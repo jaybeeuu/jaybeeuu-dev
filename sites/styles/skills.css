@@ -1,0 +1,33 @@
+#scroller
+{
+	width :			auto;
+	margin-left :	40%;
+	margin-right :	10%;
+}
+
+.skill
+{
+	margin :			20px 0px 0px 20px;
+	padding :			20px;
+	height :			180px;
+	width :				180px;
+	color :				#000000;
+	background-color :	white;
+	float:				left;
+}
+
+.skill-title
+{
+	font : 16px;
+}
+
+.skill-short-description
+{
+	font : 14px;
+	display : none;
+}
+
+.skill-description
+{
+	display : none;
+}

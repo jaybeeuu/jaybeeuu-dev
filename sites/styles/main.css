@@ -1,69 +1,97 @@
 
 /* =============================================================================
    Body
-   ========================================================================== */
+   ============================================================================= */
 
 body
 {
-	background-image :		url('../images/ShipSmall.jpg');
-	background-color :		#000000;
-	background-size :		100% auto;
-	background-position : 	bottom;
-	background-repeat :		no-repeat;
-	background-attachment :	fixed;
 	font-family :			Tahoma, Geneva, sans-serif;
 	color :					#ffffff;
+	background-color :		#000000;
+	min-height :			480px;
+	min-width :				320px;
 }
+
+/* =============================================================================
+   Title
+   ============================================================================= */
 
 #title
 {
+	position :		relative;
+	font-size :		34px;
 	text-align :	right;
+	z-index :		9999;
 }
 
 #title span
 {
 	cursor :		pointer;
 }
-	
+
 /* =============================================================================
    Navigation
-   ========================================================================== */
+   ============================================================================= */
 
 #navList
 {
+	color :			#dddddd;
 	width :			100%;
 	position :		fixed;
-	bottom :		50px;
+	bottom :		40px;
 	text-align:		center;
+	z-index:		9999;
 }
 
 #navList span
 {
-	margin :		10px;
+	padding :		0px 4px;
+	margin :		0px 6px;
+	border-color:	#ffffff;
 	text-align :	center;
 	cursor :		pointer;
 }
 
-#navList span:hover
+#navList span:hover, #navList span.current
 {
-	background-image : url('../images/underline.jpg')
+	padding :		0px 3px;
+	border-width :	1px;
+	border-style:	none dotted;
 }
 
+#navList span.current
+{
+	cursor :	default;
+}
+	
 /* =============================================================================
-   Home
-   ========================================================================== */
+   Content General
+   ============================================================================= */
 
-#home
+#content
 {
-	text-align :	right;
+	position :		fixed;
+	width :			auto;
+	height :		auto;
+	top :			60px;
+	right :			10px;
+	bottom :		80px;
+	left :			10px;
+	overflow :		hidden;
 }
 
-#home p
+#scroller
 {
-	color :			#dddddd;
+	height:			100%;
+	overflow :		auto;
 }
 
-#home a
+#background
 {
-	color:#bbbbbb;
+	position :	fixed;
+	left :		0px;
+	bottom :	0px;
+	width :		100%;
+	height :	auto;
+	z-index :	-2;
 }

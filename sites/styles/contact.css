@@ -1,0 +1,58 @@
+
+/* =============================================================================
+   form
+   ========================================================================== */
+
+#scroller
+{
+	float : right;
+	text-align :	right;
+}
+
+input, textarea
+{
+	width : 50%;
+	min-width : 100px;
+}
+
+#submit
+{
+	width : 25%;
+	min-width : 50px;
+}
+
+.single-line-label
+{
+	vertical-align : middle;
+}
+
+#firstNameLabel
+{
+	margin-right : 48px;
+}
+
+#lastNameLabel
+{
+	margin-right : 50px;
+}
+
+#organisationLabel
+{
+	margin-right : 34px;
+}
+
+#emailLabel
+{
+	margin-right : 25px;
+}
+
+#telephoneLabel
+{
+	margin-right : 4px;
+}
+
+#commentsLabel
+{
+	margin-right : 50px;
+	vertical-align : top;
+}
