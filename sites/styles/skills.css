@@ -1,13 +1,13 @@
 #scroller
 {
-	width :			auto;
-	margin-left :	40%;
-	margin-right :	10%;
+	position :	absolute;
+	width :		50%;
+	min-width :	280px;
 }
 
 .skill
 {
-	margin :			20px 0px 0px 20px;
+	margin :			0px 0px 30px 30px;
 	padding :			20px;
 	height :			180px;
 	width :				180px;

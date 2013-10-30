@@ -5,54 +5,66 @@
 
 #scroller
 {
-	float : right;
 	text-align :	right;
+	float :			right;
+	width :			40%;
+	min-width :		240px;
 }
 
-input, textarea
+#contactForm input, #contactForm textarea
 {
+	float :			none;
+	position :		static; 
+	width :			60%;
+	min-width :		200px;
+	padding :		1px 3px;
+	margin :		3px 0px;
+	border :		#333333 1px solid;
+}
+
+#errors
+{
+	float : right;
 	width : 50%;
-	min-width : 100px;
+	text-align: left;
+	font : 10 #DD8888;
 }
 
-#submit
+.invalid
 {
-	width : 25%;
-	min-width : 50px;
+	background-color : #FFBBBB;
 }
 
-.single-line-label
+#contactForm #submit
+{
+	width :				25%;
+	min-width :			50px;
+	background-color :	#FFFFFF;
+}
+
+#submit:hover
+{
+	background-color : #AAAAAA;
+}
+
+#errors
+{
+	display : none;
+}
+
+label
+{
+	display :		inline-block;
+	width :			105px;
+	text-align :	left;
+}
+
+.label-single-line
 {
 	vertical-align : middle;
 }
 
-#firstNameLabel
+.label-multi-line
 {
-	margin-right : 48px;
-}
-
-#lastNameLabel
-{
-	margin-right : 50px;
-}
-
-#organisationLabel
-{
-	margin-right : 34px;
-}
-
-#emailLabel
-{
-	margin-right : 25px;
-}
-
-#telephoneLabel
-{
-	margin-right : 4px;
-}
-
-#commentsLabel
-{
-	margin-right : 50px;
 	vertical-align : top;
 }

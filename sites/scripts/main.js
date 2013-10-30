@@ -20,7 +20,7 @@ function ready()
 
 function setupScrollbars()
 {
-	$('#scroller').mCustomScrollbar();
+	$('#scroller').mCustomScrollbar({theme: 'light-thin', horizontalScrollbar :true, autoHideScrollbar: true});
 }
 
 function resize(event)
@@ -95,10 +95,11 @@ function changeContents(page)
 {
 	if ( typeof(closeDownContents) != "undefined" ) closeDownContents();
 
-	$('#content').fadeOut(g_animationDuration, function ()
+	$('#index-content').fadeOut(g_animationDuration, function ()
 	{
-		$('#content').html(page);
-		$('#content').fadeIn(g_animationDuration, setupNewContents);
+		$('#index-content').html(page);
+
+		$('#index-content').fadeIn(g_animationDuration, setupNewContents);
 	});
 }
 
