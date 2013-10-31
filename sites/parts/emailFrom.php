@@ -1,7 +1,5 @@
 <?php
 if(isset($_POST['email'])) {
-     
-    // EDIT THE 2 LINES BELOW AS REQUIRED
     $email_to = "info@joshuawallace.co.uk";
     $email_subject = "Website Contact: ";
      

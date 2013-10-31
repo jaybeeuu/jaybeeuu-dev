@@ -1,4 +1,5 @@
 var g_validation;
+var g_validationSettings;
 
 function setupContents()
 {
@@ -8,50 +9,50 @@ function setupContents()
 			submitButtonId	: '#submit'
 		});
 
+	g_validationSettings =
+	[
+		{ elementId: '#name', validationFunction: g_validation.validateText, message: 'The name is required. Plaese let me know who you are.' },
+		{ elementId: '#organisation', validationFunction: g_validation.validateText, message: 'Organisation is required. Pleaase tell me the organisation you belong to.' },
+		{ elementId: '#email', validationFunction: g_validation.validateEmail, message: 'The email address you entered doesn\'t look right. Please give me an email address I can reply to.' },
+		{ elementId: '#subject', validationFunction: g_validation.validateText, message: 'Subject is required. Please tell me what this message is about.' },
+		{ elementId: '#content', validationFunction: g_validation.validateText, message: 'Content is required. What is the message you like to send me?' }
+	];
+
 	$('#name').focusout(validateName);
 	$('#organisation').focusout(validateOrganisation);
 	$('#email').focusout(validateEmail);
 	$('#subject').focusout(validateSubject);
 	$('#content').focusout(validateContent);
-	$('submit').click(attemptPost);
 }
 
-function attemptPost()
+function validateForm()
 {
-	if (vaildateAll())
-	{
-		onsubimt();
-	}
-}
-
-function validateAll()
-{
-	return validateName() && validateOrganisation() && validateEmail() && validateSubject() && validateContent();
+	return g_validation.validateElements(g_validationSettings);
 }
 
 function validateName()
 {
-	g_validation.validateElement($('#name'), g_validation.validateText, 'The name is required. Plaese let me know who you are.');
+	g_validation.validateElement(g_validationSettings[0]);
 }
 
 function validateOrganisation()
 {
-	g_validation.validateElement('#organisation', g_validation.validateText, 'Organisation is required. Pleaase tell me the organisation you belong to.');
+	g_validation.validateElement(g_validationSettings[1]);
 }
 
 function validateEmail()
 {
-	g_validation.validateElement($('#email'), g_validation.validateEmail, 'The email address you entered doesn\'t look right. Please give me an email address I can reply to.');
+	g_validation.validateElement(g_validationSettings[2]);
 }
 
 function validateSubject()
 {
-	g_validation.validateElement('#subject', g_validation.validateText, 'Subject is required. Please tell me what this message is about.');
+	g_validation.validateElement(g_validationSettings[3]);
 }
 
 function validateContent()
 {
-	g_validation.validateElement('#content', g_validation.validateText, 'Content is required. What is the message you like to send me?');
+	g_validation.validateElement(g_validationSettings[4]);
 }
 
 //@ sourceURL=contact.js

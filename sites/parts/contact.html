@@ -1,7 +1,7 @@
 
 			<link rel="stylesheet" href="styles/contact.css" type="text/css" />
 			<div id="scroller">
-				<form id="contactForm" name="contactform" method="post" action="attemptSend()">
+				<form id="contactForm" name="contactform" onsubmit="return validateForm();" method="post" action="emailFrom.php">
 					<label id="nameLabel" class="single-line-label" for="name">Name</label>
 					<input  id="name" type="text" name="name" maxlength="100" /><br />
 						

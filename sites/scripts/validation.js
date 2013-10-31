@@ -2,19 +2,32 @@ function Validation(options)
 {
 	var validationReport = new ValidationReport(options);
 
-	this.validateElement = function (element, validationFunction, errorMessage)
+	this.validateElement = function (settings)
 	{
-		element = $(element);
+		element = $(settings.elementId);
 
-		if (validationFunction(element.val()))
+		var wasValid = doValidateElement(element, settings.validationFunction, settings.message);
+
+		validationReport.updateMessageDisplay();
+
+		return wasValid;
+	}
+
+	this.validateElements = function(elements)
+	{
+		var wasValid = true;
+
+		for (var i = 0; i < elements.length; i++)
 		{
-			markValid(element);
+			var element = $(elements[i].elementId);
+
+			wasValid = doValidateElement(element, elements[i].validationFunction, elements[i].message) && wasValid;
 		}
-		else
-		{
-			markInvalid(element, errorMessage);
-		}
-	};
+
+		validationReport.updateMessageDisplay();
+
+		return wasValid;
+	}
 
 	this.validateEmail = function (email)
 	{
@@ -25,6 +38,20 @@ function Validation(options)
 	{
 		return validate(text, [isValidText]);
 	};
+
+	function doValidateElement(element, validationFunction, errorMessage)
+	{
+		if (validationFunction(element.val()))
+		{
+			markValid(element);
+
+			return true;
+		}
+
+		markInvalid(element, errorMessage);
+
+		return false;
+	}
 
 	function validate(obj, validationFunctions)
 	{
@@ -122,6 +149,12 @@ function ValidationReport(options)
 		}
 	}
 
+	this.updateMessageDisplay = function ()
+	{
+		if (reportCount <= 0) displayNoErrors();
+		else displayErrors();
+	}
+
 	function addNewMessage(elementId, message)
 	{
 		reports[elementId] = message;
@@ -129,8 +162,6 @@ function ValidationReport(options)
 		$(elementId).addClass(invalidFieldClass, animationTiming);
 
 		reportCount++;
-
-		updateMessageDisplay();
 	}
 
 	function removeMessage(elementId)
@@ -142,14 +173,6 @@ function ValidationReport(options)
 		delete reports[elementId];
 
 		reportCount--;
-
-		updateMessageDisplay();
-	}
-
-	function updateMessageDisplay()
-	{
-		if (reportCount <= 0) displayNoErrors();
-		else displayErrors();
 	}
 
 	function displayNoErrors()
