@@ -10,3 +10,5 @@ function selectoriseId(id)
 {
 	return id.startsWith('#') ? id : '#' + id;
 }
+
+//@ sourceURL=utilities.js

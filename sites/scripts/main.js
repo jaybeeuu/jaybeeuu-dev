@@ -1,5 +1,6 @@
 $(ready);
 
+var g_page;
 var g_currentPage;
 var g_animationDuration = 500;
 
@@ -82,6 +83,8 @@ function loadPage(page)
 
 function setCurrentPage(newPage)
 {
+	g_page = new Page();
+
 	unhighlight(g_currentPage);
 
 	g_currentPage = newPage;
@@ -93,8 +96,6 @@ function setCurrentPage(newPage)
 
 function changeContents(page)
 {
-	if ( typeof(closeDownContents) != "undefined" ) closeDownContents();
-
 	$('#index-content').fadeOut(g_animationDuration, function ()
 	{
 		$('#index-content').html(page);
@@ -109,7 +110,7 @@ function setupNewContents()
 
 	resizeBackground();
 
-	typeof (setupContents) != 'undefined' ? setupContents() : null;
+	g_page.setupContents();
 }
 
 function getAspectRatio(selector)

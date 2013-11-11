@@ -1,6 +1,6 @@
-function Validation(options)
+function Validation(report)
 {
-	var validationReport = new ValidationReport(options);
+	var validationReport = report;
 
 	this.validateElement = function (settings)
 	{
