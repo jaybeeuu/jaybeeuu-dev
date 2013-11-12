@@ -5,8 +5,7 @@
 	min-width :	280px;
 }
 
-.skill
-{
+.tile{
 	margin :			0px 0px 30px 30px;
 	padding :			20px;
 	height :			180px;
@@ -16,18 +15,18 @@
 	float:				left;
 }
 
-.skill-title
+.tile-title
 {
 	font : 16px;
 }
 
-.skill-short-description
+.tile-short-description
 {
 	font : 14px;
 	display : none;
 }
 
-.skill-description
+.tile-description
 {
 	display : none;
 }

@@ -2,7 +2,7 @@ function SkillsPage()
 {
 	this.setupContents = function ()
 	{
-		$('.skill').each(setupHover);
+		$('.tile').each(setupHover);
 
 		this.constructor.prototype.setupContents.call(this);
 	};
@@ -14,14 +14,14 @@ function SkillsPage()
 
 	function skillsListHover(event)
 	{
-		var target = $($(event.target).children('.skill-short-description').filter(':not(:animated)')[0]);
+		var target = $($(event.target).children('.tile-short-description').filter(':not(:animated)')[0]);
 
 		target.fadeIn(500);
 	}
 
 	function skillsListUnhover(event)
 	{
-		var target = $($(event.target).children('.skill-short-description')[0]);
+		var target = $($(event.target).children('.tile-short-description')[0]);
 
 		target.fadeOut(100);
 	}
