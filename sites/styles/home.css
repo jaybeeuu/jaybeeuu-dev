@@ -1,9 +1,15 @@
-#contentBody
+#content-body
 {
-	text-align :	right;
+	text-align	: right;
 }
 
-#contentBody a
+#contact-link
 {
-	color :		#cccccc;
+	color: #cccccc;
+	cursor: pointer;
+}
+
+#contact-link:hover
+{
+	color	: #eeeeee;
 }
