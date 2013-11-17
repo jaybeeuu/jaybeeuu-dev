@@ -55,32 +55,49 @@ function SkillsPage()
 
 		if (target.is(':visible'))
 		{
-			target.fadeOut(g_animationDuration);
-			visibleDescription = null;
+			hideTileDescription(target)
 		}
 		else
 		{
-			if (visibleDescription != null)
-			{
-				visibleDescription.fadeOut(g_animationDuration, function () { target.fadeIn(g_animationDuration); });
-			}
-			else
-			{
-				target.fadeIn(g_animationDuration, function ()
-				{
-					target.mCustomScrollbar({ theme: 'dark-thin', horizontalScrollbar: true, autoHideScrollbar: true });
-				});
-			}
-
-			visibleDescription = target;
-
-			target.focus();
+			showTileDescription(target);
 		}
 	}
 
 	function tileDescriptionClick(event)
 	{
 		$(event.target).fadeOut(g_animationDuration);
+	}
+
+	function showTileDescription(target)
+	{
+		if (visibleDescription != null)
+		{
+			visibleDescription.fadeOut(g_animationDuration,
+				function ()
+				{
+					target.fadeIn(g_animationDuration,
+						function () { setVisibleTileDescription(target); });
+				});
+		}
+		else
+		{
+			target.fadeIn(g_animationDuration, function () { setVisibleTileDescription(target); });
+		}
+	}
+
+	function hideTileDescription(target)
+	{
+		target.fadeOut(g_animationDuration);
+		visibleDescription = null;
+	}
+
+	function setVisibleTileDescription(target)
+	{
+		target.mCustomScrollbar({ theme: 'dark-thin', horizontalScrollbar: true, autoHideScrollbar: true });
+
+		visibleDescription = target;
+
+		target.focus();
 	}
 }
 
