@@ -1,6 +1,6 @@
 function ExperiencePage()
 {
-	this.baseColour = '#000000';
+	this.baseColour = '#FFFFFF';
 }
 
 ExperiencePage.prototype = new Page();
