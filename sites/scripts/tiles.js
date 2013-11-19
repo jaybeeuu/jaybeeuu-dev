@@ -1,7 +1,9 @@
 (function($){
 
-	$.fn.tiles = function ()
+	$.fn.tiles = function (options)
 	{
+		processOptions(options);
+
 		var visibleDescription = null;
 
 		setup(this);
@@ -101,6 +103,24 @@
 			visibleDescription = target;
 
 			target.focus();
+		}
+
+		function processOptions(options)
+		{
+			if (!isValidobject(options))
+			{
+				return;
+			}
+
+			if (isValidObject(options.color))
+			{
+				$('.tile').css({ backgroundColor: options.color });
+			}
+		}
+
+		function isValidObject(obj)
+		{
+			return typeof obj != 'undefined' && obj != null
 		}
 	}
 }(jQuery));
