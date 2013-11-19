@@ -74,6 +74,7 @@
 		{
 			if (visibleDescription != null)
 			{
+				//need to fix when people are clicking about rapidly - some weird things happen.
 				visibleDescription.fadeOut(g_animationDuration,
 					function ()
 					{
