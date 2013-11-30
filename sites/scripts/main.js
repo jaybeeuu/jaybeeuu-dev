@@ -13,8 +13,8 @@ function ready()
 	getLastPage();
 
 	$('#title span').click(goHome);
-
-	$('#navList').click(navClicked);
+	
+	$('.navButton').each(function (index, element) { $(element).click(navClicked); });
 
 	$(window).resize(resize);
 }
@@ -57,9 +57,7 @@ function goHome()
 
 function navClicked(event)
 {
-	var target = event.target;
-
-	var page = target.id.replace('Nav', '');
+	var page = $(event.target).html();
 
 	loadPage(page);
 }

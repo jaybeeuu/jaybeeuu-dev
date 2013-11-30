@@ -107,7 +107,7 @@
 
 		function processOptions(options)
 		{
-			if (!isValidobject(options))
+			if (!isValidObject(options))
 			{
 				return;
 			}
