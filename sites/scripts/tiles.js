@@ -20,10 +20,13 @@
 			$(element).hover(tileHover, tileUnhover);
 
 			$(element).click(tileClick);
+
 		}
 
 		function setupTileDescription(index, element)
 		{
+			$(element).mCustomScrollbar({ theme: 'dark-thin', horizontalScrollbar: true, autoHideScrollbar: true });
+
 			$(element).click(tileDescriptionClick);
 		}
 
@@ -98,7 +101,7 @@
 
 		function setVisibleTileDescription(target)
 		{
-			target.mCustomScrollbar({ theme: 'dark-thin', horizontalScrollbar: true, autoHideScrollbar: true });
+			target.mCustomScrollbar('update');
 
 			visibleDescription = target;
 

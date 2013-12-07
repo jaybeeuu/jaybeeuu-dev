@@ -19,7 +19,7 @@ function ready()
 
 function setupScrollbars()
 {
-	$('#scroller').mCustomScrollbar({theme: 'light-thin', horizontalScrollbar :true, autoHideScrollbar: true});
+	$('#scroller').mCustomScrollbar('update');
 }
 
 function setupNavLinks()
@@ -98,8 +98,10 @@ function setCurrentPage(newPage)
 function changeContents(page)
 {
 	$('#index-content').fadeOut(g_animationDuration, function ()
-	{
+	{	
 		$('#index-content').html(page);
+
+		$('#scroller').mCustomScrollbar({ theme: 'light-thin', horizontalScrollbar: true, autoHideScrollbar: true });
 
 		$('#index-content').fadeIn(g_animationDuration, setupNewContents);
 	});
