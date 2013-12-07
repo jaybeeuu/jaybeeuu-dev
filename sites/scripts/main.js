@@ -13,8 +13,6 @@ function ready()
 	getLastPage();
 
 	$('#title span').click(goHome);
-	
-	$('.navButton').each(function (index, element) { $(element).click(navClicked); });
 
 	$(window).resize(resize);
 }
@@ -22,6 +20,11 @@ function ready()
 function setupScrollbars()
 {
 	$('#scroller').mCustomScrollbar({theme: 'light-thin', horizontalScrollbar :true, autoHideScrollbar: true});
+}
+
+function setupNavLinks()
+{
+	$('.navButton').each(function (index, element) { $(element).click(navClicked); });
 }
 
 function resize(event)
@@ -105,6 +108,8 @@ function changeContents(page)
 function setupNewContents()
 {
 	setupScrollbars();
+
+	setupNavLinks();
 
 	resizeBackground();
 
