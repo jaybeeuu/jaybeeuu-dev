@@ -36,7 +36,6 @@ body
 
 #navList
 {
-	color :			#dddddd;
 	width :			100%;
 	position :		fixed;
 	bottom :		30px;
@@ -44,19 +43,31 @@ body
 	z-index:		9999;
 }
 
-#navList span
+.navButton
 {
-	padding :		0px 4px;
-	margin :		0px 6px;
-	border-color:	#ffffff;
+	color:			#999999;
+	border-width :	1px;
+	border-color:	#000000;
+	padding :		0px 2px;
 	text-align :	center;
 	cursor :		pointer;
 }
 
-#navList span:hover, #navList span.current
+#navList span.navButton
+{
+	border-color:	#ffffff;
+	padding:		0px 4px;
+	margin:			0px 6px;
+}
+
+#navList span.navButton:hover
 {
 	padding :		0px 3px;
-	border-width :	1px;
+}
+
+.navButton:hover, #navList span.current
+{
+	padding :		0px 1px;
 	border-style:	none dotted;
 }
 
