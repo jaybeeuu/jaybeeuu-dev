@@ -62,7 +62,7 @@ function navClicked(event)
 {
 	var target = $(event.target);
 
-	var targetAttr = target.attr('target');
+	var targetAttr = target.attr('data-target');
 
 	var page =  (typeof targetAttr ==  'undefined') ? target.html() : targetAttr;
 
