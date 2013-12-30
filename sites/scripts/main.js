@@ -60,7 +60,11 @@ function goHome()
 
 function navClicked(event)
 {
-	var page = $(event.target).html();
+	var target = $(event.target);
+
+	var targetAttr = target.attr('target');
+
+	var page =  (typeof targetAttr ==  'undefined') ? target.html() : targetAttr;
 
 	loadPage(page);
 }
