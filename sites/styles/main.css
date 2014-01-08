@@ -60,22 +60,37 @@ body
 	margin:			0px 6px;
 }
 
-#navList span.navButton:hover
+#navList .navButton:hover
 {
 	padding :		0px 3px;
 }
 
-.navButton:hover, #navList span.current
+.navButton:hover, #navList .navButton.current
 {
 	padding :		0px 1px;
 	border-style:	none dotted;
 }
 
-#navList span.current
+
+.navButton.inLine
+{
+	padding : 0px;
+	color: #cccccc;
+	cursor: pointer;
+}
+
+.navButton.inLine:hover
+{
+	padding : 0px;
+	border-style: none;
+	color	: #eeeeee;
+}
+
+#navList .navButton.current
 {
 	cursor :	default;
 }
-	
+
 /* =============================================================================
    Content General
    ============================================================================= */

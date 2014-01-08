@@ -2,14 +2,3 @@
 {
 	text-align	: right;
 }
-
-#contact-link
-{
-	color: #cccccc;
-	cursor: pointer;
-}
-
-#contact-link:hover
-{
-	color	: #eeeeee;
-}
