@@ -25,7 +25,7 @@
 
 		function setupTileDescription(index, element)
 		{
-			$(element).mCustomScrollbar({ theme: 'dark-thin', horizontalScrollbar: true, autoHideScrollbar: true });
+			$(element).mCustomScrollbar({ theme: 'dark-thin', autoHideScrollbar: true });
 
 			$(element).click(tileDescriptionClick);
 		}
