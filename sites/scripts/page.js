@@ -1,6 +1,6 @@
 var Page = function ()
 {
-	this.baseColour = '#FFFFFF';
+	this.baseColour = '#EEEEEE';
 
 	this.setupContents = function ()
 	{
