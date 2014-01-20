@@ -67,7 +67,7 @@ body
 
 .navButton:hover, #navList .navButton.current
 {
-	padding :		0px 1px;
+	padding :		0px 3px;
 	border-style:	none dotted;
 }
 
