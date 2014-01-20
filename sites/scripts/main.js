@@ -105,7 +105,7 @@ function changeContents(page)
 	{	
 		$('#index-content').html(page);
 
-		$('#scroller').mCustomScrollbar({ theme: 'light-thin', horizontalScrollbar: true, autoHideScrollbar: true });
+		$('#scroller').mCustomScrollbar({ theme: 'light-thin', scrollIntertia: 0, autoHideScrollbar: true });
 
 		$('#index-content').fadeIn(g_animationDuration, setupNewContents);
 	});
