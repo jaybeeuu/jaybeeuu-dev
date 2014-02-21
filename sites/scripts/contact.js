@@ -27,6 +27,8 @@ function ContactPage()
 		$('#subject').focusout(validateSubject);
 		$('#content').focusout(validateContent);
 
+		$('#submit').click(validateForm);
+		
 		this.constructor.prototype.setupContents.call(this);
 	}
 

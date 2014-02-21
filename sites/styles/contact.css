@@ -13,6 +13,7 @@
 
 #contactForm input, #contactForm textarea
 {
+	font-family :	Tahoma, Geneva, sans-serif;
 	float :			none;
 	position :		static; 
 	width :			60%;
