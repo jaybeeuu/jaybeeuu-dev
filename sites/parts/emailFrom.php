@@ -84,7 +84,7 @@ $headers = 'From: '.$email_from."\r\n".
 @mail($email_to, $email_subject, $email_message, $headers); 
 ?>
  
-Thank you for contacting me. I will be in touch with you very soon.
+Thank you for contacting me; I will be in touch with you very soon.
  
 <?php
 }
