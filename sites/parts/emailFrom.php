@@ -1,4 +1,5 @@
 <?php
+
 if(isset($_POST['email'])) {
     $email_to = "info@joshuawallace.co.uk";
     $email_subject = "Website Contact: ";
@@ -14,12 +15,25 @@ if(isset($_POST['email'])) {
     }
      
     // validation expected data exists
-    if( !isset($_POST['name']) ||
-		!isset($_POST['organisation']) ||
-        !isset($_POST['email']) ||
-		!isset($_POST['subject']) ||
-        !isset($_POST['conent'])) {
-        died('We are sorry, but there appears to be a problem with the form you submitted.');      
+    if( !isset($_POST['name']))
+	{
+        died('The Name is missing from the post.');
+    }
+	if(	!isset($_POST['organisation']))
+	{
+        died('The Organisation is missing from the post.');
+    }
+	if(	!isset($_POST['email']))
+	{
+        died('The Email is missing from the post.');
+    }
+	if(	!isset($_POST['subject']))
+	{
+        died('The Subject is missing from the post.');
+    }
+	if(	!isset($_POST['content']))
+	{
+        died('The Content is missing from the post.');
     }
      
     $name = $_POST['name']; // required
@@ -37,7 +51,7 @@ if(isset($_POST['email'])) {
   if(!preg_match($string_exp,$name)) {
     $error_message .= 'The Name you entered does not appear to be valid.<br />';
   }
-  if(strlen($organisation) < 2)) {
+  if(strlen($organisation) < 2) {
     $error_message .= 'The Organisation you entered does not appear to be valid.<br />';
   }
   if(strlen($subject) < 2) {
@@ -69,8 +83,6 @@ $headers = 'From: '.$email_from."\r\n".
 'X-Mailer: PHP/' . phpversion();
 @mail($email_to, $email_subject, $email_message, $headers); 
 ?>
- 
-<!-- include your own success html here -->
  
 Thank you for contacting me. I will be in touch with you very soon.
  
