@@ -63,7 +63,7 @@ if(isset($_POST['email'])) {
   if(strlen($error_message) > 0) {
     died($error_message);
   }
-    $email_message = "Form details below.\n\n";
+    $email_message = "Source: http://joshuawallace.co.uk/parts/emailForm.php\n";
      
     function clean_string($string) {
       $bad = array("content-type","bcc:","to:","cc:","href");
