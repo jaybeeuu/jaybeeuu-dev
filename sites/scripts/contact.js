@@ -7,7 +7,8 @@ function ContactPage()
 	{
 		var report = new ValidationReport({
 			errorsId: '#errors',
-			submitButtonId: '#submit'
+			submitButtonId: '#submit',
+			animationTiming : g_animationDuration
 		});
 
 		g_validation = new Validation(report);
@@ -27,6 +28,8 @@ function ContactPage()
 		$('#subject').focusout(validateSubject);
 		$('#content').focusout(validateContent);
 
+		$('#submit').click(validateForm);
+		
 		this.constructor.prototype.setupContents.call(this);
 	}
 
@@ -80,18 +83,34 @@ function ContactPage()
     		url		: formURL,
     		type	: "POST",
     		data	: postData,
-    		success	: function (data, textStatus, jqXHR)
-    		{
-    			//data: return data from server
-    		},
-    		error	: function (jqXHR, textStatus, errorThrown)
-    		{
-    			//if fails      
-    		}
+    		success	: submitFormSuccess,
+    		error	: submitFormError
 		});
 
 		e.preventDefault(); //STOP default action
 	});
+	
+	function submitFormSuccess(data, textStatus, jqXHR)
+    {
+		$('#submit').fadeOut(
+			g_animationDuration,
+			function()
+			{ 
+				$('#errors').html(data);
+				$('#errors').fadeIn(g_animationDuration);
+			});
+	}
+	
+	function submitFormError(jqXHR, textStatus, errorThrown)
+	{
+		$('#submit').fadeOut(
+			g_animationDuration,
+				function()
+				{ 
+					$('#errors').html(errorThrown);
+					$('#errors').fadeIn(g_animationDuration);
+				});
+	}
 }
 
 ContactPage.prototype = new Page();
