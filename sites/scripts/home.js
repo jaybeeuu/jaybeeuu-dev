@@ -1,5 +1,6 @@
 function HomePage()
 {
+	this.backgroundImage = 'images/ship.jpg';
 }
 
 HomePage.prototype = new Page();
