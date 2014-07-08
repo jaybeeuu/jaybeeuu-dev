@@ -1,6 +1,8 @@
 var Page = function ()
 {
-	this.baseColour = '#EEEEEE';
+	this.baseColour = '#FFFFFF';
+
+	this.backgroundImage = 'images/ship.jpg';
 
 	this.setupContents = function ()
 	{

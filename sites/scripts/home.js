@@ -1,5 +1,6 @@
 function HomePage()
 {
+	this.backgroundImage = 'images/nullarbor.jpg';
 }
 
 HomePage.prototype = new Page();
