@@ -94,19 +94,22 @@ function changeContents(page, pageName)
 	{
 		$('#index-content').html(page);
 
-		$('#index-content').append(
-			getImage('index-content-background', g_page.backgroundImage, 'background'));
+		var img = getImage('index-content-background', g_page.backgroundImage, 'background',
+			function ()
+			{
+				$('#index-content').append(img);
 
-		resizeBackground();
+				resizeBackground();
 
-		$('#scroller').mCustomScrollbar({ theme: 'light-thin', scrollIntertia: 0, autoHideScrollbar: true });
-		
-		$('#index-content').fadeIn(g_animationDuration, function ()
-		{
-			setupNewContents();
+				$('#scroller').mCustomScrollbar({ theme: 'light-thin', scrollIntertia: 0, autoHideScrollbar: true });
 
-			setNavCurrentPage(pageName);
-		});
+				$('#index-content').fadeIn(g_animationDuration, function ()
+				{
+					setupNewContents();
+
+					setNavCurrentPage(pageName);
+				});
+			});
 	});
 }
 
@@ -136,15 +139,17 @@ function getAspectRatio(selector)
 	return $(selector).height() / $(selector).width()
 }
 
-function getImage(id, src, alt)
+function getImage(id, src, alt, nextAction)
 {
 	var img = new Image();
 
 	img.id = id;
 
-	img.src = src;
+	img.onload = nextAction;
 
 	img.alt = alt;
+
+	img.src = src;
 
 	return img;
 }
