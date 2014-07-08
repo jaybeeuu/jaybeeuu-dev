@@ -12,6 +12,8 @@ function ready()
 {
 	getLastPage();
 
+	setupNavLinks('#navList');
+
 	$('#title span').click(goHome);
 
 	$(window).resize(resize);
@@ -22,9 +24,9 @@ function setupScrollbars()
 	$('#scroller').mCustomScrollbar('update');
 }
 
-function setupNavLinks()
+function setupNavLinks(parent)
 {
-	$('.navButton').each(function (index, element) { $(element).click(navClicked); });
+	$(parent + ' .navButton').each(function (index, element) { $(element).click(navClicked); });
 }
 
 function resize(event)
@@ -124,7 +126,7 @@ function setupNewContents()
 {
 	setupScrollbars();
 
-	setupNavLinks();
+	setupNavLinks('#index-content');
 
 	g_page.setupContents();
 }
