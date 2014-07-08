@@ -45,7 +45,6 @@ body
 
 .navButton
 {
-	color:			#999999;
 	border-width :	1px;
 	border-color:	#000000;
 	padding :		0px 2px;
@@ -113,7 +112,7 @@ body
 	overflow :		auto;
 }
 
-#background
+#index-content-background
 {
 	position :	fixed;
 	left :		0px;

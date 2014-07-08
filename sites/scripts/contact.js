@@ -3,6 +3,8 @@ function ContactPage()
 	var g_validation;
 	var g_validationSettings;
 
+	this.backgroundImage = 'images/lionsGateBridge.jpg';
+
 	this.setupContents = function(postSetup)
 	{
 		var report = new ValidationReport({

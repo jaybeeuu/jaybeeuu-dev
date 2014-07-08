@@ -1,5 +1,7 @@
 function SkillsPage()
 {
+	this.backgroundImage = 'images/englishBayPark.jpg';
+
 	this.setupContents = function ()
 	{
 		$('#scroller').tiles();
