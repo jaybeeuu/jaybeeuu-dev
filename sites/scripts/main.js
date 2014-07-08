@@ -10,6 +10,8 @@ var g_animationDuration = 500;
 
 function ready()
 {
+	preloadImages();
+
 	getLastPage();
 
 	setupNavLinks('#navList');
@@ -17,6 +19,29 @@ function ready()
 	$('#title span').click(goHome);
 
 	$(window).resize(resize);
+
+}
+
+var images = new Array()
+
+function preloadImages()
+{
+	doPreload(
+		'images/nullarbor.jpg',
+		'images/tree.jpg',
+		'images/englishBayPark.jpg',
+		'images/melbourneExhibitionHall.jpg',
+		'images/lionsGateBridge.jpg'
+	)
+}
+
+function doPreload()
+{
+	for (i = 0; i < doPreload.arguments.length; i++)
+	{
+		images[i] = new Image()
+		images[i].src = doPreload.arguments[i]
+	}
 }
 
 function setupScrollbars()
