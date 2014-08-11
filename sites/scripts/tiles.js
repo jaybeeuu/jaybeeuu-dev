@@ -72,7 +72,14 @@
 
 		function tileDescriptionClick(event)
 		{
-			$(event.target).fadeOut(g_animationDuration);
+			var target = $(event.target);
+
+			if (!$(event.target).hasClass('tile-description'))
+			{
+				target = $(target.parents('.tile-description')[0]);
+			}
+
+			target.fadeOut(g_animationDuration);
 		}
 
 		function showTileDescription(target)
