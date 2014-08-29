@@ -5,6 +5,7 @@
 		<title>josh wallace</title>
 		<link rel="stylesheet" href="/styles/main.css" type="text/css" />
 		<link rel="stylesheet" href="/styles/jquery.mCustomScrollbar.css" type="text/css" />
+		<link rel="stylesheet" href="/styles/tiles.css" type="text/css" />
 
 		<!--[if IE]>
 			<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -15,16 +16,17 @@
 		
 	</head>
 	<body id="index" class="home">
-		<div id="title"><span>josh wallace</span></div>
-		<div id="index-content"></div>
-		<div id="navList">
-			<span id="homeNav" class="navButton">home</span>
-			<span id="aboutMeNav" class="navButton" data-target="aboutMe">about me</span>
-			<span id="skillsNav" class="navButton">skills</span>
-			<span id="portfolioNav" class="navButton">portfolio</span>
-			<span id="contactNav" class="navButton">contact</span>
+		<div id="title"><span>josh wallace - downloads</span></div>
+		<div id="index-content">
+			<div id="download-tiles">
+				<div id="scroller">
+					<div id="boscombe-beach" class="tile">
+						<div class="tile-title">Boscombe Beach</div>
+						<div class="tile-short-description">Some pictures from an Awesome day at the beach, in celebration of someone's birthday.</div>
+					</div>
+				</div>
+			</div>
 		</div>
-		<img src="/images/tree.jpg" alt="tree">
 		<script src="/scripts/jquery-1.10.2.min.js"></script>
 		<script src="/scripts/jquery-ui-1.10.3.custom.min.js"></script>
 		<script src="/scripts/jquery.mousewheel.js"></script>
@@ -32,6 +34,7 @@
 		<script src="/scripts/jquery.cookie.js"></script>
 		<script src="/scripts/utilities.js"></script>
 		<script src="/scripts/page.js"></script>
-		<script src="/scripts/main.js"></script>
+		<script src="/scripts/tiles.js"></script>
+		<script src="scripts/downloads.js"></script>
 	</body>
 </html>
