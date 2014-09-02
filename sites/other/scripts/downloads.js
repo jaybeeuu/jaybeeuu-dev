@@ -12,7 +12,7 @@ function ready()
 {
 	$(window).resize(resize);
 	
-	$('#scroller').tiles();
+	$('#scroller').tiles({customClick: downloadClick});
 }
 
 var img = getImage('index-content-background', '/images/nullarbor.jpg', 'background',
@@ -71,4 +71,16 @@ function getImage(id, src, alt, nextAction)
 	img.src = src;
 
 	return img;
+}
+
+function downloadClick(event)
+{
+	var target = $(event.target);
+	
+	if(target.attr('data-target') == undefined)
+	{
+		target = target.parent('.tile');
+	}
+	
+	$.fileDownload(target.attr('data-target'));
 }
