@@ -126,6 +126,11 @@
 			{
 				$('.tile').css({ backgroundColor: options.color });
 			}
+
+			if (isValidObject(options.customClick))
+			{
+				tileClick = options.customClick;
+			}
 		}
 
 		function isValidObject(obj)
