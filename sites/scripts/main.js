@@ -12,14 +12,15 @@ function ready()
 {
 	preloadImages();
 
-	getLastPage();
+	var pageName = getPageHash();
+	
+	loadPage(pageName);
 
 	setupNavLinks('#navList');
 
 	$('#title span').click(goHome);
 
 	$(window).resize(resize);
-
 }
 
 var images = new Array()
@@ -75,11 +76,6 @@ function resizeBackground(event)
 	}
 }
 
-function getLastPage()
-{
-	loadPage($.cookie('lastPage'));
-}
-
 function goHome()
 {
 	loadPage('home');
@@ -114,11 +110,15 @@ function loadPage(pageName)
 function changeContents(page, pageName)
 {
 	unhighlight(g_currentPageName);
-
+	
+	$(window).off('hashchange', handleHashChange);
+	
 	$('#index-content').fadeOut(g_animationDuration, function ()
 	{
+		setPageHash(pageName);
+	
 		$('#index-content').html(page);
-
+		
 		var img = getImage('index-content-background', g_page.backgroundImage, 'background',
 			function ()
 			{
@@ -133,6 +133,8 @@ function changeContents(page, pageName)
 					setupNewContents();
 
 					setNavCurrentPage(pageName);
+
+					$(window).on('hashchange', handleHashChange);
 				});
 			});
 	});
@@ -143,12 +145,9 @@ function setNavCurrentPage(newPage)
 	g_page = new Page();
 
 	g_currentPageName = newPage;
-
-	$.cookie('lastPage', newPage);
 	
 	highlight(newPage);
 }
-
 
 function setupNewContents()
 {
@@ -158,6 +157,10 @@ function setupNewContents()
 
 	g_page.setupContents();
 }
+
+//**************************************************************************
+// Images
+//**************************************************************************
 
 function getAspectRatio(selector)
 {
@@ -195,6 +198,42 @@ function unhighlight(page)
 	if ( ! $('#' + page + 'Nav') ) return;
 
 	$('#' + page + 'Nav').removeClass('current');
+}
+
+//**************************************************************************
+// Hash
+//**************************************************************************
+
+function handleHashChange()
+{ 
+	var pageName = getPageHash();
+	
+	loadPage(pageName);
+	
+}
+
+function setPageHash(pageName)
+{
+	if(pageName != "home")
+	{
+		window.location.hash = pageName;
+	}
+	else
+	{
+		window.location.hash = "";
+	}
+}
+
+function getPageHash()
+{
+	var pageName = window.location.hash.replace("#", "");
+	
+	if(pageName == "")
+	{
+		pageName = "home";
+	}
+	
+	return pageName
 }
 
 //@ sourceURL=main.js
