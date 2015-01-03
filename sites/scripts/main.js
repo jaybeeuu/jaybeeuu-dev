@@ -4,6 +4,8 @@ var g_page;
 var g_currentPageName;
 var g_animationDuration = 500;
 
+var images = new Array()
+
 //**************************************************************************
 // Events
 //**************************************************************************
@@ -21,38 +23,6 @@ function ready()
 	$('#title span').click(goHome);
 
 	$(window).resize(resize);
-}
-
-var images = new Array()
-
-function preloadImages()
-{
-	doPreload(
-		'images/nullarbor.jpg',
-		'images/tree.jpg',
-		'images/englishBayPark.jpg',
-		'images/melbourneExhibitionHall.jpg',
-		'images/lionsGateBridge.jpg'
-	)
-}
-
-function doPreload()
-{
-	for (i = 0; i < doPreload.arguments.length; i++)
-	{
-		images[i] = new Image()
-		images[i].src = doPreload.arguments[i]
-	}
-}
-
-function setupScrollbars()
-{
-	$('#scroller').mCustomScrollbar('update');
-}
-
-function setupNavLinks(parent)
-{
-	$(parent + ' .navButton').each(function (index, element) { $(element).click(navClicked); });
 }
 
 function resize(event)
@@ -74,11 +44,6 @@ function resizeBackground(event)
 		$('#index-content-background').css('height', $(window).height() + 'px');
 		$('#index-content-background').css('width', 'auto');
 	}
-}
-
-function goHome()
-{
-	loadPage('home');
 }
 
 function navClicked(event)
@@ -158,6 +123,21 @@ function setupNewContents()
 	g_page.setupContents();
 }
 
+function setupScrollbars()
+{
+	$('#scroller').mCustomScrollbar('update');
+}
+
+function setupNavLinks(parent)
+{
+	$(parent + ' .navButton').each(function (index, element) { $(element).click(navClicked); });
+}
+
+function goHome()
+{
+	loadPage('home');
+}
+
 //**************************************************************************
 // Images
 //**************************************************************************
@@ -180,6 +160,26 @@ function getImage(id, src, alt, nextAction)
 	img.src = src;
 
 	return img;
+}
+
+function preloadImages()
+{
+	doPreload(
+		'images/nullarbor.jpg',
+		'images/tree.jpg',
+		'images/englishBayPark.jpg',
+		'images/melbourneExhibitionHall.jpg',
+		'images/lionsGateBridge.jpg'
+	)
+}
+
+function doPreload()
+{
+	for (i = 0; i < doPreload.arguments.length; i++)
+	{
+		images[i] = new Image()
+		images[i].src = doPreload.arguments[i]
+	}
 }
 
 //**************************************************************************
