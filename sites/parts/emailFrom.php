@@ -1,7 +1,7 @@
 <?php
 
 if(isset($_POST['email'])) {
-    $email_to = "info@joshuawallace.co.uk";
+    $email_to = "info@joshuawallace.uk";
     $email_subject = "Website Contact: ";
      
      
@@ -63,7 +63,7 @@ if(isset($_POST['email'])) {
   if(strlen($error_message) > 0) {
     died($error_message);
   }
-    $email_message = "Source: http://joshuawallace.co.uk/parts/emailForm.php\n";
+    $email_message = "Source: http://joshuawallace.uk/parts/emailForm.php\n";
      
     function clean_string($string) {
       $bad = array("content-type","bcc:","to:","cc:","href");
