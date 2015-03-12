@@ -105,9 +105,6 @@
     <Content Include="other\files\Blueberry Trail.zip" />
     <Content Include="other\files\Halloween.zip" />
     <Content Include="other\files\PdfSandBox.zip" />
-    <Content Include="other\files\TheFringe1.zip" />
-    <Content Include="other\files\TheFringe2.zip" />
-    <Content Include="other\files\TheFringe3.zip" />
     <Content Include="parts\emailFrom.php" />
   </ItemGroup>
   <ItemGroup>
