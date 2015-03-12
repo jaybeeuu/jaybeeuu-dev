@@ -77,10 +77,17 @@ function downloadClick(event)
 {
 	var target = $(event.target);
 	
-	if(target.attr('data-target') == undefined)
+	var filesString = target.attr('data-target');
+	
+	if(filesString == undefined)
 	{
-		target = target.parent('.tile');
+		filesString = target = target.parent('.tile').attr('data-target');
 	}
 	
-	$.fileDownload(target.attr('data-target'));
+	var files = filesString.split(';');
+	
+	for(i = 0; i < files.length; i++)
+	{
+		$.fileDownload(files[i]);
+	}
 }
