@@ -1,0 +1,71 @@
+
+/* =============================================================================
+   form
+   ========================================================================== */
+
+#scroller
+{
+	text-align :	right;
+	float :			right;
+	width :			40%;
+	min-width :		240px;
+}
+
+#contactForm input, #contactForm textarea
+{
+	font-family :	Tahoma, Geneva, sans-serif;
+	float :			none;
+	position :		static; 
+	width :			60%;
+	min-width :		200px;
+	padding :		1px 3px;
+	margin :		3px 0px;
+	border :		#333333 1px solid;
+}
+
+#errors
+{
+	float : right;
+	width : 50%;
+	text-align: left;
+	font : 10 #DD8888;
+}
+
+.invalid
+{
+	background-color : #FFBBBB;
+}
+
+#contactForm #submit
+{
+	width :				25%;
+	min-width :			50px;
+	background-color :	#FFFFFF;
+}
+
+#submit:hover
+{
+	background-color : #AAAAAA;
+}
+
+#errors
+{
+	display : none;
+}
+
+label
+{
+	display :		inline-block;
+	width :			105px;
+	text-align :	left;
+}
+
+.label-single-line
+{
+	vertical-align : middle;
+}
+
+.label-multi-line
+{
+	vertical-align : top;
+}
