@@ -1,5 +1,1 @@
-Output
-*\obj
-*.suo
-StyleCop.Cache
-Sources/packages/
+.venv

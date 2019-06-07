@@ -1,17 +1,41 @@
-# README #
+# nginx
 
-### What is this repository for? ###
+This is a repo i am using to learn how to setup and configure NGINX. The goal here is to habe it run in a docker container with some static content, proxied to a webpack dev server for development. There will also be an express server providing the backend.
 
-This repo contains my website - designed to be a sort of virtual business card. It won't be of much interest to many people but me. I have made it public in order that people can see an example  of my work.
+I may at some point add n redis into the mix. although i'm not sure yet what that will bring to the party...
 
-### How do I get set up? ###
+As it stands the contents of this repo work reasonably well. I think this is the basis for my website. A Python backend, running Sanic, with a react/redux front end served up by nginx.
 
-Just copy the lot into a webserver and make sure index.html is one of the default page options. Or you  can see it in action at www.joshuawallace.co.uk
+Using nginx will allow me to scale up the backend with some load balancing if need be and i will also be able to add things like redis caching to help out. To be honest though it is unlikely i will need to so the first step is to get the thing into an environment and have it show something...
 
-### Contribution guidelines ###
 
-I have only really made this public in order to allow people to see my work; it's not the sort of thing i expect people to want tot contribute to.
+### `Alias` vs `Root`
 
-### Who do I talk to? ###
+First job is serving some static content. Which is easy
 
-I am Josh Wallace, you can talk to me about this repo - start at www.joshuawallace.co.uk (the live version of this site) and head for the contact page.
+
+```conf
+events {
+    worker_connections: 1024;
+}
+
+http {
+    server {
+        location /static/ {
+            root /var/www/content/;
+        }
+    }
+}
+```
+
+In your `nginx.conf` is all you need.
+
+
+However... Using this configurtaion the url `/static/index.html` will be looked up as `/var/www/content/static/index.html`. Turns out the way to fix that is by using `alias`.
+
+The most important difference between `alias` and `root` is that files looked up with `root` will have the whole url path appended, while file behind an `alias` will only be looked up using hte unmatched portion of the url.
+
+
+Meanwhile substituting `root` for `alias` means the file would be looked up at `/var/www/content/index.html`.
+
+More details on [this](https://stackoverflow.com/questions/10631933/nginx-static-file-serving-confusion-with-root-alias) stack overflow question and on the docs for [alis](http://nginx.org/en/docs/http/ngx_http_core_module.html#alias) and [root](http://nginx.org/en/docs/http/ngx_http_core_module.html#root).
