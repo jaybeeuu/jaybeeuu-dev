@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+export DOCKER_APP=bickleywallace
+export PIPENV_VENV_IN_PROJECT=true
+
+if [ '$1' == 'prod' ]
+then
+    export DOCKER_ENV=production
+else
+    export DOCKER_ENV=development
+fi
