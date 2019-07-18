@@ -1,0 +1,36 @@
+@import "../styles/colours";
+@import "../styles/mixins";
+
+@mixin nav-button {
+    @include transition-complex;
+    font-size: 5em;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    z-index: 1;
+    @include text-overlay;
+    opacity: 0;
+
+    &:hover{
+        opacity: 1;
+    }
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+
+.root {
+    height: 100%;
+    position: relative;
+}
+
+.nav-button-left {
+    @include nav-button;
+    left: 0;
+}
+
+.nav-button-right {
+    @include nav-button;
+    right: 0;
+}

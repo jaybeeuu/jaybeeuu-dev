@@ -1,0 +1,31 @@
+@import './styles/colours.scss';
+
+.root {
+    overflow: hidden;
+    background-color: $black;
+    color: $white;
+    font-family: 'Raleway', sans-serif;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: row;
+
+    textarea, button:not(:global(.material-icons)) {
+        font-family: 'Raleway', sans-serif;
+    }
+
+    textarea, input, p {
+        font-size: 1em;
+    }
+
+    label, button:not(:global(.material-icons)) {
+        font-size: 1.1em;
+    }
+}
+
+.carousel-panel {
+    flex: 1 1 auto;
+}

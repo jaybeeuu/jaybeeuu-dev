@@ -1,0 +1,20 @@
+{
+  "plugins": [
+    "jasmine",
+    "jest"
+  ],
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:jasmine/recommended",
+    "plugin:jest/recommended"
+  ],
+  "env": {
+    "node": true,
+    "jasmine": true,
+    "jest/globals": true
+  },
+  "rules": {
+    "jasmine/no-spec-dupes": ["warn", "branch"],
+    "jasmine/no-suite-dupes": ["warn", "branch"]
+  }
+}

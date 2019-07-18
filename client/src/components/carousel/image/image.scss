@@ -1,0 +1,83 @@
+
+@import "../../styles/colours";
+@import "../../styles/mixins";
+
+
+.root {
+    position: relative;
+    height: 100%;
+}
+
+.details-container {
+    @include transition-complex;
+    &-enter,
+    &-exit-active,
+    &-exit-done {
+        opacity: 0;
+    }
+
+    &-enter-active,
+    &-enter-done,
+    &-exit-done {
+        opacity: 1;
+    }
+}
+
+.title {
+    padding: $block-padding;
+    position: absolute;
+    @include text-overlay;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+}
+
+.edit-button {
+    background-color: transparent;
+    color: $white;
+    outline: none;
+    border: none;
+    margin: 0.5em;
+    font-size: 2em;
+    cursor: pointer;
+}
+
+.details {
+    padding: $block-padding;
+    position: absolute;
+    @include text-overlay;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+}
+
+.image {
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
+}
+
+
+.description {
+    margin: 0;
+    padding: $block-padding;
+}
+
+.tags {
+    display: flex;
+    margin: 0;
+    padding: $block-padding;
+}
+
+.tag {
+    padding: 0.2em 0.6em;
+    margin: 0 0.5em;
+    list-style: none;
+    border-radius: 0.2em;
+    color: $black;
+    background-color: $white;
+}

@@ -1,0 +1,16 @@
+@import "../../styles/mixins";
+
+@keyframes spin {
+    from { transform:rotate(0deg); }
+    to { transform:rotate(360deg); }
+}
+
+.root {
+    &:hover > span {
+        animation: spin $transition-duration-complex ease;
+    }
+}
+
+.icon {
+    display: inline-block;
+}
