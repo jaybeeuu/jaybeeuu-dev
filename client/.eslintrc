@@ -1,0 +1,77 @@
+{
+  "plugins": [
+    "babel",
+    "import"
+  ],
+  "extends": [
+    "eslint:recommended",
+  ],
+  "env": {
+    "es6": true,
+    "browser": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "allowImportExportEverywhere": false,
+    "codeFrame": true,
+    "ecmaVersion": 2018,
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "16.0"
+    },
+    "import/resolver": {
+      "webpack": {
+        "config": "./config/webpack.config.dev.js"
+      }
+    }
+  },
+  "rules": {
+    "babel/new-cap": "warn",
+    "babel/no-invalid-this": "warn",
+    "babel/no-unused-expressions": "warn",
+    "babel/object-curly-spacing": [ "error", "always" ],
+    "babel/quotes": ["error", "double"],
+    "babel/semi": ["error", "always"],
+    "brace-style": ["error", "1tbs", { "allowSingleLine": false }],
+    "import/no-unresolved": ["error", { "caseSensitive": true } ],
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "linebreak-style": ["error", "unix"],
+    "no-unused-vars": "warn",
+    "multiline-ternary": ["error","always-multiline"],
+    "operator-linebreak": ["error", "before"],
+    "space-before-blocks": [ "error", "always" ],
+    "space-before-function-paren": [
+      "error",
+      {
+        "anonymous": "always",
+        "named": "never",
+        "asyncArrow": "always"
+      }
+    ],
+    "strict": ["error", "safe"]
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/config/**/*.*",
+        "**/scripts/**/*.js",
+        "**/*.config.js"
+      ],
+      "env": {
+        "node": true,
+        "browser": false
+      },
+      "parserOptions": {
+        "sourceType": "module"
+      },
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ]
+}

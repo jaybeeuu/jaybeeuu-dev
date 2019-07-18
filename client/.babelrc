@@ -1,0 +1,10 @@
+{
+  "sourceMaps": true,
+  "presets": [
+    "@babel/preset-env",
+    "@babel/preset-react"
+  ],
+  "plugins": [
+    "transform-class-properties"
+  ]
+}

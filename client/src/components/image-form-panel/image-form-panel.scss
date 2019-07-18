@@ -1,0 +1,19 @@
+@import "../styles/colours.scss";
+@import "../styles/mixins.scss";
+
+.form {
+    @include transition-complex;
+    width: 20em;
+
+    &-enter,
+    &-exit-active,
+    &-exit-done {
+        width: 0;
+    }
+
+    &-enter-active,
+    &-enter-done,
+    &-exit-done {
+        width: 20em;
+    }
+}

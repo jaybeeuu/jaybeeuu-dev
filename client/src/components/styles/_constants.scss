@@ -1,0 +1,12 @@
+$transition-duration-simple: 100ms;
+$transition-duration-complex: 200ms;
+$transition-duration-detailed: 500ms;
+
+$block-padding: 0.5em;
+$inline-padding: 0.3em 0.5em;
+
+:export {
+    simpleDuration: $transition-duration-simple;
+    complexDuration: $transition-duration-complex;
+    detailedDuration: $transition-duration-detailed;
+}
