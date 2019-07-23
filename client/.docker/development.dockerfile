@@ -7,10 +7,9 @@ RUN apk update && apk add yarn
 WORKDIR /var/www
 
 COPY ./package.json .
-COPY ./yarn.lock .
 
-RUN yarn install
+RUN npm install
 
 COPY . .
 
-CMD ["yarn", "start"]
+CMD ["npm", "run-script", "start"]
