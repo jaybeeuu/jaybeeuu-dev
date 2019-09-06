@@ -13,6 +13,8 @@ services:
     volumes:
        - ./client/:/var/www
        - /var/www/node_modules
+    ports:
+      - 5055:3000
     networks:
       - default
 
@@ -28,6 +30,8 @@ services:
        - ./api/:/var/www
        - /var/www/.venv
        - /var/www/__pycache__
+    ports:
+      - 5050:80
     networks:
       - default
 

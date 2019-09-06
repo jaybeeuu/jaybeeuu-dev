@@ -5,7 +5,7 @@ const paths = require("./paths");
 
 const env = require("./env")();
 
-module.exports = {
+const config = {
   mode: "development",
   devtool: "cheap-module-source-map",
   entry: [
@@ -108,3 +108,7 @@ module.exports = {
     child_process: "empty",
   },
 };
+
+console.log("webpack.config.dev", JSON.stringify(config, null, 2));
+
+module.exports = config;
