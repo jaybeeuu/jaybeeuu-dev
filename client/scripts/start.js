@@ -36,8 +36,11 @@ devServer.listen(PORT, HOST, (err) => {
   }
 
   console.log(chalk.cyan(`Serving at ${friendlyUrl}\n`));
-  console.log(chalk.cyan("Opening browser..."));
-  open(friendlyUrl);
+
+  if(serverConfig.open) {
+    console.log(chalk.cyan("Opening browser..."));
+    open(friendlyUrl);
+  }
 });
 
 ["SIGINT", "SIGTERM"].forEach(function (sig) {
