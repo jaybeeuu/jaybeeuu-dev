@@ -1,9 +1,0 @@
-#!/bin/bash -e
-
-export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-. $DIR/env $1
-
-docker-compose down
-docker-compose build
-docker-compose up
