@@ -1,3 +1,0 @@
-#!/bin/bash -e
-
-docker run --rm -it $1 /bin/sh

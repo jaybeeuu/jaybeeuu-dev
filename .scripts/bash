@@ -1,3 +1,0 @@
-#!/bin/bash -e
-
-docker exec -it "$DOCKER_APP-$1" /bin/bash
