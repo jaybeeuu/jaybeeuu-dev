@@ -18,7 +18,8 @@ module.exports = {
     "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
   rules: {
-    "semi": ["error", "always"]
+    "semi": ["error", "always"],
+    "quotes": ["error", "double"]
   },
   overrides: [
     {
