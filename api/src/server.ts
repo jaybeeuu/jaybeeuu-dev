@@ -1,8 +1,11 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import { Server } from "http";
+import log from "./logger";
 
-export default async (port): Promise<Server> => {
+export type CloseServer = () => Promise<Error | undefined>;
+
+export default async (port): Promise<CloseServer> => {
   const app = express();
 
   app.use(express.static("public"));
@@ -20,7 +23,7 @@ export default async (port): Promise<Server> => {
     );
   });
 
-  console.log(`Listening on port ${port}!`);
+  log(`Listening on port ${port}!`);
 
-  return server;
+  return () => new Promise((resolve) => server.close(resolve));
 };
