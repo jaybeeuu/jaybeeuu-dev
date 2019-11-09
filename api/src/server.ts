@@ -1,7 +1,8 @@
 import express from "express";
 import cookieParser from "cookie-parser";
+import { Server } from "http";
 
-export default async (port) => {
+export default async (port): Promise<Server> => {
   const app = express();
 
   app.use(express.static("public"));
@@ -9,12 +10,17 @@ export default async (port) => {
 
   app.get(
     "/",
-    (req, res) => res.send("Hello World!")
+    (req, res) => res.send("Hello, World!")
   );
 
-  await new Promise(
-    (resolve) => app.listen(port, resolve)
-  );
+  const server: Server = await new Promise((resolve) => {
+    const innerServer = app.listen(
+      port,
+      () => { resolve(innerServer); }
+    );
+  });
 
   console.log(`Listening on port ${port}!`);
+
+  return server;
 };
