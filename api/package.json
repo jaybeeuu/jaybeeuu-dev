@@ -10,12 +10,11 @@
     "debug": "nodemon -e js,ts --watch ./src --exec 'npm run-script build && npm run-script start:debug'",
     "lint": "eslint --ext .js,.ts .",
     "test": "jest",
-    "test:watch": "node --inspect ./node_modules/.bin/jest --runInBand --watch"
+    "test:watch": "node --inspect ./node_modules/.bin/jest --runInBand --watch --no-cache"
   },
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com>",
   "license": "MIT",
   "dependencies": {
-    "@types/request-promise-native": "^1.0.17",
     "cookie-parser": "^1.4.4",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -28,6 +27,7 @@
     "@types/express": "^4.17.2",
     "@types/jest": "^24.0.22",
     "@types/node": "^12.12.7",
+    "@types/request-promise-native": "^1.0.17",
     "@typescript-eslint/eslint-plugin": "^2.6.1",
     "@typescript-eslint/parser": "^2.6.1",
     "eslint": "^6.6.0",
