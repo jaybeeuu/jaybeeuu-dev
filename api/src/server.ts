@@ -16,5 +16,5 @@ export default async (port) => {
     (resolve) => app.listen(port, resolve)
   );
 
-  console.log("Listening on port ${port}");
+  console.log(`Listening on port ${port}!`);
 };
