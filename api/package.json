@@ -4,9 +4,13 @@
   "description": "The API behind my blog",
   "main": "index.js",
   "scripts": {
-    "start": "node --inspect=5858 -r ts-node/register ./src/index.ts",
-    "start:watch": "nodemon",
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:debug": "node --inspect=6229 dist/index.js",
+    "debug": "nodemon -e js,ts --watch ./src --exec 'npm run-script build && npm run-script start:debug'",
+    "lint": "eslint --ext .js,.ts .",
+    "test": "jest",
+    "test:watch": "node --inspect ./node_modules/.bin/jest --runInBand --watch"
   },
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com>",
   "license": "MIT",
