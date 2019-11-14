@@ -10,7 +10,7 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   parserOptions: {
     sourceType: "module",
-    project: "./tsconfig.eslint.json"
+    project: "./tsconfig.json"
   },
   extends: [
     "eslint:recommended",
@@ -26,7 +26,9 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["./src/**/*.spec.ts"],
+      files: [
+        "./src/**/*.spec.ts"
+      ],
       env: {
         "jest/globals": true
       },
