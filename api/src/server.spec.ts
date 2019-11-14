@@ -2,6 +2,8 @@ import startServer, { CloseServer } from "./server";
 import request from "request-promise-native";
 import { URL } from "url";
 
+jest.mock('./logger');
+
 const port = 5337;
 const protocol = "http";
 const hostName = "localhost";
