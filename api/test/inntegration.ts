@@ -1,26 +1,26 @@
-import startServer, { CloseServer } from "./server";
+import { ParamsDictionary, Request, NextFunction } from "express-serve-static-core";
 import request from "request-promise-native";
 import { URL } from "url";
-import { ParamsDictionary, Request, NextFunction } from "express-serve-static-core";
+import startServer, { CloseServer } from "../src/server";
 
 jest.mock("morgan", () => () => (
   req: Request<ParamsDictionary>,
   res: Response,
   next: NextFunction
 ) => next());
-jest.mock("./logger");
+jest.mock("../src/log");
 
 const port = 5337;
 const protocol = "http";
 const hostName = "localhost";
 const baseURl = `${protocol}://${hostName}:${port}`;
 
-const get = async (route: string) => {
+export const get = async (route: string) => {
   const url = new URL(route, baseURl);
   return await request(url.href);
 };
 
-describe("Hello world", () => {
+export const setupServer = () => {
   let closeServer: CloseServer;
 
   beforeAll(async () => {
@@ -30,9 +30,4 @@ describe("Hello world", () => {
   afterAll(async () => {
     await closeServer();
   });
-
-  it("returns 'Hello, World!' from a GET '/' ", async () => {
-    const result = await get("/");
-    expect(result).toBe("Hello, World!");
-  });
-});
+};
