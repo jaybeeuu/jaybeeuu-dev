@@ -10,7 +10,6 @@
     "debug": "nodemon -e js,ts --watch ./src --exec 'npm run-script build && npm run-script start:debug'",
     "lint": "eslint --ext .js,.ts .",
     "test": "jest --config ./test/jest.config.js",
-    "test:integration": "jest --config ./test/jest.config.integration.js",
     "test:watch": "node --inspect ./node_modules/.bin/jest --runInBand --watch --no-cache"
   },
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com>",
