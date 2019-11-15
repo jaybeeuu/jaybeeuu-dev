@@ -1,8 +1,9 @@
+import chalk from "chalk";
 import express from "express";
 import cookieParser from "cookie-parser";
 import { Server } from "http";
 import morgan from "morgan";
-import log from "./logger";
+import log from "./log";
 
 export type CloseServer = () => Promise<Error | undefined>;
 
@@ -27,7 +28,7 @@ export default async (port: number): Promise<CloseServer> => {
     );
   });
 
-  log(`Listening on port ${port}!`);
+  log.info(`${chalk.green("Listening on port")} ${chalk.blue(port)}!`);
 
   return () => new Promise((resolve) => server.close(resolve));
 };
