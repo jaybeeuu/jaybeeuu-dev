@@ -5,7 +5,10 @@
         "outDir": "dist",
         "sourceMap": true,
         "esModuleInterop": true,
-        "strictNullChecks": true
+        "strictNullChecks": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+
     },
     "include": [
         "**/*.ts",
