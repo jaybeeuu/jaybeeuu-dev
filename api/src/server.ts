@@ -6,7 +6,7 @@ import log from "./logger";
 
 export type CloseServer = () => Promise<Error | undefined>;
 
-export default async (port): Promise<CloseServer> => {
+export default async (port: number): Promise<CloseServer> => {
   const app = express();
 
   app.use(morgan("dev"));
