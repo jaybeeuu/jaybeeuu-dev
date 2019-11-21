@@ -1,4 +1,4 @@
-import { setupServer, get } from "../../../test/inntegration";
+import { setupServer, get } from "../../../test/integration";
 
 describe("Hello world", () => {
   setupServer();
