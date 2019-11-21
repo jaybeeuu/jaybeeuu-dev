@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import { Server } from "http";
 import morgan from "morgan";
 import log from "./log";
+import rootRouter from "./routes/root";
 
 export type CloseServer = () => Promise<Error | undefined>;
 
@@ -14,12 +15,7 @@ export default async (port: number): Promise<CloseServer> => {
   app.use(express.static("public"));
   app.use(cookieParser());
 
-  app.get(
-    "/",
-    (req, res) => {
-      res.send("Hello, World!");
-    }
-  );
+  app.use("/", rootRouter);
 
   const server: Server = await new Promise((resolve) => {
     const innerServer = app.listen(

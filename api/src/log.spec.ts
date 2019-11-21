@@ -1,6 +1,5 @@
 import log from "./log";
 
-
 describe("log", () => {
   beforeEach(() => {
     jest.spyOn(console, "log").mockImplementation(() => {});
