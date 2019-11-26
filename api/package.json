@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "The API behind my blog",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
     "start": "node dist/index.js",
@@ -40,7 +39,7 @@
     "eslint": "^6.6.0",
     "eslint-plugin-jest": "^23.0.4",
     "jest": "^24.9.0",
-    "nodemon": "1.19.4",
+    "nodemon": "^2.0.1",
     "ts-jest": "^24.1.0",
     "typescript": "^3.7.2"
   },
