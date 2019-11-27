@@ -2,15 +2,15 @@
   "name": "bickley-wallace-api",
   "version": "1.0.0",
   "description": "The API behind my blog",
-  "main": "index.js",
+  "main": "./src/index.ts",
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
     "start": "node dist/index.js",
     "start:debug": "node --inspect=6229 dist/index.js",
-    "debug": "nodemon -e js,ts --watch ./src --exec 'npm run-script build && npm run-script start:debug'",
+    "debug": "nodemon ./src/index.ts",
     "lint": "eslint --ext .js,.ts .",
     "test": "jest --config ./test/jest.config.js",
-    "test:watch": "node --inspect ./node_modules/.bin/jest  --config ./test/jest.config.js --runInBand --watch --no-cache"
+    "test:watch": "node --inspect ./node_modules/.bin/jest --config ./test/jest.config.js --runInBand --watch --no-cache"
   },
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com>",
   "license": "MIT",
@@ -41,17 +41,7 @@
     "jest": "^24.9.0",
     "nodemon": "^2.0.1",
     "ts-jest": "^24.1.0",
+    "ts-node": "^8.5.2",
     "typescript": "^3.7.2"
-  },
-  "nodemonConfig": {
-    "ignore": [
-      "**/*.spec.ts",
-      "node_modules"
-    ],
-    "watch": [
-      "src"
-    ],
-    "exec": "npm start",
-    "ext": "ts"
   }
 }

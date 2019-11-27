@@ -8,7 +8,6 @@ import registerRoutes from "./routes/index";
 
 export type CloseServer = () => Promise<Error | undefined>;
 
-
 export default async (port: number): Promise<CloseServer> => {
   const app = express();
 
@@ -25,7 +24,7 @@ export default async (port: number): Promise<CloseServer> => {
     );
   });
 
-  log.info(`${chalk.green("Listening on port")} ${chalk.blue(port)}!`);
+  log.info(`${chalk.yellow("Listening on port")} ${chalk.blue(port)}!`);
 
   return () => new Promise((resolve) => server.close(resolve));
 };
