@@ -7,7 +7,8 @@
     "build": "tsc --project ./tsconfig.build.json",
     "start": "node dist/index.js",
     "start:debug": "node --inspect=6229 dist/index.js",
-    "debug": "nodemon ./src/index.ts",
+    "dev": "nodemon ./src/index.ts",
+    "dev:debug": "nodemon --inspect=6229 ./src/index.ts",
     "lint": "eslint --ext .js,.ts .",
     "test": "jest --config ./test/jest.config.js",
     "test:watch": "node --inspect ./node_modules/.bin/jest --config ./test/jest.config.js --runInBand --watch --no-cache"
