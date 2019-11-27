@@ -4,11 +4,12 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "dist",
-    "sourceMap": true,
+
     "esModuleInterop": true,
-    "strict": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
+    "sourceMap": true,
+    "strict": true
 
   },
   "include": [
