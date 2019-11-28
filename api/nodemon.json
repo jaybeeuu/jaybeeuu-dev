@@ -3,6 +3,6 @@
   "ignore": ["*.spec.ts", "test/**"],
   "ext": "js,ts,json",
   "execMap": {
-    "ts": "ts-node"
+    "ts": "node --require ts-node/register"
   }
 }
