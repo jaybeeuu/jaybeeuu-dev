@@ -1,8 +1,9 @@
 {
+  "sourceMaps": true,
   "watch": ["src"],
   "ignore": ["*.spec.ts", "test/**"],
   "ext": "js,ts,json",
   "execMap": {
-    "ts": "node --require ts-node/register"
+    "ts": "babel-node --extensions '.ts'"
   }
 }

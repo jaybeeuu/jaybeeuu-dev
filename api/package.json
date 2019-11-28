@@ -6,9 +6,9 @@
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
     "start": "node dist/index.js",
-    "start:debug": "node --inspect=6229 dist/index.js",
     "dev": "nodemon --inspect ./src/index.ts",
     "lint": "eslint --ext .js,.ts .",
+    "type-check": "tsc --noEmit",
     "test": "jest --config ./test/jest.config.js",
     "test:watch": "node --inspect ./node_modules/.bin/jest --config ./test/jest.config.js --runInBand --watch --no-cache"
   },
@@ -17,6 +17,7 @@
   "dependencies": {
     "chalk": "^3.0.0",
     "cookie-parser": "^1.4.4",
+    "core-js": "^3.4.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "morgan": "^1.9.1",
@@ -25,6 +26,11 @@
     "source-map-support": "^0.5.16"
   },
   "devDependencies": {
+    "@babel/cli": "^7.7.4",
+    "@babel/core": "^7.7.4",
+    "@babel/node": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "@babel/preset-typescript": "^7.7.4",
     "@types/chalk": "^2.2.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/dotenv": "^8.2.0",
