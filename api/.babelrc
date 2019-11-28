@@ -1,0 +1,17 @@
+{
+  "sourceMaps": true,
+  "ignore": ["./**/*.spec.ts"],
+  "presets": [
+    "@babel/preset-typescript",
+    [
+      "@babel/preset-env",
+      {
+        "useBuiltIns": "usage",
+        "corejs": "3",
+        "targets": {
+          "node": "current"
+        }
+      }
+    ]
+  ]
+}
