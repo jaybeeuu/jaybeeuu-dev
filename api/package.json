@@ -4,7 +4,7 @@
   "description": "The API behind my blog",
   "main": "./src/index.ts",
   "scripts": {
-    "build": "tsc --project ./tsconfig.build.json",
+    "build": "babel --extensions .ts --out-dir dist ./src",
     "start": "node dist/index.js",
     "dev": "nodemon --inspect ./src/index.ts",
     "lint": "eslint --ext .js,.ts .",
