@@ -1,5 +1,5 @@
 {
-  "sourceMaps": true,
+  "sourceMaps": "inline",
   "ignore": ["./**/*.spec.ts"],
   "presets": [
     "@babel/preset-typescript",
