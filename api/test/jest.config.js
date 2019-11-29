@@ -2,7 +2,6 @@ module.exports = {
   clearMocks: true,
   testEnvironment: "node",
   rootDir: "..",
-  preset: "ts-jest",
   testMatch: [
     "**/*.spec.ts"
   ],

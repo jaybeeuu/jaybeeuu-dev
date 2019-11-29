@@ -3,7 +3,7 @@ const router = express.Router();
 
 router.get(
   "/",
-  (req, res) => {
+  (req, res): void => {
     res.send("Hello, World!");
   }
 );
