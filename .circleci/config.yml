@@ -1,10 +1,12 @@
 version: 2.1
 
 jobs:
-    api-type-check:
+    api-checkout-install:
         docker:
           - image: circleci/node:12.13.1
+
         working_directory: ~/src/api
+
         steps:
             - checkout:
                 path: ~/src
@@ -21,7 +23,22 @@ jobs:
                 - node_modules
                 key: v1-dependencies-{{ checksum "package.json" }}
 
-            - run: npm run-script type-check
+            - persist_to_workspace:
+                    # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
+                    # taken to be the root directory of the workspace.
+                    root: ~/src
+                    paths:
+                        - ./*
+
+    api-type-check:
+        docker:
+          - image: circleci/node:12.13.1
+        working_directory: ~/src/api
+        steps:
+          - attach_workspace:
+              at: ~/src
+
+          - run: npm run-script type-check
 
     # api-test:
     #     docker:
@@ -52,7 +69,11 @@ workflows:
 
   api-install-test:
     jobs:
-      - api-type-check
+      - api-checkout-install
+      - api-type-check:
+            requires:
+              - api-checkout-install
+
     #   - api-lint
     #   - api-test
     #   - api-build
