@@ -1,0 +1,105 @@
+version: 2.1
+
+jobs:
+    api-checkout-install:
+        docker:
+          - image: circleci/node:12.13.1
+
+        working_directory: ~/src/api
+
+        steps:
+          - checkout:
+              path: ~/src
+
+          - restore_cache:
+                keys:
+                  - v1-dependencies-{{ checksum "package.json" }}
+                  - v1-dependencies-
+
+          - run: npm install
+
+          - save_cache:
+               paths:
+                 - node_modules
+               key: v1-dependencies-{{ checksum "package.json" }}
+
+          - persist_to_workspace:
+                root: ~/src
+                paths:
+                  - ./*
+
+
+    api-type-check:
+        docker:
+          - image: circleci/node:12.13.1
+
+        working_directory: ~/src/api
+
+        steps:
+          - attach_workspace:
+                at: ~/src
+
+          - run: npm run-script type-check
+
+
+    api-test:
+        docker:
+          - image: circleci/node:12.13.1
+
+        working_directory: ~/src/api
+
+        steps:
+          - attach_workspace:
+                at: ~/src
+
+          - run: npm run-script test
+
+
+    api-lint:
+        docker:
+          - image: circleci/node:12.13.1
+
+        working_directory: ~/src/api
+
+        steps:
+          - attach_workspace:
+                at: ~/src
+
+          - run: npm run-script lint
+
+
+    api-build:
+        docker:
+          - image: circleci/node:12.13.1
+
+        working_directory: ~/src/api
+
+        steps:
+          - attach_workspace:
+                at: ~/src
+
+          - run: npm run-script build
+
+
+workflows:
+  version: 2
+
+  api-install-test:
+    jobs:
+      - api-checkout-install
+      - api-type-check:
+            requires:
+              - api-checkout-install
+      - api-test:
+            requires:
+              - api-checkout-install
+      - api-lint:
+            requires:
+              - api-checkout-install
+      - api-build:
+            requires:
+              - api-checkout-install
+
+    #   - api-lint
+    #   - api-test
+    #   - api-build

@@ -1,8 +1,8 @@
-import root from './root';
-import { Express, Router } from 'express';
+import root from "./root";
+import { Express, Router } from "express";
 
 const routes: { [route: string]: Router } = {
-  '/': root
+  "/": root
 };
 
 const registerRoutes = (app: Express ): void => {
