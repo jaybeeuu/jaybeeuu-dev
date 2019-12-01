@@ -8,61 +8,78 @@ jobs:
         working_directory: ~/src/api
 
         steps:
-            - checkout:
-                path: ~/src
+          - checkout:
+              path: ~/src
 
-            - restore_cache:
+          - restore_cache:
                 keys:
-                - v1-dependencies-{{ checksum "package.json" }}
-                - v1-dependencies-
+                  - v1-dependencies-{{ checksum "package.json" }}
+                  - v1-dependencies-
 
-            - run: npm install
+          - run: npm install
 
-            - save_cache:
+          - save_cache:
+               paths:
+                 - node_modules
+               key: v1-dependencies-{{ checksum "package.json" }}
+
+          - persist_to_workspace:
+                root: ~/src
                 paths:
-                - node_modules
-                key: v1-dependencies-{{ checksum "package.json" }}
+                  - ./*
 
-            - persist_to_workspace:
-                    # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
-                    # taken to be the root directory of the workspace.
-                    root: ~/src
-                    paths:
-                        - ./*
 
     api-type-check:
         docker:
           - image: circleci/node:12.13.1
+
         working_directory: ~/src/api
+
         steps:
           - attach_workspace:
-              at: ~/src
+                at: ~/src
 
           - run: npm run-script type-check
 
-    # api-test:
-    #     docker:
-    #       - image: circleci/node:12.13.1
-    #     working_directory: ~/src/api
-    #     steps:
-    #       <<: *api-checkout-install
-    #       - run: npm run-script test
 
-    # api-lint:
-    #     docker:
-    #     - image: circleci/node:12.13.1
-    #     working_directory: ~/src/api
-    #     steps:
-    #     <<: *api-checkout-install
-    #     - run: npm run-script lint
+    api-test:
+        docker:
+          - image: circleci/node:12.13.1
 
-    # api-build:
-    #     docker:
-    #     - image: circleci/node:12.13.1
-    #     working_directory: ~/src/api
-    #     steps:
-    #     <<: *api-checkout-install
-    #     - run: npm run-script build
+        working_directory: ~/src/api
+
+        steps:
+          - attach_workspace:
+                at: ~/src
+
+          - run: npm run-script test
+
+
+    api-lint:
+        docker:
+          - image: circleci/node:12.13.1
+
+        working_directory: ~/src/api
+
+        steps:
+          - attach_workspace:
+                at: ~/src
+
+          - run: npm run-script lint
+
+
+    api-build:
+        docker:
+          - image: circleci/node:12.13.1
+
+        working_directory: ~/src/api
+
+        steps:
+          - attach_workspace:
+                at: ~/src
+
+          - run: npm run-script build
+
 
 workflows:
   version: 2
@@ -71,6 +88,15 @@ workflows:
     jobs:
       - api-checkout-install
       - api-type-check:
+            requires:
+              - api-checkout-install
+      - api-test:
+            requires:
+              - api-checkout-install
+      - api-lint:
+            requires:
+              - api-checkout-install
+      - api-build:
             requires:
               - api-checkout-install
 
