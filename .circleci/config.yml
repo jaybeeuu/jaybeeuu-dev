@@ -1,0 +1,61 @@
+version: 2.1
+
+checkout-install: &api-checkout-install
+  - checkout:
+     path: ~/src
+
+  - restore_cache:
+      keys:
+        - v1-dependencies-{{ checksum "./api/package.json" }}
+        - v1-dependencies-
+
+  - run: npm install
+
+  - save_cache:
+      paths:
+        - node_modules
+      key: v1-dependencies-{{ checksum "package.json" }}
+
+jobs:
+  api-type-check:
+    docker:
+      - image: circleci/node:12.13.1
+    working_directory: ~/src/api
+    steps:
+      <<: *api-checkout-install
+      - run: npm run-script type-check
+
+  api-test:
+    docker:
+      - image: circleci/node:12.13.1
+    working_directory: ~/src/api
+    steps:
+      <<: *api-checkout-install
+      - run: npm run-script test
+
+  api-lint:
+    docker:
+      - image: circleci/node:12.13.1
+    working_directory: ~/src/api
+    steps:
+      <<: *api-checkout-install
+      - run: npm run-script lint
+
+  api-build:
+    docker:
+      - image: circleci/node:12.13.1
+    working_directory: ~/src/api
+    steps:
+      <<: *api-checkout-install
+      - run: npm run-script build
+
+
+workflows:
+  version: 2
+
+  api-install-test:
+    jobs:
+      - api-type-check
+      - api-lint
+      - api-test
+      - api-build
