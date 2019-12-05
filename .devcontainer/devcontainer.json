@@ -1,0 +1,20 @@
+{
+  "name": "Bickley-Wallace - API",
+  "dockerFile": "Dockerfile",
+
+  "appPort": [3000],
+
+  "runArgs": [ "-u", "node" ],
+
+  "settings": {
+      "terminal.integrated.shell.linux": "/bin/bash"
+  },
+
+  "postCreateCommand": "pushd ./api && npm install",
+
+  "extensions": [
+    "dbaeumer.vscode-eslint",
+    "eg2.vscode-npm-script",
+    "christian-kohler.npm-intellisense"
+  ]
+}
