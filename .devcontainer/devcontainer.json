@@ -4,13 +4,13 @@
 
   "appPort": [3000],
 
-  "runArgs": [ "-u", "node" ],
+  "runArgs": [ "-u", "node", "-v", "${env:HOME}${env:USERPROFILE}/.ssh:/root/.ssh-localhost:ro" ],
 
   "settings": {
       "terminal.integrated.shell.linux": "/bin/bash"
   },
 
-  "postCreateCommand": "pushd ./api && npm install",
+  "postCreateCommand": "cd ./api && npm install && cd .. && sudo cp -r /root/.ssh-localhost ~ && sudo chown -R $(id -u):$(id -g) ~/.ssh-localhost && mv ~/.ssh-localhost ~/.ssh && chmod 700 ~/.ssh && chmod 600 ~/.ssh/*",
 
   "extensions": [
     "dbaeumer.vscode-eslint",

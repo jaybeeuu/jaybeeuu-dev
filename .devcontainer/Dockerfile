@@ -15,8 +15,10 @@ RUN apt-get update \
     && rm -f /usr/local/bin/yarn \
     && rm -f /usr/local/bin/yarnpkg \
     #
-    # Install eslint globally
-    && npm install -g eslint \
+    # Add sudo support for non-root users
+    && apt-get install -y sudo \
+    && echo node ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/node \
+    && chmod 0440 /etc/sudoers.d/node \
     #
     # Clean up
     && apt-get autoremove -y \
