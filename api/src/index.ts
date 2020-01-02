@@ -1,7 +1,7 @@
 import { install } from "source-map-support";
 install();
 
-import { port } from "./env-vars";
+import { httpPort, httpsPort } from "./env-vars";
 import server from "./server";
 
-server(port);
+server(httpPort, httpsPort);

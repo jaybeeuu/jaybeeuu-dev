@@ -19,10 +19,12 @@ module.exports = {
   ],
   rules: {
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": ["error"],
     "semi": ["error", "always"],
     "quotes": ["error", "double"],
-    "no-console": "error"
+    "no-console": "error",
+
+    "@typescript-eslint/no-unused-vars": ["error"],
+    "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }]
   },
   overrides: [
     {

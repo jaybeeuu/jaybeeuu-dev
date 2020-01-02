@@ -1,30 +1,48 @@
 import chalk from "chalk";
-import express from "express";
 import cookieParser from "cookie-parser";
-import { Server } from "http";
+import express, { Express } from "express";
+import fs from "fs";
+import http from "http";
+import https from "https";
+import { Server } from "net";
 import morgan from "morgan";
 import log from "./log";
 import registerRoutes from "./routes/index";
 
-export type CloseServer = () => Promise<Error | undefined>;
+type CloseServer = () => Promise<void>;
 
-export default async (port: number): Promise<CloseServer> => {
+const startServer = async (server: Server, port: number, protocol: string): Promise<CloseServer> => {
+  await new Promise((resolve) => server.listen(port, resolve));
+
+  log.info(`${chalk.yellow("Listening on port")} ${chalk.blue(port)}!`, `${protocol}://localhost:${port}`);
+
+  return async () => {
+    const result = await new Promise((resolve) => server.close(resolve));
+
+    if (result instanceof Error) {
+      throw Error;
+    };
+  };
+};
+
+export default async (httpPort: number, httpsPort: number): Promise<CloseServer> => {
   const app = express();
 
   app.use(morgan("dev"));
   app.use(express.static("public"));
   app.use(cookieParser());
 
+  var sslOptions = {
+    key: fs.readFileSync('./certs/key.pem'),
+    cert: fs.readFileSync('./certs/cert.pem')
+  };
+
   registerRoutes(app);
 
-  const server: Server = await new Promise((resolve) => {
-    const innerServer = app.listen(
-      port,
-      () => { resolve(innerServer); }
-    );
-  });
+  const closeHttp = startServer(http.createServer(app), httpPort, 'http');
+  const closeHttps = startServer(https.createServer(app, sslOptions), httpsPort, 'https');
 
-  log.info(`${chalk.yellow("Listening on port")} ${chalk.blue(port)}!`);
-
-  return () => new Promise((resolve) => server.close(resolve));
+  return async () => {
+    await Promise.all([closeHttp, closeHttps]);
+  }
 };
