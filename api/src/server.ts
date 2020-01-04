@@ -8,8 +8,30 @@ import { Server } from "net";
 import morgan from "morgan";
 import log from "./log";
 import registerRoutes from "./routes/index";
+import path from "path";
 
 type CloseServer = () => Promise<void>;
+
+const promiseReadFile = (path: string): Promise<Buffer> => {
+  return new Promise((resolve) => fs.readFile(path, (error, data) => {
+    if (error) {
+      throw error;
+    }
+    resolve(data);
+  }));
+};
+
+const resolveCertFilePath = (filename: string): string => path.resolve(__dirname, "../certs", filename);
+
+const getSSLOptions = async (): Promise<https.ServerOptions> => {
+
+  const [ cert, key ] = await Promise.all([
+    promiseReadFile(resolveCertFilePath("certificate.crt")),
+    promiseReadFile(resolveCertFilePath("private.key"))
+  ]);
+
+  return { cert, key };
+};
 
 const startServer = async (server: Server, port: number, protocol: string): Promise<CloseServer> => {
   await new Promise((resolve) => server.listen(port, resolve));
@@ -32,15 +54,10 @@ export default async (httpPort: number, httpsPort: number): Promise<CloseServer>
   app.use(express.static("public"));
   app.use(cookieParser());
 
-  var sslOptions = {
-    key: fs.readFileSync('./certs/key.pem'),
-    cert: fs.readFileSync('./certs/cert.pem')
-  };
-
   registerRoutes(app);
 
   const closeHttp = startServer(http.createServer(app), httpPort, 'http');
-  const closeHttps = startServer(https.createServer(app, sslOptions), httpsPort, 'https');
+  const closeHttps = startServer(https.createServer(await getSSLOptions(), app), httpsPort, 'https');
 
   return async () => {
     await Promise.all([closeHttp, closeHttps]);
