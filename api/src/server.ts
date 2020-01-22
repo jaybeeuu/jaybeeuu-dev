@@ -10,7 +10,7 @@ import log from "./log";
 import registerRoutes from "./routes/index";
 import path from "path";
 
-type CloseServer = () => Promise<void>;
+export type CloseServer = () => Promise<void>;
 
 const promiseReadFile = (path: string): Promise<Buffer> => {
   return new Promise((resolve) => fs.readFile(path, (error, data) => {
