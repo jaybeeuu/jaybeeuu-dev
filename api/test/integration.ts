@@ -22,7 +22,7 @@ const https = {
   options: {
     strictSSL: false
   }
-}
+};
 
 type Get = (route: string) => Promise<any>;
 
@@ -46,7 +46,7 @@ const httpsGet = makeGet(https, hostName);
 export const describeRoute = (
   description: string,
   tests: (get: Get) => () => void
-) => {
+): void => {
   describe(description, () => {
     let closeServer: CloseServer;
 
@@ -58,7 +58,7 @@ export const describeRoute = (
       await closeServer();
     });
 
-    describe('http', tests(httpGet));
-    describe('https', tests(httpsGet));
+    describe("http", tests(httpGet));
+    describe("https", tests(httpsGet));
   });
 };

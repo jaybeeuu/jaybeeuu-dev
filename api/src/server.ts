@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import cookieParser from "cookie-parser";
-import express, { Express } from "express";
+import express from "express";
 import fs from "fs";
 import http from "http";
 import https from "https";
@@ -43,7 +43,7 @@ const startServer = async (server: Server, port: number, protocol: string): Prom
 
     if (result instanceof Error) {
       throw Error;
-    };
+    }
   };
 };
 
@@ -56,10 +56,10 @@ export default async (httpPort: number, httpsPort: number): Promise<CloseServer>
 
   registerRoutes(app);
 
-  const closeHttp = startServer(http.createServer(app), httpPort, 'http');
-  const closeHttps = startServer(https.createServer(await getSSLOptions(), app), httpsPort, 'https');
+  const closeHttp = startServer(http.createServer(app), httpPort, "http");
+  const closeHttps = startServer(https.createServer(await getSSLOptions(), app), httpsPort, "https");
 
   return async () => {
     await Promise.all([closeHttp, closeHttps]);
-  }
+  };
 };
