@@ -1,10 +1,10 @@
 {
-  "name": "Bickley-Wallace - API",
+  "name": "Bickley-Wallace",
   "dockerFile": "Dockerfile",
 
   "appPort": [3000],
 
-  "runArgs": [ "-u", "node", "-v", "${env:HOME}${env:USERPROFILE}/.ssh:/root/.ssh-localhost:ro" ],
+  "runArgs": [ "-u", "node"],
 
   "settings": {
       "terminal.integrated.shell.linux": "/bin/bash"
