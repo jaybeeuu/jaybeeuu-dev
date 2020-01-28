@@ -1,0 +1,20 @@
+{
+    "folders": [
+        {
+            "name": ".circleci",
+            "path": ".circleci"
+        },
+        {
+            "name": ".devcontainer",
+            "path": ".devcontainer"
+        },
+        {
+            "name": "api",
+            "path": "api"
+        },
+        {
+            "name": "client",
+            "path": "client"
+        }
+    ]
+}

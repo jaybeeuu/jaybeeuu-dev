@@ -22,7 +22,7 @@ const https = {
   options: {
     strictSSL: false
   }
-};
+}
 
 type Get = (route: string) => Promise<any>;
 
