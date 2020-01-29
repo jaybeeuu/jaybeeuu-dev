@@ -2,7 +2,6 @@ import chalk from "chalk";
 import cookieParser from "cookie-parser";
 import express from "express";
 import fs from "fs";
-import http from "http";
 import https from "https";
 import { Server } from "net";
 import morgan from "morgan";
@@ -47,7 +46,7 @@ const startServer = async (server: Server, port: number, protocol: string): Prom
   };
 };
 
-export default async (httpPort: number, httpsPort: number): Promise<CloseServer> => {
+export default async (httpsPort: number): Promise<CloseServer> => {
   const app = express();
 
   app.use(morgan("dev"));
@@ -56,10 +55,5 @@ export default async (httpPort: number, httpsPort: number): Promise<CloseServer>
 
   registerRoutes(app);
 
-  const closeHttp = startServer(http.createServer(app), httpPort, "http");
-  const closeHttps = startServer(https.createServer(await getSSLOptions(), app), httpsPort, "https");
-
-  return async () => {
-    await Promise.all([closeHttp, closeHttps]);
-  };
+  return startServer(https.createServer(await getSSLOptions(), app), httpsPort, "https");
 };

@@ -11,10 +11,6 @@ jest.mock("morgan", () => () => (
 jest.mock("../src/log");
 
 const hostName = "localhost";
-const http = {
-  port: 5337,
-  protocol: "http"
-};
 
 const https = {
   port: 5338,
@@ -40,7 +36,6 @@ const makeGet = (
   const url = new URL(route, baseURl);
   return await request(url.href, options);
 };
-const httpGet = makeGet(http, hostName);
 const httpsGet = makeGet(https, hostName);
 
 export const describeRoute = (
@@ -51,14 +46,13 @@ export const describeRoute = (
     let closeServer: CloseServer;
 
     beforeAll(async () => {
-      closeServer = await startServer(http.port, https.port);
+      closeServer = await startServer(https.port);
     });
 
     afterAll(async () => {
       await closeServer();
     });
 
-    describe("http", tests(httpGet));
     describe("https", tests(httpsGet));
   });
 };
