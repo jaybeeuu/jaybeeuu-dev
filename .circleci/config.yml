@@ -82,6 +82,10 @@ jobs:
 
           - run: npm run-script build
 
+          - store_artifacts:
+              path: ./dist
+              destination: api-dist
+
 
 workflows:
   version: 2
