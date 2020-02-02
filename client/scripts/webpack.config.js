@@ -1,3 +1,4 @@
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
@@ -21,13 +22,6 @@ module.exports = {
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
-  },
-  stats: {
-    colors: true,
-    children: false,
-    chunks: false,
-    chunkModules: false,
-    modules: false
   },
   module: {
     strictExportPresence: true,
@@ -80,6 +74,7 @@ module.exports = {
     }),
     new webpack.DefinePlugin(env.stringified),
     new webpack.NoEmitOnErrorsPlugin(),
-    new CaseSensitivePathsPlugin()
+    new CaseSensitivePathsPlugin(),
+    new CleanWebpackPlugin()
   ],
 };
