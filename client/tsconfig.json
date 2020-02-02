@@ -5,7 +5,6 @@
     "moduleResolution": "node",
     "outDir": "dist",
     "allowJs": true,
-    "jsx": "react",
 
     "esModuleInterop": true,
     "noImplicitAny": true,
@@ -14,10 +13,10 @@
     "strict": true
   },
   "include": [
-    "**/*.js",
     "**/*.ts",
-    "**/*.jsx",
-    "**/*.tsx"
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx"
   ],
   "exclude": [
     "node_modules"

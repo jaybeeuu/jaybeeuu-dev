@@ -2,7 +2,6 @@ process.env.BABEL_ENV = "development";
 process.env.NODE_ENV = "development";
 
 const chalk = require("chalk");
-const open = require("open");
 const webpack = require("webpack");
 const WebpackDevServer = require("webpack-dev-server");
 const config = require("./webpack.config");
@@ -36,8 +35,6 @@ devServer.listen(PORT, HOST, (err) => {
   }
 
   console.log(chalk.cyan(`Serving at ${friendlyUrl}\n`));
-  console.log(chalk.cyan("Opening browser..."));
-  open(friendlyUrl);
 });
 
 ["SIGINT", "SIGTERM"].forEach(function (sig) {
