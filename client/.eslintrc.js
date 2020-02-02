@@ -8,26 +8,6 @@ module.exports = {
     "react",
     "jest"
   ],
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    sourceType: "module",
-    project: "./tsconfig.json"
-  },
-  extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking"
-  ],
-  parser: "babel-eslint",
-  parserOptions: {
-    sourceType: "module",
-    allowImportExportEverywhere: false,
-    codeFrame: true,
-    ecmaVersion: 2018,
-    ecmaFeatures: {
-      jsx: true
-    }
-  },
   settings: {
     react: {
       pragma: "React",
@@ -35,10 +15,20 @@ module.exports = {
     },
     "import/resolver": {
       webpack: {
-        "config": "./config/webpack.config.dev.js"
+        "config": "./scripts/webpack.config.js"
       }
     }
   },
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    project: "./tsconfig.json"
+  },
+  extends: [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ],
   rules: {
     "no-unused-vars": "off",
     "semi": ["error", "always"],
@@ -46,36 +36,24 @@ module.exports = {
     "no-console": "error",
 
     "@typescript-eslint/no-unused-vars": ["error"],
-    "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }]
   },
   overrides: [
     {
-      files: ["./src/**/*.ts"],
-      extends: [
-        "eslint:recommended"
+      files: [
+        "scripts/**/*.js"
       ],
-      parser: "@typescript-eslint/parser",
-      parserOptions: {
-        sourceType: "module"
+      env: {
+        node: true,
+        browser: false
       },
       rules: {
-        "@typescript-eslint/unbound-method": ["off"]
+        "no-console": "off"
       }
     },
     {
-      "files": [
-        "config/**/*.js",
-        "scripts/**/*.js"
-      ],
-      "env": {
-        "node": true,
-        "browser": false
-      },
-      "parserOptions": {
-        "sourceType": "module"
-      },
-      "rules": {
-        "no-console": "off"
+      files: ["*.ts", "*.tsx"],
+      rules: {
+        "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }]
       }
     }
   ]
