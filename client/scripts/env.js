@@ -1,26 +1,7 @@
-const appVarRegex = /^BW_/i;
+import dotenv from "dotenv";
 
-function getClientEnvironment() {
-  const raw = Object.keys(process.env)
-    .filter(key => appVarRegex.test(key))
-    .reduce(
-      (env, key) => {
-        env[key] = process.env[key];
-        return env;
-      },
-      {
-        NODE_ENV: process.env.NODE_ENV || "development"
-      }
-    );
+dotenv.config();
 
-  const stringified = {
-    "process.env": Object.keys(raw).reduce((env, key) => {
-      env[key] = JSON.stringify(raw[key]);
-      return env;
-    }, {}),
-  };
-
-  return { raw, stringified };
-}
-
-module.exports = getClientEnvironment;
+export default {
+  NODE_ENV: process.env.NODE_ENV || "development"
+};
