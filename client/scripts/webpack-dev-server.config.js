@@ -5,7 +5,6 @@ module.exports = {
   contentBase: paths.appPublic,
   watchContentBase: true,
   hot: true,
-  open: true,
   overlay: {
     errors: true,
     warnings: true

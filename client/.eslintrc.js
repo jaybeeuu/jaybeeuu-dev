@@ -53,7 +53,10 @@ module.exports = {
     {
       files: ["*.ts", "*.tsx"],
       rules: {
-        "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }]
+        "@typescript-eslint/explicit-function-return-type": [
+          "error",
+          { allowExpressions: true }
+        ]
       }
     }
   ]

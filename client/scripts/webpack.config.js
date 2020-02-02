@@ -6,7 +6,6 @@ const paths = require("./paths");
 const env = require("./env")();
 
 const isDevelopment = env.raw.NODE_ENV === "development";
-console.log(env.raw);
 
 module.exports = {
   mode: isDevelopment ? "development" : "production",
@@ -18,10 +17,10 @@ module.exports = {
   output: {
     pathinfo: true,
     path: paths.appBuild,
-    filename: "bundle.js",
+    filename: paths.appBundle,
   },
   resolve: {
-    extensions: [".js", ".jsx", "ts", "tsx"],
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
   },
   stats: {
     colors: true,
@@ -44,7 +43,7 @@ module.exports = {
             },
           },
           {
-            test: /\.(js|jsx|ts|tsx)$/,
+            test: /\.(ts|tsx|js|jsx)$/,
             include: paths.appSrc,
             loader: require.resolve("babel-loader")
           },
@@ -64,7 +63,7 @@ module.exports = {
             ]
           },
           {
-            exclude: [/\.(js|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+            exclude: [/\.(ts|tsx|js|jsx)$/, /\.html$/, /\.json$/],
             loader: require.resolve("file-loader"),
             options: {
               name: "static/media/[name].[hash:8].[ext]",
