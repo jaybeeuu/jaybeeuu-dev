@@ -18,11 +18,6 @@ module.exports = (api) => {
           }
         }
       ]
-    ],
-    env: {
-      test: {
-        ignore: []
-      }
-    }
+    ]
   };
 };
