@@ -1,4 +1,4 @@
-const appVarRegex = /^PHOTAG_/i;
+const appVarRegex = /^BW_/i;
 
 function getClientEnvironment() {
   const raw = Object.keys(process.env)
