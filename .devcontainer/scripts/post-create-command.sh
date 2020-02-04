@@ -1,6 +1,7 @@
 #!/bin/bash
 pushd "$(dirname "$0")"
 
-../../api/scripts/post-create-command.sh
+./gen-certs.sh "../../api/certs"
+./gen-certs.sh "../../client/certs"
 
 popd

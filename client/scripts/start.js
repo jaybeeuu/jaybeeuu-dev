@@ -1,6 +1,7 @@
 process.env.BABEL_ENV = "development";
 process.env.NODE_ENV = "development";
 
+const env = require("./env");
 const webpack = require("webpack");
 const WebpackDevServer = require("webpack-dev-server");
 const config = require("./webpack.config");
@@ -10,8 +11,8 @@ const serverConfig = require("./webpack-dev-server.config");
 
 const devServer = new WebpackDevServer(compiler, serverConfig);
 
-const PORT = parseInt(process.env.PORT, 10) || 3000;
-const HOST = process.env.HOST || "0.0.0.0";
+const PORT = env.PORT;
+const HOST = env.HOST;
 
 devServer.listen(PORT, HOST);
 
