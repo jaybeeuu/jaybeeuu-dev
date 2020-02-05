@@ -18,6 +18,7 @@ module.exports = {
   mode: isDevelopment ? "development" : "production",
   devtool: isDevelopment ? "eval-source-map" : "source-map",
   watch: isDevelopment,
+  devServer: require("./webpack-dev-server.config"),
   entry: [
     paths.appIndex,
   ],

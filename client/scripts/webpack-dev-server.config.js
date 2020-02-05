@@ -14,7 +14,6 @@ module.exports = {
   overlay: {
     errors: true
   },
-  publicPath: "/",
   quiet: true,
   watchContentBase: true
 };
