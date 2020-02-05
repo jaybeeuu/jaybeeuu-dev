@@ -5,8 +5,8 @@
   "main": "./src/index.ts",
   "scripts": {
     "build": "babel --extensions .ts --out-dir dist ./src",
-    "start": "node dist/index.js",
-    "dev": "nodemon --inspect ./src/index.ts",
+    "start": "nodemon --inspect ./src/index.ts",
+    "start:prod": "node dist/index.js",
     "lint": "eslint --ext .js,.ts --format codeframe .",
     "type-check": "tsc --noEmit",
     "test": "jest --config ./test/jest.config.js",
