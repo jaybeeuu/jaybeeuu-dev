@@ -36,6 +36,9 @@ module.exports = {
     "no-console": "error",
 
     "@typescript-eslint/no-unused-vars": ["error"],
+    "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }],
+
+    "react/prop-types": "off"
   },
   overrides: [
     {
@@ -48,15 +51,6 @@ module.exports = {
       },
       rules: {
         "no-console": "off"
-      }
-    },
-    {
-      files: ["*.ts", "*.tsx"],
-      rules: {
-        "@typescript-eslint/explicit-function-return-type": [
-          "error",
-          { allowExpressions: true }
-        ]
       }
     }
   ]
