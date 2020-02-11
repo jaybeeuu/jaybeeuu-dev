@@ -27,7 +27,8 @@ module.exports = {
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:jest/all"
   ],
   rules: {
     "no-unused-vars": "off",
@@ -38,12 +39,14 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": ["error"],
     "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }],
 
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+
+    "jest/prefer-expect-assertions": "off"
   },
   overrides: [
     {
       files: [
-        "scripts/**/*.js"
+        "config/**/*.js"
       ],
       env: {
         node: true,
@@ -51,6 +54,14 @@ module.exports = {
       },
       rules: {
         "no-console": "off"
+      }
+    },
+    {
+      files: [
+        "**/*.spec.ts"
+      ],
+      env: {
+        "jest/globals": true
       }
     }
   ]
