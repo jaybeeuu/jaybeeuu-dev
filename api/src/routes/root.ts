@@ -4,7 +4,7 @@ const router = express.Router();
 router.get(
   "/",
   (req, res): void => {
-    res.send("Hello, World!");
+    res.send(JSON.stringify("Hello, World!"));
   }
 );
 
