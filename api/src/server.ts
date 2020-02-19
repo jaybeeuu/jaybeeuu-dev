@@ -1,13 +1,15 @@
 import chalk from "chalk";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import express from "express";
 import fs from "fs";
 import https from "https";
-import { Server } from "net";
 import morgan from "morgan";
+import { Server } from "net";
+import path from "path";
+import env from "./env";
 import log from "./log";
 import registerRoutes from "./routes/index";
-import path from "path";
 
 export type CloseServer = () => Promise<void>;
 
@@ -46,14 +48,21 @@ const startServer = async (server: Server, port: number, protocol: string): Prom
   };
 };
 
-export default async (httpsPort: number): Promise<CloseServer> => {
-  const app = express();
+const getClientOrigin = (): string => {
+  const clientUrl = new URL(`https://${env.CLIENT_HOST_NAME}:${env.CLIENT_PORT}`).toString();
+  return clientUrl.replace(/\/$/, "");
+};
 
+export default async (): Promise<CloseServer> => {
+  const app = express();
+  app.use(cors({
+    origin: getClientOrigin()
+  }));
   app.use(morgan("dev"));
   app.use(express.static("public"));
   app.use(cookieParser());
 
   registerRoutes(app);
 
-  return startServer(https.createServer(await getSSLOptions(), app), httpsPort, "https");
+  return startServer(https.createServer(await getSSLOptions(), app), env.API_PORT, "https");
 };

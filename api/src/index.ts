@@ -4,4 +4,4 @@ install();
 import env from "./env";
 import server from "./server";
 
-server(env.PORT);
+server(env.API_PORT);

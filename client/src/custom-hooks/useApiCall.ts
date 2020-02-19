@@ -1,6 +1,7 @@
 import { useObservable } from "./useObservable";
 import env from "../env";
 import { ajax, AjaxResponse, AjaxRequest } from "rxjs/ajax";
+import { useRef } from "react";
 
 const { CLIENT_HOST_NAME, CLIENT_PORT, API_HOST_NAME, API_PORT } = env;
 
@@ -18,7 +19,7 @@ export const useApiCall = (relativePath: string): AjaxResponse | undefined => {
     url: getApiUrl(relativePath)
   };
 
-  const call = ajax(request);
+  const call = useRef(ajax(request));
 
-  return useObservable(call);
+  return useObservable(call.current);
 };

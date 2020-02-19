@@ -5,7 +5,7 @@ const ApiRoot = (): ReactElement => {
   const message = useApiCall("/");
   return (
     <pre>
-      {message}
+      {JSON.stringify(message, null, 2)}
     </pre>
   );
 };
