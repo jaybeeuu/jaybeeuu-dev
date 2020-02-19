@@ -4,13 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 const paths = require("./paths");
 
-const env = require("./env");
-const stringifiedEnv = {
-  "env": Object.keys(env).reduce((env, key) => {
-    env[key] = JSON.stringify(env[key]);
-    return env;
-  }, {})
-};
+const { env, stringifiedEnv } = require("./env");
 
 const isDevelopment = env.NODE_ENV === "development";
 
@@ -83,5 +77,5 @@ module.exports = {
     new webpack.NoEmitOnErrorsPlugin(),
     new CaseSensitivePathsPlugin(),
     new CleanWebpackPlugin()
-  ],
+  ]
 };

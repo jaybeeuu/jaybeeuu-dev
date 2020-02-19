@@ -57,6 +57,12 @@ module.exports = {
       }
     },
     {
+      files: ["src/env.js"],
+      globals: {
+        ["process"]: "readonly"
+      }
+    },
+    {
       files: [
         "**/*.spec.ts"
       ],
