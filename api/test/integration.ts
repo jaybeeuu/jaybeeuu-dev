@@ -2,6 +2,7 @@ import { ParamsDictionary, Request, NextFunction } from "express-serve-static-co
 import request, { RequestPromiseOptions } from "request-promise-native";
 import { URL } from "url";
 import startServer, { CloseServer } from "../src/server";
+import env from "../src/env";
 
 jest.mock("morgan", () => () => (
   req: Request<ParamsDictionary>,
@@ -9,34 +10,31 @@ jest.mock("morgan", () => () => (
   next: NextFunction
 ) => next());
 jest.mock("../src/log");
+jest.mock("../src/env", () => ({
+  API_HOST_NAME: "localhost",
+  API_PORT: 5338,
+  CLIENT_HOST_NAME: "localhost",
+  CLIENT_PORT: 5337,
+  NODE_ENV: process.env.NODE_ENV
+}));
 
-const hostName = "localhost";
-
-const https = {
-  port: 5338,
-  protocol: "https",
-  options: {
-    strictSSL: false
-  }
+const requestOptions = {
+  strictSSL: false
 };
 
 type Get = (route: string) => Promise<any>;
 
 const makeGet = (
-  { protocol, port, options = {} }: {
-    protocol: string,
-    port: number,
-    options?: RequestPromiseOptions
-  },
-  host: string,
+  options: RequestPromiseOptions = {}
 ): Get => async (
   route: string
 ): Promise<any> => {
-  const baseURl = `${protocol}://${host}:${port}`;
+  const baseURl = new URL(`https://${env.API_HOST_NAME}:${env.API_PORT}`).toString();
   const url = new URL(route, baseURl);
   return await request(url.href, options);
 };
-const httpsGet = makeGet(https, hostName);
+
+const httpsGet = makeGet(requestOptions);
 
 export const describeRoute = (
   description: string,
@@ -46,7 +44,7 @@ export const describeRoute = (
     let closeServer: CloseServer;
 
     beforeAll(async () => {
-      closeServer = await startServer(https.port);
+      closeServer = await startServer();
     });
 
     afterAll(async () => {
