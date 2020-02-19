@@ -2,7 +2,7 @@
   "name": "Bickley-Wallace",
   "dockerFile": "Dockerfile",
 
-  "appPort": [3443, 3444],
+  "forwardPorts": [3443, 3444],
 
   "runArgs": [ "-u", "node"],
 
