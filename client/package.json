@@ -2,6 +2,13 @@
   "name": "bickleywallace-client",
   "version": "0.0.0",
   "description": "UI for the Bickley-Wallace site",
+  "keywords": [
+    "Bickley-Wallace",
+    "Josh",
+    "UI"
+  ],
+  "author": "Josh Bickley-Wallace",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
     "build": "webpack --config ./config/webpack.config.js",
@@ -10,13 +17,6 @@
     "test": "jest --config ./config/jest.config.js",
     "test:watch": "node --inspect ./node_modules/.bin/jest --config ./config/jest.config.js --runInBand --watch --no-cache"
   },
-  "keywords": [
-    "Bickley-Wallace",
-    "Josh",
-    "UI"
-  ],
-  "author": "Josh Bickley-Wallace",
-  "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@babel/preset-env": "^7.8.4",
