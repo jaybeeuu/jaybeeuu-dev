@@ -6,10 +6,6 @@ docker-image-node: &docker-image-node
 
 src-dir: &src-dir ~/src
 
-attach-src: &attach-src
-    - attach_workspace:
-        at: *src-dir
-
 api-base: &api-base
     <<: *docker-image-node
 
@@ -62,7 +58,8 @@ jobs:
         <<: *api-base
 
         steps:
-          <<: *attach-src
+          - attach_workspace:
+                at: *src-dir
           - run: npm run-script type-check
 
 
@@ -70,7 +67,8 @@ jobs:
         <<: *api-base
 
         steps:
-          <<: *attach-src
+          - attach_workspace:
+                at: *src-dir
           - run: npm run-script test
 
 
@@ -78,7 +76,8 @@ jobs:
         <<: *api-base
 
         steps:
-          <<: *attach-src
+          - attach_workspace:
+                at: *src-dir
           - run: npm run-script lint
 
 
@@ -86,7 +85,8 @@ jobs:
         <<: *api-base
 
         steps:
-          <<: *attach-src
+          - attach_workspace:
+                at: *src-dir
           - run: npm run-script build
           - store_artifacts:
               path: ./dist
@@ -98,7 +98,8 @@ jobs:
         <<: *client-base
 
         steps:
-          <<: *attach-src
+          - attach_workspace:
+                at: *src-dir
           - run: npm run-script type-check
 
 
@@ -106,7 +107,8 @@ jobs:
         <<: *client-base
 
         steps:
-          <<: *attach-src
+          - attach_workspace:
+                at: *src-dir
           - run: npm run-script test
 
 
@@ -114,7 +116,8 @@ jobs:
         <<: *client-base
 
         steps:
-          <<: *attach-src
+          - attach_workspace:
+                at: *src-dir
           - run: npm run-script lint
 
 
@@ -122,7 +125,8 @@ jobs:
         <<: *client-base
 
         steps:
-          <<: *attach-src
+          - attach_workspace:
+                at: *src-dir
           - run: npm run-script build
           - store_artifacts:
               path: ./dist
