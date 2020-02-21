@@ -8,13 +8,15 @@ src-dir: &src-dir ~/src
 
 api-base: &api-base
     <<: *docker-image-node
-
     working_directory: ~/src/api
+    environment:
+        NODE_ENV: production
 
 client-base: &client-base
     <<: *docker-image-node
-
     working_directory: ~/src/client
+    environment:
+        NODE_ENV: production
 
 jobs:
     checkout-install-deps:
@@ -49,9 +51,9 @@ jobs:
                 key: v1-npm-deps-client-{{ checksum "./client/package-lock.json" }}
 
           - persist_to_workspace:
-              root: *src-dir
-              paths:
-                - ./*
+                root: *src-dir
+                paths:
+                  - ./*
 
 
     api-type-check:
