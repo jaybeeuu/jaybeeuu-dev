@@ -12,31 +12,42 @@ api-base: &api-base
     working_directory: ~/src/api
 
 jobs:
-    api-checkout-install:
-        <<: *api-base
+    checkout:
+        <<: *docker-image-node
+
+        working_directory: ~/src
 
         steps:
           - checkout:
               path: *src-dir
 
+          - run: ./.devcontainer/scripts/post-create-command.sh
+
+          - persist_to_workspace:
+              root: *src-dir
+              paths:
+                - ./*
+
+
+    api-install-deps:
+        <<: *api-base
+
+        steps:
+          - attach_workspace:
+                at: *src-dir
+
           - restore_cache:
                 keys:
-                  - v1-dependencies-{{ checksum "package.json" }}
-                  - v1-dependencies-
+                  - v1-npm-deps-{{ checksum "./api/package-lock.json" }}
+                  - v1-npm-deps
 
           - run: npm install
 
           - save_cache:
                paths:
                  - node_modules
-               key: v1-dependencies-{{ checksum "package.json" }}
+               key: v1-npm-deps-{{ checksum "./api/package-lock.json" }}
 
-          - run: ./scripts/post-create-command.sh
-
-          - persist_to_workspace:
-                root: *src-dir
-                paths:
-                  - ./*
 
 
     api-type-check:
@@ -88,19 +99,23 @@ workflows:
 
   api-install-test:
     jobs:
-      - api-checkout-install
+      - checkout
+
+      - api-install-deps:
+            requires:
+              - checkout
       - api-type-check:
             requires:
-              - api-checkout-install
+              - api-install-deps
       - api-test:
             requires:
-              - api-checkout-install
+              - api-install-deps
       - api-lint:
             requires:
-              - api-checkout-install
+              - api-install-deps
       - api-build:
             requires:
-              - api-checkout-install
+              - api-install-deps
 
     #   - api-lint
     #   - api-test
