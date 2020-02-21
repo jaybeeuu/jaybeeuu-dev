@@ -11,6 +11,10 @@ api-base: &api-base
 
     working_directory: ~/src/api
 
+    steps:
+        - attach_workspace:
+              at: *src-dir
+
 jobs:
     checkout-install-deps:
         <<: *docker-image-node
@@ -63,8 +67,6 @@ jobs:
         <<: *api-base
 
         steps:
-          - attach_workspace:
-                at: *src-dir
 
           - run: npm run-script test
 
