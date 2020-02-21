@@ -1,15 +1,23 @@
 version: 2.1
 
+docker-image-node: &docker-image-node
+    docker:
+      - image: circleci/node:12.13.1
+
+src-dir: &src-dir ~/src
+
+api-base: &api-base
+    <<: *docker-image-node
+
+    working_directory: ~/src/api
+
 jobs:
     api-checkout-install:
-        docker:
-          - image: circleci/node:12.13.1
-
-        working_directory: ~/src/api
+        <<: *api-base
 
         steps:
           - checkout:
-              path: ~/src
+              path: *src-dir
 
           - restore_cache:
                 keys:
@@ -26,59 +34,47 @@ jobs:
           - run: ./scripts/post-create-command.sh
 
           - persist_to_workspace:
-                root: ~/src
+                root: *src-dir
                 paths:
                   - ./*
 
 
     api-type-check:
-        docker:
-          - image: circleci/node:12.13.1
-
-        working_directory: ~/src/api
+        <<: *api-base
 
         steps:
           - attach_workspace:
-                at: ~/src
+                at: *src-dir
 
           - run: npm run-script type-check
 
 
     api-test:
-        docker:
-          - image: circleci/node:12.13.1
-
-        working_directory: ~/src/api
+        <<: *api-base
 
         steps:
           - attach_workspace:
-                at: ~/src
+                at: *src-dir
 
           - run: npm run-script test
 
 
     api-lint:
-        docker:
-          - image: circleci/node:12.13.1
-
-        working_directory: ~/src/api
+        <<: *api-base
 
         steps:
           - attach_workspace:
-                at: ~/src
+                at: *src-dir
 
           - run: npm run-script lint
 
 
     api-build:
-        docker:
-          - image: circleci/node:12.13.1
-
-        working_directory: ~/src/api
+        <<: *api-base
 
         steps:
           - attach_workspace:
-                at: ~/src
+                at: *src-dir
 
           - run: npm run-script build
 
