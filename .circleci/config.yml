@@ -12,7 +12,7 @@ api-base: &api-base
     working_directory: ~/src/api
 
 jobs:
-    checkout:
+    checkout-install-deps:
         <<: *docker-image-node
 
         working_directory: ~/src
@@ -23,31 +23,30 @@ jobs:
 
           - run: ./.devcontainer/scripts/post-create-command.sh
 
+          - restore_cache:
+                keys:
+                  - v1-npm-deps-api-{{ checksum "./api/package-lock.json" }}
+                  - v1-npm-deps-api
+          - run: npm install --prefix ./api
+          - save_cache:
+                paths:
+                  - node_modules
+                key: v1-npm-deps-api-{{ checksum "./api/package-lock.json" }}
+
+          - restore_cache:
+                keys:
+                  - v1-npm-deps-client-{{ checksum "./client/package-lock.json" }}
+                  - v1-npm-deps-client
+          - run: npm install --prefix ./client
+          - save_cache:
+                paths:
+                  - node_modules
+                key: v1-npm-deps-client-{{ checksum "./client/package-lock.json" }}
+
           - persist_to_workspace:
               root: *src-dir
               paths:
                 - ./*
-
-
-    api-install-deps:
-        <<: *api-base
-
-        steps:
-          - attach_workspace:
-                at: *src-dir
-
-          - restore_cache:
-                keys:
-                  - v1-npm-deps-{{ checksum "./api/package-lock.json" }}
-                  - v1-npm-deps
-
-          - run: npm install
-
-          - save_cache:
-               paths:
-                 - node_modules
-               key: v1-npm-deps-{{ checksum "./api/package-lock.json" }}
-
 
 
     api-type-check:
@@ -99,24 +98,17 @@ workflows:
 
   api-install-test:
     jobs:
-      - checkout
+      - checkout-install-deps
 
-      - api-install-deps:
-            requires:
-              - checkout
       - api-type-check:
             requires:
-              - api-install-deps
+              - checkout-install-deps
       - api-test:
             requires:
-              - api-install-deps
+              - checkout-install-deps
       - api-lint:
             requires:
-              - api-install-deps
+              - checkout-install-deps
       - api-build:
             requires:
-              - api-install-deps
-
-    #   - api-lint
-    #   - api-test
-    #   - api-build
+              - checkout-install-deps
