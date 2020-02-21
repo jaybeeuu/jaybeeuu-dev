@@ -8,21 +8,25 @@ ARG USER_GID=$USER_UID
 # Configure apt and install packages
 RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
-    && apt-get install -y git procps \
-    #
-    # Remove yarn
-    && rm -rf /opt/yarn-* \
+    && apt-get install -y git procps
+
+# Remove yarn
+RUN rm -rf /opt/yarn-* \
     && rm -f /usr/local/bin/yarn \
-    && rm -f /usr/local/bin/yarnpkg \
-    #
-    # Add sudo support for non-root users
-    && apt-get install -y sudo \
+    && rm -f /usr/local/bin/yarnpkg
+
+# Add sudo support for non-root users
+RUN apt-get install -y sudo \
     && echo node ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/node \
-    && chmod 0440 /etc/sudoers.d/node \
-    #
-    # Clean up
-    && apt-get autoremove -y \
+    && chmod 0440 /etc/sudoers.d/node
+
+# Clean up
+RUN apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
+
+# install CircleCI CLI
+RUN curl -fLSs --http1.0 https://circle.ci/cli | bash
+
 
 ENV DEBIAN_FRONTEND=
