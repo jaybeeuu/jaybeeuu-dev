@@ -9,14 +9,10 @@ src-dir: &src-dir ~/src
 api-base: &api-base
     <<: *docker-image-node
     working_directory: ~/src/api
-    environment:
-        NODE_ENV: production
 
 client-base: &client-base
     <<: *docker-image-node
     working_directory: ~/src/client
-    environment:
-        NODE_ENV: production
 
 jobs:
     checkout-install-deps:
