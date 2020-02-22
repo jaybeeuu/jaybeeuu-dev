@@ -19,15 +19,9 @@ module.exports = {
       }
     }
   },
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    project: "./tsconfig.json"
-  },
   extends: [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:jest/all"
   ],
   rules: {
@@ -36,14 +30,28 @@ module.exports = {
     "quotes": ["error", "double"],
     "no-console": "error",
 
-    "@typescript-eslint/no-unused-vars": ["error"],
-    "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }],
-
     "react/prop-types": "off",
 
     "jest/prefer-expect-assertions": "off"
   },
   overrides: [
+    {
+      files: [
+        "*.ts"
+      ],
+      parser: "@typescript-eslint/parser",
+      parserOptions: {
+        project: "./tsconfig.json"
+      },
+      extends: [
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        ],
+      rules: {
+        "@typescript-eslint/no-unused-vars": ["error"],
+        "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }],
+      },
+    },
     {
       files: [
         "config/**/*.js"
@@ -58,6 +66,9 @@ module.exports = {
     },
     {
       files: ["src/env.js"],
+      parserOptions: {
+        sourceType: "module"
+      },
       globals: {
         ["process"]: "readonly"
       }
