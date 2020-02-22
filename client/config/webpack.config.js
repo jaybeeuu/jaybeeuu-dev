@@ -12,7 +12,7 @@ module.exports = {
   mode: isDevelopment ? "development" : "production",
   devtool: isDevelopment ? "eval-source-map" : "source-map",
   watch: isDevelopment,
-  devServer: isDevelopment ? require("./webpack-dev-server.config") : null,
+  devServer: isDevelopment ? require("./webpack-dev-server.config") : undefined,
   entry: [
     paths.appIndex,
   ],
