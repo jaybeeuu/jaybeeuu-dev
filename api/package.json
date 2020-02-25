@@ -1,7 +1,14 @@
 {
   "name": "bickley-wallace-api",
-  "version": "1.0.0",
+  "version": "0.0.0",
+  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com>",
+  "license": "MIT",
   "description": "The API behind my blog",
+  "keywords": [
+    "Bickley-Wallace",
+    "Josh",
+    "UI"
+  ],
   "main": "./src/index.ts",
   "scripts": {
     "build": "babel --extensions .ts --out-dir dist ./src",
@@ -12,13 +19,6 @@
     "test": "jest --config ./test/jest.config.js",
     "test:watch": "node --inspect ./node_modules/.bin/jest --config ./test/jest.config.js --runInBand --watch --no-cache"
   },
-  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com>",
-  "keywords": [
-    "Bickley-Wallace",
-    "Josh",
-    "UI"
-  ],
-  "license": "MIT",
   "dependencies": {
     "@types/cors": "^2.8.6",
     "chalk": "^3.0.0",
