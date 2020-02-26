@@ -1,0 +1,19 @@
+{
+  "name": "bickleywallace-e2e",
+  "version": "0.0.0",
+  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com>",
+  "license": "MIT",
+  "description": "E2E tests for the Bickley-Wallace site",
+  "keywords": [
+    "Bickley-Wallace",
+    "Josh",
+    "E2E"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "cypress:open": "cypress open"
+  },
+  "devDependencies": {
+    "cypress": "^4.0.2"
+  }
+}

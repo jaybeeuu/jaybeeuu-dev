@@ -20,13 +20,25 @@ RUN apt-get install -y sudo \
     && echo node ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/node \
     && chmod 0440 /etc/sudoers.d/node
 
-# Clean up
-RUN apt-get autoremove -y \
-    && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/*
+# install Cypress dependencies (separate commands to avoid time outs)
+RUN apt-get install -y \
+    libgtk2.0-0
+RUN apt-get install -y \
+    libnotify-dev
+RUN apt-get install -y \
+    libgconf-2-4 \
+    libnss3 \
+    libxss1
+RUN apt-get install -y \
+    libasound2 \
+    xvfb
 
 # install CircleCI CLI
 RUN curl -fLSs --http1.0 https://circle.ci/cli | bash
 
+# Clean up
+RUN apt-get autoremove -y \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV DEBIAN_FRONTEND=

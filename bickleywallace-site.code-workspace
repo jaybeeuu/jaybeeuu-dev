@@ -15,6 +15,9 @@
         {
             "name": "client",
             "path": "client"
+        },
+        {
+            "path": "e2e"
         }
     ]
 }
