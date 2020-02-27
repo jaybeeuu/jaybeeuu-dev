@@ -11,7 +11,7 @@
   ],
   "main": "index.js",
   "scripts": {
-    "cypress:open": "cypress open"
+    "cypress": "cypress"
   },
   "devDependencies": {
     "cypress": "^4.0.2"
