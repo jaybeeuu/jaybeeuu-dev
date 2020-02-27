@@ -23,8 +23,9 @@ module.exports = {
     "quotes": ["error", "double"],
     "no-console": "error",
 
+    "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }],
     "@typescript-eslint/no-unused-vars": ["error"],
-    "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }]
+    "@typescript-eslint/unbound-method": ["off"]
   },
   overrides: [
     {
@@ -34,19 +35,6 @@ module.exports = {
       env: {
         "jest/globals": true
       },
-    },
-    {
-      files: ["./src/**/*.ts"],
-      extends: [
-        "eslint:recommended"
-      ],
-      parser: "@typescript-eslint/parser",
-      parserOptions: {
-        sourceType: "module"
-      },
-      rules: {
-        "@typescript-eslint/unbound-method": ["off"]
-      }
     }
   ]
 };

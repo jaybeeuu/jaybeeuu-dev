@@ -4,7 +4,6 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "dist",
-    "allowJs": true,
     "esModuleInterop": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -12,8 +11,7 @@
     "strict": true
   },
   "include": [
-    "**/*.ts",
-    "**/*.js"
+    "**/*.ts"
   ],
   "exclude": [
     "node_modules"
