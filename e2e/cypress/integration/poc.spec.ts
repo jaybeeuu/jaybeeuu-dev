@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 context("POC", () => {
   it("loads", () => {
     cy.visit("https://localhost:3443");

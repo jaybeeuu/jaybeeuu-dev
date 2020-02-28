@@ -10,6 +10,7 @@ module.exports = {
   },
   extends: [
     "eslint:recommended",
+    "plugin:cypress/recommended"
   ],
   rules: {
     "no-unused-vars": "off",
