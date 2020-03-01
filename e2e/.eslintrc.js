@@ -4,6 +4,7 @@ module.exports = {
     "cypress/globals": true
   },
   plugins: [
+    "@typescript-eslint",
     "cypress"
   ],
   settings: {
@@ -19,5 +20,22 @@ module.exports = {
     "no-console": "error"
   },
   overrides: [
+    {
+      files: [
+        "*.ts"
+      ],
+      parser: "@typescript-eslint/parser",
+      parserOptions: {
+        project: "./tsconfig.json"
+      },
+      extends: [
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        ],
+      rules: {
+        "@typescript-eslint/no-unused-vars": ["error"],
+        "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }],
+      }
+    }
   ]
 };
