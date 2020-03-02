@@ -1,9 +1,9 @@
 {
   "name": "bickleywallace-e2e",
   "version": "0.0.0",
-  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com>",
+  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jayseeare)",
   "license": "MIT",
-  "description": "E2E tests for the Bickley-Wallace site",
+  "description": "E2E tests for my blog.",
   "keywords": [
     "Bickley-Wallace",
     "Josh",

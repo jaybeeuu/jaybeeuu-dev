@@ -1,7 +1,7 @@
 {
   "name": "bickley-wallace-api",
   "version": "0.0.0",
-  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com>",
+  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jayseeare)",
   "license": "MIT",
   "description": "The API behind my blog",
   "keywords": [

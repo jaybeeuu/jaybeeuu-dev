@@ -66,7 +66,9 @@ module.exports = {
       }
     },
     {
-      files: ["src/env.js"],
+      files: [
+        "src/env.js"
+      ],
       parserOptions: {
         sourceType: "module"
       },

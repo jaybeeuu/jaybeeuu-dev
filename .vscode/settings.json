@@ -1,4 +1,4 @@
 {
 	"terminal.integrated.shell.linux": "/bin/bash",
-	"eslint.workingDirectories": [{ "mode": "auto" }]
+	"eslint.workingDirectories": ["./e2e", { "pattern": "./packages/*/" }]
 }
