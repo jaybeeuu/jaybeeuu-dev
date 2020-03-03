@@ -19,32 +19,13 @@ jobs:
               path: *src-dir
 
           - run: ./.devcontainer/scripts/post-create-command.sh
-
-          - restore_cache:
-                keys:
-                  - v1-npm-deps-api-{{ checksum "./api/package-lock.json" }}
-                  - v1-npm-deps-api
-          - run: npm install --prefix ./api
-          - save_cache:
-                paths:
-                  - node_modules
-                key: v1-npm-deps-api-{{ checksum "./api/package-lock.json" }}
-
-          - restore_cache:
-                keys:
-                  - v1-npm-deps-client-{{ checksum "./client/package-lock.json" }}
-                  - v1-npm-deps-client
-          - run: npm install --prefix ./client
-          - save_cache:
-                paths:
-                  - node_modules
-                key: v1-npm-deps-client-{{ checksum "./client/package-lock.json" }}
+          - run: npm install
+          - run: npm run-script bootstrap
 
           - persist_to_workspace:
                 root: *src-dir
                 paths:
                   - ./*
-
 
 
     lint:
