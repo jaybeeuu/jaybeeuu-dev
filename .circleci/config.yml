@@ -6,19 +6,13 @@ docker-image-node: &docker-image-node
 
 src-dir: &src-dir ~/src
 
-api-base: &api-base
+base: &base
     <<: *docker-image-node
-    working_directory: ~/src/api
-
-client-base: &client-base
-    <<: *docker-image-node
-    working_directory: ~/src/client
+    working_directory: *src-dir
 
 jobs:
     checkout-install-deps:
-        <<: *docker-image-node
-
-        working_directory: ~/src
+        <<: *base
 
         steps:
           - checkout:
@@ -52,26 +46,9 @@ jobs:
                   - ./*
 
 
-    api-type-check:
-        <<: *api-base
 
-        steps:
-          - attach_workspace:
-                at: *src-dir
-          - run: npm run-script type-check
-
-
-    api-test:
-        <<: *api-base
-
-        steps:
-          - attach_workspace:
-                at: *src-dir
-          - run: npm run-script test
-
-
-    api-lint:
-        <<: *api-base
+    lint:
+        <<: *base
 
         steps:
           - attach_workspace:
@@ -79,8 +56,26 @@ jobs:
           - run: npm run-script lint
 
 
-    api-build:
-        <<: *api-base
+    type-check:
+        <<: *base
+
+        steps:
+          - attach_workspace:
+                at: *src-dir
+          - run: npm run-script type-check
+
+
+    test:
+        <<: *base
+
+        steps:
+          - attach_workspace:
+                at: *src-dir
+          - run: npm run-script test
+
+
+    build:
+        <<: *base
 
         steps:
           - attach_workspace:
@@ -92,45 +87,6 @@ jobs:
 
 
 
-    client-type-check:
-        <<: *client-base
-
-        steps:
-          - attach_workspace:
-                at: *src-dir
-          - run: npm run-script type-check
-
-
-    client-test:
-        <<: *client-base
-
-        steps:
-          - attach_workspace:
-                at: *src-dir
-          - run: npm run-script test
-
-
-    client-lint:
-        <<: *client-base
-
-        steps:
-          - attach_workspace:
-                at: *src-dir
-          - run: npm run-script lint
-
-
-    client-build:
-        <<: *client-base
-
-        steps:
-          - attach_workspace:
-                at: *src-dir
-          - run: npm run-script build
-          - store_artifacts:
-              path: ./dist
-              destination: client-dist
-
-
 workflows:
   version: 2
 
@@ -138,28 +94,15 @@ workflows:
     jobs:
       - checkout-install-deps
 
-      - api-type-check:
+      - type-check:
             requires:
               - checkout-install-deps
-      - api-test:
+      - test:
             requires:
               - checkout-install-deps
-      - api-lint:
+      - lint:
             requires:
               - checkout-install-deps
-      - api-build:
-            requires:
-              - checkout-install-deps
-
-      - client-type-check:
-            requires:
-              - checkout-install-deps
-      - client-test:
-            requires:
-              - checkout-install-deps
-      - client-lint:
-            requires:
-              - checkout-install-deps
-      - client-build:
+      - build:
             requires:
               - checkout-install-deps
