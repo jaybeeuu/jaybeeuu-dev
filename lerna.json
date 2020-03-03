@@ -1,8 +1,6 @@
 {
   "packages": [
-    "./api",
-    "./client",
-    "e2e"
+    "packages/**"
   ],
   "version": "0.0.0"
 }

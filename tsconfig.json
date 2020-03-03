@@ -1,17 +1,20 @@
 {
   "compilerOptions": {
     "target": "es2019",
+    "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "dist",
-
-    "esModuleInterop": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "sourceMap": true,
-    "strict": true,
-
-    "types": [
-      "cypress"
-    ]
-  }
+    "strict": true
+  },
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "dist",
+    "node_modules"
+  ]
 }
