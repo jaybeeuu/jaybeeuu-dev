@@ -10,11 +10,10 @@
     "strict": true
   },
   "include": [
-    "**/*.ts"
+    "packages"
   ],
   "exclude": [
-    "**/node_modules",
     "dist",
-    "node_modules"
+    "**/node_modules"
   ]
 }
