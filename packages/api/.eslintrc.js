@@ -57,6 +57,11 @@ module.exports = {
         "test/**/*.ts",
         "**/*.spec.ts"
       ],
+      rules: {
+        "jest/valid-describe": "off",
+        "jest/valid-title": ["error", { ignoreTypeOfDescribeName: false }],
+        "jest/no-hooks": "off"
+      },
       env: {
         "jest/globals": true
       }

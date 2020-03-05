@@ -36,21 +36,20 @@ const makeGet = (
 
 const httpsGet = makeGet(requestOptions);
 
-export const describeRoute = (
-  description: string,
+export const isRoute = (
   tests: (get: Get) => () => void
 ): void => {
-  describe(description, () => {
-    let closeServer: CloseServer;
+  let closeServer: CloseServer;
 
-    beforeAll(async () => {
-      closeServer = await startServer();
-    });
-
-    afterAll(async () => {
-      await closeServer();
-    });
-
-    describe("https", tests(httpsGet));
+  // eslint-disable-next-line jest/require-top-level-describe
+  beforeAll(async () => {
+    closeServer = await startServer();
   });
+
+  // eslint-disable-next-line jest/require-top-level-describe
+  afterAll(async () => {
+    await closeServer();
+  });
+
+  tests(httpsGet);
 };
