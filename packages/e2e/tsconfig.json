@@ -4,5 +4,6 @@
     "types": [
       "cypress"
     ]
-  }
+  },
+  "include": ["cypress/**/*.ts"]
 }
