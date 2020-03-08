@@ -1,19 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es2019",
-    "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "dist",
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "sourceMap": true,
     "strict": true
   },
-  "include": [
-    "packages"
-  ],
   "exclude": [
     "dist",
-    "**/node_modules"
+    "node_modules"
   ]
 }

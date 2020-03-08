@@ -1,4 +1,10 @@
 {
 	"terminal.integrated.shell.linux": "/bin/bash",
-	"eslint.workingDirectories": ["./e2e", { "pattern": "./packages/*/" }]
+	"eslint.workingDirectories": [{ "pattern": "./packages/*/" }],
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact"
+	]
 }
