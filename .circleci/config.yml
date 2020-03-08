@@ -63,8 +63,11 @@ jobs:
                 at: *src-dir
           - run: npm run-script build
           - store_artifacts:
-              path: ./dist
+              path: ./packages/api/dist
               destination: api-dist
+          - store_artifacts:
+              path: ./packages/client/dist
+              destination: client-dist
 
 
 
