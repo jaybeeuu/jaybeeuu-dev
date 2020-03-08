@@ -20,6 +20,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap --hoist",
     "build": "lerna run --parallel build",
+    "gen-certs": "./scripts/gen-certs.sh",
     "lint": "lerna run --parallel lint",
     "start": "lerna run --parallel start",
     "test": "lerna run --parallel test",

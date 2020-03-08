@@ -21,6 +21,7 @@ jobs:
           - run: ./.devcontainer/scripts/post-create-command.sh
           - run: npm install
           - run: npm run-script bootstrap
+          - run: npm run-script gen-certs
 
           - persist_to_workspace:
                 root: *src-dir

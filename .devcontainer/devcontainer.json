@@ -10,8 +10,6 @@
       "terminal.integrated.shell.linux": "/bin/bash"
   },
 
-  "postCreateCommand": "./.devcontainer/scripts/post-create-command.sh",
-
   "extensions": [
     "dbaeumer.vscode-eslint",
     "eg2.vscode-npm-script",
