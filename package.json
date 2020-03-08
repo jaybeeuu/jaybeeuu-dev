@@ -22,6 +22,7 @@
     "build": "lerna run --parallel build",
     "lint": "lerna run --parallel lint",
     "start": "lerna run --parallel start",
+    "test": "lerna run --parallel test",
     "type-check": "lerna run --parallel type-check"
   },
   "devDependencies": {
