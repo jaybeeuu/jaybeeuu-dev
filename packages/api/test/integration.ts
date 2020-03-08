@@ -37,7 +37,7 @@ const makeGet = (
 const httpsGet = makeGet(requestOptions);
 
 export const isRoute = (
-  tests: (get: Get) => () => void
+  tests: (get: Get) => void
 ): void => {
   let closeServer: CloseServer;
 
