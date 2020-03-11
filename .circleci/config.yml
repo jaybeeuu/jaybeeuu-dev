@@ -1,15 +1,15 @@
 version: 2.1
 
 docker-image-node: &docker-image-node
+
+src-dir: &src-dir ~/src
+
+base: &base
     docker:
       - image: circleci/node:12.13.1
     environment:
         NODE_ENV: production
 
-src-dir: &src-dir ~/src
-
-base: &base
-    <<: *docker-image-node
     working_directory: *src-dir
 
 jobs:
