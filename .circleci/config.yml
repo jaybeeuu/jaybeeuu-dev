@@ -20,7 +20,6 @@ jobs:
           - checkout:
               path: *src-dir
 
-          - run: ./.devcontainer/scripts/post-create-command.sh
           - run: npm install --no-package-lock
           - run: npm run-script bootstrap:ci
           - run: npm run-script gen-certs
