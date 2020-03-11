@@ -3,6 +3,8 @@ version: 2.1
 docker-image-node: &docker-image-node
     docker:
       - image: circleci/node:12.13.1
+    environment:
+        NODE_ENV: production
 
 src-dir: &src-dir ~/src
 
@@ -19,8 +21,8 @@ jobs:
               path: *src-dir
 
           - run: ./.devcontainer/scripts/post-create-command.sh
-          - run: npm install
-          - run: npm run-script bootstrap
+          - run: npm ci
+          - run: npm run-script bootstrap:ci
           - run: npm run-script gen-certs
 
           - persist_to_workspace:
