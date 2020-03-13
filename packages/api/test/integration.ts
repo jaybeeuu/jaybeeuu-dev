@@ -4,19 +4,23 @@ import { URL } from "url";
 import startServer, { CloseServer } from "../src/server";
 import env from "../src/env";
 
+
 jest.mock("morgan", () => () => (
   req: Request<ParamsDictionary>,
   res: Response,
   next: NextFunction
 ) => next());
 jest.mock("../src/log");
-jest.mock("../src/env", () => ({
-  API_HOST_NAME: "localhost",
-  API_PORT: 5338,
-  CLIENT_HOST_NAME: "localhost",
-  CLIENT_PORT: 5337,
-  NODE_ENV: process.env.NODE_ENV
-}));
+jest.mock("../src/env", () => {
+  const jestWorkerId: number = +(process.env.JEST_WORKER_ID || 0);
+  return {
+    API_HOST_NAME: "localhost",
+    API_PORT: 5338 + jestWorkerId,
+    CLIENT_HOST_NAME: "localhost",
+    CLIENT_PORT: 5237 + jestWorkerId,
+    NODE_ENV: process.env.NODE_ENV
+  };
+});
 
 const requestOptions = {
   strictSSL: false
