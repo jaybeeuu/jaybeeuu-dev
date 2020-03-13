@@ -7,8 +7,6 @@ src-dir: &src-dir ~/src
 base: &base
     docker:
       - image: circleci/node:12.13.1
-    environment:
-        NODE_ENV: production
 
     working_directory: *src-dir
 
@@ -21,7 +19,6 @@ jobs:
               path: *src-dir
 
           - run: npm install --no-package-lock
-          - run: ls ./node_modules/.bin/lerna
           - run: npm run-script bootstrap:ci
           - run: npm run-script gen-certs
 
