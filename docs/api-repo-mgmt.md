@@ -26,12 +26,17 @@ Involves storing a bunch of files including simple git repos in bickleywallace-s
 * Detect if repo already exists (error recovery)
 
 * If local does not exist
-   * Clone
+   * clone
 * Else
   * pull
-* Compare current and previous commits
+* Compare current and previous commits - git diff
 * build new/updated files to HTML
 * Update manifest
 * Store new commit ref - persist.
 
 Do this transactionally?
+
+This is also the behaviour for refresh.
+
+Could initially skip the diff and just rebuild everything.
+
