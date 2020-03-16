@@ -1,9 +1,9 @@
+import env from "./mock-env";
+
 import { ParamsDictionary, Request, NextFunction } from "express-serve-static-core";
 import request, { RequestPromiseOptions } from "request-promise-native";
 import { URL } from "url";
 import startServer, { CloseServer } from "../src/server";
-import env from "../src/env";
-
 
 jest.mock("morgan", () => () => (
   req: Request<ParamsDictionary>,
@@ -11,16 +11,6 @@ jest.mock("morgan", () => () => (
   next: NextFunction
 ) => next());
 jest.mock("../src/log");
-jest.mock("../src/env", () => {
-  const jestWorkerId: number = +(process.env.JEST_WORKER_ID || 0);
-  return {
-    API_HOST_NAME: "localhost",
-    API_PORT: 5338 + jestWorkerId,
-    CLIENT_HOST_NAME: "localhost",
-    CLIENT_PORT: 5237 + jestWorkerId,
-    NODE_ENV: process.env.NODE_ENV
-  };
-});
 
 const requestOptions = {
   strictSSL: false

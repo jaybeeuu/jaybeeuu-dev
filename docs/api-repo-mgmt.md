@@ -20,9 +20,9 @@ Scenario testing to API level with packaged git repos - will need to create fram
 
 Involves storing a bunch of files including simple git repos in bickleywallace-site. Problem? ZIP?
 
-## INIT
+## Init/refresh
 
-* Should be during startup phase of API?
+* Should this be during startup phase of API? Or just on API endpoint call? I think i'm going to only do it on endpoint call.
 * Detect if repo already exists (error recovery)
 
 * If local does not exist

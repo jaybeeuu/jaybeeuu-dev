@@ -1,4 +1,4 @@
-import { isRoute } from "../../../test/integration";
+import { isRoute } from "../../../test/server";
 
 describe("/posts", () => {
   isRoute((get) => {
