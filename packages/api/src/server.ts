@@ -7,7 +7,7 @@ import https from "https";
 import morgan from "morgan";
 import { Server } from "net";
 import path from "path";
-import env from "./env";
+import { API_PORT, CLIENT_HOST_NAME, CLIENT_PORT } from "./env";
 import log from "./log";
 import registerRoutes from "./routes/index";
 
@@ -49,7 +49,7 @@ const startServer = async (server: Server, port: number, protocol: string): Prom
 };
 
 const getClientOrigin = (): string => {
-  const clientUrl = new URL(`https://${env.CLIENT_HOST_NAME}:${env.CLIENT_PORT}`).toString();
+  const clientUrl = new URL(`https://${CLIENT_HOST_NAME}:${CLIENT_PORT}`).toString();
   return clientUrl.replace(/\/$/, "");
 };
 
@@ -64,5 +64,5 @@ export default async (): Promise<CloseServer> => {
 
   registerRoutes(app);
 
-  return startServer(https.createServer(await getSSLOptions(), app), env.API_PORT, "https");
+  return startServer(https.createServer(await getSSLOptions(), app), API_PORT, "https");
 };

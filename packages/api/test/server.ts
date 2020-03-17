@@ -1,4 +1,4 @@
-import env from "./mock-env";
+import { API_HOST_NAME, API_PORT } from "./mock-env";
 
 import { ParamsDictionary, Request, NextFunction } from "express-serve-static-core";
 import request, { RequestPromiseOptions } from "request-promise-native";
@@ -23,7 +23,7 @@ const makeGet = (
 ): Get => async (
   route: string
 ): Promise<any> => {
-  const baseURl = new URL(`https://${env.API_HOST_NAME}:${env.API_PORT}`).toString();
+  const baseURl = new URL(`https://${API_HOST_NAME}:${API_PORT}`).toString();
   const url = new URL(route, baseURl);
   return await request(url.href, options);
 };
