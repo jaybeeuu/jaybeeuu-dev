@@ -15,10 +15,14 @@ RUN rm -rf /opt/yarn-* \
     && rm -f /usr/local/bin/yarn \
     && rm -f /usr/local/bin/yarnpkg
 
+
 # Add sudo support for non-root users
 RUN apt-get install -y sudo \
     && echo node ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/node \
     && chmod 0440 /etc/sudoers.d/node
+
+# update npm and install lerna
+RUN npm install -g npm lerna
 
 # install Cypress dependencies (separate commands to avoid time outs)
 RUN apt-get install -y \
