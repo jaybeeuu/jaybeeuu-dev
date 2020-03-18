@@ -25,10 +25,11 @@ module.exports = {
     "plugin:jest/all"
   ],
   rules: {
-    "no-unused-vars": "off",
-    "semi": ["error", "always"],
-    "quotes": ["error", "double"],
+    "indent": ["error", 2],
     "no-console": "error",
+    "no-unused-vars": "off",
+    "quotes": ["error", "double"],
+    "semi": ["error", "always"],
 
     "react/prop-types": "off",
 

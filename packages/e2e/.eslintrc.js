@@ -14,10 +14,11 @@ module.exports = {
     "plugin:cypress/recommended"
   ],
   rules: {
+    "indent": ["error", 2],
+    "no-console": "error",
     "no-unused-vars": "off",
-    "semi": ["error", "always"],
     "quotes": ["error", "double"],
-    "no-console": "error"
+    "semi": ["error", "always"],
   },
   overrides: [
     {
