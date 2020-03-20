@@ -25,6 +25,7 @@
     "lint": "lerna run --parallel lint",
     "start": "lerna run --parallel start",
     "test": "lerna run --parallel test",
+    "test:watch": "lerna run --parallel test:watch",
     "type-check": "lerna run --parallel type-check"
   },
   "devDependencies": {

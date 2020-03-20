@@ -1,38 +1,17 @@
-import { API_HOST_NAME, API_PORT } from "./mock-env";
+import "./mock-env";
 
-import { ParamsDictionary, Request, NextFunction } from "express-serve-static-core";
-import request, { RequestPromiseOptions } from "request-promise-native";
-import { URL } from "url";
+import { Request, NextFunction, Response } from "express";
 import startServer, { CloseServer } from "../src/server";
 
 jest.mock("morgan", () => () => (
-  req: Request<ParamsDictionary>,
+  req: Request<any>,
   res: Response,
   next: NextFunction
 ) => next());
+
 jest.mock("../src/log");
 
-const requestOptions = {
-  strictSSL: false
-};
-
-type Get = (route: string) => Promise<any>;
-
-const makeGet = (
-  options: RequestPromiseOptions = {}
-): Get => async (
-  route: string
-): Promise<any> => {
-  const baseURl = new URL(`https://${API_HOST_NAME}:${API_PORT}`).toString();
-  const url = new URL(route, baseURl);
-  return await request(url.href, options);
-};
-
-const httpsGet = makeGet(requestOptions);
-
-export const isRoute = (
-  tests: (get: Get) => void
-): void => {
+export const useServer = (): void => {
   let closeServer: CloseServer;
 
   // eslint-disable-next-line jest/require-top-level-describe
@@ -44,6 +23,4 @@ export const isRoute = (
   afterAll(async () => {
     await closeServer();
   });
-
-  tests(httpsGet);
 };

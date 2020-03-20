@@ -7,9 +7,10 @@ import https from "https";
 import morgan from "morgan";
 import { Server } from "net";
 import path from "path";
+import { URL } from "url";
+import registerRoutes from "./routes/index";
 import { API_PORT, CLIENT_HOST_NAME, CLIENT_PORT } from "./env";
 import log from "./log";
-import registerRoutes from "./routes/index";
 
 export type CloseServer = () => Promise<void>;
 
