@@ -1,26 +1,64 @@
-import { promises as fs, constants as fsConstants } from"fs";
+import { promises as fs, constants as fsConstants, Stats } from"fs";
 import rmfr from "rmfr";
-import { POST_DIST_DIRECTORY, POST_REPO_DIRECTORY, REMOTE_POST_REPO_DIRECTORY } from "./mock-env";
 import path from "path";
+import { postDistDirectory, postRepoDirectory, resolveApp } from "../src/paths";
+import { REMOTE_POST_REPO_DIRECTORY } from "../src/env";
 
-const copyDir = async (sourcePath: string, destinationPath: string): Promise<void> => {
-  await fs.mkdir(destinationPath);
+const remotePostRepoDirectory = resolveApp(REMOTE_POST_REPO_DIRECTORY);
 
-  const files = await fs.readdir(sourcePath);
-  await Promise.all(files.map(async (file) => {
-    const fileStats = await fs.lstat(path.join(sourcePath, file));
-    const sourceFile =  path.join(sourcePath, file);
-    const destinationFile =  path.join(destinationPath, file);
+interface FileInfo {
+  directory: string;
+  name: string;
+  file: string;
+  relativePath: string;
+  stats: Stats;
+}
 
-    if (fileStats.isDirectory()) {
-      await copyDir(sourceFile, destinationFile);
-    } else if(fileStats.isSymbolicLink()) {
-      const symlink = await fs.readlink(sourceFile);
-      await fs.symlink(symlink, destinationFile);
-    } else {
-      await fs.copyFile(sourceFile, destinationFile);
+type OnFileAction = (
+  fileInfo: FileInfo
+) => Promise<void>;
+
+const innerRecurseDir = async function* (directory: string, relativePath: string): AsyncGenerator<FileInfo> {
+  const fileNames = await fs.readdir(directory);
+
+  for (const fileName of fileNames) {
+    const file =  path.join(directory, fileName);
+    const stats = await fs.lstat(file);
+    const fileInfo = {
+      directory,
+      name: fileName,
+      relativePath,
+      file,
+      stats
+    };
+
+    yield fileInfo;
+    if (stats.isDirectory()) {
+      yield* innerRecurseDir(file, path.join(relativePath, fileName));
     }
-  }));
+  }
+};
+
+// eslint-disable-next-line @typescript-eslint/require-await
+export const recurseDirectory = async function* (directory: string): AsyncGenerator<FileInfo> {
+  yield* innerRecurseDir(directory, "/");
+};
+
+const copyDir = async (
+  sourcePath: string,
+  destinationPath: string
+): Promise<void> => {
+  for await (const { stats, relativePath, name, file } of recurseDirectory(sourcePath)) {
+    const destination = path.join(destinationPath, relativePath, name);
+    if (stats.isDirectory()) {
+      await fs.mkdir(destination, { recursive: true });
+    } else if (stats.isSymbolicLink()) {
+      const symlink = await fs.readlink(file);
+      await fs.symlink(symlink, destination);
+    } else if (stats.isFile()) {
+      await fs.copyFile(file, destination);
+    }
+  }
 };
 
 const copyDirIfSourceExists = async (source: string, destination: string): Promise<void> => {
@@ -36,14 +74,14 @@ export const setupDirectories = async (
   testFileDir: string
 ): Promise<[void, void, void]> => {
   return Promise.all([
-    copyDirIfSourceExists(path.join(testFileDir, "dist"), POST_DIST_DIRECTORY),
-    copyDirIfSourceExists(path.join(testFileDir, "repo"), POST_REPO_DIRECTORY),
-    copyDirIfSourceExists(path.join(testFileDir, "remote"), REMOTE_POST_REPO_DIRECTORY)
+    copyDirIfSourceExists(path.join(testFileDir, "dist"), postDistDirectory),
+    copyDirIfSourceExists(path.join(testFileDir, "repo"), postRepoDirectory),
+    copyDirIfSourceExists(path.join(testFileDir, "remote"), remotePostRepoDirectory)
   ]);
 };
 
 export const cleanUpDirectories = (): Promise<[void, void, void]> => Promise.all([
-  rmfr(POST_DIST_DIRECTORY),
-  rmfr(POST_REPO_DIRECTORY),
+  rmfr(postDistDirectory),
+  rmfr(postRepoDirectory),
   rmfr(REMOTE_POST_REPO_DIRECTORY)
 ]);

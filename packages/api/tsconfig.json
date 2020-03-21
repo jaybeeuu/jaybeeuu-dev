@@ -3,7 +3,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "lib": [
-      "ES6",
+      "ESNext",
       "ScriptHost"
     ]
   },

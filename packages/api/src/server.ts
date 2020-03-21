@@ -6,11 +6,11 @@ import fs from "fs";
 import https from "https";
 import morgan from "morgan";
 import { Server } from "net";
-import path from "path";
 import { URL } from "url";
 import registerRoutes from "./routes/index";
 import { API_PORT, CLIENT_HOST_NAME, CLIENT_PORT } from "./env";
 import log from "./log";
+import { certs } from "./paths";
 
 export type CloseServer = () => Promise<void>;
 
@@ -23,13 +23,11 @@ const promiseReadFile = (path: string): Promise<Buffer> => {
   }));
 };
 
-const resolveCertFilePath = (filename: string): string => path.resolve(__dirname, "../certs", filename);
-
 const getSSLOptions = async (): Promise<https.ServerOptions> => {
 
   const [ cert, key ] = await Promise.all([
-    promiseReadFile(resolveCertFilePath("certificate.crt")),
-    promiseReadFile(resolveCertFilePath("private.key"))
+    promiseReadFile(certs.certificate),
+    promiseReadFile(certs.key)
   ]);
 
   return { cert, key };
