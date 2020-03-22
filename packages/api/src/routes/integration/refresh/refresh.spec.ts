@@ -1,8 +1,14 @@
+import { REMOTE_POST_REPO_DIRECTORY,  } from "../../../../test/mock-env";
+
 import path from "path";
+import { postRepoDirectory } from "../../../paths";
 import { fetch, Verbs } from "../../../../test/fetch";
-import { cleanUpDirectories, setupDirectories } from "../../../../test/files";
+import { cleanUpDirectories, setupDirectories, getFileHashes, FileHashMap } from "../../../../test/files";
 import { useServer } from "../../../../test/server";
-import { POST_REPO_DIRECTORY, POST_REPO_REMOTE } from "../../../env";
+
+const getRepoFileHashes = (directory: string): Promise<FileHashMap> => {
+  return getFileHashes(directory, { exclude: [/.git/] });
+};
 
 describe("refresh", () => {
   useServer();
@@ -16,6 +22,8 @@ describe("refresh", () => {
       .then((response) => response.json());
 
     expect(response).toBe("Success!");
-    expect(POST_REPO_DIRECTORY).toMatchDirectory(POST_REPO_REMOTE);
+
+    expect(await getRepoFileHashes(postRepoDirectory))
+      .toStrictEqual(await getRepoFileHashes(REMOTE_POST_REPO_DIRECTORY));
   });
 });

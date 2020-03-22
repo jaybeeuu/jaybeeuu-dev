@@ -23,6 +23,7 @@
     "@types/cors": "^2.8.6",
     "@types/node": "^13.9.0",
     "@types/node-fetch": "^2.5.5",
+    "@types/nodegit": "^0.26.1",
     "@types/rimraf": "^2.0.3",
     "chalk": "^3.0.0",
     "cookie-parser": "^1.4.4",
@@ -32,6 +33,7 @@
     "express": "^4.17.1",
     "morgan": "^1.9.1",
     "node-fetch": "^2.6.0",
+    "nodegit": "^0.26.5",
     "source-map-support": "^0.5.16"
   },
   "devDependencies": {

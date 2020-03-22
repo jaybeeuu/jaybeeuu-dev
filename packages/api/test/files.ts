@@ -1,4 +1,5 @@
-import { promises as fs, constants as fsConstants, Stats } from"fs";
+import crypto from "crypto";
+import fs, { Stats } from "fs";
 import rmfr from "rmfr";
 import path from "path";
 import { postDistDirectory, postRepoDirectory, resolveApp } from "../src/paths";
@@ -14,16 +15,25 @@ interface FileInfo {
   stats: Stats;
 }
 
-type OnFileAction = (
-  fileInfo: FileInfo
-) => Promise<void>;
+interface RecurseDirectoryOptions {
+  exclude?: RegExp[]
+}
 
-const innerRecurseDir = async function* (directory: string, relativePath: string): AsyncGenerator<FileInfo> {
-  const fileNames = await fs.readdir(directory);
+const innerRecurseDir = async function* (
+  directory: string,
+  relativePath: string,
+  options: RecurseDirectoryOptions = {}
+): AsyncGenerator<FileInfo> {
+  const { exclude = [] } = options;
 
-  for (const fileName of fileNames) {
+  const fileNames = await fs.promises.readdir(directory);
+  const filteredFileNames = fileNames.filter(
+    (fileName) => !exclude.some((excludeEntry) => excludeEntry.exec(fileName))
+  );
+
+  for (const fileName of filteredFileNames) {
     const file =  path.join(directory, fileName);
-    const stats = await fs.lstat(file);
+    const stats = await fs.promises.lstat(file);
     const fileInfo = {
       directory,
       name: fileName,
@@ -33,38 +43,47 @@ const innerRecurseDir = async function* (directory: string, relativePath: string
     };
 
     yield fileInfo;
+
     if (stats.isDirectory()) {
-      yield* innerRecurseDir(file, path.join(relativePath, fileName));
+      yield* innerRecurseDir(file, path.join(relativePath, fileName), options);
     }
   }
 };
 
 // eslint-disable-next-line @typescript-eslint/require-await
-export const recurseDirectory = async function* (directory: string): AsyncGenerator<FileInfo> {
-  yield* innerRecurseDir(directory, "/");
+export const recurseDirectory = async function* (
+  directory: string,
+  options?: RecurseDirectoryOptions
+): AsyncGenerator<FileInfo> {
+  yield* innerRecurseDir(directory, "/", options);
 };
 
 const copyDir = async (
   sourcePath: string,
-  destinationPath: string
+  destinationPath: string,
+  options?: RecurseDirectoryOptions
 ): Promise<void> => {
-  for await (const { stats, relativePath, name, file } of recurseDirectory(sourcePath)) {
+  for await (const { stats, relativePath, name, file } of recurseDirectory(sourcePath, options)) {
     const destination = path.join(destinationPath, relativePath, name);
     if (stats.isDirectory()) {
-      await fs.mkdir(destination, { recursive: true });
+      await fs.promises.mkdir(destination, { recursive: true });
     } else if (stats.isSymbolicLink()) {
-      const symlink = await fs.readlink(file);
-      await fs.symlink(symlink, destination);
+      const symlink = await fs.promises.readlink(file);
+      await fs.promises.symlink(symlink, destination);
     } else if (stats.isFile()) {
-      await fs.copyFile(file, destination);
+      await fs.promises.copyFile(file, destination);
     }
   }
 };
 
-const copyDirIfSourceExists = async (source: string, destination: string): Promise<void> => {
+const copyDirIfSourceExists = async (
+  source: string,
+  destination: string,
+  options?: RecurseDirectoryOptions
+): Promise<void> => {
   try {
-    await fs.access(source, fsConstants.R_OK);
-    return copyDir(source, destination);
+    await fs.promises.access(source, fs.constants.R_OK);
+    return copyDir(source, destination, options);
   } catch {
     return;
   }
@@ -85,3 +104,42 @@ export const cleanUpDirectories = (): Promise<[void, void, void]> => Promise.all
   rmfr(postRepoDirectory),
   rmfr(REMOTE_POST_REPO_DIRECTORY)
 ]);
+
+
+// Algorithm depends on availability of OpenSSL on platform
+// Another algorithms: 'sha1', 'md5', 'sha256', 'sha512' ...
+const algorithm = "sha1";
+
+const getFileHash = (filename: string): Promise<string> => {
+  const hash = crypto.createHash(algorithm);
+
+  return new Promise((resolve) => {
+    const stream = fs.createReadStream(filename);
+    stream.on("data", (data) => {
+      hash.update(data);
+    });
+
+    stream.on("end", () => {
+      resolve(hash.digest("hex"));
+    });
+  });
+};
+
+export interface FileHashMap {
+  [file: string]: string
+}
+
+export const getFileHashes = async (
+  directory: string,
+  options?: RecurseDirectoryOptions
+): Promise<{ [file: string]: string }> => {
+  const hashes: FileHashMap = {};
+
+  for await (const { stats, file, name, relativePath } of recurseDirectory(directory, options)) {
+    if (stats.isFile()) {
+      hashes[path.join(relativePath, name)] = await getFileHash(file);
+    }
+  }
+
+  return hashes;
+};

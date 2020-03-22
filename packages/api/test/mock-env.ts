@@ -6,7 +6,7 @@ export {
   NODE_ENV,
   POST_DIST_DIRECTORY,
   POST_REPO_DIRECTORY,
-  POST_REPO_REMOTE,
+  REMOTE_POST_REPO,
   REMOTE_POST_REPO_DIRECTORY
 } from "../src/env";
 
@@ -20,7 +20,7 @@ jest.mock("../src/env", () => {
     CLIENT_PORT: 5237 + jestWorkerId,
     NODE_ENV: process.env.NODE_ENV,
     POST_REPO_DIRECTORY: `./fs/test/${jestWorkerId.toString()}/local`,
-    POST_REPO_REMOTE: `${REMOTE_POST_REPO_DIRECTORY}/.git`,
+    REMOTE_POST_REPO: `${REMOTE_POST_REPO_DIRECTORY}/.git`,
     REMOTE_POST_REPO_DIRECTORY,
     POST_DIST_DIRECTORY: `./fs/test/${jestWorkerId.toString()}/dist`
   };
