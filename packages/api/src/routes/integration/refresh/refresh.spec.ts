@@ -13,9 +13,23 @@ const getRepoFileHashes = (directory: string): Promise<FileHashMap> => {
 describe("refresh", () => {
   useServer();
 
-  it("clones the repo is one does not already exist.", async () => {
+  it("clones the repo if one does not already exist.", async () => {
     await cleanUpDirectories();
     const testFiles = path.join(__dirname, "test-files/no-local-repo");
+    await setupDirectories(testFiles);
+
+    const response = await fetch("/refresh", { method: Verbs.POST })
+      .then((response) => response.json());
+
+    expect(response).toBe("Success!");
+
+    expect(await getRepoFileHashes(postRepoDirectory))
+      .toStrictEqual(await getRepoFileHashes(REMOTE_POST_REPO_DIRECTORY));
+  });
+
+  it("updates the repo if it has alread been cloend.", async () => {
+    await cleanUpDirectories();
+    const testFiles = path.join(__dirname, "test-files/local-repo-1-behind");
     await setupDirectories(testFiles);
 
     const response = await fetch("/refresh", { method: Verbs.POST })
