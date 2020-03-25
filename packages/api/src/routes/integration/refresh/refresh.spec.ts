@@ -12,7 +12,6 @@ const getRepoFileHashes = (directory: string): Promise<FileHashMap> => {
 
 describe("refresh", () => {
   useServer();
-
   it("clones the repo if one does not already exist.", async () => {
     await cleanUpDirectories();
     const testFiles = path.join(__dirname, "test-files/no-local-repo");
@@ -27,7 +26,7 @@ describe("refresh", () => {
       .toStrictEqual(await getRepoFileHashes(REMOTE_POST_REPO_DIRECTORY));
   });
 
-  it("updates the repo if it has alread been cloend.", async () => {
+  it("updates the repo if it has already been cloned.", async () => {
     await cleanUpDirectories();
     const testFiles = path.join(__dirname, "test-files/local-repo-1-behind");
     await setupDirectories(testFiles);

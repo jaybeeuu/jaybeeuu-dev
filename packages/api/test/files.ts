@@ -1,62 +1,12 @@
 import crypto from "crypto";
-import fs, { Stats } from "fs";
+import fs from "fs";
 import rmfr from "rmfr";
 import path from "path";
 import { postDistDirectory, postRepoDirectory, resolveApp } from "../src/paths";
-import { REMOTE_POST_REPO_DIRECTORY } from "../src/env";
+import { REMOTE_POST_REPO_DIRECTORY, REMOTE_POST_REPO, FILES_ROOT } from "../src/env";
+import { recurseDirectory, RecurseDirectoryOptions, ifCanAccess } from "../src/files/index";
 
 const remotePostRepoDirectory = resolveApp(REMOTE_POST_REPO_DIRECTORY);
-
-interface FileInfo {
-  directory: string;
-  name: string;
-  file: string;
-  relativePath: string;
-  stats: Stats;
-}
-
-interface RecurseDirectoryOptions {
-  exclude?: RegExp[]
-}
-
-const innerRecurseDir = async function* (
-  directory: string,
-  relativePath: string,
-  options: RecurseDirectoryOptions = {}
-): AsyncGenerator<FileInfo> {
-  const { exclude = [] } = options;
-
-  const fileNames = await fs.promises.readdir(directory);
-  const filteredFileNames = fileNames.filter(
-    (fileName) => !exclude.some((excludeEntry) => excludeEntry.exec(fileName))
-  );
-
-  for (const fileName of filteredFileNames) {
-    const file =  path.join(directory, fileName);
-    const stats = await fs.promises.lstat(file);
-    const fileInfo = {
-      directory,
-      name: fileName,
-      relativePath,
-      file,
-      stats
-    };
-
-    yield fileInfo;
-
-    if (stats.isDirectory()) {
-      yield* innerRecurseDir(file, path.join(relativePath, fileName), options);
-    }
-  }
-};
-
-// eslint-disable-next-line @typescript-eslint/require-await
-export const recurseDirectory = async function* (
-  directory: string,
-  options?: RecurseDirectoryOptions
-): AsyncGenerator<FileInfo> {
-  yield* innerRecurseDir(directory, "/", options);
-};
 
 const copyDir = async (
   sourcePath: string,
@@ -80,31 +30,42 @@ const copyDirIfSourceExists = async (
   source: string,
   destination: string,
   options?: RecurseDirectoryOptions
+): Promise<void> => ifCanAccess(
+  source,
+  () => copyDir(source, destination, options)
+);
+
+const replaceInFile = async (
+  filePath: string,
+  searchTerm: string | RegExp,
+  replaceValue: string
 ): Promise<void> => {
-  try {
-    await fs.promises.access(source, fs.constants.R_OK);
-    return copyDir(source, destination, options);
-  } catch {
-    return;
-  }
+  const fileContent = await fs.promises.readFile(filePath, "utf8");
+  fileContent.replace(searchTerm, replaceValue);
+  await fs.promises.writeFile(filePath, fileContent, { encoding: "utf8" });
 };
 
 export const setupDirectories = async (
   testFileDir: string
 ): Promise<[void, void, void]> => {
+  const testRemoteRepoDirectory = path.join(testFileDir, "remote");
+  const repoDir = path.join(testFileDir, "repo");
+
   return Promise.all([
     copyDirIfSourceExists(path.join(testFileDir, "dist"), postDistDirectory),
-    copyDirIfSourceExists(path.join(testFileDir, "repo"), postRepoDirectory),
-    copyDirIfSourceExists(path.join(testFileDir, "remote"), remotePostRepoDirectory)
+    ifCanAccess(repoDir, async () => {
+      await copyDir(repoDir, postRepoDirectory);
+      await replaceInFile(
+        path.join(postRepoDirectory, ".git", "config"),
+        new RegExp(path.join(testRemoteRepoDirectory, ".git"), "g"),
+        REMOTE_POST_REPO
+      );
+    }),
+    copyDirIfSourceExists(testRemoteRepoDirectory, remotePostRepoDirectory)
   ]);
 };
 
-export const cleanUpDirectories = (): Promise<[void, void, void]> => Promise.all([
-  rmfr(postDistDirectory),
-  rmfr(postRepoDirectory),
-  rmfr(REMOTE_POST_REPO_DIRECTORY)
-]);
-
+export const cleanUpDirectories = (): Promise<void> => rmfr(FILES_ROOT);
 
 // Algorithm depends on availability of OpenSSL on platform
 // Another algorithms: 'sha1', 'md5', 'sha256', 'sha512' ...
