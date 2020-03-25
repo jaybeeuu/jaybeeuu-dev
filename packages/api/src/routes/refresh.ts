@@ -8,8 +8,15 @@ import { canAccess } from "../files/index";
 const router = express.Router();
 
 const asyncMiddleware = (handler: RequestHandler): RequestHandler =>
-  (req, res, next) => {
-    handler(req, res, next).catch(next);
+  async (req, res, next) => {
+    try {
+      await handler(req, res, next);
+    } catch (error) {
+      res.status(500).json({
+        message: error.message || error,
+        stack: error.stack
+      });
+    }
   };
 
 router.post(
