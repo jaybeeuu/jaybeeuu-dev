@@ -13,7 +13,6 @@ router.post(
   withHandleErrors(async (req, res): Promise<void> => {
     if (await canAccess(postRepoDirectory)) {
       await simpleGit(postRepoDirectory).pull();
-      throw new Error("whoops!");
     } else {
       await fs.promises.mkdir(postRepoDirectory, { recursive: true });
       await simpleGit(postRepoDirectory).clone(resolveApp(REMOTE_POST_REPO), postRepoDirectory);
