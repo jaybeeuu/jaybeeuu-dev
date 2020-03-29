@@ -17,7 +17,7 @@ module.exports = {
     "no-unused-vars": "off",
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
-
+    "no-shadow": ["error"],
     "jest/prefer-expect-assertions": "off"
   },
   overrides: [
