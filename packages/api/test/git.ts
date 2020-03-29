@@ -32,7 +32,10 @@ export interface Repo {
   commits: Commit[];
 }
 
-const makeCommit = async (repoPath: string, { message, files }: Commit): Promise<void> => {
+const makeCommit = async (
+  repoPath: string,
+  { message, files }: Commit
+): Promise<void> => {
   for(const { path: filePath, content } of files) {
     const resolvedFilePath = path.resolve(repoPath, filePath);
     await fs.promises.writeFile(
@@ -46,20 +49,24 @@ const makeCommit = async (repoPath: string, { message, files }: Commit): Promise
   await git(repoPath).commit(message);
 };
 
-const getCommitIndexToCloneDownStream = (commitCount: number, downsStreamStatus?: Status): number => {
+const getCommitIndexToCloneDownStream = (
+  commitCount: number,
+  downsStreamStatus?: Status
+): number => {
   if (!downsStreamStatus) {
     return -1;
   }
 
   const lastUpstreamCommitIndex = commitCount -1;
-  if (downsStreamStatus === UP_TO_DATE) {
-    return lastUpstreamCommitIndex;
-  }
-
-  return lastUpstreamCommitIndex - (downsStreamStatus.behind || 0);
+  return downsStreamStatus === UP_TO_DATE ?
+    lastUpstreamCommitIndex :
+    lastUpstreamCommitIndex - (downsStreamStatus.behind || 0);
 };
 
-const cloneDownStream = async (repoPath: string, { path: downStreamPath, status }: DownstreamRepo): Promise<void> => {
+const cloneDownStream = async (
+  repoPath: string,
+  { path: downStreamPath, status }: DownstreamRepo
+): Promise<void> => {
   await git(downStreamPath).clone(repoPath);
 
   if (status !== UP_TO_DATE) {
@@ -75,9 +82,10 @@ export const makeRepos = async (
 ): Promise<void> => {
   await fs.promises.mkdir(repoPath, { recursive: true });
   await git(repoPath).init();
+
   const cloneRpoAtIndex = getCommitIndexToCloneDownStream(commits.length, downStream?.status);
 
-  for(let commitIndex = 0; commitIndex < commits.length; commitIndex++) {
+  for (let commitIndex = 0; commitIndex < commits.length; commitIndex++) {
     const commit = commits[commitIndex];
     await makeCommit(repoPath, commit);
 

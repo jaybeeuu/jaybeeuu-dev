@@ -1,6 +1,6 @@
 import express from "express";
 import fs from "fs";
-import simpleGit from "simple-git/promise";
+import git from "simple-git/promise";
 import { REMOTE_POST_REPO } from "../env";
 import { postRepoDirectory, resolveApp } from "../paths";
 import { canAccess } from "../files/index";
@@ -12,10 +12,10 @@ router.post(
   "/",
   withHandleErrors(async (req, res): Promise<void> => {
     if (await canAccess(postRepoDirectory)) {
-      await simpleGit(postRepoDirectory).pull();
+      await git(postRepoDirectory).pull();
     } else {
       await fs.promises.mkdir(postRepoDirectory, { recursive: true });
-      await simpleGit(postRepoDirectory).clone(resolveApp(REMOTE_POST_REPO), postRepoDirectory);
+      await git(postRepoDirectory).clone(resolveApp(REMOTE_POST_REPO), postRepoDirectory);
     }
 
     res.json("Success!");
