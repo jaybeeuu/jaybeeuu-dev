@@ -3,9 +3,9 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "lib": [
-      "ESNext",
-      "ScriptHost"
-    ]
+      "ESNext"
+    ],
+    "types": ["jest"]
   },
   "include": [
     "src/**/*.ts",

@@ -2,7 +2,12 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "jsx": "react",
-    "esModuleInterop": true
+    "lib": [
+      "dom",
+      "ESNext"
+    ],
+    "esModuleInterop": true,
+    "types": ["jest", "node"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }
