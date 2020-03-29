@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import git from "simple-git/promise";
+import { POST_REPO_USER_NAME, POST_REPO_USER_EMAIL } from "../src/env";
 
 export interface File {
   path: string,
@@ -45,7 +46,6 @@ const makeCommit = async (
     );
     await git(repoPath).add(resolvedFilePath);
   }
-
   await git(repoPath).commit(message);
 };
 
@@ -69,6 +69,9 @@ const cloneDownStream = async (
 ): Promise<void> => {
   await git(downStreamPath).clone(repoPath);
 
+  git(repoPath).addConfig("user.name", POST_REPO_USER_NAME);
+  git(repoPath).addConfig("user.email", POST_REPO_USER_EMAIL);
+
   if (status !== UP_TO_DATE) {
     for (const commit of status.commitsAhead || []) {
       await makeCommit(downStreamPath, commit);
@@ -81,7 +84,10 @@ export const makeRepos = async (
   downStream?: DownstreamRepo
 ): Promise<void> => {
   await fs.promises.mkdir(repoPath, { recursive: true });
-  await git(repoPath).init();
+  await git(repoPath)
+    .init();
+  git(repoPath).addConfig("user.name", POST_REPO_USER_NAME);
+  git(repoPath).addConfig("user.email", POST_REPO_USER_EMAIL);
 
   const cloneRpoAtIndex = getCommitIndexToCloneDownStream(commits.length, downStream?.status);
 
