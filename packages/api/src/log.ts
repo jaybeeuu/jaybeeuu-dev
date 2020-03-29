@@ -1,6 +1,8 @@
 // eslint-disable-next-line no-console
 const info = (...args: any[]): void => console.log(...args);
-const error = (error: Error): void => console.log(`Error:\n${error.message}\n\n${error.stack}`);
+
+// eslint-disable-next-line no-console
+const error = (err: Error): void => console.log(`Error:\n${err.message}\n\n${err.stack}`);
 
 export default {
   info,
