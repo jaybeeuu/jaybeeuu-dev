@@ -12,13 +12,7 @@ Scenario testing to API level with packaged git repos - will need to create fram
 
 ### Framework
 
-* Dir containing remote repo, local repo, built html(?)
-* Test setup
-  * Replace local repo dir
-  * Replace remote repo
-  * Replace local built HTML.
-
-Involves storing a bunch of files including simple git repos in bickleywallace-site. Problem? ZIP?
+* Declaratively create git repos from the tests. see `packages/api/test/git.ts`.
 
 ## Init/refresh
 
@@ -30,7 +24,7 @@ Involves storing a bunch of files including simple git repos in bickleywallace-s
 * Else
   * pull
 * Compare current and previous commits - git diff
-* build new/updated files to HTML
+* build new/updated files to post json
 * Update manifest
 * Store new commit ref - persist.
 
@@ -40,3 +34,32 @@ This is also the behaviour for refresh.
 
 Could initially skip the diff and just rebuild everything.
 
+### Markdown Parsing
+
+* [marked](https://marked.js.org/)
+* [@types/marked](https://www.npmjs.com/package/@types/marked)
+* [DOMPurify](https://www.npmjs.com/package/dompurify)
+* [highlight.js](https://highlightjs.org/)
+
+### Post JSON struncture
+
+```json
+{
+  "title": "string",
+  "date": "string",
+  "html": "string"
+}
+```
+Save File to hash.
+
+### Manifest JSON structure
+
+```json
+[
+  {
+    "title": "string",
+    "date": "string",
+    "address": "string"
+  }
+]
+```
