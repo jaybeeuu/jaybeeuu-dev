@@ -1,10 +1,10 @@
 import { Express, Router } from "express";
-import root from "./root";
+import ping from "./ping";
 import posts from "./posts";
 import refresh from "./refresh";
 
 const routes: { [route: string]: Router } = {
-  "/": root,
+  "/ping": ping,
   "/posts": posts,
   "/refresh": refresh
 };
