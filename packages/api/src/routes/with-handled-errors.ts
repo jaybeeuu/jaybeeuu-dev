@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import log from "../log";
 
-export const withHandleErrors = (handler: RequestHandler): RequestHandler =>
+export const withHandledErrors = (handler: RequestHandler): RequestHandler =>
   async (req, res, next) => {
     try {
       await handler(req, res, next);

@@ -1,11 +1,14 @@
-import { POST_REPO_DIRECTORY, REMOTE_POST_REPO_DIRECTORY } from "../../../../test/mock-env";
+import "../mock-env";
 
 import path from "path";
-import { postRepoDirectory } from "../../../paths";
-import { fetch, Verbs } from "../../../../test/fetch";
-import { cleanUpDirectories, getFileHashes, FileHashMap } from "../../../../test/files";
-import { useServer } from "../../../../test/server";
-import { makeRepos } from "../../../../test/git";
+import { POST_REPO_DIRECTORY } from "../../src/paths";
+import { fetch, Verbs } from "../fetch";
+import { cleanUpDirectories, getFileHashes, FileHashMap, getRemoteRepoDirectory } from "../files";
+import { useServer } from "../server";
+import { makeRepos } from "../git";
+
+
+const REMOTE_POST_REPO_DIRECTORY = getRemoteRepoDirectory();
 
 const getRepoFileHashes = (directory: string): Promise<FileHashMap> => {
   return getFileHashes(directory, { exclude: [/.git/] });
@@ -33,7 +36,7 @@ describe("refresh", () => {
 
     expect(response).toBe("Success!");
 
-    expect(await getRepoFileHashes(postRepoDirectory))
+    expect(await getRepoFileHashes(POST_REPO_DIRECTORY))
       .toStrictEqual(await getRepoFileHashes(REMOTE_POST_REPO_DIRECTORY));
   });
 
@@ -54,7 +57,7 @@ describe("refresh", () => {
         }]
       },
       {
-        path: path.resolve(POST_REPO_DIRECTORY),
+        path: POST_REPO_DIRECTORY,
         status: { behind: 1 }
       }
     );
@@ -64,7 +67,7 @@ describe("refresh", () => {
 
     expect(response).toBe("Success!");
 
-    expect(await getRepoFileHashes(postRepoDirectory))
+    expect(await getRepoFileHashes(POST_REPO_DIRECTORY))
       .toStrictEqual(await getRepoFileHashes(REMOTE_POST_REPO_DIRECTORY));
   });
 });

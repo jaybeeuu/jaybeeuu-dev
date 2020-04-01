@@ -1,12 +1,12 @@
 import path from "path";
 import fs from "fs";
-import { POST_DIST_DIRECTORY, POST_REPO_DIRECTORY } from "./env";
+import { FILES_ROOT } from "./env";
 
 const appDirectory = fs.realpathSync(process.cwd());
-export const resolveApp = (relativePath: string ): string => path.resolve(appDirectory, relativePath);
+export const resolveApp = (...pathSegments: string[]): string => path.resolve(appDirectory, ...pathSegments);
 
-export const postDistDirectory = resolveApp(POST_DIST_DIRECTORY);
-export const postRepoDirectory = resolveApp(POST_REPO_DIRECTORY);
+export const POST_DIST_DIRECTORY = resolveApp(FILES_ROOT, "dist");
+export const POST_REPO_DIRECTORY = resolveApp(FILES_ROOT, "depo");
 export const certs = {
   key: resolveApp("certs/private.key"),
   certificate: resolveApp("certs/certificate.crt")

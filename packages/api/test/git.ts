@@ -69,11 +69,11 @@ const cloneDownStream = async (
 ): Promise<void> => {
   await git(downStreamPath).clone(repoPath);
 
-  git(repoPath).addConfig("user.name", POST_REPO_USER_NAME);
-  git(repoPath).addConfig("user.email", POST_REPO_USER_EMAIL);
+  if (status !== UP_TO_DATE && status.commitsAhead) {
+    git(repoPath).addConfig("user.name", POST_REPO_USER_NAME);
+    git(repoPath).addConfig("user.email", POST_REPO_USER_EMAIL);
 
-  if (status !== UP_TO_DATE) {
-    for (const commit of status.commitsAhead || []) {
+    for (const commit of status.commitsAhead) {
       await makeCommit(downStreamPath, commit);
     }
   }

@@ -1,5 +1,5 @@
-import { useServer } from "../../../test/server";
-import { fetch } from "../../../test/fetch";
+import { useServer } from "../server";
+import { fetch } from "../fetch";
 
 describe("hello world", () => {
   useServer();

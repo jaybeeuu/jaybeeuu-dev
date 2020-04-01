@@ -1,4 +1,4 @@
-import { API_HOST_NAME, API_PORT } from "./mock-env";
+import "./mock-env";
 
 import { ParamsDictionary, Request, NextFunction } from "express-serve-static-core";
 import fs from "fs";
@@ -6,6 +6,7 @@ import { Agent } from "https";
 import nodeFetch, { Response, RequestInit } from "node-fetch";
 import path from "path";
 import { URL } from "url";
+import { API_PORT, API_HOST_NAME } from "../src/env";
 
 jest.mock("morgan", () => () => (
   req: Request<ParamsDictionary>,

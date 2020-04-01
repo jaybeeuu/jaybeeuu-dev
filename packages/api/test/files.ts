@@ -2,10 +2,16 @@ import crypto from "crypto";
 import fs from "fs";
 import rmfr from "rmfr";
 import path from "path";
-import { FILES_ROOT } from "../src/env";
-import { recurseDirectory, RecurseDirectoryOptions } from "../src/files/index";
 
-export const cleanUpDirectories = (): Promise<void> => rmfr(FILES_ROOT);
+import { recurseDirectory, RecurseDirectoryOptions } from "../src/files/index";
+import { REMOTE_POST_REPO, FILES_ROOT } from "../src/env";
+
+export const getRemoteRepoDirectory = (): string => path.resolve(REMOTE_POST_REPO.replace(/\/.git$/, ""));
+
+export const cleanUpDirectories = (): Promise<void[]> => Promise.all([
+  rmfr(path.resolve(FILES_ROOT)),
+  rmfr(getRemoteRepoDirectory())
+]);
 
 // Algorithm depends on availability of OpenSSL on platform
 // Another algorithms: 'sha1', 'md5', 'sha256', 'sha512' ...

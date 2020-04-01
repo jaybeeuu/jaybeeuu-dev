@@ -45,6 +45,7 @@ Could initially skip the diff and just rebuild everything.
 
 ```json
 {
+  "slug": "string",
   "title": "string",
   "date": "string",
   "html": "string"
@@ -55,11 +56,20 @@ Save File to hash.
 ### Manifest JSON structure
 
 ```json
-[
-  {
+{
+  "slug": {
     "title": "string",
+    "slug/id":"string",
     "date": "string",
     "address": "string"
   }
-]
+}
+```
+
+### History JSON structure
+
+```json
+{
+  "oldHash": "newHash"
+}
 ```
