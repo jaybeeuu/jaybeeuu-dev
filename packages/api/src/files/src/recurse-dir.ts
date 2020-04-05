@@ -2,44 +2,63 @@ import fs, { Stats } from "fs";
 import path from "path";
 
 interface FileInfo {
-  directory: string;
-  name: string;
-  file: string;
+  /**
+   * THe absolute
+   */
+  absolutePath: string;
+  /**
+   * The file name and extension, without the directory.
+   */
+  fileName: string;
+  /**
+   * The full absolute path and name of the file.
+   */
+  filePath: string;
+  /**
+   * The relative path to the file from the working directory.
+   */
   relativePath: string;
+  /**
+   * Node file stats.
+   */
   stats: Stats;
 }
 
 export interface RecurseDirectoryOptions {
-  exclude?: RegExp[]
+  exclude?: RegExp[];
+  include?: RegExp[];
 }
 
 const innerRecurseDir = async function* (
-  directory: string,
+  absolutePath: string,
   relativePath: string,
   options: RecurseDirectoryOptions = {}
 ): AsyncGenerator<FileInfo> {
-  const { exclude = [] } = options;
+  const { exclude = [], include = []} = options;
 
-  const fileNames = await fs.promises.readdir(directory);
+  const fileNames = await fs.promises.readdir(absolutePath);
   const filteredFileNames = fileNames.filter(
-    (fileName) => !exclude.some((excludeEntry) => excludeEntry.exec(fileName))
+    (fileName) => {
+      return !exclude.some((excludeEntry) => excludeEntry.exec(fileName))
+        && include.some((includeEntry) => includeEntry.exec(fileName));
+    }
   );
 
   for (const fileName of filteredFileNames) {
-    const file =  path.join(directory, fileName);
-    const stats = await fs.promises.lstat(file);
-    const fileInfo = {
-      directory,
-      name: fileName,
+    const filePath =  path.join(absolutePath, fileName);
+    const stats = await fs.promises.lstat(filePath);
+    const fileInfo: FileInfo = {
+      absolutePath,
+      fileName,
       relativePath,
-      file,
+      filePath,
       stats
     };
 
     yield fileInfo;
 
     if (stats.isDirectory()) {
-      yield* innerRecurseDir(file, path.join(relativePath, fileName), options);
+      yield* innerRecurseDir(filePath, path.join(relativePath, fileName), options);
     }
   }
 };

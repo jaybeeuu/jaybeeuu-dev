@@ -1,12 +1,13 @@
 import express from "express";
 import { withHandledErrors } from "./with-handled-errors";
+import { getPostManifest } from "../posts/index";
 
 const router = express.Router();
 
 router.get(
   "/",
-  (req, res): void => {
-    res.json({});
+  async (req, res): void => {
+    res.json(await getPostManifest());
   }
 );
 

@@ -42,7 +42,7 @@ export const getFileHashes = async (
 ): Promise<{ [file: string]: string }> => {
   const hashes: FileHashMap = {};
 
-  for await (const { stats, file, name, relativePath } of recurseDirectory(directory, options)) {
+  for await (const { stats, filePath: file, fileName: name, relativePath } of recurseDirectory(directory, options)) {
     if (stats.isFile()) {
       hashes[path.join(relativePath, name)] = await getFileHash(file);
     }

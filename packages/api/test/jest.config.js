@@ -8,5 +8,8 @@ module.exports = {
   testPathIgnorePatterns: [
     "/node_modules/",
     "/dist/"
+  ],
+  watchPathIgnorePatterns: [
+    "<rootDir>/fs"
   ]
 };

@@ -1,7 +1,7 @@
 import "../mock-env";
 
 import path from "path";
-import { POST_REPO_DIRECTORY } from "../../src/paths";
+import { POSTS_REPO_DIRECTORY } from "../../src/paths";
 import { fetch, Verbs } from "../fetch";
 import { cleanUpDirectories, getFileHashes, FileHashMap, getRemoteRepoDirectory } from "../files";
 import { useServer } from "../server";
@@ -36,7 +36,7 @@ describe("refresh", () => {
 
     expect(response).toBe("Success!");
 
-    expect(await getRepoFileHashes(POST_REPO_DIRECTORY))
+    expect(await getRepoFileHashes(POSTS_REPO_DIRECTORY))
       .toStrictEqual(await getRepoFileHashes(REMOTE_POST_REPO_DIRECTORY));
   });
 
@@ -57,7 +57,7 @@ describe("refresh", () => {
         }]
       },
       {
-        path: POST_REPO_DIRECTORY,
+        path: POSTS_REPO_DIRECTORY,
         status: { behind: 1 }
       }
     );
@@ -67,7 +67,7 @@ describe("refresh", () => {
 
     expect(response).toBe("Success!");
 
-    expect(await getRepoFileHashes(POST_REPO_DIRECTORY))
+    expect(await getRepoFileHashes(POSTS_REPO_DIRECTORY))
       .toStrictEqual(await getRepoFileHashes(REMOTE_POST_REPO_DIRECTORY));
   });
 });

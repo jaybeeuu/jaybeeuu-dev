@@ -1,7 +1,7 @@
 import "../mock-env";
 
 import path from "path";
-import { POST_REPO_DIRECTORY } from "../../src/paths";
+import { POSTS_REPO_DIRECTORY } from "../../src/paths";
 import { fetch, Verbs } from "../fetch";
 import { cleanUpDirectories, getFileHashes, FileHashMap, getRemoteRepoDirectory } from "../files";
 import { useServer } from "../server";
@@ -36,7 +36,7 @@ describe("refresh", () => {
     expect(response).toBe("Success!");
 
     // TODO: Won't need this once testing other end points.
-    expect(await getRepoFileHashes(POST_REPO_DIRECTORY))
+    expect(await getRepoFileHashes(POSTS_REPO_DIRECTORY))
       .toStrictEqual(await getRepoFileHashes(REMOTE_POST_REPO_DIRECTORY));
   });
 
@@ -60,13 +60,13 @@ describe("refresh", () => {
     const result = await fetch("/posts", { method: Verbs.GET })
       .then((res) => res.json());
 
-    expect(result).toStrictEqual([
-      {
+    expect(result).toStrictEqual({
+      "first-post": {
         title: "First Post",
         slug: "first-post",
-        date: "2020-03-31",
-        href: expect.any(String)
+        fileName: expect.stringMatching(/[a-fA-F0-9]{40}\.html/),
+        href: expect.stringMatching(/\/posts\/[a-fA-F0-9]{40}\.html/)
       }
-    ]);
+    });
   });
 });
