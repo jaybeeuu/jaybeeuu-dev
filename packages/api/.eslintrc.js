@@ -13,11 +13,13 @@ module.exports = {
   ],
   rules: {
     "indent": ["error", 2],
-    "no-console": "error",
-    "no-unused-vars": "off",
+    "no-console": ["error"],
+    "no-unused-vars": ["off"],
+    "no-shadow": ["error"],
+    "operator-linebreak": ["error", "before"],
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
-    "no-shadow": ["error"],
+
     "jest/prefer-expect-assertions": "off"
   },
   overrides: [
