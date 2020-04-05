@@ -1,3 +1,4 @@
+import sanitizeHtml from "sanitize-html";
 import highlight from "highlight.js";
 import fs from "fs";
 import marked  from "marked";
@@ -19,5 +20,7 @@ const markedOptions = {
 
 export const compilePost = async (markdownFilePath: string): Promise<string> => {
   const fileAsString = await fs.promises.readFile(markdownFilePath, "utf8");
-  return marked(fileAsString, markedOptions);
+  const html = marked(fileAsString, markedOptions);
+  sanitizeHtml.defaults;
+  return sanitizeHtml(html);
 };

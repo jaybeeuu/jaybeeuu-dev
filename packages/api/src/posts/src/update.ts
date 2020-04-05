@@ -3,17 +3,10 @@ import path from "path";
 import { recurseDirectory } from "../../files";
 import { POSTS_REPO_DIRECTORY, POSTS_DIST_DIRECTORY } from "../../paths";
 import { getHash } from "../../utilities/hash";
+import { kebabToTitleCase } from "../../utilities/kebab-to-title-case";
 import { writePostManifest, getPostManifest } from "./manifest";
 import { writePostRedirects, getPostRedirects } from "./redirects";
 import { compilePost } from "./compile";
-
-const kebabToTitleCase = (kebab: string):string => {
-  return kebab.split("-").map((word) => {
-    const firstLetter = word.substring(0,1);
-    const rest = word.substring(1);
-    return `${firstLetter.toUpperCase()}${rest}`;
-  }).join(" ");
-};
 
 export const update = async (): Promise<void> => {
   const [manifest, postRedirects] = await Promise.all([
