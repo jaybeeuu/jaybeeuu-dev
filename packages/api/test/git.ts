@@ -58,9 +58,9 @@ const getCommitIndexToCloneDownStream = (
   }
 
   const lastUpstreamCommitIndex = commitCount -1;
-  return downsStreamStatus === UP_TO_DATE ?
-    lastUpstreamCommitIndex :
-    lastUpstreamCommitIndex - (downsStreamStatus.behind || 0);
+  return downsStreamStatus === UP_TO_DATE
+    ? lastUpstreamCommitIndex
+    : lastUpstreamCommitIndex - (downsStreamStatus.behind || 0);
 };
 
 const cloneDownStream = async (
