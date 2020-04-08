@@ -2,11 +2,11 @@ import fs from "fs";
 import path from "path";
 import { recurseDirectory } from "../../files";
 import { POSTS_REPO_DIRECTORY, POSTS_DIST_DIRECTORY } from "../../paths";
-import { getHash } from "../../utilities/hash";
 import { kebabToTitleCase } from "../../utilities/kebab-to-title-case";
 import { writePostManifest, getPostManifest } from "./manifest";
 import { writePostRedirects, getPostRedirects } from "./redirects";
 import { compilePost } from "./compile";
+import { getPostFileName } from "..";
 
 export const update = async (): Promise<void> => {
   const [manifest, postRedirects] = await Promise.all([
@@ -19,8 +19,7 @@ export const update = async (): Promise<void> => {
     const slug = markdownFileInfo.fileName.split(".")[0];
     const title = kebabToTitleCase(slug);
     const compiledPost = await compilePost(markdownFileInfo.filePath);
-    const compiledFileHash = getHash(compiledPost);
-    const compiledFileName = `${compiledFileHash}.html`;
+    const compiledFileName = getPostFileName(compiledPost);
     const compiledFilePath = path.join(POSTS_DIST_DIRECTORY, compiledFileName);
     await fs.promises.writeFile(compiledFilePath, compiledPost, "utf8", );
     const href = `/posts/${compiledFileName}`;
