@@ -11,7 +11,7 @@ export const getPostFileName = (fileContent: string): string => {
 
 export const resolvePostFilePath = (name: string): string => {
   if (!POST_FILE_REGEXP.exec(name)) {
-    throw new Error("Invlid file name");
+    throw new Error("Invalid file name");
   }
 
   return path.join(POSTS_DIST_DIRECTORY, name);

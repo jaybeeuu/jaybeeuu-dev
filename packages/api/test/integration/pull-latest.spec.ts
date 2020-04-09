@@ -5,7 +5,7 @@ import { POSTS_REPO_DIRECTORY } from "../../src/paths";
 import { fetch, Verbs } from "../fetch";
 import { cleanUpDirectories, getFileHashes, FileHashMap, getRemoteRepoDirectory } from "../files";
 import { useServer } from "../server";
-import { makeRepos } from "../git";
+import { makeRepo, makeCommit } from "../git";
 
 
 const REMOTE_POST_REPO_DIRECTORY = getRemoteRepoDirectory();
@@ -16,17 +16,29 @@ const getRepoFileHashes = (directory: string): Promise<FileHashMap> => {
 
 describe("refresh", () => {
   useServer();
-  it("clones the repo if one does not already exist.", async () => {
+
+  it("updates the repo if it has already been cloned.", async () => {
     await cleanUpDirectories();
-    await makeRepos(
+    await makeRepo(
+      path.resolve(REMOTE_POST_REPO_DIRECTORY),
+      [{
+        message: "Make a post",
+        files: [{
+          path: "./first-post.md",
+          content: "# This is the first post\n\nIt has some content."
+        }]
+      }]
+    );
+
+    await fetch("/refresh", { method: Verbs.POST });
+
+    await makeCommit(
+      path.resolve(REMOTE_POST_REPO_DIRECTORY),
       {
-        path: path.resolve(REMOTE_POST_REPO_DIRECTORY),
-        commits: [{
-          message: "Make a post",
-          files: [{
-            path: "./first-post.md",
-            content: "# This is the first post\n\nIt has some content."
-          }]
+        message: "Make a post",
+        files: [{
+          path: "./first-post.md",
+          content: "# This is the updated first post\n\nIt has some updated content."
         }]
       }
     );
@@ -40,34 +52,45 @@ describe("refresh", () => {
       .toStrictEqual(await getRepoFileHashes(REMOTE_POST_REPO_DIRECTORY));
   });
 
-  it("updates the repo if it has already been cloned.", async () => {
+
+  it("redirects a request for the previous version of a post to the updated one.", async () => {
     await cleanUpDirectories();
-    await makeRepos(
-      {
-        path: path.resolve(REMOTE_POST_REPO_DIRECTORY),
-        commits: [{
-          message: "Make a post",
-          files: [{
-            path: "./first-post.md",
-            content: "# This is the first post\n\nIt has some content."
-          }, {
-            path: "./first-post.md",
-            content: "# This is the updated first post\n\nIt has some updated content."
-          }]
+    const slug = "first-post";
+    await makeRepo(
+      path.resolve(REMOTE_POST_REPO_DIRECTORY),
+      [{
+        message: "Make a post",
+        files: [{
+          path: `./${slug}.md`,
+          content: "# This is the first post\n\nIt has some content."
         }]
-      },
+      }]
+    );
+
+    await fetch("/refresh", { method: Verbs.POST });
+
+    const manifest = await fetch("/posts", { method: Verbs.GET })
+      .then((res) => res.json());
+
+    const updatedPostContent = "and it has been updated";
+    await makeCommit(
+      path.resolve(REMOTE_POST_REPO_DIRECTORY),
       {
-        path: POSTS_REPO_DIRECTORY,
-        status: { behind: 1 }
+        message: "Make a post",
+        files: [{
+          path: `./${slug}.md`,
+          content: `# This is the updated first post\n\nIt has some content${updatedPostContent}.`
+        }]
       }
     );
 
-    const response = await fetch("/refresh", { method: Verbs.POST })
-      .then((res) => res.json());
+    await fetch("/refresh", { method: Verbs.POST });
 
-    expect(response).toBe("Success!");
+    const response = await fetch(manifest[slug].href, { method: Verbs.GET });
+    expect(response.redirected).toBe(true);
 
-    expect(await getRepoFileHashes(POSTS_REPO_DIRECTORY))
-      .toStrictEqual(await getRepoFileHashes(REMOTE_POST_REPO_DIRECTORY));
+    const post = await response.text();
+
+    expect(post).toContain(updatedPostContent);
   });
 });
