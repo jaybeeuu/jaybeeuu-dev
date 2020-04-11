@@ -57,7 +57,7 @@ export const update = async (): Promise<void> => {
     const href = `/posts/${compiledFileName}`;
 
     const originalRecord = manifest[slug];
-    if (originalRecord) {
+    if (originalRecord && originalRecord.fileName !== compiledFileName) {
       postRedirects[originalRecord.fileName] = compiledFileName;
     }
 
