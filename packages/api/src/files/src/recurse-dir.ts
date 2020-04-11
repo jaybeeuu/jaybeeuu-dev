@@ -1,7 +1,7 @@
 import fs, { Stats } from "fs";
 import path from "path";
 
-interface FileInfo {
+export interface FileInfo {
   /**
    * THe absolute
    */

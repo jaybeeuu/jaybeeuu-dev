@@ -2,15 +2,18 @@ import fs from "fs";
 import { canAccess } from "../../files";
 import { POST_MANIFEST_FILE_PATH } from "../../paths";
 
-export interface PostMeta {
+export interface PostMetaData {
+  abstract: string;
+  fileName: string;
+  href: string;
+  lastUpdateDate: string;
+  publishDate: string;
   slug: string;
   title: string;
-  fileName: string;
-  href: string
 }
 
 export interface PostManifest {
-  [slug: string]: PostMeta;
+  [slug: string]: PostMetaData;
 }
 
 export const getPostManifest = async (): Promise<PostManifest> => {
