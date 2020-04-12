@@ -7,11 +7,7 @@ import { writePostRedirects, getPostRedirects } from "./redirects";
 import { compilePost } from "./compile";
 import { getPostFileName } from "..";
 
-type PostMetaFileData = Pick<PostMetaData, "abstract" | "lastUpdateDate" | "publishDate" | "title">;
-
-const isValidDateString = (dateString: string): boolean => {
-  return !isNaN(Date.parse(dateString));
-};
+type PostMetaFileData = Pick<PostMetaData, "abstract" | "title">;
 
 const isPostMetaFile = (x: any): x is PostMetaFileData => {
   if (typeof x !== "object") {
@@ -19,8 +15,6 @@ const isPostMetaFile = (x: any): x is PostMetaFileData => {
   }
 
   return typeof x.abstract === "string"
-    && isValidDateString(x.lastUpdateDate)
-    && isValidDateString(x.publishDate)
     && typeof x.title === "string";
 };
 
@@ -57,7 +51,9 @@ export const update = async (): Promise<void> => {
     const href = `/posts/${compiledFileName}`;
 
     const originalRecord = manifest[slug];
-    if (originalRecord && originalRecord.fileName !== compiledFileName) {
+    const hasBeenUpdated = originalRecord && originalRecord.fileName !== compiledFileName;
+
+    if (hasBeenUpdated) {
       postRedirects[originalRecord.fileName] = compiledFileName;
     }
 
@@ -65,6 +61,8 @@ export const update = async (): Promise<void> => {
 
     manifest[slug] = {
       ...metadata,
+      publishDate: originalRecord?.publishDate || new Date().toUTCString(),
+      lastUpdateDate: hasBeenUpdated ? new Date().toUTCString() : null,
       slug,
       fileName: compiledFileName,
       href

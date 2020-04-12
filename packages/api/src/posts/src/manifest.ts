@@ -6,7 +6,7 @@ export interface PostMetaData {
   abstract: string;
   fileName: string;
   href: string;
-  lastUpdateDate: string;
+  lastUpdateDate: string | null;
   publishDate: string;
   slug: string;
   title: string;

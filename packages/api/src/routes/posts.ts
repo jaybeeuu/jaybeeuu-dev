@@ -9,7 +9,8 @@ const router = express.Router();
 router.get(
   "/",
   async (request, response): Promise<void> => {
-    response.json(await getPostManifest());
+    const manifest = await getPostManifest();
+    response.json(manifest);
   }
 );
 

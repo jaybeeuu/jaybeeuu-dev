@@ -1,6 +1,7 @@
 import "../mock-env";
 
 import path from "path";
+import { advanceTo } from "jest-date-mock";
 import { fetch, Verbs } from "../fetch";
 import { cleanUpDirectories, getRemoteRepoDirectory } from "../files";
 import { useServer } from "../server";
@@ -13,6 +14,14 @@ describe("refresh", () => {
 
   it("makes the posts available, after a refresh from a blank slate.", async () => {
     await cleanUpDirectories();
+
+    const publishDate = "2020-03-11";
+    advanceTo(publishDate);
+
+    const meta = {
+      title: "This is the first post",
+      abstract: "This is the very first post."
+    };
     await makeRepo(
       path.resolve(REMOTE_POST_REPO_DIRECTORY),
       [{
@@ -22,12 +31,7 @@ describe("refresh", () => {
           content: "# This is the first post\n\nIt has some content."
         }, {
           path: "./first-post.json",
-          content: JSON.stringify({
-            title: "This is the first post",
-            publishDate: "2020-03-11",
-            lastUpdateDate: "2020-03-11",
-            abstract: "This is the very first post."
-          }, null, 2)
+          content: JSON.stringify(meta, null, 2)
         }]
       }]
     );
@@ -39,17 +43,15 @@ describe("refresh", () => {
 
     expect(result).toStrictEqual({
       "first-post": {
-        title: "This is the first post",
+        ...meta,
+        publishDate: new Date(publishDate).toUTCString(),
+        lastUpdateDate: null,
         slug: "first-post",
         fileName: expect.stringMatching(/[a-fA-F0-9]{40}\.html/),
-        href: expect.stringMatching(/\/posts\/[a-fA-F0-9]{40}\.html/),
-        publishDate: "2020-03-11",
-        lastUpdateDate: "2020-03-11",
-        abstract: "This is the very first post."
+        href: expect.stringMatching(/\/posts\/[a-fA-F0-9]{40}\.html/)
       }
     });
   });
-
 
   it("makes the post available in the manifest on /post, after a refresh from a blank slate.", async () => {
     await cleanUpDirectories();
@@ -67,8 +69,6 @@ describe("refresh", () => {
           path: "./first-post.json",
           content: JSON.stringify({
             title: "This is the first post",
-            publishDate: "2020-03-11",
-            lastUpdateDate: "2020-03-11",
             abstract: "This is the very first post."
           }, null, 2)
         }]
