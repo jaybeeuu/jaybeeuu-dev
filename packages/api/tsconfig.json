@@ -3,7 +3,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "lib": [
-      "ESNext"
+      "ES2020"
     ],
     "types": ["jest"]
   },
