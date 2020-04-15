@@ -1,13 +1,14 @@
-import fs from "fs";
 import path from "path";
-import { recurseDirectory, FileInfo } from "../../files";
+import { recurseDirectory, FileInfo, canAccess, writeTextFile, readTextFile } from "../../files";
 import { POSTS_REPO_DIRECTORY, POSTS_DIST_DIRECTORY } from "../../paths";
 import { writePostManifest, getPostManifest, PostMetaData } from "./manifest";
 import { writePostRedirects, getPostRedirects } from "./redirects";
 import { compilePost } from "./compile";
-import { getPostFileName } from "..";
+import { getPostFileName } from "../index";
+import { Result, success, failure, ResultState } from "../../results";
 
 type PostMetaFileData = Pick<PostMetaData, "abstract" | "title">;
+const MARKDOWN_FILE_EXTENSION = /.md$/;
 
 const isPostMetaFile = (x: any): x is PostMetaFileData => {
   if (typeof x !== "object") {
@@ -18,36 +19,38 @@ const isPostMetaFile = (x: any): x is PostMetaFileData => {
     && typeof x.title === "string";
 };
 
-const getMetaFileContent = async (markdownFileInfo: FileInfo): Promise<PostMetaFileData> => {
-  const metaFilePath = markdownFileInfo.filePath.replace(/.md$/, ".json");
+const getMetaFileContent = async (markdownFileInfo: FileInfo): Promise<Result<PostMetaFileData>> => {
+  const metaFileName = markdownFileInfo.fileName.replace(MARKDOWN_FILE_EXTENSION, ".json");
+  const metaFilePath = path.join(markdownFileInfo.absolutePath, metaFileName);
 
-  try {
-    const metaFileContent = await fs.promises.readFile(metaFilePath, "utf8");
-    const metadata = JSON.parse(metaFileContent);
+  if (! await canAccess(metaFilePath)) {
+    return failure(`Metafile ${metaFileName} for the post ${markdownFileInfo.fileName} was missing.`);
+  }
 
-    if (isPostMetaFile(metadata)) {
-      return metadata;
-    } else {
-      throw new Error("Metadata does not match the expected interface.");
-    }
-  } catch (error) {
-    throw new Error(`Error processing meta file for ${markdownFileInfo.fileName}\n\n${error.message || error}`);
+  const metaFileContent = await readTextFile(metaFilePath);
+  const metadata = JSON.parse(metaFileContent);
+
+  if (isPostMetaFile(metadata)) {
+    return success(metadata);
+  } else {
+    return failure(
+      `Metadata for ${markdownFileInfo.fileName} in ${metaFileName} does not contain the expected information.`
+    );
   }
 };
 
-export const update = async (): Promise<void> => {
+export const update = async (): Promise<Result<void>> => {
   const [manifest, postRedirects] = await Promise.all([
     getPostManifest(),
-    getPostRedirects(),
-    fs.promises.mkdir(POSTS_DIST_DIRECTORY, { recursive: true })
+    getPostRedirects()
   ]);
 
-  for await(const markdownFileInfo of recurseDirectory(POSTS_REPO_DIRECTORY, { include: [/\.md$/]})) {
+  for await(const markdownFileInfo of recurseDirectory(POSTS_REPO_DIRECTORY, { include: [MARKDOWN_FILE_EXTENSION] })) {
     const slug = markdownFileInfo.fileName.split(".")[0];
     const compiledPost = await compilePost(markdownFileInfo.filePath);
     const compiledFileName = getPostFileName(compiledPost);
     const compiledFilePath = path.join(POSTS_DIST_DIRECTORY, compiledFileName);
-    await fs.promises.writeFile(compiledFilePath, compiledPost, "utf8", );
+    await writeTextFile(compiledFilePath, compiledPost);
     const href = `/posts/${compiledFileName}`;
 
     const originalRecord = manifest[slug];
@@ -57,10 +60,13 @@ export const update = async (): Promise<void> => {
       postRedirects[originalRecord.fileName] = compiledFileName;
     }
 
-    const metadata = await getMetaFileContent(markdownFileInfo);
+    const result = await getMetaFileContent(markdownFileInfo);
+    if (result.state === ResultState.failure) {
+      return result;
+    }
 
     manifest[slug] = {
-      ...metadata,
+      ...result.value,
       publishDate: originalRecord?.publishDate || new Date().toUTCString(),
       lastUpdateDate: hasBeenUpdated ? new Date().toUTCString() : null,
       slug,
@@ -73,4 +79,6 @@ export const update = async (): Promise<void> => {
     writePostManifest(manifest),
     writePostRedirects(postRedirects)
   ]);
+
+  return success();
 };

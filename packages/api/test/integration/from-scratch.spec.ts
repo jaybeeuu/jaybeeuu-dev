@@ -12,7 +12,7 @@ const REMOTE_POST_REPO_DIRECTORY = getRemoteRepoDirectory();
 describe("refresh", () => {
   useServer();
 
-  it("makes the posts available, after a refresh from a blank slate.", async () => {
+  it("makes the post available in the manifest on /post, after a refresh from a blank slate.", async () => {
     await cleanUpDirectories();
 
     const publishDate = "2020-03-11";
@@ -53,7 +53,7 @@ describe("refresh", () => {
     });
   });
 
-  it("makes the post available in the manifest on /post, after a refresh from a blank slate.", async () => {
+  it("makes the posts available, after a refresh from a blank slate.", async () => {
     await cleanUpDirectories();
 
     const slug = "first-post";

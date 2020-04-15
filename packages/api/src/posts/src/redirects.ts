@@ -1,5 +1,4 @@
-import fs from "fs";
-import { canAccess } from "../../files";
+import { canAccess, writeTextFile, readTextFile } from "../../files";
 import { POST_REDIRECTS_FILE_PATH } from "../../paths";
 
 export interface PostRedirectsMap {
@@ -8,10 +7,10 @@ export interface PostRedirectsMap {
 
 export const getPostRedirects = async (): Promise<PostRedirectsMap> => {
   return await canAccess(POST_REDIRECTS_FILE_PATH)
-    ? JSON.parse(await fs.promises.readFile(POST_REDIRECTS_FILE_PATH, "utf8"))
+    ? JSON.parse(await readTextFile(POST_REDIRECTS_FILE_PATH))
     : {};
 };
 
 export const writePostRedirects = async (postRedirects: PostRedirectsMap): Promise<void> => {
-  return fs.promises.writeFile(POST_REDIRECTS_FILE_PATH, JSON.stringify(postRedirects, null, 2), "utf8");
+  return writeTextFile(POST_REDIRECTS_FILE_PATH, JSON.stringify(postRedirects, null, 2));
 };

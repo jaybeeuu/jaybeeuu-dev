@@ -1,7 +1,7 @@
 import sanitizeHtml from "sanitize-html";
 import highlight from "highlight.js";
-import fs from "fs";
 import marked  from "marked";
+import { readTextFile } from "../../files";
 
 const markedOptions = {
   renderer: new marked.Renderer(),
@@ -19,7 +19,7 @@ const markedOptions = {
 };
 
 export const compilePost = async (markdownFilePath: string): Promise<string> => {
-  const fileAsString = await fs.promises.readFile(markdownFilePath, "utf8");
+  const fileAsString = await readTextFile(markdownFilePath);
   const html = marked(fileAsString, markedOptions);
   sanitizeHtml.defaults;
   return sanitizeHtml(html);

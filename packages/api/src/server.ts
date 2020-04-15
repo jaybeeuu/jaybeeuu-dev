@@ -14,20 +14,10 @@ import { certs } from "./paths";
 
 export type CloseServer = () => Promise<void>;
 
-const promiseReadFile = (path: string): Promise<Buffer> => {
-  return new Promise((resolve) => fs.readFile(path, (error, data) => {
-    if (error) {
-      throw error;
-    }
-    resolve(data);
-  }));
-};
-
 const getSSLOptions = async (): Promise<https.ServerOptions> => {
-
   const [ cert, key ] = await Promise.all([
-    promiseReadFile(certs.certificate),
-    promiseReadFile(certs.key)
+    fs.promises.readFile(certs.certificate),
+    fs.promises.readFile(certs.key)
   ]);
 
   return { cert, key };

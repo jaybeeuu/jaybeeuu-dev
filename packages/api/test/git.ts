@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import git from "simple-git/promise";
 import { POST_REPO_USER_NAME, POST_REPO_USER_EMAIL } from "../src/env";
+import { writeTextFile } from "../src/files";
 
 export interface File {
   path: string,
@@ -24,10 +25,9 @@ export const makeCommit = async (
 ): Promise<void> => {
   for(const { path: filePath, content } of files) {
     const resolvedFilePath = path.resolve(repoPath, filePath);
-    await fs.promises.writeFile(
+    await writeTextFile(
       resolvedFilePath,
-      content,
-      { encoding: "utf8" }
+      content
     );
     await git(repoPath).add(resolvedFilePath);
   }
