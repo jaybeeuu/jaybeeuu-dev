@@ -1,6 +1,7 @@
 export enum ResultState {
-  success= "success",
-  failure= "failure"
+  // eslint-disable-next-line no-shadow
+  success = "success",
+  failure = "failure"
 }
 
 export interface Success<TValue> {
@@ -15,16 +16,14 @@ export interface Failure {
 
 export type Result<TValue> = Success<TValue> | Failure;
 
-function success(): Success<void>;
-function success<TValue>(value: TValue): Success<TValue>;
-function success<TValue>(value?: TValue): Success<TValue> {
+export function success(): Success<void>;
+export function success<TValue>(value: TValue): Success<TValue>;
+export function success<TValue>(value?: TValue): Success<TValue> {
   return {
     state: ResultState.success,
     value: value as TValue
   };
 }
-
-export { success };
 
 export const failure = (message: string): Failure => ({
   state: ResultState.failure,
