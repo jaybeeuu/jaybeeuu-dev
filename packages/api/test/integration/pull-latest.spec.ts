@@ -235,7 +235,7 @@ describe("refresh", () => {
     await makeCommit(
       path.resolve(REMOTE_POST_REPO_DIRECTORY),
       {
-        message: "Make a post",
+        message: "Update a post",
         files: [{
           path: `./${slug}.json`,
           content: JSON.stringify(newMeta, null, 2)
