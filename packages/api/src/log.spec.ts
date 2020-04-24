@@ -1,8 +1,11 @@
+/* eslint-disable no-console */
+import "../test/custom-matchers";
 import log from "./log";
 
 describe("log", () => {
   beforeEach(() => {
     jest.spyOn(console, "log").mockImplementation(() => {});
+    jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
   describe("info", () => {
@@ -10,9 +13,25 @@ describe("log", () => {
       const args = [1, "2", { id: 3 }];
       log.info(...args);
 
-      // console.log call verified in test.
-      // eslint-disable-next-line no-console
       expect(console.log).toHaveBeenCalledWith(...args);
+    });
+  });
+
+  describe("error", () => {
+    it("passes arguments to console.error", () => {
+      const error = {
+        name: "{name}",
+        message: "{message}",
+        stack: "{stack}"
+      };
+
+      log.error(error);
+
+      expect(console.error).toHaveBeenCalledWith(expect.stringContainingAll(
+        error.name,
+        error.message,
+        error.stack
+      ));
     });
   });
 });
