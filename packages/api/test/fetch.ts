@@ -67,6 +67,12 @@ const agent = new Agent({
   ca: fs.readFileSync(path.join(__dirname, "../certs/certificate.crt"))
 });
 
+const defaultOptions: RequestOptions = {
+  headers: {
+    "Content-Type": "application/json"
+  }
+};
+
 export const fetch: Fetch = async (
   route: string,
   options?: RequestOptions
@@ -74,7 +80,15 @@ export const fetch: Fetch = async (
   const baseURl = new URL(`https://${API_HOST_NAME}:${API_PORT}`).toString();
   const url = new URL(route, baseURl);
 
-  const response = await nodeFetch(url.href, { agent, ...options });
+  const response = await nodeFetch(
+    url.href,
+    {
+      agent,
+      ...defaultOptions,
+      ...options
+    }
+  );
+
   if (response.ok) {
     return response;
   }
