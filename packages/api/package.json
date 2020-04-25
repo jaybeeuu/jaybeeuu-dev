@@ -13,6 +13,7 @@
   "scripts": {
     "build": "babel --extensions .ts --out-dir dist ./src",
     "start": "nodemon ./src/index.ts",
+    "start:debug": "nodemon --inspect ./src/index.ts",
     "start:prod": "node dist/index.js",
     "lint": "eslint --ext .js,.ts --format codeframe .",
     "type-check": "tsc --noEmit",
