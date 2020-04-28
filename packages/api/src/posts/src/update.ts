@@ -1,11 +1,14 @@
 import path from "path";
-import { recurseDirectory, FileInfo, canAccess, writeTextFile, readTextFile } from "../../files";
+import { recurseDirectory, FileInfo, canAccess, writeTextFile, readTextFile, deleteFile } from "../../files";
 import { POSTS_REPO_DIRECTORY, POSTS_DIST_DIRECTORY } from "../../paths";
-import { writePostManifest, getPostManifest, PostMetaData } from "./manifest";
-import { writePostRedirects, getPostRedirects } from "./redirects";
+import { writePostManifest, getPostManifest, PostMetaData, PostManifest } from "./manifest";
+import { writePostRedirects, getPostRedirects, PostRedirectsMap } from "./redirects";
 import { compilePost } from "./compile";
 import { getPostFileName } from "../index";
 import { Result, success, failure, ResultState } from "../../results";
+import { Z_FILTERED } from "zlib";
+import { fstat } from "fs";
+import { resolvePostFilePath } from "./file-paths";
 
 type PostMetaFileData = Pick<PostMetaData, "abstract" | "title">;
 const MARKDOWN_FILE_EXTENSION = /.md$/;
@@ -39,11 +42,23 @@ const getMetaFileContent = async (markdownFileInfo: FileInfo): Promise<Result<Po
   }
 };
 
+const collectGarbage = async (
+  oldManifest: PostManifest,
+  newManifest: PostManifest
+): Promise<void[]> => {
+  return Promise.all(
+    Object.entries(oldManifest).filter(([slug]) => {
+      return newManifest[slug] === undefined;
+    }).map(([, postMetaData]): Promise<void> => {
+      return deleteFile(resolvePostFilePath(postMetaData.fileName));
+    })
+  );
+};
+
 export const update = async (): Promise<Result<void>> => {
-  const [manifest, postRedirects] = await Promise.all([
-    getPostManifest(),
-    getPostRedirects()
-  ]);
+  const postRedirects = { ...await getPostRedirects() };
+  const oldManifest = await getPostManifest();
+  const newManifest: PostManifest = {};
 
   for await(const markdownFileInfo of recurseDirectory(POSTS_REPO_DIRECTORY, { include: [MARKDOWN_FILE_EXTENSION] })) {
     const slug = markdownFileInfo.fileName.split(".")[0];
@@ -53,7 +68,7 @@ export const update = async (): Promise<Result<void>> => {
     await writeTextFile(compiledFilePath, compiledPost);
     const href = `/posts/${compiledFileName}`;
 
-    const originalRecord = manifest[slug];
+    const originalRecord = oldManifest[slug];
     const hasBeenUpdated = originalRecord && originalRecord.fileName !== compiledFileName;
 
     if (hasBeenUpdated) {
@@ -65,7 +80,7 @@ export const update = async (): Promise<Result<void>> => {
       return result;
     }
 
-    manifest[slug] = {
+    newManifest[slug] = {
       ...result.value,
       publishDate: originalRecord?.publishDate || new Date().toUTCString(),
       lastUpdateDate: hasBeenUpdated ? new Date().toUTCString() : null,
@@ -74,9 +89,9 @@ export const update = async (): Promise<Result<void>> => {
       href
     };
   }
-
   await Promise.all([
-    writePostManifest(manifest),
+    collectGarbage(oldManifest, newManifest),
+    writePostManifest(newManifest),
     writePostRedirects(postRedirects)
   ]);
 

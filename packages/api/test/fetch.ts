@@ -80,7 +80,7 @@ export const fetch: Fetch = async (
   const baseURl = new URL(`https://${API_HOST_NAME}:${API_PORT}`).toString();
   const url = new URL(route, baseURl);
 
-  const response = await nodeFetch(
+  return await nodeFetch(
     url.href,
     {
       agent,
@@ -88,10 +88,4 @@ export const fetch: Fetch = async (
       ...options
     }
   );
-
-  if (response.ok) {
-    return response;
-  }
-
-  throw new Error(`Request to ${url} returned: ${response.status} (${response.statusText})\n\n${await response.text()}`);
 };

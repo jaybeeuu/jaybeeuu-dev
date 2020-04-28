@@ -263,7 +263,7 @@ describe("refresh", () => {
     });
   });
 
-  it("deletes the html for posts which no longre exist.", async () => {
+  it("removes deleted posts from the manifest.", async () => {
     await cleanUpDirectories();
     const slug = "first-post";
 
@@ -306,5 +306,52 @@ describe("refresh", () => {
       .then((res) => res.json());
 
     expect(newManifest).toStrictEqual({});
+  });
+
+
+  it("cannot retrieve deleted posts.", async () => {
+    await cleanUpDirectories();
+    const slug = "first-post";
+
+    await makeRepo(
+      path.resolve(REMOTE_POST_REPO_DIRECTORY),
+      [{
+        message: "Make a post",
+        files: [{
+          path: `./${slug}.md`,
+          content: "# This is the first post\n\nIt has some content."
+        }, {
+          path: `./${slug}.json`,
+          content: JSON.stringify({
+            title: "This is the first post",
+            abstract: "This is the very first post."
+          }, null, 2)
+        }]
+      }]
+    );
+
+    await fetch("/refresh", { method: Verbs.POST });
+    const oldManifest = await fetch("/posts", { method: Verbs.GET })
+      .then((res) => res.json());
+
+    await makeCommit(
+      path.resolve(REMOTE_POST_REPO_DIRECTORY),
+      {
+        message: "Delete a post",
+        files: [{
+          path: `./${slug}.md`,
+          content: null
+        }, {
+          path: `./${slug}.json`,
+          content: null
+        }]
+      }
+    );
+
+    await fetch("/refresh", { method: Verbs.POST });
+
+    const response = await fetch(oldManifest[slug].href, { method: Verbs.GET });
+
+    expect(response.status).toStrictEqual(404);
   });
 });

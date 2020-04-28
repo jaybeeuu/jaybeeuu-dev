@@ -32,8 +32,8 @@ export const makeCommit = async (
         resolvedFilePath,
         content
       );
-      await git(repoPath).add(resolvedFilePath);
     }
+    await git(repoPath).add(resolvedFilePath);
   }
   await git(repoPath).commit(message);
 };
