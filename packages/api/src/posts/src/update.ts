@@ -2,12 +2,10 @@ import path from "path";
 import { recurseDirectory, FileInfo, canAccess, writeTextFile, readTextFile, deleteFile } from "../../files";
 import { POSTS_REPO_DIRECTORY, POSTS_DIST_DIRECTORY } from "../../paths";
 import { writePostManifest, getPostManifest, PostMetaData, PostManifest } from "./manifest";
-import { writePostRedirects, getPostRedirects, PostRedirectsMap } from "./redirects";
+import { writePostRedirects, getPostRedirects } from "./redirects";
 import { compilePost } from "./compile";
 import { getPostFileName } from "../index";
 import { Result, success, failure, ResultState } from "../../results";
-import { Z_FILTERED } from "zlib";
-import { fstat } from "fs";
 import { resolvePostFilePath } from "./file-paths";
 
 type PostMetaFileData = Pick<PostMetaData, "abstract" | "title">;
