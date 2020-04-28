@@ -2,7 +2,7 @@ import path from "path";
 import { recurseDirectory, FileInfo, canAccess, writeTextFile, readTextFile, deleteFile } from "../../files";
 import { POSTS_REPO_DIRECTORY, POSTS_DIST_DIRECTORY } from "../../paths";
 import { writePostManifest, getPostManifest, PostMetaData, PostManifest } from "./manifest";
-import { writePostRedirects, getPostRedirects } from "./redirects";
+import { writePostRedirects, getPostRedirects, PostRedirectsMap } from "./redirects";
 import { compilePost } from "./compile";
 import { getPostFileName } from "../index";
 import { Result, success, failure, ResultState } from "../../results";
@@ -42,11 +42,13 @@ const getMetaFileContent = async (markdownFileInfo: FileInfo): Promise<Result<Po
 
 const collectGarbage = async (
   oldManifest: PostManifest,
-  newManifest: PostManifest
+  newManifest: PostManifest,
+  postRedirects: PostRedirectsMap
 ): Promise<void[]> => {
   return Promise.all(
-    Object.entries(oldManifest).filter(([slug]) => {
-      return newManifest[slug] === undefined;
+    Object.entries(oldManifest).filter(([slug, postMeta]) => {
+      return newManifest[slug] === undefined
+        || postRedirects[postMeta.fileName];
     }).map(([, postMetaData]): Promise<void> => {
       return deleteFile(resolvePostFilePath(postMetaData.fileName));
     })
@@ -87,8 +89,9 @@ export const update = async (): Promise<Result<void>> => {
       href
     };
   }
+
   await Promise.all([
-    collectGarbage(oldManifest, newManifest),
+    collectGarbage(oldManifest, newManifest, postRedirects),
     writePostManifest(newManifest),
     writePostRedirects(postRedirects)
   ]);

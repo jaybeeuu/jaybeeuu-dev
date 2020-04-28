@@ -6,6 +6,8 @@ import { cleanUpDirectories, getRemoteRepoDirectory } from "../files";
 import { useServer } from "../server";
 import { makeRepo, makeCommit } from "../git";
 import { advanceTo } from "jest-date-mock";
+import { resolvePostFilePath } from "../../src/posts";
+import { canAccess } from "../../src/files";
 
 const REMOTE_POST_REPO_DIRECTORY = getRemoteRepoDirectory();
 
@@ -57,6 +59,48 @@ describe("refresh", () => {
     const post = await response.text();
 
     expect(post).toContain(updatedPostContent);
+  });
+
+  it("removes the previous version of the post from disk.", async () => {
+    await cleanUpDirectories();
+    const slug = "first-post";
+    await makeRepo(
+      path.resolve(REMOTE_POST_REPO_DIRECTORY),
+      [{
+        message: "Make a post",
+        files: [{
+          path: `./${slug}.md`,
+          content: "# This is the first post\n\nIt has some content."
+        }, {
+          path: `./${slug}.json`,
+          content: JSON.stringify({
+            title: "This is the first post",
+            abstract: "This is the very first post."
+          }, null, 2)
+        }]
+      }]
+    );
+
+    await fetch("/refresh", { method: Verbs.POST });
+
+    const manifest = await fetch("/posts", { method: Verbs.GET })
+      .then((res) => res.json());
+
+    const updatedPostContent = "and it has been updated";
+    await makeCommit(
+      path.resolve(REMOTE_POST_REPO_DIRECTORY),
+      {
+        message: "Make a post",
+        files: [{
+          path: `./${slug}.md`,
+          content: `# This is the updated first post\n\nIt has some content${updatedPostContent}.`
+        }]
+      }
+    );
+
+    await fetch("/refresh", { method: Verbs.POST });
+
+    expect(await canAccess(resolvePostFilePath(manifest[slug].fileName))).toBe(false);
   });
 
   it("does not redirect a request for a post that has not been updated.", async () => {
@@ -155,7 +199,7 @@ describe("refresh", () => {
     expect(manifest[slug].lastUpdateDate).toBe(new Date(updateDate).toUTCString());
   });
 
-  it("returns the updated content from the new post.", async () => {
+  it("returns the updated content from a request for the new post.", async () => {
     await cleanUpDirectories();
     const slug = "first-post";
     await makeRepo(
