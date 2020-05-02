@@ -2,20 +2,23 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const acceptedEnvVars = [
-  "CLIENT_HOST_NAME",
-  "CLIENT_PORT",
-  "API_HOST_NAME",
-  "API_PORT",
-  "NODE_ENV"
-];
+const envVars = {
+  "CLIENT_HOST_NAME": "127.0.0.1",
+  "CLIENT_PORT": "3443",
+  "API_HOST_NAME": "127.0.0.1",
+  "API_PORT": "3444",
+  "NODE_ENV": "devlopment"
+};
 
-const env = Object.entries(process.env)
-  .filter(([key]) => acceptedEnvVars.includes(key))
-  .reduce((acc, [key, value]) => {
-    acc[key] = value;
-    return acc;
-  }, {});
+const env = {
+  ...envVars,
+  ...Object.entries(process.env)
+    .filter(([key]) => Object.keys(envVars).includes(key))
+    .reduce((acc, [key, value]) => {
+      acc[key] = value;
+      return acc;
+    }, {})
+};
 
 const stringifiedEnv = {
   "process.env": Object.entries(env)

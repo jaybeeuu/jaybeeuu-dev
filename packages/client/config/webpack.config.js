@@ -1,18 +1,31 @@
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
+const fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
+const { env, stringifiedEnv } = require("./env");
 const paths = require("./paths");
 
-const { env, stringifiedEnv } = require("./env");
-
-const isDevelopment = env.NODE_ENV === "development";
-
+const isProduction = env.NODE_ENV === "production";
+console.log(env.CLIENT_PORT);
 module.exports = {
-  mode: isDevelopment ? "development" : "production",
-  devtool: isDevelopment ? "eval-source-map" : "source-map",
-  watch: isDevelopment,
-  devServer: isDevelopment ? require("./webpack-dev-server.config") : undefined,
+  mode: isProduction ? "production" : "development",
+  devtool: isProduction ? "source-map" : "eval-source-map",
+  watch: !isProduction,
+  devServer: {
+    compress: true,
+    contentBase: paths.appPublic,
+    host: env.CLIENT_HOST_NAME,
+    hot: true,
+    https: {
+      key: fs.readFileSync(paths.certs.key),
+      cert: fs.readFileSync(paths.certs.certificate),
+    },
+    overlay: true,
+    port: env.CLIENT_PORT,
+    quiet: true,
+    watchContentBase: true
+  },
   entry: [
     paths.appIndex,
   ],

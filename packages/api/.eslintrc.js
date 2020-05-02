@@ -51,6 +51,9 @@ module.exports = {
         node: true,
         browser: false
       },
+      parserOptions: {
+        ecmaVersion: 2018
+      },
       rules: {
         "no-console": "off"
       }

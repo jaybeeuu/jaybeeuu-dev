@@ -1,7 +1,7 @@
+import { useRef } from "preact/hooks";
 import { useObservable } from "./useObservable";
 import { CLIENT_HOST_NAME, CLIENT_PORT, API_HOST_NAME, API_PORT } from "../env";
 import { ajax, AjaxResponse, AjaxRequest } from "rxjs/ajax";
-import { useRef } from "react";
 
 const apiUrl = new URL(`https://${API_HOST_NAME}:${API_PORT}`);
 const clientUrl = new URL(`https://${CLIENT_HOST_NAME}:${CLIENT_PORT}`);

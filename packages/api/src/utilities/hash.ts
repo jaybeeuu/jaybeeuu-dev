@@ -7,5 +7,5 @@ const algorithm = "sha1";
 export const getHash = (data: string): string => {
   const hash = crypto.createHash(algorithm);
   hash.update(data);
-  return hash.digest("hex");
+  return hash.digest("latin1");
 };

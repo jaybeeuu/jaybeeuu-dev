@@ -1,7 +1,6 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import { h, render } from "preact";
 import App from "./app/app";
 
-ReactDOM.render((
+render((
   <App />
 ), document.getElementById("app"));

@@ -10,7 +10,7 @@ module.exports = {
   ],
   settings: {
     react: {
-      pragma: "React",
+      pragma: "h",
       version: "detect"
     },
     "import/resolver": {
@@ -46,6 +46,7 @@ module.exports = {
         project: "./tsconfig.json"
       },
       extends: [
+        "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
       ],
@@ -58,23 +59,15 @@ module.exports = {
       files: [
         "config/**/*.js"
       ],
+      parserOptions: {
+        ecmaVersion: 2018
+      },
       env: {
         node: true,
         browser: false
       },
       rules: {
         "no-console": "off"
-      }
-    },
-    {
-      files: [
-        "src/env.js"
-      ],
-      parserOptions: {
-        sourceType: "module"
-      },
-      globals: {
-        ["process"]: "readonly"
       }
     },
     {
