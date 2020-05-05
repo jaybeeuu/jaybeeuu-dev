@@ -1,7 +1,7 @@
 import "../mock-env";
 
 import path from "path";
-import { fetch, Verbs } from "../fetch";
+import { fetch, Verbs, fetchOK } from "../fetch";
 import { cleanUpDirectories, getRemoteRepoDirectory } from "../files";
 import { useServer } from "../server";
 import { makeRepo, makeCommit } from "../git";
@@ -34,7 +34,7 @@ describe("refresh", () => {
       }]
     );
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
 
     const manifest = await fetch("/posts", { method: Verbs.GET })
       .then((res) => res.json());
@@ -51,7 +51,7 @@ describe("refresh", () => {
       }
     );
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
 
     const response = await fetch(manifest[slug].href, { method: Verbs.GET });
     expect(response.redirected).toBe(true);
@@ -81,7 +81,7 @@ describe("refresh", () => {
       }]
     );
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
 
     const manifest = await fetch("/posts", { method: Verbs.GET })
       .then((res) => res.json());
@@ -98,7 +98,7 @@ describe("refresh", () => {
       }
     );
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
 
     expect(await canAccess(resolvePostFilePath(manifest[slug].fileName))).toBe(false);
   });
@@ -124,7 +124,7 @@ describe("refresh", () => {
       }]
     );
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
 
     const manifest = await fetch("/posts", { method: Verbs.GET })
       .then((res) => res.json());
@@ -146,7 +146,7 @@ describe("refresh", () => {
       }
     );
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
 
     const response = await fetch(manifest[slug].href, { method: Verbs.GET });
     expect(response.redirected).toBe(false);
@@ -176,7 +176,7 @@ describe("refresh", () => {
       }]
     );
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
 
     await makeCommit(
       path.resolve(REMOTE_POST_REPO_DIRECTORY),
@@ -192,7 +192,7 @@ describe("refresh", () => {
     const updateDate = "2020-03-11";
     advanceTo(updateDate);
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
 
     const manifest = await fetch("/posts", { method: Verbs.GET })
       .then((res) => res.json());
@@ -219,7 +219,7 @@ describe("refresh", () => {
       }]
     );
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
     const newContent = "It has some different content";
     await makeCommit(
       path.resolve(REMOTE_POST_REPO_DIRECTORY),
@@ -232,7 +232,7 @@ describe("refresh", () => {
       }
     );
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
 
     const manifest = await fetch("/posts", { method: Verbs.GET })
       .then((res) => res.json());
@@ -267,7 +267,7 @@ describe("refresh", () => {
     const publishDate = "2020-03-11";
     advanceTo(publishDate);
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
 
     const manifest = await fetch("/posts", { method: Verbs.GET })
       .then((res) => res.json());
@@ -290,7 +290,7 @@ describe("refresh", () => {
     const updateDate = "2020-03-11";
     advanceTo(updateDate);
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
 
     const newManifest = await fetch("/posts", { method: Verbs.GET })
       .then((res) => res.json());
@@ -328,7 +328,7 @@ describe("refresh", () => {
       }]
     );
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
 
     await makeCommit(
       path.resolve(REMOTE_POST_REPO_DIRECTORY),
@@ -344,7 +344,7 @@ describe("refresh", () => {
       }
     );
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
 
     const newManifest = await fetch("/posts", { method: Verbs.GET })
       .then((res) => res.json());
@@ -374,7 +374,7 @@ describe("refresh", () => {
       }]
     );
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
     const oldManifest = await fetch("/posts", { method: Verbs.GET })
       .then((res) => res.json());
 
@@ -392,7 +392,7 @@ describe("refresh", () => {
       }
     );
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
 
     const response = await fetch(oldManifest[slug].href, { method: Verbs.GET });
 

@@ -6,7 +6,7 @@ import { writePostRedirects, getPostRedirects, PostRedirectsMap } from "./redire
 import { compilePost } from "./compile";
 import { getPostFileName } from "../index";
 import { Result, success, failure, ResultState } from "../../results";
-import { resolvePostFilePath } from "./file-paths";
+import { resolvePostFilePath, validateSlug } from "./file-paths";
 
 type PostMetaFileData = Pick<PostMetaData, "abstract" | "title">;
 const MARKDOWN_FILE_EXTENSION = /.md$/;
@@ -60,10 +60,18 @@ export const update = async (): Promise<Result<void>> => {
   const oldManifest = await getPostManifest();
   const newManifest: PostManifest = {};
 
-  for await(const markdownFileInfo of recurseDirectory(POSTS_REPO_DIRECTORY, { include: [MARKDOWN_FILE_EXTENSION] })) {
+  for await (const markdownFileInfo of recurseDirectory(
+    POSTS_REPO_DIRECTORY,
+    { include: [MARKDOWN_FILE_EXTENSION] })
+  ) {
     const slug = markdownFileInfo.fileName.split(".")[0];
+    const slugValidation = validateSlug(slug);
+    if (slugValidation.state === ResultState.failure) {
+      return slugValidation;
+    }
+
     const compiledPost = await compilePost(markdownFileInfo.filePath);
-    const compiledFileName = getPostFileName(compiledPost);
+    const compiledFileName = getPostFileName(slug, compiledPost);
     const compiledFilePath = path.join(POSTS_DIST_DIRECTORY, compiledFileName);
     await writeTextFile(compiledFilePath, compiledPost);
     const href = `/posts/${compiledFileName}`;
@@ -75,13 +83,13 @@ export const update = async (): Promise<Result<void>> => {
       postRedirects[originalRecord.fileName] = compiledFileName;
     }
 
-    const result = await getMetaFileContent(markdownFileInfo);
-    if (result.state === ResultState.failure) {
-      return result;
+    const metaFileContentResult = await getMetaFileContent(markdownFileInfo);
+    if (metaFileContentResult.state === ResultState.failure) {
+      return metaFileContentResult;
     }
 
     newManifest[slug] = {
-      ...result.value,
+      ...metaFileContentResult.value,
       publishDate: originalRecord?.publishDate || new Date().toUTCString(),
       lastUpdateDate: hasBeenUpdated ? new Date().toUTCString() : null,
       slug,

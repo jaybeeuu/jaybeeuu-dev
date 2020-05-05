@@ -2,7 +2,7 @@ import "../mock-env";
 
 import path from "path";
 import { advanceTo } from "jest-date-mock";
-import { fetch, Verbs } from "../fetch";
+import { fetch, Verbs, fetchOK } from "../fetch";
 import { cleanUpDirectories, getRemoteRepoDirectory } from "../files";
 import { useServer } from "../server";
 import { makeRepo } from "../git";
@@ -17,7 +17,7 @@ describe("refresh", () => {
 
     const publishDate = "2020-03-11";
     advanceTo(publishDate);
-
+    const slug = "first-post";
     const meta = {
       title: "This is the first post",
       abstract: "This is the very first post."
@@ -27,28 +27,28 @@ describe("refresh", () => {
       [{
         message: "Make a post",
         files: [{
-          path: "./first-post.md",
+          path: `./${slug}.md`,
           content: "# This is the first post\n\nIt has some content."
         }, {
-          path: "./first-post.json",
+          path: `./${slug}.json`,
           content: JSON.stringify(meta, null, 2)
         }]
       }]
     );
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
 
     const result = await fetch("/posts", { method: Verbs.GET })
       .then((res) => res.json());
 
     expect(result).toStrictEqual({
-      "first-post": {
+      [slug]: {
         ...meta,
         publishDate: new Date(publishDate).toUTCString(),
         lastUpdateDate: null,
-        slug: "first-post",
-        fileName: expect.stringMatching(/[a-fA-F0-9]{40}\.html/),
-        href: expect.stringMatching(/\/posts\/[a-fA-F0-9]{40}\.html/)
+        slug,
+        fileName: expect.stringMatching(new RegExp(`${slug}-[A-z0-9]{6}.html`)),
+        href: expect.stringMatching(new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`))
       }
     });
   });
@@ -75,7 +75,7 @@ describe("refresh", () => {
       }]
     );
 
-    await fetch("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: Verbs.POST });
 
     const manifest = await fetch("/posts", { method: Verbs.GET })
       .then((res) => res.json());

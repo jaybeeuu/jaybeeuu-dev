@@ -89,3 +89,20 @@ export const fetch: Fetch = async (
     }
   );
 };
+
+
+export const fetchOK = async (route: string,
+  options?: RequestOptions
+): Promise<Response> => {
+  const response = await fetch(route, options);
+
+  if (response.ok) {
+    return response;
+  }
+  throw new Error(`Response was not OK:\n\n${JSON.stringify({
+    status: response.status,
+    statusText: response.statusText,
+    text: await response.json(),
+    url: response.url
+  }, null, 2)}}`);
+};
