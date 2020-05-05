@@ -30,4 +30,4 @@ export const resolvePostFilePath = (name: string): string => {
   }
 
   return path.join(POSTS_DIST_DIRECTORY, name);
-}
+};
