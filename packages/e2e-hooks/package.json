@@ -9,8 +9,8 @@
     "Josh",
     "E2E Hooks"
   ],
-  "packageConfig": {
-    "dist": "dist"
+  "publishConfig": {
+    "directory": "dist"
   },
   "scripts": {
     "build": "tsc",

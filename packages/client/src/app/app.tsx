@@ -1,4 +1,4 @@
-import { titleBar } from "@bickley-wallace/e2e-hooks/dist/title-bar";
+import { titleBar } from "@bickley-wallace/e2e-hooks/title-bar";
 import { h, FunctionComponent } from "preact";
 import ApiRoot from "./api-root/api-root";
 
