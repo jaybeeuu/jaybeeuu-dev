@@ -6,8 +6,10 @@
     "moduleResolution": "node",
     "noImplicitAny": true,
     "noImplicitReturns": true,
+    "resolveJsonModule": true,
     "sourceMap": true,
-    "strict": true
+    "strict": true,
+    "types": []
   },
   "exclude": [
     "dist",
