@@ -5,70 +5,73 @@ docker-image-node: &docker-image-node
 src-dir: &src-dir ~/src
 
 base: &base
-    docker:
-      - image: circleci/node:12.13.1
+  docker:
+    - image: circleci/node:12.13.1
 
-    working_directory: *src-dir
+  working_directory: *src-dir
 
 jobs:
-    checkout-install-deps:
-        <<: *base
+  checkout-install-deps:
+    <<: *base
 
-        steps:
-          - checkout:
-              path: *src-dir
+    steps:
+      - checkout:
+          path: *src-dir
 
-          - run: npm install --no-package-lock
-          - run: npm run-script bootstrap:ci
-          - run: npm run-script gen-certs
+      - run: npm install --no-package-lock
+      - run: npm run-script bootstrap:ci
+      - run: npm run-script gen-certs
 
-          - persist_to_workspace:
-                root: *src-dir
-                paths:
-                  - ./*
+      - persist_to_workspace:
+          root: *src-dir
+          paths:
+            - ./*
 
+  build:
+    <<: *base
 
-    lint:
-        <<: *base
+    steps:
+      - attach_workspace:
+          at: *src-dir
+      - run: npm run-script build
+      - store_artifacts:
+          path: ./packages/api/dist
+          destination: api-dist
+      - store_artifacts:
+          path: ./packages/client/dist
+          destination: client-dist
 
-        steps:
-          - attach_workspace:
-                at: *src-dir
-          - run: npm run-script lint
-
-
-    type-check:
-        <<: *base
-
-        steps:
-          - attach_workspace:
-                at: *src-dir
-          - run: npm run-script type-check
-
-
-    test:
-        <<: *base
-
-        steps:
-          - attach_workspace:
-                at: *src-dir
-          - run: npm run-script test
+      - persist_to_workspace:
+          root: *src-dir
+          paths:
+            - ./*
 
 
-    build:
-        <<: *base
+  lint:
+    <<: *base
 
-        steps:
-          - attach_workspace:
-                at: *src-dir
-          - run: npm run-script build
-          - store_artifacts:
-              path: ./packages/api/dist
-              destination: api-dist
-          - store_artifacts:
-              path: ./packages/client/dist
-              destination: client-dist
+    steps:
+      - attach_workspace:
+          at: *src-dir
+      - run: npm run-script lint
 
+
+  type-check:
+    <<: *base
+
+    steps:
+      - attach_workspace:
+          at: *src-dir
+      - run: npm run-script type-check
+
+
+  test:
+    <<: *base
+
+    steps:
+      - attach_workspace:
+          at: *src-dir
+      - run: npm run-script test
 
 
 workflows:
@@ -78,15 +81,16 @@ workflows:
     jobs:
       - checkout-install-deps
 
-      - type-check:
-            requires:
-              - checkout-install-deps
-      - test:
-            requires:
-              - checkout-install-deps
-      - lint:
-            requires:
-              - checkout-install-deps
       - build:
-            requires:
-              - checkout-install-deps
+          requires:
+            - checkout-install-deps
+
+      - type-check:
+          requires:
+            - build
+      - test:
+          requires:
+            - build
+      - lint:
+          requires:
+            - build
