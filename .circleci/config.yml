@@ -84,13 +84,13 @@ workflows:
       - build:
           requires:
             - checkout-install-deps
+      - lint:
+          requires:
+             - checkout-install-deps
 
       - type-check:
           requires:
             - build
       - test:
-          requires:
-            - build
-      - lint:
           requires:
             - build
