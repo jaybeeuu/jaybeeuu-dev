@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "tsc --watch",
+    "start": "tsc --watch --preserveWatchOutput",
     "lint": "eslint --ext .js,.ts --format codeframe ."
   },
   "devDependencies": {
