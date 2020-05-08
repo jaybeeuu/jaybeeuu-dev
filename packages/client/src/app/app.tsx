@@ -5,8 +5,8 @@ import ApiRoot from "./api-root/api-root";
 const e2eHooks = titleBar();
 
 const App: FunctionComponent = () => (
-  <div className={e2eHooks.element}>
-    <div>Hello, Client World!</div>
+  <div>
+    <div className={e2eHooks.greeting}>Hello, Client World!</div>
     <ApiRoot />
   </div>
 );

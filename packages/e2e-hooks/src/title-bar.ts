@@ -1,7 +1,8 @@
 import { getMakeHooks } from "./make-hooks";
 
 const titleBar = getMakeHooks({
-  element: "title-bar"
+  block: "title-bar",
+  greeting: "greeting"
 });
 
 export { titleBar };
