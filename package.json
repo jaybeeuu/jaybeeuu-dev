@@ -20,13 +20,13 @@
   "scripts": {
     "bootstrap": "lerna bootstrap --hoist",
     "bootstrap:ci": "lerna bootstrap --hoist -- --production",
-    "build": "lerna run --parallel build",
+    "build": "lerna run --stream build",
     "gen-certs": "./scripts/gen-certs.sh",
-    "lint": "lerna run --parallel lint",
+    "lint": "lerna run --parallel --no-bail lint",
     "start": "lerna run --parallel start",
-    "test": "lerna run --parallel test",
+    "test": "lerna run --parallel --no-bail test",
     "test:watch": "lerna run --parallel test:watch",
-    "type-check": "lerna run --parallel type-check"
+    "type-check": "lerna run --parallel --no-bail type-check"
   },
   "devDependencies": {
     "lerna": "^3.20.2"
