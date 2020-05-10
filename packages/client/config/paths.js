@@ -16,7 +16,7 @@ module.exports = {
   appSrc: resolveApp("src"),
   appPackageJson: resolveApp("package.json"),
   certs: {
-    key: path.join(certs, "private.key"),
-    certificate: path.join(certs, "certificate.crt")
+    key: path.join(certs, "localhost.key"),
+    certificate: path.join(certs, "localhost.crt")
   }
 };

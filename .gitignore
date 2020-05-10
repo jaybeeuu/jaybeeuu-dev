@@ -1,2 +1,3 @@
-node_modules
+certs
 lerna-debug.log
+node_modules
