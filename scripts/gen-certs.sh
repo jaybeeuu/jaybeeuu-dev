@@ -17,13 +17,13 @@ do-gen-certs () {
     certsDir=$1
     rm -rf $certsDir
     mkdir $certsDir
-
-    localhostKey="$certsDir/localhost.key"
-    localhostCsr="$certsDir/localhost.csr"
-    localhostCrt="$certsDir/localhost.crt"
+    name="$2.bickley-wallace.com"
+    localhostKey="$certsDir/$name.key"
+    localhostCsr="$certsDir/$name.csr"
+    localhostCrt="$certsDir/$name.crt"
 
     openssl req -new -sha256 -newkey rsa -nodes \
-        -subj "/C=UK/ST=Somerset/L=Bath/O=Josh Bickley-Wallace/CN=localhostnpm start" \
+        -subj "/C=UK/ST=Somerset/L=Bath/O=Josh Bickley-Wallace/OU=$name/CN=localhost" \
         -keyout $localhostKey -out $localhostCsr
 
     openssl x509 -req -in $localhostCsr \
@@ -31,7 +31,7 @@ do-gen-certs () {
         -out $localhostCrt
 }
 
-do-gen-certs "../packages/api/certs"
-do-gen-certs "../packages/client/certs"
+do-gen-certs "../packages/api/certs" "api"
+do-gen-certs "../packages/client/certs" "client"
 
 popd
