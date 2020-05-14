@@ -29,6 +29,6 @@
     "type-check": "lerna run --parallel --no-bail type-check"
   },
   "devDependencies": {
-    "lerna": "^3.20.2"
+    "lerna": "^3.21.0"
   }
 }
