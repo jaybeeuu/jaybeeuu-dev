@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import cookieParser from "cookie-parser";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import express from "express";
 import fs from "fs";
 import https from "https";
@@ -37,15 +37,31 @@ const startServer = async (server: Server, port: number, protocol: string): Prom
   };
 };
 
-const getClientOrigin = (): string => {
-  const clientUrl = new URL(`https://${CLIENT_HOST_NAME}:${CLIENT_PORT}`).toString();
+const formatUrl = (host: string): string => {
+  const clientUrl = new URL(`https://${host}:${CLIENT_PORT}`).toString();
   return clientUrl.replace(/\/$/, "");
+};
+
+const makeGetAllowedOrigins = (): Extract<CorsOptions["origin"], Function>  => {
+  const whitelist = CLIENT_HOST_NAME === "localhost" ? [
+    formatUrl("localhost"),
+    formatUrl("0.0.0.0"),
+    formatUrl("127.0.0.1")
+  ] : [formatUrl(CLIENT_HOST_NAME)];
+
+  return (origin, callback): void => {
+    if (origin && whitelist.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`Origin "${origin}" not allowed by CORS.`), false);
+    }
+  };
 };
 
 export default async (): Promise<CloseServer> => {
   const app = express();
   app.use(cors({
-    origin: getClientOrigin()
+    origin: makeGetAllowedOrigins()
   }));
   app.use(morgan("dev"));
   app.use(express.static("public"));
