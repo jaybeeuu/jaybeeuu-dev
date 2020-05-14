@@ -18,14 +18,15 @@
   },
   "homepage": "https://github.com/jayseeare/bickleywallace-site#readme",
   "scripts": {
-    "bootstrap": "lerna bootstrap --hoist",
     "bootstrap:ci": "lerna bootstrap --hoist -- --production",
+    "bootstrap": "lerna bootstrap --hoist",
     "build": "lerna run --stream build",
+    "clean": "git clean -fdX",
     "gen-certs": "./scripts/gen-certs.sh",
     "lint": "lerna run --parallel --no-bail lint",
     "start": "lerna run --parallel start",
-    "test": "lerna run --parallel --no-bail test",
     "test:watch": "lerna run --parallel test:watch",
+    "test": "lerna run --parallel --no-bail test",
     "type-check": "lerna run --parallel --no-bail type-check"
   },
   "devDependencies": {
