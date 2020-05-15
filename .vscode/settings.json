@@ -1,5 +1,8 @@
 {
 	"terminal.integrated.shell.linux": "/bin/bash",
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	},
 	"eslint.workingDirectories": [{ "pattern": "./packages/*/" }],
 	"eslint.validate": [
 		"javascript",
