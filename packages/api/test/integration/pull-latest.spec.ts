@@ -1,13 +1,14 @@
 import "../mock-env";
 
 import path from "path";
-import { fetch, Verbs, fetchOK } from "../fetch";
+import { fetch, fetchOK } from "../fetch";
 import { cleanUpDirectories, getRemoteRepoDirectory } from "../files";
 import { useServer } from "../server";
 import { makeRepo, makeCommit } from "../git";
 import { advanceTo } from "jest-date-mock";
 import { resolvePostFilePath } from "../../src/posts";
 import { canAccess } from "../../src/files";
+import { HttpMethod } from "../../src/http-methods";
 
 const REMOTE_POST_REPO_DIRECTORY = getRemoteRepoDirectory();
 
@@ -34,9 +35,9 @@ describe("refresh", () => {
       }]
     );
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
 
-    const manifest = await fetch("/posts", { method: Verbs.GET })
+    const manifest = await fetch("/posts", { method: HttpMethod.GET })
       .then((res) => res.json());
 
     const updatedPostContent = "and it has been updated";
@@ -51,9 +52,9 @@ describe("refresh", () => {
       }
     );
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
 
-    const response = await fetch(manifest[slug].href, { method: Verbs.GET });
+    const response = await fetch(manifest[slug].href, { method: HttpMethod.GET });
     expect(response.redirected).toBe(true);
 
     const post = await response.text();
@@ -81,9 +82,9 @@ describe("refresh", () => {
       }]
     );
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
 
-    const manifest = await fetch("/posts", { method: Verbs.GET })
+    const manifest = await fetch("/posts", { method: HttpMethod.GET })
       .then((res) => res.json());
 
     const updatedPostContent = "and it has been updated";
@@ -98,7 +99,7 @@ describe("refresh", () => {
       }
     );
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
 
     expect(await canAccess(resolvePostFilePath(manifest[slug].fileName))).toBe(false);
   });
@@ -124,9 +125,9 @@ describe("refresh", () => {
       }]
     );
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
 
-    const manifest = await fetch("/posts", { method: Verbs.GET })
+    const manifest = await fetch("/posts", { method: HttpMethod.GET })
       .then((res) => res.json());
 
     await makeCommit(
@@ -146,9 +147,9 @@ describe("refresh", () => {
       }
     );
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
 
-    const response = await fetch(manifest[slug].href, { method: Verbs.GET });
+    const response = await fetch(manifest[slug].href, { method: HttpMethod.GET });
     expect(response.redirected).toBe(false);
 
     const post = await response.text();
@@ -176,7 +177,7 @@ describe("refresh", () => {
       }]
     );
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
 
     await makeCommit(
       path.resolve(REMOTE_POST_REPO_DIRECTORY),
@@ -192,9 +193,9 @@ describe("refresh", () => {
     const updateDate = "2020-03-11";
     advanceTo(updateDate);
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
 
-    const manifest = await fetch("/posts", { method: Verbs.GET })
+    const manifest = await fetch("/posts", { method: HttpMethod.GET })
       .then((res) => res.json());
     expect(manifest[slug].lastUpdateDate).toBe(new Date(updateDate).toUTCString());
   });
@@ -219,7 +220,7 @@ describe("refresh", () => {
       }]
     );
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
     const newContent = "It has some different content";
     await makeCommit(
       path.resolve(REMOTE_POST_REPO_DIRECTORY),
@@ -232,12 +233,12 @@ describe("refresh", () => {
       }
     );
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
 
-    const manifest = await fetch("/posts", { method: Verbs.GET })
+    const manifest = await fetch("/posts", { method: HttpMethod.GET })
       .then((res) => res.json());
 
-    const response = await fetch(manifest[slug].href, { method: Verbs.GET });
+    const response = await fetch(manifest[slug].href, { method: HttpMethod.GET });
     const post = await response.text();
 
     expect(post).toContain(newContent);
@@ -267,9 +268,9 @@ describe("refresh", () => {
     const publishDate = "2020-03-11";
     advanceTo(publishDate);
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
 
-    const manifest = await fetch("/posts", { method: Verbs.GET })
+    const manifest = await fetch("/posts", { method: HttpMethod.GET })
       .then((res) => res.json());
 
     const newMeta = {
@@ -290,9 +291,9 @@ describe("refresh", () => {
     const updateDate = "2020-03-11";
     advanceTo(updateDate);
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
 
-    const newManifest = await fetch("/posts", { method: Verbs.GET })
+    const newManifest = await fetch("/posts", { method: HttpMethod.GET })
       .then((res) => res.json());
 
     expect(newManifest).toStrictEqual({
@@ -328,7 +329,7 @@ describe("refresh", () => {
       }]
     );
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
 
     await makeCommit(
       path.resolve(REMOTE_POST_REPO_DIRECTORY),
@@ -344,9 +345,9 @@ describe("refresh", () => {
       }
     );
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
 
-    const newManifest = await fetch("/posts", { method: Verbs.GET })
+    const newManifest = await fetch("/posts", { method: HttpMethod.GET })
       .then((res) => res.json());
 
     expect(newManifest).toStrictEqual({});
@@ -374,8 +375,8 @@ describe("refresh", () => {
       }]
     );
 
-    await fetchOK("/refresh", { method: Verbs.POST });
-    const oldManifest = await fetch("/posts", { method: Verbs.GET })
+    await fetchOK("/refresh", { method: HttpMethod.POST });
+    const oldManifest = await fetch("/posts", { method: HttpMethod.GET })
       .then((res) => res.json());
 
     await makeCommit(
@@ -392,9 +393,9 @@ describe("refresh", () => {
       }
     );
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
 
-    const response = await fetch(oldManifest[slug].href, { method: Verbs.GET });
+    const response = await fetch(oldManifest[slug].href, { method: HttpMethod.GET });
 
     expect(response.status).toStrictEqual(404);
   });

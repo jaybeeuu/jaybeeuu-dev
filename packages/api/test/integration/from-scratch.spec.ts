@@ -2,7 +2,8 @@ import "../mock-env";
 
 import path from "path";
 import { advanceTo } from "jest-date-mock";
-import { fetch, Verbs, fetchOK } from "../fetch";
+import { HttpMethod } from "../../src/http-methods";
+import { fetch, fetchOK } from "../fetch";
 import { cleanUpDirectories, getRemoteRepoDirectory } from "../files";
 import { useServer } from "../server";
 import { makeRepo } from "../git";
@@ -36,9 +37,9 @@ describe("refresh", () => {
       }]
     );
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
 
-    const result = await fetch("/posts", { method: Verbs.GET })
+    const result = await fetch("/posts", { method: HttpMethod.GET })
       .then((res) => res.json());
 
     expect(result).toStrictEqual({
@@ -75,12 +76,12 @@ describe("refresh", () => {
       }]
     );
 
-    await fetchOK("/refresh", { method: Verbs.POST });
+    await fetchOK("/refresh", { method: HttpMethod.POST });
 
-    const manifest = await fetch("/posts", { method: Verbs.GET })
+    const manifest = await fetch("/posts", { method: HttpMethod.GET })
       .then((res) => res.json());
 
-    const post = await fetch(manifest[slug].href, { method: Verbs.GET,  })
+    const post = await fetch(manifest[slug].href, { method: HttpMethod.GET,  })
       .then((res) => res.text());
 
     expect(post).toContain(postContent);
