@@ -4,9 +4,10 @@ import { ParamsDictionary, Request, NextFunction } from "express-serve-static-co
 import fs from "fs";
 import { Agent } from "https";
 import nodeFetch, { Response, RequestInit } from "node-fetch";
-import path from "path";
 import { URL } from "url";
-import { API_PORT, API_HOST_NAME } from "../src/env";
+import { API_PORT, API_HOST_NAME, CLIENT_HOST_NAME, CLIENT_PORT } from "../src/env";
+import { HttpMethod } from "../src/http-methods";
+import { resolveApp } from "../src/paths";
 
 jest.mock("morgan", () => () => (
   req: Request<ParamsDictionary>,
@@ -64,11 +65,12 @@ export type Fetch = (route: string, init?: RequestOptions) => Promise<Response>;
 const agent = new Agent({
   host: "localhost",
   port: API_PORT,
-  ca: fs.readFileSync(path.join(__dirname, "../certs/certificate.crt"))
+  ca: fs.readFileSync(resolveApp("../../certs/bickley-wallace-ca.crt"))
 });
 
 const defaultOptions: RequestOptions = {
   headers: {
+    "Origin": new URL(`HTTPS://${CLIENT_HOST_NAME}:${CLIENT_PORT}`).toString(),
     "Content-Type": "application/json"
   }
 };
