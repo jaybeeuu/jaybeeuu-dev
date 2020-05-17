@@ -10,7 +10,7 @@ const isProduction = env.NODE_ENV === "production";
 console.log(env.CLIENT_PORT);
 module.exports = {
   mode: isProduction ? "production" : "development",
-  devtool: isProduction ? "source-map" : "eval-source-map",
+  devtool: isProduction ? "source-map" : "source-map",
   watch: !isProduction,
   devServer: {
     compress: true,
