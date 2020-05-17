@@ -1,4 +1,5 @@
 import chalk from "chalk";
+import compression from "compression";
 import cookieParser from "cookie-parser";
 import express from "express";
 import fs from "fs";
@@ -37,6 +38,7 @@ const startServer = async (server: Server, port: number, protocol: string): Prom
 
 export default async (): Promise<CloseServer> => {
   const app = express();
+  app.use(compression());
   app.use(morgan("dev"));
   app.use(express.static("public"));
   app.use(cookieParser());

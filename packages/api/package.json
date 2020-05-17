@@ -21,7 +21,9 @@
     "test:watch": "node --inspect ./node_modules/.bin/jest --config ./test/jest.config.js --runInBand --watch --no-cache"
   },
   "dependencies": {
+    "@types/compression": "^1.7.0",
     "chalk": "^4.0.0",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
     "core-js": "^3.6.5",
     "cors": "^2.8.5",
