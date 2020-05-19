@@ -22,7 +22,7 @@ RUN apt-get install -y sudo \
     && chmod 0440 /etc/sudoers.d/node
 
 # update npm and install lerna
-RUN npm install -g npm lerna
+RUN npm install -g npm lerna @microsoft/rush
 
 # install Cypress dependencies (separate commands to avoid time outs)
 RUN apt-get install -y \
