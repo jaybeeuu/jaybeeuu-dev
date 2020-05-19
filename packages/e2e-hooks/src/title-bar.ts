@@ -1,6 +1,6 @@
-import { getMakeHooks } from "./make-hooks";
+import { makeHooks } from "./make-hooks";
 
-const titleBar = getMakeHooks({
+const titleBar = makeHooks({
   block: "title-bar",
   greeting: "greeting"
 });

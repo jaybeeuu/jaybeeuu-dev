@@ -3,7 +3,7 @@
   "compilerOptions": {
     "module": "ES6",
     "declaration": true,
-    "outDir": "./dist",
+    "outDir": "./lib",
     "target": "ES2020"
   },
   "include": [

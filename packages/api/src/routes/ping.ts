@@ -8,7 +8,10 @@ router.get(
   "/",
   allowCors({ methods: [HttpMethod.GET] }),
   (req, res): void => {
-    res.send(JSON.stringify("pong"));
+    setTimeout(() => {
+      res.header("Cache-Control", "no-cache");
+      res.send(JSON.stringify("pong"));
+    }, 3500);
   }
 );
 
