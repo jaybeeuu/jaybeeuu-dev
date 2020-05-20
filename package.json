@@ -22,6 +22,7 @@
     "bootstrap": "lerna bootstrap --hoist",
     "build": "lerna run --stream build",
     "clean": "git clean -fdX",
+    "e2e": "cd packages/e2e && cypress",
     "gen-certs": "./scripts/gen-certs.sh",
     "lint": "lerna run --parallel --no-bail lint",
     "start": "lerna run --parallel start",
