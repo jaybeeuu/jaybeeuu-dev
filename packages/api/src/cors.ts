@@ -28,7 +28,7 @@ export type AllowCorsOptions = Omit<CorsOptions, "methods" | "origin"> & {
   methods: HttpMethod[];
 }
 
-export const allowCors = (options: AllowCorsOptions): ReturnType<typeof cors> => cors({
+export const allowCors = (options?: AllowCorsOptions): ReturnType<typeof cors> => cors({
   origin: getAllowedOrigins,
   ...options
 });

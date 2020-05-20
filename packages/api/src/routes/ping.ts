@@ -1,5 +1,6 @@
 import express from "express";
 import { allowCors, HttpMethod } from "../cors";
+
 const router = express.Router();
 
 router.get(

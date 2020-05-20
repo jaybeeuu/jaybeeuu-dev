@@ -31,7 +31,7 @@ const agent = new Agent({
 
 const defaultOptions: RequestOptions = {
   headers: {
-    "Origin": new URL(`HTTPS://${CLIENT_HOST_NAME}:${CLIENT_PORT}`).toString(),
+    "Origin": new URL(`https://${CLIENT_HOST_NAME}:${CLIENT_PORT}`).toString().replace(/\/$/, ""),
     "Content-Type": "application/json"
   }
 };
@@ -64,7 +64,7 @@ export const fetchOK = async (route: string,
   throw new Error(`Response was not OK:\n\n${JSON.stringify({
     status: response.status,
     statusText: response.statusText,
-    text: await response.json(),
+    text: await response.text(),
     url: response.url
   }, null, 2)}}`);
 };

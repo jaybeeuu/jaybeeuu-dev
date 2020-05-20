@@ -2,10 +2,10 @@ import { useRef, useState, useEffect, Inputs } from "preact/hooks";
 import { API_HOST_NAME, API_PORT } from "../env";
 import { callApi, ApiCallResult, ApiCallStatus } from "../utils/api";
 
+const baseUrl = new URL(`https://${API_HOST_NAME}:${API_PORT}`);
+
 const formaatUrl = (relativePath: string): string => {
-  const url = new URL(`https://${API_HOST_NAME}:${API_PORT}`);
-  url.pathname = relativePath;
-  return url.toString();
+  return new URL(relativePath, baseUrl).toString();
 };
 
 const useAsyncEffect = (
