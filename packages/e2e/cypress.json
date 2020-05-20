@@ -1,6 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/cypress-io/cypress/develop/cli/schema/cypress.schema.json",
-  "supportFile": false,
-  "fixturesFolder": false,
-  "baseUrl": "https://127.0.0.1:3443"
+  "baseUrl": "https://localhost:3443",
+  "integrationFolder": "integration",
+  "pluginsFile": "plugins/index.js",
+  "supportFile": "support/index.ts",
+  "fixturesFolder": false
 }
