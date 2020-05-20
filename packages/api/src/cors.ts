@@ -4,8 +4,7 @@ import { CLIENT_HOST_NAME, CLIENT_PORT } from "./env";
 import { HttpMethod } from "./http-methods";
 
 const formatUrl = (host: string): string => {
-  const clientUrl = new URL(`https://${host}:${CLIENT_PORT}`).toString();
-  return clientUrl.replace(/\/$/, "");
+  return new URL(`https://${host}:${CLIENT_PORT}`).toString();
 };
 
 const whitelist = CLIENT_HOST_NAME === "localhost" ? [
@@ -15,7 +14,7 @@ const whitelist = CLIENT_HOST_NAME === "localhost" ? [
 ] : [formatUrl(CLIENT_HOST_NAME)];
 
 const getAllowedOrigins: Extract<CorsOptions["origin"], Function> = (origin, callback) => {
-  if (origin && whitelist.includes(origin)) {
+  if (origin && whitelist.includes(new URL(origin).toString())) {
     callback(null, true);
   } else {
     callback(new Error(`Origin "${origin}" not allowed by CORS.`), false);

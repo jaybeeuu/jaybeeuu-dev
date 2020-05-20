@@ -31,7 +31,7 @@ const agent = new Agent({
 
 const defaultOptions: RequestOptions = {
   headers: {
-    "Origin": new URL(`https://${CLIENT_HOST_NAME}:${CLIENT_PORT}`).toString().replace(/\/$/, ""),
+    "Origin": new URL(`https://${CLIENT_HOST_NAME}:${CLIENT_PORT}`).toString(),
     "Content-Type": "application/json"
   }
 };
