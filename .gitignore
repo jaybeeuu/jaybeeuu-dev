@@ -1,4 +1,5 @@
 */.srl
+.cypress
 certs
 lerna-debug.log
 node_modules

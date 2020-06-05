@@ -25,16 +25,23 @@ RUN npm install -g npm lerna @microsoft/rush
 
 # install Cypress dependencies (separate commands to avoid time outs)
 RUN apt-get install -y \
-    libgtk2.0-0
+    libgtk2.0-0 \
+    libgtk-3-0
 RUN apt-get install -y \
-    libnotify-dev
+    libnotify-dev \
+    libgconf-2-4
 RUN apt-get install -y \
-    libgconf-2-4 \
     libnss3 \
     libxss1
 RUN apt-get install -y \
     libasound2 \
+    libxtst6
+RUN apt-get install -y \
+    xauth \
     xvfb
+
+ENV CYPRESS_CACHE_FOLDER /workspaces/bickleywallace-site/.cypress
+# ENV CYPRESS_RUN_BINARY /workspaces/bickleywallace-site/.cypress
 
 # install CircleCI CLI
 RUN curl -fLSs --http1.0 https://circle.ci/cli | bash
@@ -45,6 +52,7 @@ RUN apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Make docker.host.internal avvailable on all hosts https://github.com/docker/for-linux/issues/264
-RUN echo -e "`/sbin/ip route|awk '/default/ { print $3 }'`\tdocker.host.internal" | sudo tee -a /etc/hosts > /dev/null
+RUN echo -e "`/sbin/ip route|awk '/default/ { print $3 }'`\thost.docker.internal" | sudo tee -a /etc/hosts > /dev/null
+ENV DISPLAY host.docker.internal:0.0
 
 ENV DEBIAN_FRONTEND=
