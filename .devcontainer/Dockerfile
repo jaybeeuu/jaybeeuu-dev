@@ -15,7 +15,6 @@ RUN rm -rf /opt/yarn-* \
     && rm -f /usr/local/bin/yarn \
     && rm -f /usr/local/bin/yarnpkg
 
-
 # Add sudo support for non-root users
 RUN apt-get install -y sudo \
     && echo node ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/node \
@@ -44,5 +43,8 @@ RUN curl -fLSs --http1.0 https://circle.ci/cli | bash
 RUN apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
+
+# Make docker.host.internal avvailable on all hosts https://github.com/docker/for-linux/issues/264
+RUN echo -e "`/sbin/ip route|awk '/default/ { print $3 }'`\tdocker.host.internal" | sudo tee -a /etc/hosts > /dev/null
 
 ENV DEBIAN_FRONTEND=
