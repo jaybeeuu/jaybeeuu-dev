@@ -40,9 +40,6 @@ RUN apt-get install -y \
     xauth \
     xvfb
 
-ENV CYPRESS_CACHE_FOLDER /workspaces/bickleywallace-site/.cypress
-# ENV CYPRESS_RUN_BINARY /workspaces/bickleywallace-site/.cypress
-
 # install CircleCI CLI
 RUN curl -fLSs --http1.0 https://circle.ci/cli | bash
 
