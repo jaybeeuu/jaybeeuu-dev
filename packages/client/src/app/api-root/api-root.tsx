@@ -4,7 +4,7 @@ import { ApiCallStatus } from "../../utils/api";
 import { titleBar } from "@bickley-wallace/e2e-hooks";
 
 const ApiRoot: FunctionComponent = () => {
-  const call = useApiCall("/postse", []);
+  const call = useApiCall("/posts", []);
   return (
     <pre className={titleBar.apiResults}>
       {call.status === ApiCallStatus.FAILED ? JSON.stringify({
