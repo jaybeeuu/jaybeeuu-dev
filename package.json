@@ -25,6 +25,7 @@
     "e2e": "cd packages/e2e && cypress",
     "gen-certs": "./scripts/gen-certs.sh",
     "lint": "lerna run --parallel --no-bail lint",
+    "nvm": "nvm use 12.18.0",
     "start": "lerna run --parallel start",
     "test:watch": "lerna run --parallel test:watch",
     "test": "lerna run --parallel --no-bail test",
