@@ -4,6 +4,6 @@
   "ignore": ["*.spec.ts", "test/**"],
   "ext": "js,ts,json",
   "execMap": {
-    "ts": "babel-node --extensions '.ts'"
+    "ts": "babel-node --extensions .ts"
   }
 }
