@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import "../test/custom-matchers";
-import log from "./log";
+import * as log from "./log";
 
 describe("log", () => {
   beforeEach(() => {

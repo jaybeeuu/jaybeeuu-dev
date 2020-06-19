@@ -8,8 +8,9 @@ import morgan from "morgan";
 import { Server } from "net";
 import registerRoutes from "./routes/index";
 import { API_PORT } from "./env";
-import log from "./log";
+import * as log from "./log";
 import { certs } from "./paths";
+import { errorHandler } from "./errors";
 
 export type CloseServer = () => Promise<void>;
 
@@ -40,9 +41,9 @@ export default async (): Promise<CloseServer> => {
   const app = express();
   app.use(compression());
   app.use(morgan("dev"));
+  app.use(errorHandler);
   app.use(express.static("public"));
   app.use(cookieParser());
-
   registerRoutes(app);
 
   return startServer(https.createServer(await getSSLOptions(), app), API_PORT, "https");

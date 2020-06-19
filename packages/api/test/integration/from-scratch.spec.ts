@@ -2,7 +2,7 @@ import "../mock-env";
 
 import path from "path";
 import { advanceTo } from "jest-date-mock";
-import { HttpMethod } from "../../src/http-methods";
+import { HttpMethod } from "../../src/http-constants";
 import { fetch, fetchOK } from "../fetch";
 import { cleanUpDirectories, getRemoteRepoDirectory } from "../files";
 import { useServer } from "../server";

@@ -36,3 +36,13 @@ export enum HttpMethod {
    */
   TRACE = "TRACE"
 }
+
+export enum HttpStatusCode {
+  OK = 200,
+
+  BAD_REQUEST = 400,
+  FORBIDDEN = 403,
+  NOT_FOUND = 404,
+
+  INTERAL_SERVER_ERROR = 500
+}

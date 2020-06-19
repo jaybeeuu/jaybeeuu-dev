@@ -1,7 +1,7 @@
 import cors, { CorsOptions } from "cors";
 import { URL } from "url";
 import { CLIENT_HOST_NAME, CLIENT_PORT } from "./env";
-import { HttpMethod } from "./http-methods";
+import { HttpMethod } from "./http-constants";
 
 const formatUrl = (host: string): string => {
   return new URL(`https://${host}:${CLIENT_PORT}`).toString();

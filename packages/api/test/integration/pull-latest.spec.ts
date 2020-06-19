@@ -8,7 +8,7 @@ import { makeRepo, makeCommit } from "../git";
 import { advanceTo } from "jest-date-mock";
 import { resolvePostFilePath } from "../../src/posts";
 import { canAccess } from "../../src/files";
-import { HttpMethod } from "../../src/http-methods";
+import { HttpMethod } from "../../src/http-constants";
 
 const REMOTE_POST_REPO_DIRECTORY = getRemoteRepoDirectory();
 

@@ -4,7 +4,7 @@ import * as repo from "../repo/index";
 import * as posts from "../posts/index";
 import { ResultState } from "../results";
 import { allowCors } from "../cors";
-import { HttpMethod } from "../http-methods";
+import { HttpMethod } from "../http-constants";
 
 const router = express.Router();
 
