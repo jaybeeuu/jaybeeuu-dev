@@ -13,6 +13,7 @@ const isValidStatusCode = (candidate: any): boolean => {
   return Object.values(HttpStatusCode).includes(candidate);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
   log.error("Error occurred durring request", error);
   const status = isValidStatusCode(error.status) ? error.status : HttpStatusCode.INTERAL_SERVER_ERROR;

@@ -25,11 +25,11 @@ export const useApiCall = (relativePath: string, dependencies: Inputs): ApiCallR
   const [result, setResult]  = useState<ApiCallResult>({ status: ApiCallStatus.PENDING });
 
   useAsyncEffect(async (signal) => {
-    for await ( const result of callApi(formaatUrl(relativePath))) {
+    for await ( const apiResult of callApi(formaatUrl(relativePath))) {
       if (signal.cancelled) {
         break;
       }
-      setResult(result);
+      setResult(apiResult);
     }
   }, dependencies);
 
