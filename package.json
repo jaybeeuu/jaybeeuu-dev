@@ -9,6 +9,10 @@
     "Josh",
     "Site"
   ],
+  "engines": {
+    "node": "^12.18.0",
+    "pnpm": "^5.2.6"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jayseeare/bickleywallace-site.git"
@@ -18,20 +22,16 @@
   },
   "homepage": "https://github.com/jayseeare/bickleywallace-site#readme",
   "scripts": {
-    "bootstrap:ci": "lerna bootstrap --hoist -- --production",
-    "bootstrap": "lerna bootstrap --hoist",
-    "build": "lerna run --stream build",
+    "bootstrap:ci": "",
+    "bootstrap": "pnpm install -r",
+    "build": "pnpm run -r build",
     "clean": "git clean -fdX",
     "e2e": "cd packages/e2e && cypress",
     "gen-certs": "./scripts/gen-certs.sh",
-    "lint": "lerna run --parallel --no-bail lint",
+    "lint": "pnpm run --no-bail --no-sort -r lint",
     "nvm": "nvm use 12.18.0",
-    "start": "lerna run --parallel start",
-    "test:watch": "lerna run --parallel test:watch",
-    "test": "lerna run --parallel --no-bail test",
-    "type-check": "lerna run --parallel --no-bail type-check"
-  },
-  "devDependencies": {
-    "lerna": "^3.22.1"
+    "start": "pnpm run -r --no-sort start",
+    "test": "pnpm run --no-bail --no-sort -r test",
+    "type-check": "pnpm run --no-bail --no-sort -r type-check"
   }
 }

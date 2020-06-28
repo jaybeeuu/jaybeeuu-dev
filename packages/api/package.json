@@ -42,7 +42,7 @@
     "@babel/node": "^7.8.4",
     "@babel/preset-env": "^7.9.0",
     "@babel/preset-typescript": "^7.9.0",
-    "@bickley-wallace/config-eslint": "*",
+    "@bickley-wallace/config-eslint": "workspace:*",
     "@types/compression": "^1.7.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.6",
@@ -63,6 +63,7 @@
     "eslint": "^6.8.0",
     "eslint-plugin-jest": "^23.6.0",
     "jest": "^25.3.0",
+    "jest-matcher-utils": "^25.5.0",
     "jest-date-mock": "^1.0.8",
     "nodemon": "^2.0.3",
     "typescript": "^3.7.5"
