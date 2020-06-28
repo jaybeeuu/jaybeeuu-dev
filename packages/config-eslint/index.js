@@ -1,8 +1,14 @@
-const baseConfig = require('./base-eslintrc.json');
+const options = {
+  "rules": {
+    arrays: "replace"
+  }
+};
 
-module.exports.baseConfig = baseConfig;
+const defaultOptions = {
+  arrays: "concat"
+};
 
-const mergeConfigEntry = (left, right) => {
+const mergeConfigEntry = (left, right, path, { arrays } = defaultOptions) => {
   if (right === undefined) {
     return left;
   }
@@ -16,12 +22,22 @@ const mergeConfigEntry = (left, right) => {
   }
 
   if (Array.isArray(left) && Array.isArray(right)) {
-    return right;
+    switch(arrays) {
+      case "replace": return left;
+      case "merge": return left.map((leftValue, i) => mergeConfigEntry(leftValue, right[i]));
+      case "concat":
+      default: return [...left, ...right];
+    }
   }
 
   if (typeof left === "object" && typeof right === "object") {
     return Object.entries(right).reduce((acc, [key, rightValue]) => {
-      acc[key] = mergeConfigEntry(left[key], rightValue);
+      const resolvedOptions = options[key] || defaultOptions;
+      acc[key] = mergeConfigEntry(
+        left[key],
+        rightValue,
+        resolvedOptions
+      );
 
       if (acc[key] === undefined) {
         delete acc[key];
@@ -42,7 +58,7 @@ const mergeConfigEntry = (left, right) => {
   return right;
 };
 
-module.exports.mergeConfig = (...configFragments) => {
+const mergeConfig = (...configFragments) => {
   if (configFragments.length <= 1) {
     const finalConfig = {
       ...configFragments[0],
@@ -54,5 +70,11 @@ module.exports.mergeConfig = (...configFragments) => {
   const [left, right, ...otherConfigs] = configFragments;
   const leftmost = mergeConfigEntry(left, right);
 
-  return this.mergeConfig(leftmost, ...otherConfigs);
+  return mergeConfig(leftmost, ...otherConfigs);
+};
+
+module.exports = {
+  base: require('./configs/base-eslintrc.json'),
+  jest: require('./configs/jest-eslintrc.json'),
+  mergeConfig
 };

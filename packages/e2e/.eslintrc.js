@@ -1,18 +1,16 @@
-const { baseConfig, mergeConfig } = require('@bickley-wallace/config-eslint');
+const { base, mergeConfig } = require('@bickley-wallace/config-eslint');
 
 module.exports = mergeConfig(
-  baseConfig,
+  base,
   {
     env: {
       node: true,
       "cypress/globals": true
     },
     plugins: [
-      ...baseConfig.plugins,
       "cypress"
     ],
     extends: [
-      ...baseConfig.extends,
       "plugin:cypress/recommended"
     ]
   }

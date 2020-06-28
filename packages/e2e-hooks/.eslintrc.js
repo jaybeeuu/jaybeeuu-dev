@@ -1,7 +1,7 @@
-const { baseConfig, mergeConfig } = require('@bickley-wallace/config-eslint');
+const { base, mergeConfig } = require('@bickley-wallace/config-eslint');
 
 module.exports = mergeConfig(
-  baseConfig,
+  base,
   {
     env: {
       browser: true

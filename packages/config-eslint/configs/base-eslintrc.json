@@ -3,23 +3,19 @@
     "es6": true
   },
   "plugins": [
-    "@typescript-eslint",
-    "jest"
+    "@typescript-eslint"
   ],
   "extends": [
-    "eslint:recommended",
-    "plugin:jest/all"
+    "eslint:recommended"
   ],
   "rules": {
     "indent": ["error", 2],
     "no-console": ["error"],
-    "no-unused-vars": ["off"],
     "no-shadow": ["error"],
+    "no-unused-vars": ["off"],
     "operator-linebreak": ["error", "before"],
     "quotes": ["error", "double"],
-    "semi": ["error", "always"],
-
-    "jest/prefer-expect-assertions": "off"
+    "semi": ["error", "always"]
   },
   "overrides": {
     "typescript": {
@@ -29,8 +25,8 @@
       ],
       "parser": "@typescript-eslint/parser",
       "parserOptions": {
-        "sourceType": "module",
-        "project": "./tsconfig.json"
+        "project": "./tsconfig.json",
+        "sourceType": "module"
       },
       "extends": [
         "eslint:recommended",
@@ -38,6 +34,7 @@
         "plugin:@typescript-eslint/recommended-requiring-type-checking"
       ],
       "rules": {
+        "no-unused-vars": ["off"],
         "@typescript-eslint/no-unused-vars": ["error"],
         "@typescript-eslint/explicit-function-return-type": ["error", { "allowExpressions": true }]
       }
@@ -47,28 +44,14 @@
         "config/**/*.js"
       ],
       "env": {
-        "node": true,
-        "browser": false
+        "browser": false,
+        "node": true
       },
       "parserOptions": {
         "ecmaVersion": 2018
       },
       "rules": {
         "no-console": "off"
-      }
-    },
-    "jest": {
-      "files": [
-        "test/**/*.ts",
-        "**/*.spec.ts"
-      ],
-      "rules": {
-        "jest/valid-describe": "off",
-        "jest/valid-title": ["error", { "ignoreTypeOfDescribeName": false }],
-        "jest/no-hooks": "off"
-      },
-      "env": {
-        "jest/globals": true
       }
     }
   }
