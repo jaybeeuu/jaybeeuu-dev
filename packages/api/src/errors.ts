@@ -1,6 +1,6 @@
 import * as log from "./log";
 import { ErrorRequestHandler } from "express";
-import { NODE_ENV } from "./env";
+import { NODE_ENV, Envs } from "./env";
 import { HttpStatusCode } from "./http-constants";
 
 interface ErrorResponseBody {
@@ -22,7 +22,7 @@ export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
     status: status
   };
 
-  if (NODE_ENV !== "production" && error.stack) {
+  if (NODE_ENV !== Envs.PRODUCTION && error.stack) {
     ressponseBody.stack = error.stack;
   }
 
