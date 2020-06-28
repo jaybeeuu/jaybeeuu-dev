@@ -45,10 +45,12 @@ export default async (): Promise<CloseServer> => {
   const app = express();
   app.use(compression());
   app.use(morgan("dev"));
-  app.use(errorHandler);
   app.use(express.static("public"));
   app.use(cookieParser());
+
   registerRoutes(app);
+
+  app.use(errorHandler);
 
   return startServer(https.createServer(await getSSLOptions(), app), API_PORT, "https");
 };

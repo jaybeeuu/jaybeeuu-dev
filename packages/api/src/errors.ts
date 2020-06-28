@@ -14,7 +14,7 @@ const isValidStatusCode = (candidate: any) => {
 };
 
 export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
-  log.error(error);
+  log.error("Error occurred durring request", error);
   const status = isValidStatusCode(error.status) ? error.status : HttpStatusCode.INTERAL_SERVER_ERROR;
   res.status(status);
   const ressponseBody: ErrorResponseBody = {
@@ -27,5 +27,4 @@ export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
   }
 
   res.json(ressponseBody);
-  return res.status(500).json({ error: error.toString() });
 };
