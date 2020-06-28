@@ -5,11 +5,12 @@
   "license": "MIT",
   "description": "The API behind my blog",
   "keywords": [
-    "Bickley-Wallace",
-    "Josh",
     "API"
   ],
-  "main": "./src/index.ts",
+  "main": "./lib/index.js",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "build": "babel --extensions .ts --out-dir dist ./src",
     "start": "nodemon ./src/index.ts",
@@ -41,6 +42,7 @@
     "@babel/node": "^7.8.4",
     "@babel/preset-env": "^7.9.0",
     "@babel/preset-typescript": "^7.9.0",
+    "@bickley-wallace/config-eslint": "*",
     "@types/compression": "^1.7.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.6",

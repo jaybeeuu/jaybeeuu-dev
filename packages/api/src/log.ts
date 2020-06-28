@@ -6,7 +6,7 @@ const getErrorMessage = (err: any | null | undefined): string => {
     return JSON.stringify(err) || "Empty string";
   }
 
-  if (typeof err === 'string') {
+  if (typeof err === "string") {
     return err;
   }
 
@@ -17,5 +17,6 @@ const getErrorMessage = (err: any | null | undefined): string => {
 export const error = (message:string, err?: unknown): void => {
   const errorMessage = getErrorMessage(err);
 
+  // eslint-disable-next-line no-console
   console.error(`${message}: ${errorMessage}`);
-}
+};

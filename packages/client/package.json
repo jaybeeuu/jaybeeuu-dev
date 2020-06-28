@@ -5,8 +5,6 @@
   "license": "MIT",
   "description": "UI for my blog.",
   "keywords": [
-    "Bickley-Wallace",
-    "Josh",
     "UI"
   ],
   "main": "src/index.tsx",

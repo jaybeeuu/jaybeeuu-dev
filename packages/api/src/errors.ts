@@ -9,7 +9,7 @@ interface ErrorResponseBody {
   status: HttpStatusCode;
 }
 
-const isValidStatusCode = (candidate: any) => {
+const isValidStatusCode = (candidate: any): boolean => {
   return Object.values(HttpStatusCode).includes(candidate);
 };
 
