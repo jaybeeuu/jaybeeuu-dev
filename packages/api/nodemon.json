@@ -1,6 +1,6 @@
 {
   "sourceMaps": true,
-  "watch": ["src"],
+  "watch": ["src", "./babel.coonig.js", "./tsconfig.json"],
   "ignore": ["*.spec.ts", "test/**"],
   "ext": "js,ts,json",
   "execMap": {
