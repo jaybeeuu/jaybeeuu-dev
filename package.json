@@ -11,7 +11,6 @@
   ],
   "engines": {
     "node": "^12.18.0",
-    "pnpm": "^5.2.6"
   },
   "repository": {
     "type": "git",
@@ -32,5 +31,8 @@
     "start": "pnpm run -r --no-sort start",
     "test": "pnpm run --no-bail --no-sort -r test",
     "type-check": "pnpm run --no-bail --no-sort -r type-check"
+  },
+  "dependencies": {
+    "pnpm": "^5.2.6"
   }
 }
