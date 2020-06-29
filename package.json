@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/jayseeare/bickleywallace-site#readme",
   "scripts": {
-    "bootstrap:ci": "",
     "bootstrap": "pnpm install -r",
     "build": "pnpm run -r build",
     "clean": "git clean -fdX",
