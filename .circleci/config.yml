@@ -6,7 +6,7 @@ src-dir: &src-dir ~/src
 
 base: &base
   docker:
-    - image: circleci/node:12.13.1
+    - image: circleci/node:12.18.0
 
   working_directory: *src-dir
 
@@ -18,7 +18,6 @@ jobs:
       - checkout:
           path: *src-dir
 
-      - run: npm install --no-pacakge-lock
       - run: npm run-script bootstrap
       - run: npm run-script gen-certs
 
