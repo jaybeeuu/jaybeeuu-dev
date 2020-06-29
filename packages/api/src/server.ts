@@ -7,7 +7,7 @@ import https from "https";
 import morgan from "morgan";
 import { Server } from "net";
 import registerRoutes from "./routes/index";
-import { API_PORT, NODE_ENV, Envs } from "./env";
+import { API_PORT, NODE_ENV, Environments } from "./env";
 import * as log from "./log";
 import { certs } from "./paths";
 import { errorHandler } from "./errors";
@@ -26,7 +26,7 @@ const getSSLOptions = async (): Promise<https.ServerOptions> => {
 const startServer = async (server: Server, port: number, protocol: string): Promise<CloseServer> => {
   await new Promise((resolve) => server.listen(port, resolve));
 
-  if (NODE_ENV !== Envs.PRODUCTION) {
+  if (NODE_ENV !== Environments.PRODUCTION) {
     log.info(`Running in process: ${process.pid}`);
   }
 

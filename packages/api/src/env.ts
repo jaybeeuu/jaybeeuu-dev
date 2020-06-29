@@ -2,19 +2,19 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export enum Envs {
+export enum Environments {
   DEVELOPMENT = "developemnt",
   PRODUCTION = "production",
   TEST = "test"
 }
 
-const getValidEnv = (env?: string): Envs => {
-  return !env || Object.values(Envs).includes(env as any)
+const getValidEnv = (env?: string): Environments => {
+  return !env || Object.values(Environments).includes(env as any)
     ? env as any
-    : Envs.DEVELOPMENT;
+    : Environments.DEVELOPMENT;
 };
 
-export const NODE_ENV: Envs = getValidEnv(process.env.NODE_ENV);
+export const NODE_ENV: Environments = getValidEnv(process.env.NODE_ENV);
 
 export const API_HOST_NAME = process.env.API_HOST_NAME || "localhost";
 export const API_PORT = +(process.env.PORT || 3444);
