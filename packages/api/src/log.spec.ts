@@ -39,7 +39,7 @@ describe("log", () => {
       const error = new Error("{error message}");
       error.stack = "{stack}";
 
-      log.error("message", error);
+      log.error(message, error);
 
       expect(console.error).toHaveBeenCalledWith(expect.stringContainingAll(
         message,
