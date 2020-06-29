@@ -18,7 +18,7 @@ jobs:
       - checkout:
           path: *src-dir
 
-      - run: npm install --no-package-lock
+      - run: npm install -g pnpm@^5.2.6
       - run: npm run-script bootstrap
       - run: npm run-script gen-certs
 
