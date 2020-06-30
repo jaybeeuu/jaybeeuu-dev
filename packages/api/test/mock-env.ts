@@ -4,7 +4,7 @@ jest.mock("../src/env", () => {
   const FILES_ROOT = `./fs/test/${jestWorkerId.toString()}`;
   const REMOTE_POST_REPO = `./fs/remote/test/${jestWorkerId.toString()}/.git`;
 
-  return {
+  const env = {
     ...actualEnv,
     API_HOST_NAME: "localhost",
     API_PORT: 5338 + jestWorkerId,
@@ -14,4 +14,9 @@ jest.mock("../src/env", () => {
     REMOTE_POST_REPO,
     FILES_ROOT
   };
+
+  // eslint-disable-next-line no-console
+  console.log(`ENV ${jestWorkerId}:\n\n ${JSON.stringify(env, null, 2)}`);
+
+  return env;
 });
