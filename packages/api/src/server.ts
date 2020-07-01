@@ -51,6 +51,11 @@ export default async (): Promise<CloseServer> => {
   registerRoutes(app);
 
   app.use(errorHandler);
+  const sslOptions = await getSSLOptions();
 
-  return startServer(https.createServer(await getSSLOptions(), app), API_PORT, "https");
+  return startServer(
+    https.createServer(sslOptions, app),
+    API_PORT,
+    "https"
+  );
 };

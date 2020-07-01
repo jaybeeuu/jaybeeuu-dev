@@ -15,8 +15,5 @@ jest.mock("../src/env", () => {
     FILES_ROOT
   };
 
-  // eslint-disable-next-line no-console
-  console.log(`ENV ${jestWorkerId}:\n\n ${JSON.stringify(env, null, 2)}`);
-
   return env;
 });
