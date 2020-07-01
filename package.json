@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/jayseeare/bickleywallace-site#readme",
   "scripts": {
-    "bootstrap": "npm install --no-package-lock && pnpm install -r --filter {packages}",
+    "bootstrap": "npm install --no-package-lock && pnpm install -r",
     "build": "pnpm run -r build --filter {packages}",
     "clean": "git clean -fdX",
     "e2e": "cd packages/e2e && cypress",
