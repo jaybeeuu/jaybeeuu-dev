@@ -7,7 +7,7 @@ const { env, stringifiedEnv } = require("./env");
 const paths = require("./paths");
 
 const isProduction = env.NODE_ENV === "production";
-console.log(env.CLIENT_PORT);
+
 module.exports = {
   mode: isProduction ? "production" : "development",
   devtool: isProduction ? "source-map" : "source-map",
