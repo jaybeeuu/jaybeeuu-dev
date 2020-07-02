@@ -1,7 +1,7 @@
 import express from "express";
 import { withHandledErrors } from "./with-handled-errors";
-import * as repo from "../repo/index";
-import * as posts from "../posts/index";
+import { update as updateRepo } from "../repo/index";
+import { update as updatePosts } from "../posts/index";
 import { ResultState } from "../results";
 import { allowCors } from "../cors";
 import { HttpMethod } from "../http-constants";
@@ -12,8 +12,8 @@ router.post(
   "/",
   allowCors({ methods: [HttpMethod.GET] }),
   withHandledErrors(async (req, res): Promise<void> => {
-    await repo.update();
-    const updateResult = await posts.update();
+    await updateRepo();
+    const updateResult = await updatePosts();
     if (updateResult.state === ResultState.failure) {
       res.statusCode = 500;
       res.json({
