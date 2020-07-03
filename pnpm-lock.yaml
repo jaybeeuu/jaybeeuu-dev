@@ -91,7 +91,7 @@ importers:
       marked: ^0.8.2
       morgan: ^1.10.0
       node-fetch: ^2.6.0
-      nodemon: ^2.0.3
+      nodemon: ^2.0.4
       rmfr: ^2.0.0
       sanitize-html: ^1.23.0
       simple-git: ^1.132.0
