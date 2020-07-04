@@ -3,8 +3,8 @@ const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
-const { env, stringifiedEnv } = require("./env");
-const paths = require("./paths");
+const { env, stringifiedEnv } = require("./config/env");
+const paths = require("./config/paths");
 
 const isProduction = env.NODE_ENV === "production";
 

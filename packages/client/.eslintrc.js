@@ -17,7 +17,7 @@ module.exports = mergeConfig(
       },
       "import/resolver": {
         webpack: {
-          "config": "./config/webpack.config.js"
+          "config": "./webpack.config.js"
         }
       }
     },

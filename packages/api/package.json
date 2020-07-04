@@ -17,8 +17,8 @@
     "start:prod": "node dist/index.js",
     "lint": "eslint --ext .js,.ts --format codeframe .",
     "type-check": "tsc --noEmit",
-    "test": "jest --config ./test/jest.config.js",
-    "test:watch": "jest --watch  --no-cache --runInBand --config ./test/jest.config.js"
+    "test": "jest",
+    "test:watch": "jest --watch  --no-cache --runInBand"
   },
   "dependencies": {
     "chalk": "^4.0.0",

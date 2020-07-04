@@ -41,6 +41,8 @@
     },
     "config": {
       "files": [
+        ".*rc.js",
+        "*.config.js",
         "config/**/*.js"
       ],
       "env": {

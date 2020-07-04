@@ -1,4 +1,6 @@
 module.exports = (api) => {
+  api.cache.using(() => process.env.NODE_ENV);
+
   const isTest = api.env("test");
 
   const ignore = isTest ? [] : ["./**/*.spec.ts"];

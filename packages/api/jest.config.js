@@ -1,12 +1,14 @@
 module.exports = {
   clearMocks: true,
-  testEnvironment: "jsdom",
-  rootDir: "..",
+  testEnvironment: "node",
   testMatch: [
     "**/*.spec.ts"
   ],
   testPathIgnorePatterns: [
     "/node_modules/",
     "/dist/"
+  ],
+  watchPathIgnorePatterns: [
+    "<rootDir>/fs"
   ]
 };
