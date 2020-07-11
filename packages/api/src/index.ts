@@ -1,6 +1,18 @@
-import server from "./server";
+import getOpts from "getopts";
+import { update } from "./posts";
+import { UpdateOptions } from "./posts/src/types";
 
-// process.env.PATH = process.env.PATH ?? process.env.Path;
-// delete process.env.Path;
+const options = getOpts(process.argv, {
+  alias: {
+    souurceDir: "s",
+    outputDir: "o",
+    manifestFileName: "m"
+  },
+  default: {
+    souurceDir: ".",
+    outputDir: "./lib",
+    manifestFileName: "post-manifest.json"
+  }
+}) as unknown as UpdateOptions;
 
-server();
+update(options);

@@ -1,8 +1,0 @@
-{
-  "sourceMaps": true,
-  "watch": ["src"],
-  "ext": "js,ts,json",
-  "execMap": {
-    "ts": "babel-node --extensions '.ts'"
-  }
-}

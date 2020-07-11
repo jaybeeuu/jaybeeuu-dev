@@ -31,7 +31,6 @@ do-gen-certs () {
         -out $localhostCrt
 }
 
-do-gen-certs "../packages/api/certs" "api"
 do-gen-certs "../packages/client/certs" "client"
 
 popd

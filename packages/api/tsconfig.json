@@ -2,10 +2,13 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "esModuleInterop": true,
+    "outDir": "./lib",
+    "declaration": true,
     "types": ["jest"]
   },
   "include": [
     "src/**/*.ts",
     "test/**/*.ts"
-  ]
+  ],
+  "exclude": ["lib"]
 }

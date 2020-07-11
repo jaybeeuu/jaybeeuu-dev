@@ -14,3 +14,15 @@ export const writeTextFile = async (filePath: string, data: string): Promise<voi
     "utf8"
   );
 };
+
+export interface File {
+  path: string,
+  content: string
+}
+
+export const writeTextFiles = async (rootDir: string, files: File[]): Promise<void> => {
+  await Promise.all(files.map(({ path: filePath, content }) => writeTextFile(
+    path.resolve(rootDir, filePath),
+    content
+  )));
+};
