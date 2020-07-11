@@ -1,14 +1,18 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    "esModuleInterop": true,
     "outDir": "./lib",
     "declaration": true,
-    "types": ["jest"]
+    "types": [
+      "jest"
+    ]
   },
   "include": [
     "src/**/*.ts",
+    "src/**/*.spec.ts",
     "test/**/*.ts"
   ],
-  "exclude": ["lib"]
+  "exclude": [
+    "node_modues"
+  ]
 }
