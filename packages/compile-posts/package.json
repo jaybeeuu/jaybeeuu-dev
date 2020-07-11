@@ -14,8 +14,8 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsc --config=./tsconfig.build.json",
-    "start": "tsc --watch --preserveWatchOutput --config=./tsconfig.build.json",
+    "build": "tsc --project ./tsconfig.build.json",
+    "start": "tsc --watch --preserveWatchOutput --project ./tsconfig.build.json",
     "lint": "eslint --ext .js,.ts --format codeframe .",
     "type-check": "tsc --noEmit",
     "test": "jest",

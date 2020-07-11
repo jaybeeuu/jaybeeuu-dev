@@ -8,6 +8,7 @@
   ],
   "exclude": [
     "lib",
-    "*.spec.ts"
+    "*.spec.ts",
+    "test/**/*.ts"
   ]
 }
