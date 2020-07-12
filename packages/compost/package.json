@@ -8,10 +8,10 @@
     "Compile",
     "Posts"
   ],
-  "bin": "./lib/bin/compost.js",
-  "main": "./lib/index.js",
+  "bin": "lib/bin/compost.js",
+  "main": "lib/index.js",
   "files": [
-    "./lib"
+    "lib"
   ],
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json --pretty",

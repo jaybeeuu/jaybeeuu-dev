@@ -9,9 +9,11 @@
     "Josh",
     "Posts"
   ],
+  "files": [
+    "lib"
+  ],
   "scripts": {
-    "build": "compost",
-    "build:debug": "node --inspect-brk node_modules/@bickley-wallace/compost/lib/bin/compost.js"
+    "build": "compost"
   },
   "devDependencies": {
     "@bickley-wallace/compost": "workspace:*"

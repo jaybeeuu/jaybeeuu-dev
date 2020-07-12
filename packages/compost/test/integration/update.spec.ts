@@ -7,7 +7,7 @@ import { update } from "../../src/posts";
 const jestWorkerId = +(process.env.JEST_WORKER_ID || 0);
 const sourceDir = path.resolve(`./fs/test/${jestWorkerId.toString()}/src`);
 const outputDir = path.resolve(`./fs/test/${jestWorkerId.toString()}/out`);
-const manifestFileName = "post-mainfest.json";
+const manifestFileName = "mainfest.json";
 
 const getOutputFile = async (filePath: string): Promise<string> => {
   const resolvedManifestFilePath = path.resolve(outputDir, filePath);

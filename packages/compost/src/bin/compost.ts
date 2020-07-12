@@ -9,7 +9,7 @@ const options = getOpts(process.argv, {
     sourceDir: "s"
   },
   default: {
-    manifestFileName: "post-manifest.json",
+    manifestFileName: "manifest.json",
     outputDir: "./lib",
     sourceDir: "./src"
   }
