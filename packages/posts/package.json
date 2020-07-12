@@ -3,14 +3,14 @@
   "version": "0.0.0",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jayseeare)",
   "license": "MIT",
-  "description": "The E2E hookse used to test my application",
+  "description": "My blog",
   "keywords": [
     "Bickley-Wallace",
     "Josh",
     "Posts"
   ],
   "scripts": {
-    "build": "compile-posts"
+    "build": "compost"
   },
   "devDependencies": {
     "@bickley-wallace/compile-posts": "workspace:*"

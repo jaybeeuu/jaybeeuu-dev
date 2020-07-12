@@ -1,17 +1,17 @@
 import getOpts from "getopts";
-import { update } from "./posts";
-import { UpdateOptions } from "./posts/src/types";
+import { update } from "../posts";
+import { UpdateOptions } from "../posts/src/types";
 
 const options = getOpts(process.argv, {
   alias: {
-    souurceDir: "s",
+    manifestFileName: "m",
     outputDir: "o",
-    manifestFileName: "m"
+    souurceDir: "s"
   },
   default: {
-    souurceDir: ".",
+    manifestFileName: "post-manifest.json",
     outputDir: "./lib",
-    manifestFileName: "post-manifest.json"
+    souurceDir: "./src"
   }
 }) as unknown as UpdateOptions;
 

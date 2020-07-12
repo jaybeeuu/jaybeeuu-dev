@@ -1,5 +1,5 @@
 {
-  "name": "@bickley-wallace/compile-posts",
+  "name": "@bickley-wallace/compost",
   "version": "0.0.0",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jayseeare)",
   "license": "MIT",
@@ -8,14 +8,15 @@
     "Compile",
     "Posts"
   ],
-  "bin": "./lib/index.js",
+  "bin": "./lib/bin/compost.js",
   "main": "./lib/index.js",
   "files": [
     "./lib"
   ],
   "scripts": {
-    "build": "tsc --project ./tsconfig.build.json",
-    "start": "tsc --watch --preserveWatchOutput --project ./tsconfig.build.json",
+    "prebuild": "rmfr ./lib",
+    "build": "tsc --project ./tsconfig.build.json --pretty",
+    "start": "tsc --project ./tsconfig.build.json --pretty --watch",
     "lint": "eslint --ext .js,.ts --format codeframe .",
     "type-check": "tsc --noEmit",
     "test": "jest",

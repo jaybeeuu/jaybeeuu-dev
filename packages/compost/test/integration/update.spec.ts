@@ -1,7 +1,6 @@
 import path from "path";
-import rmfr from "rmfr";
 import { advanceTo } from "jest-date-mock";
-import { writeTextFiles, readTextFile } from "../../src/files";
+import { writeTextFiles, readTextFile, deleteDirectories } from "../../src/files";
 import { PostManifest } from "../../src/posts/src/types";
 import { update } from "../../src/posts";
 
@@ -31,13 +30,9 @@ const compilePosts = async (): Promise<void> => {
   });
 };
 
-const cleanUpDirectories = (...directories: string[]): Promise<void[]> => Promise.all(
-  directories.map((directory) => rmfr(directory))
-);
-
 describe("refresh", () => {
   it("makes the post available in the manifest on /post, after a refresh from a blank slate.", async () => {
-    await cleanUpDirectories(sourceDir, outputDir);
+    await deleteDirectories(sourceDir, outputDir);
 
     const publishDate = "2020-03-11";
     advanceTo(publishDate);
@@ -74,7 +69,7 @@ describe("refresh", () => {
   });
 
   it("makes the posts available, after a refresh from a blank slate.", async () => {
-    await cleanUpDirectories();
+    await deleteDirectories(sourceDir, outputDir);
 
     const slug = "first-post";
     const postContent = "It has some content";

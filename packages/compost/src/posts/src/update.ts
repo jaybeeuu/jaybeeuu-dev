@@ -3,7 +3,8 @@ import {
   readJsonFile,
   recurseDirectory,
   writeJsonFile,
-  writeTextFile
+  writeTextFile,
+  deleteDirectories
 } from "../../files";
 import { Result, success, ResultState } from "../../results";
 import { compilePost } from "./compile";
@@ -15,6 +16,8 @@ import { UpdateOptions, PostManifest } from "./types";
 export const update = async (options: UpdateOptions): Promise<Result<void>> => {
   const oldManifest = await readJsonFile<PostManifest>(path.join(options.outputDir, options.manifestFileName), {});
   const newManifest: PostManifest = {};
+
+  await deleteDirectories(options.outputDir);
 
   for await (const markdownFileInfo of recurseDirectory(
     options.sourceDir,
