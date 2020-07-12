@@ -1,10 +1,10 @@
 import { h, FunctionComponent } from "preact";
-import { useApiCall } from "../../custom-hooks/useApiCall";
-import { ApiCallStatus } from "../../utils/api";
+import { useApiCall } from "../custom-hooks/useApiCall";
+import { ApiCallStatus } from "../utils/api";
 import { titleBar } from "@bickley-wallace/e2e-hooks";
 
 const ApiRoot: FunctionComponent = () => {
-  const call = useApiCall("/posts", []);
+  const call = useApiCall("/posts/manifest.json", []);
   return (
     <pre className={titleBar.apiResults}>
       {call.status === ApiCallStatus.FAILED ? JSON.stringify({

@@ -12,7 +12,7 @@ var options = getopts_1["default"](process.argv, {
         sourceDir: "s"
     },
     "default": {
-        manifestFileName: "post-manifest.json",
+        manifestFileName: "manifest.json",
         outputDir: "./lib",
         sourceDir: "./src"
     }

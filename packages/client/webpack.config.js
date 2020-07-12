@@ -1,7 +1,9 @@
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyWebpckPlugin = require("copy-webpack-plugin");
 const fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require("path");
 const webpack = require("webpack");
 const { env, stringifiedEnv } = require("./config/env");
 const paths = require("./config/paths");
@@ -14,7 +16,6 @@ module.exports = {
   watch: !isProduction,
   devServer: {
     compress: true,
-    contentBase: paths.appPublic,
     host: env.CLIENT_HOST_NAME,
     hot: true,
     https: {
@@ -27,12 +28,12 @@ module.exports = {
     watchContentBase: true
   },
   entry: [
-    paths.appIndex,
+    paths.srcIndex,
   ],
   output: {
     pathinfo: true,
-    path: paths.appBuild,
-    filename: paths.appBundle,
+    path: paths.dist,
+    filename: paths.bundle,
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
@@ -52,7 +53,7 @@ module.exports = {
           },
           {
             test: /\.(ts|tsx|js|jsx)$/,
-            include: paths.appSrc,
+            include: paths.src,
             loader: require.resolve("babel-loader")
           },
           {
@@ -82,9 +83,14 @@ module.exports = {
     ],
   },
   plugins: [
+    new CopyWebpckPlugin({
+      patterns: [
+        { from: "node_modules/@bickley-wallace/posts/lib/*", to: "posts/[name].[ext]" }
+      ]
+    }),
     new HtmlWebpackPlugin({
       inject: true,
-      template: paths.appHtml,
+      template: paths.indexHtml,
     }),
     new webpack.DefinePlugin(stringifiedEnv),
     new webpack.NoEmitOnErrorsPlugin(),

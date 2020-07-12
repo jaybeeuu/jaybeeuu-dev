@@ -11,6 +11,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
     "start": "webpack-dev-server",
+    "start:debug": "node --inspect-brk node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "lint": "eslint --ext .js,.ts --format codeframe .",
     "type-check": "tsc --noEmit",
     "test": "jest",
@@ -23,6 +24,7 @@
     "@babel/preset-typescript": "^7.9.0",
     "@bickley-wallace/config-eslint": "workspace:*",
     "@bickley-wallace/e2e-hooks": "workspace:*",
+    "@bickley-wallace/posts": "workspace:*",
     "@types/jest": "^26.0.4",
     "@types/react": "^16.9.19",
     "@types/react-dom": "^16.9.5",
@@ -35,6 +37,7 @@
     "babel-loader": "^8.0.6",
     "case-sensitive-paths-webpack-plugin": "^2.3.0",
     "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^6.0.3",
     "core-js": "^3.6.5",
     "cross-env": "^7.0.2",
     "css-loader": "^3.4.2",
