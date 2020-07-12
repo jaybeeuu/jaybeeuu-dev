@@ -81,7 +81,7 @@ importers:
       webpack: ^4.42.0
       webpack-cli: ^3.3.10
       webpack-dev-server: ^3.10.2
-  packages/compile-posts:
+  packages/compost:
     dependencies:
       getopts: 2.2.5
       highlight.js: 9.18.1
@@ -175,9 +175,9 @@ importers:
       typescript: ^3.7.5
   packages/posts:
     devDependencies:
-      '@bickley-wallace/compile-posts': 'link:../compile-posts'
+      '@bickley-wallace/compost': 'link:../compost'
     specifiers:
-      '@bickley-wallace/compile-posts': 'workspace:*'
+      '@bickley-wallace/compost': 'workspace:*'
 lockfileVersion: 5.1
 packages:
   /@babel/code-frame/7.10.3:
@@ -1487,7 +1487,7 @@ packages:
   /@types/glob/7.1.2:
     dependencies:
       '@types/minimatch': 3.0.3
-      '@types/node': 13.11.1
+      '@types/node': 14.0.14
     dev: true
     resolution:
       integrity: sha512-VgNIkxK+j7Nz5P7jvUZlRvhuPSmsEfS03b0alKcq5V/STUKAa3Plemsn5mrQUO7am6OErJ4rhGEGJbACclrtRA==

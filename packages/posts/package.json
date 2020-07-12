@@ -10,9 +10,10 @@
     "Posts"
   ],
   "scripts": {
-    "build": "compost"
+    "build": "compost",
+    "build:debug": "node --inspect-brk node_modules/@bickley-wallace/compost/lib/bin/compost.js"
   },
   "devDependencies": {
-    "@bickley-wallace/compile-posts": "workspace:*"
+    "@bickley-wallace/compost": "workspace:*"
   }
 }

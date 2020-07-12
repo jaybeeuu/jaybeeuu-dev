@@ -6,12 +6,12 @@ const options = getOpts(process.argv, {
   alias: {
     manifestFileName: "m",
     outputDir: "o",
-    souurceDir: "s"
+    sourceDir: "s"
   },
   default: {
     manifestFileName: "post-manifest.json",
     outputDir: "./lib",
-    souurceDir: "./src"
+    sourceDir: "./src"
   }
 }) as unknown as UpdateOptions;
 

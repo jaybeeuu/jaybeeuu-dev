@@ -14,7 +14,6 @@
     "./lib"
   ],
   "scripts": {
-    "prebuild": "rmfr ./lib",
     "build": "tsc --project ./tsconfig.build.json --pretty",
     "start": "tsc --project ./tsconfig.build.json --pretty --watch",
     "lint": "eslint --ext .js,.ts --format codeframe .",

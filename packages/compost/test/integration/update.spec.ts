@@ -63,7 +63,7 @@ describe("refresh", () => {
         lastUpdateDate: null,
         slug,
         fileName: expect.stringMatching(new RegExp(`${slug}-[A-z0-9]{6}.html`)),
-        href: expect.stringMatching(new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`))
+        href: expect.stringMatching(new RegExp(`/${slug}-[A-z0-9]{6}.html`))
       }
     });
   });

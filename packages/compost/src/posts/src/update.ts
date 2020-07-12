@@ -14,26 +14,30 @@ import { validateSlug, getPostFileName } from "./file-paths";
 import { UpdateOptions, PostManifest } from "./types";
 
 export const update = async (options: UpdateOptions): Promise<Result<void>> => {
-  const oldManifest = await readJsonFile<PostManifest>(path.join(options.outputDir, options.manifestFileName), {});
+  const oldManifest = await readJsonFile<PostManifest>(
+    path.join(options.outputDir, options.manifestFileName),
+    {}
+  );
   const newManifest: PostManifest = {};
 
   await deleteDirectories(options.outputDir);
 
   for await (const markdownFileInfo of recurseDirectory(
-    options.sourceDir,
+    path.resolve(options.sourceDir),
     { include: [MARKDOWN_FILE_EXTENSION] })
   ) {
     const slug = markdownFileInfo.fileName.split(".")[0];
     const slugValidation = validateSlug(slug);
+
     if (slugValidation.state === ResultState.failure) {
       return slugValidation;
     }
 
     const compiledPost = await compilePost(markdownFileInfo.filePath);
     const compiledFileName = getPostFileName(slug, compiledPost);
-    const compiledFilePath = path.join(options.outputDir, "posts", compiledFileName);
+    const compiledFilePath = path.join(options.outputDir, compiledFileName);
     await writeTextFile(compiledFilePath, compiledPost);
-    const href = `/posts/${compiledFileName}`;
+    const href = `/${compiledFileName}`;
 
     const metaFileContentResult = await getMetaFileContent(markdownFileInfo);
     if (metaFileContentResult.state === ResultState.failure) {
