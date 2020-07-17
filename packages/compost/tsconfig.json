@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
+    "sourceMap": true,
     "outDir": "./lib",
     "declaration": true,
     "types": [
