@@ -1,29 +1,25 @@
-const debounce = (actor: () => void, delay: number): () => void => {
-  let nextStrategy: () => void = () => {};
+const debounce = <Args extends any[]>(
+  actor: (...args: Args) => void,
+  delay: number
+): (...args: Args) => void => {
+  let latestArgs: Args | null = null;
 
-  let executeOnTimeout = false;
+  const setLatestArgs = (...args: Args): void => {
+    latestArgs = args;
+  };
 
-  const runImmediate = (): void => {
-    actor();
-    executeOnTimeout = false;
-    nextStrategy = scheduleExecution;
+  let nextStrategy = setLatestArgs;
 
+  const scheduleExecution = (...args: Args): void => {
+    latestArgs = args;
+    nextStrategy = setLatestArgs;
     setTimeout(() => {
-      if(executeOnTimeout) {
-        runImmediate();
-      } else {
-        nextStrategy = runImmediate;
-      }
+      nextStrategy = scheduleExecution;
+      actor(...latestArgs!);
     }, delay);
   };
-
-  const scheduleExecution = (): void => {
-    executeOnTimeout = true;
-  };
-
-  nextStrategy = runImmediate;
-
-  return () => nextStrategy();
+  nextStrategy = scheduleExecution;
+  return (...args) => nextStrategy(...args);
 };
 
 export default debounce;
