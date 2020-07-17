@@ -15,7 +15,7 @@
     "lint": "eslint --ext .js,.ts --format codeframe .",
     "type-check": "tsc --noEmit",
     "test": "jest",
-    "test:watch": "node ./node_modules/.bin/jest --runInBand --watch --no-cache"
+    "test:watch": "jest --runInBand --watch --no-cache"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
