@@ -30,6 +30,7 @@
     "nvm": "nvm use 12.18.0",
     "start": "pnpm run -r --no-sort start --filter {packages}",
     "test": "pnpm run --no-bail --no-sort -r test --filter {packages}",
+    "test:watch": "pnpm run -r test:watch --filter ",
     "type-check": "pnpm run --no-bail --no-sort -r type-check --filter {packages}"
   },
   "dependencies": {
