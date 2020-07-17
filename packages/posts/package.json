@@ -13,6 +13,7 @@
     "lib"
   ],
   "scripts": {
+    "start": "compost --watch",
     "build": "compost"
   },
   "devDependencies": {

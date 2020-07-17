@@ -26,7 +26,8 @@ const compilePosts = async (): Promise<void> => {
   await update({
     outputDir,
     sourceDir,
-    manifestFileName
+    manifestFileName,
+    watch: false
   });
 };
 

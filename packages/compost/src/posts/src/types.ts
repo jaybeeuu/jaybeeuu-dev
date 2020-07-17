@@ -20,4 +20,5 @@ export interface UpdateOptions {
   manifestFileName: string;
   outputDir: string;
   sourceDir: string;
+  watch: boolean;
 }
