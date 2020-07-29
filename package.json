@@ -10,7 +10,8 @@
     "Site"
   ],
   "engines": {
-    "node": "^12.18.0"
+    "node": "^12.18.0",
+    "pnpm": "^5.4.0"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,7 @@
   },
   "homepage": "https://github.com/jayseeare/bickleywallace-site#readme",
   "scripts": {
-    "bootstrap": "npm install --no-package-lock && pnpm install -r",
+    "bootstrap": "pnpm install -r",
     "build": "pnpm run -r build --filter {packages}",
     "clean": "git clean -fdX",
     "e2e": "cd packages/e2e && cypress",
@@ -32,8 +33,5 @@
     "test": "pnpm run --no-bail --no-sort -r test --filter {packages}",
     "test:watch": "pnpm run -r test:watch --filter ",
     "type-check": "pnpm run --no-bail --no-sort -r type-check --filter {packages}"
-  },
-  "dependencies": {
-    "pnpm": "^5.4.0"
   }
 }

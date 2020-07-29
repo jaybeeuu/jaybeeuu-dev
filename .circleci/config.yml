@@ -18,6 +18,7 @@ jobs:
       - checkout:
           path: *src-dir
 
+      - run: sudo npm install -g pnpm@^5.4.0
       - run: npm run-script bootstrap
       - run: npm run-script gen-certs
 
