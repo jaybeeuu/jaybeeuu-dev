@@ -12,7 +12,8 @@
   "main": "index.js",
   "scripts": {
     "cypress": "cypress",
-    "lint": "eslint --ext .js,.ts --format codeframe ."
+    "lint": "eslint --ext .js,.ts --format codeframe .",
+    "type-check": "tsc --noEmit --pretty"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

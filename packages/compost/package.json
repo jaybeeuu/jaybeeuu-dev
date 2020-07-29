@@ -17,7 +17,7 @@
     "build": "tsc --project ./tsconfig.build.json --pretty",
     "start": "tsc --project ./tsconfig.build.json --pretty --watch",
     "lint": "eslint --ext .js,.ts --format codeframe .",
-    "type-check": "tsc --noEmit",
+    "type-check": "tsc --noEmit --pretty",
     "test": "jest",
     "test:watch": "jest --watch  --no-cache --runInBand"
   },
