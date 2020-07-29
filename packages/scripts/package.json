@@ -1,29 +1,30 @@
 {
-  "name": "@bickley-wallace/e2e-hooks",
+  "name": "@bickley-wallace/scripts",
   "version": "0.0.0",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jayseeare)",
-  "license": "MIT",
-  "description": "The E2E hookse used to test my application",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "CLI tooks used wihin this repo.",
   "keywords": [
-    "Bickley-Wallace",
-    "Josh",
-    "E2E Hooks"
+    "CLI"
   ],
-  "main": "lib/index.js",
-  "files": [
-    "lib"
-  ],
+  "bin": {
+    "gen-certs": "lib/gen-certs.js"
+  },
   "scripts": {
     "build": "tsc --pretty",
-    "start": "tsc --pretty --watch --preserveWatchOutput",
-    "type-check": "tsc --noEmit",
     "lint": "eslint --ext .js,.ts --format codeframe ."
   },
   "devDependencies": {
     "@bickley-wallace/config-eslint": "workspace:*",
+    "@types/node": "12.12.6",
     "@typescript-eslint/eslint-plugin": "^2.22.0",
     "@typescript-eslint/parser": "^2.22.0",
     "eslint": "^6.8.0",
     "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "devcert": "^1.1.2",
+    "getopts": "^2.2.5"
   }
 }

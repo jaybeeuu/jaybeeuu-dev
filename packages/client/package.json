@@ -10,6 +10,7 @@
   "main": "src/index.tsx",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
+    "gen-certs": "gen-certs --certFile=client.bickley-wallace.com.crt --keyFile=client.bickley-wallace.com.key",
     "start": "webpack-dev-server",
     "start:debug": "node --inspect-brk node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "lint": "eslint --ext .js,.ts --format codeframe .",

@@ -3,17 +3,14 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "outDir": "./lib",
-    "declaration": true,
     "types": [
       "node"
     ]
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
   ],
   "exclude": [
-    "node_modules",
-    "test/**/*.ts",
-    "**/*.spec.ts"
+    "node_modues"
   ]
 }

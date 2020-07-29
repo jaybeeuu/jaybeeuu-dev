@@ -3,7 +3,6 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyWebpckPlugin = require("copy-webpack-plugin");
 const fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const path = require("path");
 const webpack = require("webpack");
 const { env, stringifiedEnv } = require("./config/env");
 const paths = require("./config/paths");

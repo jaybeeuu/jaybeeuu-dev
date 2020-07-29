@@ -3,6 +3,7 @@
     "lib": [
       "ES2020"
     ],
+    "declaration": true,
     "moduleResolution": "node",
     "noImplicitAny": true,
     "noImplicitReturns": true,

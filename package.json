@@ -25,7 +25,7 @@
     "build": "pnpm run -r build --filter {packages}",
     "clean": "git clean -fdX",
     "e2e": "cd packages/e2e && cypress",
-    "gen-certs": "./scripts/gen-certs.sh",
+    "gen-certs": "pnpm run --no-bail --no-sort -r gen-certs --filter {packages}",
     "lint": "pnpm run --no-bail --no-sort -r lint --filter {packages}",
     "nvm": "nvm use 12.18.0",
     "start": "pnpm run -r --no-sort start --filter {packages}",

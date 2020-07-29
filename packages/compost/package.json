@@ -27,15 +27,14 @@
     "highlight.js": "^9.18.1",
     "marked": "^0.8.2",
     "rmfr": "^2.0.0",
-    "sanitize-html": "^1.23.0",
-    "ts-jest": "^26.1.1"
+    "sanitize-html": "^1.23.0"
   },
   "devDependencies": {
     "@bickley-wallace/config-eslint": "workspace:*",
     "@types/highlight.js": "^9.12.3",
     "@types/jest": "^26.0.4",
     "@types/marked": "^0.7.4",
-    "@types/node": "13.11.1",
+    "@types/node": "12.12.6",
     "@types/rmfr": "^2.0.0",
     "@types/sanitize-html": "^1.22.0",
     "@typescript-eslint/eslint-plugin": "^2.22.0",
@@ -45,6 +44,7 @@
     "jest": "^26.1.0",
     "jest-date-mock": "^1.0.8",
     "jest-matcher-utils": "^26.1.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "ts-jest": "^26.1.1"
   }
 }

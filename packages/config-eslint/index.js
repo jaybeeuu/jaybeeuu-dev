@@ -1,14 +1,11 @@
-const options = {
-  "rules": {
-    arrays: "replace"
+const strategies = {
+  "rules": (left, right) => {
+    return right || left;
   }
 };
 
-const defaultOptions = {
-  arrays: "concat"
-};
 
-const mergeConfigEntry = (left, right, path, { arrays } = defaultOptions) => {
+const mergeConfigEntry = (left, right) => {
   if (right === undefined) {
     return left;
   }
@@ -22,21 +19,15 @@ const mergeConfigEntry = (left, right, path, { arrays } = defaultOptions) => {
   }
 
   if (Array.isArray(left) && Array.isArray(right)) {
-    switch(arrays) {
-      case "replace": return left;
-      case "merge": return left.map((leftValue, i) => mergeConfigEntry(leftValue, right[i]));
-      case "concat":
-      default: return [...left, ...right];
-    }
+    return [...left, ...right];
   }
 
   if (typeof left === "object" && typeof right === "object") {
     return Object.entries(right).reduce((acc, [key, rightValue]) => {
-      const resolvedOptions = options[key] || defaultOptions;
-      acc[key] = mergeConfigEntry(
+      const mergeStrategy = strategies[key] || mergeConfigEntry;
+      acc[key] = mergeStrategy(
         left[key],
-        rightValue,
-        resolvedOptions
+        rightValue
       );
 
       if (acc[key] === undefined) {
