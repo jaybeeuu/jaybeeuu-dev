@@ -19,8 +19,7 @@ jobs:
           path: *src-dir
 
       - run: sudo npm install -g pnpm@^5.4.0
-      - run: npm run-script bootstrap
-      - run: npm run-script gen-certs
+      - run: pnpm run bootstrap
 
       - persist_to_workspace:
           root: *src-dir
@@ -33,7 +32,8 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: npm run-script build
+      - run: pnpm run build
+      - run: pnpm run gen-certs
       - store_artifacts:
           path: ./packages/client/dist
           destination: client-dist
@@ -50,7 +50,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: npm run-script lint
+      - run: pnpm run lint
 
 
   type-check:
@@ -59,7 +59,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: npm run-script type-check
+      - run: pnpm run type-check
 
 
   test:
@@ -68,7 +68,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: npm run-script test
+      - run: pnpm run test
 
 
 workflows:
