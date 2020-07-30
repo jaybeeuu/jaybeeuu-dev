@@ -7,9 +7,8 @@
     ]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.spec.ts",
-    "test/**/*.ts"
+    "src/**/*",
+    "test/**/*"
   ],
   "exclude": [
     "node_modues"

@@ -4,7 +4,7 @@ module.exports = mergeConfig(
   base,
   {
     env: {
-      node: true,
+      "browser": true,
       "cypress/globals": true
     },
     plugins: [

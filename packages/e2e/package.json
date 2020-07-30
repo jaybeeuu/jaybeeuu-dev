@@ -15,16 +15,16 @@
     "lint": "eslint --ext .js,.ts --format codeframe .",
     "type-check": "tsc --noEmit --pretty"
   },
-  "devDependencies": {
+  "dependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.0",
     "@babel/preset-typescript": "^7.9.0",
     "@bickley-wallace/config-eslint": "workspace:*",
     "@bickley-wallace/e2e-hooks": "workspace:*",
     "@cypress/webpack-preprocessor": "^4.1.3",
+    "@types/node": "12.12.6",
     "@typescript-eslint/eslint-plugin": "^2.22.0",
     "@typescript-eslint/parser": "^2.22.0",
-    "@types/node": "12.12.6",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.0.6",
     "cypress": "^4.6.0",
