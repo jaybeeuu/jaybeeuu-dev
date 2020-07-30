@@ -1,22 +1,28 @@
 // eslint-disable-next-line no-console
 export const info = (message: string, ...args: unknown[]): void => console.log(message, ...args);
 
-const getErrorMessage = (err: any | null | undefined): string => {
-  if (!err) {
-    return JSON.stringify(err) || "Empty string";
-  }
-
+const getErrorMessage = (err: any | null | undefined): string | string[] => {
   if (typeof err === "string") {
-    return err;
+    return err || "Empty String";
   }
 
-  return `${err.message ?? JSON.stringify(err)}\n\n${err.stack ?? "Error: No stack."}`;
+  if (err instanceof Error) {
+    return [
+      err.message,
+      err.stack ?? "No Stack"
+    ];
+  }
+
+  if (!err) {
+    return String(err);
+  }
+
+  return JSON.stringify(err, null, 2);
 };
 
-// eslint-disable-next-line no-console
-export const error = (message:string, err?: unknown): void => {
-  const errorMessage = getErrorMessage(err);
+export const error = (message:string, ...errs: unknown[]): void => {
+  const errorMessages = errs.flatMap(getErrorMessage);
 
   // eslint-disable-next-line no-console
-  console.error(`${message}: ${errorMessage}`);
+  console.error(message, ...errorMessages);
 };

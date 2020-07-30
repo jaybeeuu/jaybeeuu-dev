@@ -2,6 +2,11 @@
 import "../test/custom-matchers";
 import * as log from "./log";
 
+interface Sample {
+  args: [string, ...unknown[]];
+  consoleCalledWith: string[];
+}
+
 describe("log", () => {
   beforeEach(() => {
     jest.spyOn(console, "log").mockImplementation(() => {});
@@ -18,34 +23,89 @@ describe("log", () => {
   });
 
   describe("error", () => {
-    it("formats a message containing message and stack if supplied.", () => {
-      const message = "{message}";
-      const error = {
-        message: "{message}",
-        stack: "{stack}"
-      };
+    const samples: Sample[] = [
+      {
+        args: [
+          "{message}",
+          { message: "{error message}", stack: "{stack}" }
+        ],
+        consoleCalledWith: [
+          "{message}",
+          [
+            "{",
+            "  \"message\": \"{error message}\",",
+            "  \"stack\": \"{stack}\"",
+            "}"
+          ].join("\n")
+        ]
+      },
+      {
+        args: [
+          "{message}",
+          (() => {
+            const error = new Error("{error message}");
+            error.stack = "{stack}";
+            return error;
+          })()
+        ],
+        consoleCalledWith: [
+          "{message}",
+          "{error message}",
+          "{stack}"
+        ]
+      },
+      {
+        args: [
+          "{message}",
+          (() => {
+            const error = new Error("{error message}");
+            error.stack = undefined;
+            return error;
+          })()
+        ],
+        consoleCalledWith: [
+          "{message}",
+          "{error message}",
+          "No Stack"
+        ]
+      },
+      {
+        args: [
+          "{message}",
+          ""
+        ],
+        consoleCalledWith: [
+          "{message}",
+          "Empty String"
+        ]
+      },
+      {
+        args: [
+          "{message}",
+          null
+        ],
+        consoleCalledWith: [
+          "{message}",
+          "null"
+        ]
+      },
+      {
+        args: [
+          "{message}",
+          undefined
+        ],
+        consoleCalledWith: [
+          "{message}",
+          "undefined"
+        ]
+      }
+    ];
+    samples.forEach(({ args, consoleCalledWith }) => {
+      it(`should call console.error(${consoleCalledWith.join(", ")}) when passed args: ${JSON.stringify(args, null, 2)}`, () => {
+        log.error(...args);
 
-      log.error(message, error);
-
-      expect(console.error).toHaveBeenCalledWith(expect.stringContainingAll(
-        message,
-        error.message,
-        error.stack
-      ));
-    });
-
-    it("when passed an Error the message and stack are sent onto the console", () => {
-      const message = "{message}";
-      const error = new Error("{error message}");
-      error.stack = "{stack}";
-
-      log.error(message, error);
-
-      expect(console.error).toHaveBeenCalledWith(expect.stringContainingAll(
-        message,
-        error.message,
-        error.stack
-      ));
+        expect(console.error).toHaveBeenCalledWith(...consoleCalledWith);
+      });
     });
   });
 });

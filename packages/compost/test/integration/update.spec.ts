@@ -96,4 +96,70 @@ describe("refresh", () => {
 
     expect(post).toContain(postContent);
   });
+
+  it("compiles a code block.", async () => {
+    await deleteDirectories(sourceDir, outputDir);
+    const slug = "first-post";
+    const codeLine = "console.log(\"Here's a message\")";
+    await writeTextFiles(
+      sourceDir,
+      [{
+        path: `./${slug}.md`,
+        content: [
+          "# This is the first post",
+          "This is the content",
+          "```ts",
+          codeLine,
+          "```"
+        ].join("\n")
+      }, {
+        path: "./first-post.json",
+        content: JSON.stringify({
+          title: "This is the first post",
+          abstract: "This is the very first post."
+        }, null, 2)
+      }]
+    );
+
+    await compilePosts();
+
+    const manifest = await getPostManifest();
+
+    const post = await getPost(manifest[slug].href);
+
+    expect(post).toContain(codeLine);
+  });
+
+  it("compiles a code block with no code type.", async () => {
+    await deleteDirectories(sourceDir, outputDir);
+    const slug = "first-post";
+    const codeLine = "console.log(\"Here's a message\")";
+    await writeTextFiles(
+      sourceDir,
+      [{
+        path: `./${slug}.md`,
+        content: [
+          "# This is the first post",
+          "This is the content",
+          "```",
+          codeLine,
+          "```"
+        ].join("\n")
+      }, {
+        path: "./first-post.json",
+        content: JSON.stringify({
+          title: "This is the first post",
+          abstract: "This is the very first post."
+        }, null, 2)
+      }]
+    );
+
+    await compilePosts();
+
+    const manifest = await getPostManifest();
+
+    const post = await getPost(manifest[slug].href);
+
+    expect(post).toContain(codeLine);
+  });
 });

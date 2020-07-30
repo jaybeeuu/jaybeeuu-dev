@@ -1,6 +1,11 @@
 module.exports = {
   clearMocks: true,
   testEnvironment: "node",
+  collectCoverage: true,
+  collectCoverageFrom : [
+    "src/**",
+    "!src/bin/**"
+  ],
   preset: "ts-jest",
   globals: {
     "ts-jest": {
