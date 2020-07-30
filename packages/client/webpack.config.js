@@ -13,7 +13,7 @@ module.exports = {
   mode: isProduction ? "production" : "development",
   devtool: isProduction ? "source-map" : "source-map",
   watch: !isProduction,
-  devServer: {
+  devServer: ! isProduction ? {
     compress: true,
     host: env.CLIENT_HOST_NAME,
     hot: true,
@@ -25,7 +25,7 @@ module.exports = {
     port: env.CLIENT_PORT,
     quiet: true,
     watchContentBase: true
-  },
+  } : undefined,
   entry: [
     paths.srcIndex,
   ],
