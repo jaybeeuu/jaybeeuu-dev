@@ -10,6 +10,7 @@ importers:
       '@bickley-wallace/config-eslint': 'link:../config-eslint'
       '@bickley-wallace/e2e-hooks': 'link:../e2e-hooks'
       '@bickley-wallace/posts': 'link:../posts'
+      '@bickley-wallace/scripts': 'link:../scripts'
       '@types/jest': 26.0.4
       '@types/react': 16.9.41
       '@types/react-dom': 16.9.8
@@ -50,6 +51,7 @@ importers:
       '@bickley-wallace/config-eslint': 'workspace:*'
       '@bickley-wallace/e2e-hooks': 'workspace:*'
       '@bickley-wallace/posts': 'workspace:*'
+      '@bickley-wallace/scripts': 'workspace:*'
       '@types/jest': ^26.0.4
       '@types/react': ^16.9.19
       '@types/react-dom': ^16.9.5

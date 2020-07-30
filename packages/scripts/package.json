@@ -11,6 +11,9 @@
   "bin": {
     "gen-certs": "lib/gen-certs.js"
   },
+  "files": [
+    "./lib"
+  ],
   "scripts": {
     "build": "tsc --pretty",
     "lint": "eslint --ext .js,.ts --format codeframe .",
