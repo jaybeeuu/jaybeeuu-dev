@@ -1,6 +1,6 @@
 const { base, mergeConfig } = require('@bickley-wallace/config-eslint');
 
-const config = mergeConfig(
+module.exports = mergeConfig(
   base,
   {
     env: {
@@ -15,7 +15,3 @@ const config = mergeConfig(
     }
   }
 );
-
-console.log(JSON.stringify(config, null, 2));
-
-module.exports = config;

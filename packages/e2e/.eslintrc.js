@@ -12,6 +12,15 @@ module.exports = mergeConfig(
     ],
     extends: [
       "plugin:cypress/recommended"
+    ],
+    overrides: [
+      {
+        "files": ["cypress/plugins/**/*"],
+        env: {
+          "browser": false,
+          "node": true
+        }
+      }
     ]
   }
 );
