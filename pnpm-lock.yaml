@@ -133,7 +133,10 @@ importers:
       ts-jest: ^26.1.1
       typescript: ^3.7.5
   packages/config-eslint:
-    specifiers: {}
+    dependencies:
+      eslint: 6.8.0
+    specifiers:
+      eslint: ^6.8.0
   packages/e2e:
     dependencies:
       '@babel/core': 7.10.3
