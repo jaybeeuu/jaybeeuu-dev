@@ -46,7 +46,7 @@ if (options.watch) {
     chokidar_1["default"].watch(options.sourceDir).on("all", debounce_1["default"](function () {
         log.info("Rebuilding posts...");
         posts_1.update(options);
-    }, 1500));
+    }, 250));
 }
 else {
     log.info("Composting...");

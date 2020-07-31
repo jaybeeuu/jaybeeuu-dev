@@ -127,13 +127,15 @@ describe("refresh", () => {
 
     const post = await getPost(manifest[slug].href);
 
-    expect(post).toContain(codeLine);
+    expect(post).toContain(
+      "<pre><code><span class=\"hljs-built_in\">console</span>.log(<span class=\"hljs-string\">\"Here's a message\"</span>)</code></pre>"
+    );
   });
 
   it("compiles a code block with no code type.", async () => {
     await deleteDirectories(sourceDir, outputDir);
     const slug = "first-post";
-    const codeLine = "console.log(\"Here's a message\")";
+    const codeLine = "console.log(\"Here's a message\");";
     await writeTextFiles(
       sourceDir,
       [{

@@ -25,7 +25,7 @@ if (options.watch) {
   chokidar.watch(options.sourceDir).on("all", debounce(() => {
     log.info("Rebuilding posts...", );
     update(options);
-  }, 1500));
+  }, 250));
 } else {
   log.info("Composting...");
   update(options);

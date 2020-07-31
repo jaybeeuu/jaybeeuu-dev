@@ -1,7 +1,7 @@
 import { h, FunctionComponent } from "preact";
+import { titleBar } from "@bickley-wallace/e2e-hooks";
 import { useApiCall } from "../custom-hooks/useApiCall";
 import { ApiCallStatus } from "../utils/api";
-import { titleBar } from "@bickley-wallace/e2e-hooks";
 
 const ApiRoot: FunctionComponent = () => {
   const call = useApiCall("/posts/manifest.json", []);
