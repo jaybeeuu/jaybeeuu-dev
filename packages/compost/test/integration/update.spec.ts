@@ -162,4 +162,35 @@ describe("refresh", () => {
 
     expect(post).toContain(codeLine);
   });
+
+  it("recurses the all the directories.", async () => {
+    await deleteDirectories(sourceDir, outputDir);
+
+    const slug = "first-post";
+    const postContent = "It has some content";
+    await writeTextFiles(
+      sourceDir,
+      [{
+        path: `./sub-directory/${slug}.md`,
+        content: [
+          "# This is the first post",
+          postContent
+        ].join("\n")
+      }, {
+        path: `./sub-directory/${slug}.json`,
+        content: JSON.stringify({
+          title: "This is the first post",
+          abstract: "This is the very first post."
+        }, null, 2)
+      }]
+    );
+
+    await compilePosts();
+
+    const manifest = await getPostManifest();
+
+    const post = await getPost(manifest[slug].href);
+
+    expect(post).toContain(postContent);
+  });
 });

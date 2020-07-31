@@ -37,16 +37,23 @@ const innerRecurseDir = async function* (
   const { exclude = [], include = []} = options;
 
   const fileNames = await fs.promises.readdir(absolutePath);
-  const filteredFileNames = fileNames.filter(
-    (fileName) => {
-      return !exclude.some((excludeEntry) => excludeEntry.exec(fileName))
-        && include.some((includeEntry) => includeEntry.exec(fileName));
-    }
-  );
+  const excludeFile = (fileName: string): boolean => {
+    return exclude.some((excludeEntry) => excludeEntry.exec(fileName))
+      && !include.some((includeEntry) => includeEntry.exec(fileName));
+  };
 
-  for (const fileName of filteredFileNames) {
+  for (const fileName of fileNames) {
     const filePath =  path.join(absolutePath, fileName);
     const stats = await fs.promises.lstat(filePath);
+    if (stats.isDirectory()) {
+      yield* innerRecurseDir(filePath, path.join(relativePath, fileName), options);
+      continue;
+    }
+
+    if (excludeFile(fileName)) {
+      continue;
+    }
+
     const fileInfo: FileInfo = {
       absolutePath,
       fileName,
@@ -56,10 +63,6 @@ const innerRecurseDir = async function* (
     };
 
     yield fileInfo;
-
-    if (stats.isDirectory()) {
-      yield* innerRecurseDir(filePath, path.join(relativePath, fileName), options);
-    }
   }
 };
 
