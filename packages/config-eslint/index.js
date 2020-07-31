@@ -4,7 +4,6 @@ const strategies = {
   }
 };
 
-
 const mergeConfigEntry = (left, right) => {
   if (right === undefined) {
     return left;
@@ -35,7 +34,7 @@ const mergeConfigEntry = (left, right) => {
       }
 
       return acc;
-    }, { ...left }) ;
+    }, { ...left });
   }
 
   if (typeof left !== typeof right) {
@@ -54,7 +53,7 @@ const mergeConfig = (...configFragments) => {
     const finalConfig = {
       ...configFragments[0],
       overrides: Object.values(configFragments[0].overrides)
-    }
+    };
 
     return finalConfig;
   }
@@ -65,7 +64,7 @@ const mergeConfig = (...configFragments) => {
 };
 
 module.exports = {
-  base: require('./configs/base-eslintrc.json'),
-  jest: require('./configs/jest-eslintrc.json'),
+  base: require("./configs/base-eslintrc.json"),
+  jest: require("./configs/jest-eslintrc.json"),
   mergeConfig
 };

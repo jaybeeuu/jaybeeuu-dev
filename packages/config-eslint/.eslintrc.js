@@ -1,4 +1,4 @@
-const { base, mergeConfig } = require('@bickley-wallace/config-eslint');
+const { base, mergeConfig } = require("./index");
 
 module.exports = mergeConfig(
   base,
@@ -6,11 +6,14 @@ module.exports = mergeConfig(
     env: {
       node: true
     },
+    parserOptions: {
+      ecmaVersion: 2019
+    },
     overrides: {
       typescript: {
         rules: {
           "no-console": ["off"]
-        },
+        }
       }
     }
   }
