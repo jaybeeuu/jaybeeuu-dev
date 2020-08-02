@@ -24,7 +24,8 @@ const keyFilePath = path.resolve(process.cwd(), processOptions.directory, proces
 
 (async () => {
   try {
-    const ssl = await certificateFor(processOptions.domain);
+    const ssl = await certificateFor(processOptions.domain, {  getCaPath: true });
+    console.log(`CA Path: ${ssl.caPath}`);
     await fs.promises.mkdir(processOptions.directory, { recursive: true });
     await Promise.all([
       fs.promises.writeFile(certFilePath, ssl.cert),

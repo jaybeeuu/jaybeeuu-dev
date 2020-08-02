@@ -78,9 +78,10 @@ var keyFilePath = path_1["default"].resolve(process.cwd(), processOptions.direct
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 4, , 5]);
-                return [4 /*yield*/, devcert_1.certificateFor(processOptions.domain)];
+                return [4 /*yield*/, devcert_1.certificateFor(processOptions.domain, { getCaPath: true })];
             case 1:
                 ssl = _a.sent();
+                console.log("CA Path: " + ssl.caPath);
                 return [4 /*yield*/, fs.promises.mkdir(processOptions.directory, { recursive: true })];
             case 2:
                 _a.sent();
