@@ -9,6 +9,7 @@
     "eslint:recommended"
   ],
   "rules": {
+    "eol-last": ["error"],
     "indent": ["error", 2],
     "no-console": ["error"],
     "no-shadow": ["error"],
