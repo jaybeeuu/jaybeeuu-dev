@@ -15,21 +15,29 @@ const processOptions = getopts(process.argv.slice(2), {
     domain: "localhost",
     directory: "./certs",
     certName: "cert.crt",
-    keyName: "key.key"
+    keyName: "key.key",
+    caName: "ca.pem"
   }
 }) as unknown as ProcessOptions;
 
-const certFilePath = path.resolve(process.cwd(), processOptions.directory, processOptions.certName);
-const keyFilePath = path.resolve(process.cwd(), processOptions.directory, processOptions.keyName);
+const resolveToOutDir = (...pathSegments: string[]) => path.resolve(
+  process.cwd(),
+  processOptions.directory,
+  ...pathSegments
+);
+
+const certFilePath = resolveToOutDir(processOptions.certName);
+const keyFilePath = resolveToOutDir(processOptions.keyName);
+const caFilePath = resolveToOutDir(processOptions.keyName);
 
 (async () => {
   try {
-    const ssl = await certificateFor(processOptions.domain, {  getCaPath: true });
-    console.log(`CA Path: ${ssl.caPath}`);
+    const ssl = await certificateFor(processOptions.domain, { getCaBuffer: true });
     await fs.promises.mkdir(processOptions.directory, { recursive: true });
     await Promise.all([
       fs.promises.writeFile(certFilePath, ssl.cert),
-      fs.promises.writeFile(keyFilePath, ssl.key)
+      fs.promises.writeFile(keyFilePath, ssl.key),
+      fs.promises.writeFile(caFilePath, ssl.ca)
     ]);
   } catch (err) {
     console.error(err);

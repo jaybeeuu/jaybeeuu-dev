@@ -67,27 +67,29 @@ var processOptions = getopts_1["default"](process.argv.slice(2), {
         domain: "localhost",
         directory: "./certs",
         certName: "cert.crt",
-        keyName: "key.key"
+        keyName: "key.key",
+        caName: "ca.pem"
     }
 });
 var certFilePath = path_1["default"].resolve(process.cwd(), processOptions.directory, processOptions.certName);
 var keyFilePath = path_1["default"].resolve(process.cwd(), processOptions.directory, processOptions.keyName);
+var caFilePath = path_1["default"].resolve(process.cwd(), processOptions.directory, processOptions.keyName);
 (function () { return __awaiter(void 0, void 0, void 0, function () {
     var ssl, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 4, , 5]);
-                return [4 /*yield*/, devcert_1.certificateFor(processOptions.domain, { getCaPath: true })];
+                return [4 /*yield*/, devcert_1.certificateFor(processOptions.domain, { getCaBuffer: true })];
             case 1:
                 ssl = _a.sent();
-                console.log("CA Path: " + ssl.caPath);
                 return [4 /*yield*/, fs.promises.mkdir(processOptions.directory, { recursive: true })];
             case 2:
                 _a.sent();
                 return [4 /*yield*/, Promise.all([
                         fs.promises.writeFile(certFilePath, ssl.cert),
-                        fs.promises.writeFile(keyFilePath, ssl.key)
+                        fs.promises.writeFile(keyFilePath, ssl.key),
+                        fs.promises.writeFile(caFilePath, ssl.ca)
                     ])];
             case 3:
                 _a.sent();
