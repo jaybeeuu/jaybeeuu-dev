@@ -63,7 +63,7 @@ module.exports = {
                 loader: "css-loader",
                 options: {
                   modules: true,
-                  localIdentName: "[name]__[local]--[hash:base64:5]",
+                  localIdentName: isProduction ? "bw-[hash:base64:5]" : "[name]__[local]--[hash:base64:5]",
                   camelCase: true,
                   sourceMap: true
                 }
