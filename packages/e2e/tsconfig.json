@@ -5,6 +5,7 @@
       "dom",
       "ESNext"
     ],
+    "declaration": false,
     "types": ["cypress"]
   },
   "include": ["cypress/**/*"],

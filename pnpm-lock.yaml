@@ -139,9 +139,6 @@ importers:
       eslint: ^6.8.0
   packages/e2e:
     dependencies:
-      '@babel/core': 7.10.3
-      '@babel/preset-env': 7.10.3_@babel+core@7.10.3
-      '@babel/preset-typescript': 7.10.1_@babel+core@7.10.3
       '@bickley-wallace/config-eslint': 'link:../config-eslint'
       '@bickley-wallace/e2e-hooks': 'link:../e2e-hooks'
       '@cypress/webpack-preprocessor': 4.1.5_webpack@4.43.0
@@ -149,16 +146,15 @@ importers:
       '@typescript-eslint/eslint-plugin': 2.34.0_2ce5ff4d4c428c35a55f8b98c167bebb
       '@typescript-eslint/parser': 2.34.0_eslint@6.8.0+typescript@3.9.5
       babel-eslint: 10.1.0_eslint@6.8.0
-      babel-loader: 8.1.0_99bd12dc383be8ac23fae4d2d3606e9d
-      cypress: 4.9.0
+      babel-loader: 8.1.0_webpack@4.43.0
+      core-js: 3.6.5
+      cypress: 4.12.1
       eslint: 6.8.0
       eslint-plugin-cypress: 2.11.1_eslint@6.8.0
+      ts-loader: 8.0.2_typescript@3.9.5
       typescript: 3.9.5
       webpack: 4.43.0_webpack@4.43.0
     specifiers:
-      '@babel/core': ^7.9.0
-      '@babel/preset-env': ^7.9.0
-      '@babel/preset-typescript': ^7.9.0
       '@bickley-wallace/config-eslint': 'workspace:*'
       '@bickley-wallace/e2e-hooks': 'workspace:*'
       '@cypress/webpack-preprocessor': ^4.1.3
@@ -167,9 +163,11 @@ importers:
       '@typescript-eslint/parser': ^2.22.0
       babel-eslint: ^10.1.0
       babel-loader: ^8.0.6
-      cypress: ^4.6.0
+      core-js: 3.6.5
+      cypress: ^4.12.1
       eslint: ^6.8.0
       eslint-plugin-cypress: ^2.10.3
+      ts-loader: ^8.0.2
       typescript: ^3.7.5
       webpack: ^4.42.0
   packages/e2e-hooks:
@@ -661,6 +659,7 @@ packages:
     dependencies:
       '@babel/core': 7.10.3
       '@babel/helper-plugin-utils': 7.10.3
+    dev: true
     peerDependencies:
       '@babel/core': ^7.0.0-0
     resolution:
@@ -949,6 +948,7 @@ packages:
       '@babel/helper-create-class-features-plugin': 7.10.3_@babel+core@7.10.3
       '@babel/helper-plugin-utils': 7.10.3
       '@babel/plugin-syntax-typescript': 7.10.1_@babel+core@7.10.3
+    dev: true
     peerDependencies:
       '@babel/core': ^7.0.0-0
     resolution:
@@ -1058,6 +1058,7 @@ packages:
       '@babel/core': 7.10.3
       '@babel/helper-plugin-utils': 7.10.3
       '@babel/plugin-transform-typescript': 7.10.3_@babel+core@7.10.3
+    dev: true
     peerDependencies:
       '@babel/core': ^7.0.0-0
     resolution:
@@ -2329,6 +2330,22 @@ packages:
       webpack: '>=2'
     resolution:
       integrity: sha512-7q7nC1tYOrqvUrN3LQK4GwSk/TQorZSOlO9C+RZDZpODgyN4ZlCqE5q9cDsyWOliN+aU9B4JX01xK9eJXowJLw==
+  /babel-loader/8.1.0_webpack@4.43.0:
+    dependencies:
+      find-cache-dir: 2.1.0
+      loader-utils: 1.4.0
+      mkdirp: 0.5.5
+      pify: 4.0.1
+      schema-utils: 2.7.0
+      webpack: 4.43.0_webpack@4.43.0
+    dev: false
+    engines:
+      node: '>= 6.9'
+    peerDependencies:
+      '@babel/core': ^7.0.0
+      webpack: '>=2'
+    resolution:
+      integrity: sha512-7q7nC1tYOrqvUrN3LQK4GwSk/TQorZSOlO9C+RZDZpODgyN4ZlCqE5q9cDsyWOliN+aU9B4JX01xK9eJXowJLw==
   /babel-plugin-dynamic-import-node/2.3.3:
     dependencies:
       object.assign: 4.1.0
@@ -3174,7 +3191,6 @@ packages:
     resolution:
       integrity: sha512-lacdXOimsiD0QyNf9BC/mxivNJ/ybBGJXQFKzRekp1WTHoVUWsUHEn+2T8GJAzzIhyOuXA+gOxCVN3l+5PLPUA==
   /core-js/3.6.5:
-    dev: true
     requiresBuild: true
     resolution:
       integrity: sha512-vZVEEwZoIsI+vPEuoF9Iqf5H7/M3eeQqWlQnYa8FSKKePuYTf5MWnxb5SDAzCa60b3JBRS5g9b+Dq7b1y/RCrA==
@@ -3325,7 +3341,7 @@ packages:
   /cyclist/1.0.1:
     resolution:
       integrity: sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
-  /cypress/4.9.0:
+  /cypress/4.12.1:
     dependencies:
       '@cypress/listr-verbose-renderer': 0.4.1
       '@cypress/request': 2.88.5
@@ -3341,7 +3357,7 @@ packages:
       commander: 4.1.1
       common-tags: 1.8.0
       debug: 4.1.1
-      eventemitter2: 6.4.2
+      eventemitter2: 6.4.3
       execa: 1.0.0
       executable: 4.1.1
       extract-zip: 1.7.0
@@ -3351,10 +3367,10 @@ packages:
       is-installed-globally: 0.3.2
       lazy-ass: 1.6.0
       listr: 0.14.3_listr@0.14.3
-      lodash: 4.17.15
+      lodash: 4.17.19
       log-symbols: 3.0.0
       minimist: 1.2.5
-      moment: 2.26.0
+      moment: 2.27.0
       ospath: 1.2.2
       pretty-bytes: 5.3.0
       ramda: 0.26.1
@@ -3370,7 +3386,7 @@ packages:
     hasBin: true
     requiresBuild: true
     resolution:
-      integrity: sha512-qGxT5E0j21FPryzhb0OBjCdhoR/n1jXtumpFFSBPYWsaZZhNaBvc3XlBUDEZKkkXPsqUFYiyhWdHN/zo0t5FcA==
+      integrity: sha512-9SGIPEmqU8vuRA6xst2CMTYd9sCFCxKSzrHt0wr+w2iAQMCIIsXsQ5Gplns1sT6LDbZcmLv6uehabAOl3fhc9Q==
   /dashdash/1.14.1:
     dependencies:
       assert-plus: 1.0.0
@@ -3774,6 +3790,16 @@ packages:
       node: '>=6.9.0'
     resolution:
       integrity: sha512-S7eiFb/erugyd1rLb6mQ3Vuq+EXHv5cpCkNqqIkYkBgN2QdFnyCZzFBleqwGEx4lgNGYij81BWnCrFNK7vxvjQ==
+  /enhanced-resolve/4.3.0:
+    dependencies:
+      graceful-fs: 4.2.4
+      memory-fs: 0.5.0
+      tapable: 1.1.3
+    dev: false
+    engines:
+      node: '>=6.9.0'
+    resolution:
+      integrity: sha512-3e87LvavsdxyoCfGusJnrZ5G8SLPOFeHSNpZI/ATL9a5leXo2k0w6MKnbqhdBad9qTobSfB20Ld7UmgoNbAZkQ==
   /entities/1.1.2:
     dev: true
     resolution:
@@ -4030,10 +4056,10 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
-  /eventemitter2/6.4.2:
+  /eventemitter2/6.4.3:
     dev: false
     resolution:
-      integrity: sha512-r/Pwupa5RIzxIHbEKCkNXqpEQIIT4uQDxmP4G/Lug/NokVUWj0joz/WzWl3OxRpC5kDrH/WdiUJoR+IrwvXJEw==
+      integrity: sha512-t0A2msp6BzOf+QAcI6z9XMktLj52OjGQg+8SJH6v5+3uxNpWYRR3wQmfA+6xtMU9kOC59qk9licus5dYcrYkMQ==
   /eventemitter3/4.0.4:
     dev: true
     resolution:
@@ -6210,7 +6236,7 @@ packages:
       listr-update-renderer: 0.5.0_listr@0.14.3
       listr-verbose-renderer: 0.5.0
       p-map: 2.1.0
-      rxjs: 6.5.5
+      rxjs: 6.6.2
     dev: false
     engines:
       node: '>=6'
@@ -6464,7 +6490,6 @@ packages:
     dependencies:
       braces: 3.0.2
       picomatch: 2.2.2
-    dev: true
     engines:
       node: '>=8'
     resolution:
@@ -6605,10 +6630,10 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
-  /moment/2.26.0:
+  /moment/2.27.0:
     dev: false
     resolution:
-      integrity: sha512-oIixUO+OamkUkwjhAVE18rAMfRJNsNe/Stid/gwHSOfHrOtw9EhAY2AHvdKZ/k/MggcYELFCJz/Sn2pL8b8JMw==
+      integrity: sha512-al0MUK7cpIcglMv3YF13qSgdAIqxHTO7brRtaz3DlSULbqfazqkc5kEjNrLDOM7fsjshoFIihnU8snrP7zUvhQ==
   /move-concurrently/1.0.1:
     dependencies:
       aproba: 1.2.0
@@ -7904,6 +7929,14 @@ packages:
       npm: '>=2.0.0'
     resolution:
       integrity: sha512-WfQI+1gohdf0Dai/Bbmk5L5ItH5tYqm3ki2c5GdWhKjalzjg93N3avFjVStyZZz+A2Em+ZxKH5bNghw9UeylGQ==
+  /rxjs/6.6.2:
+    dependencies:
+      tslib: 1.13.0
+    dev: false
+    engines:
+      npm: '>=2.0.0'
+    resolution:
+      integrity: sha512-BHdBMVoWC2sL26w//BCu3YzKT4s2jip/WhwsGEDmeKYBhKDZeYezVUnHatYB7L85v5xs0BAQmg6BEYJEKxBabg==
   /safe-buffer/5.1.2:
     resolution:
       integrity: sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==
@@ -8800,6 +8833,21 @@ packages:
       typescript: '>=3.8 <4.0'
     resolution:
       integrity: sha512-Lk/357quLg5jJFyBQLnSbhycnB3FPe+e9i7ahxokyXxAYoB0q1pPmqxxRPYr4smJic1Rjcf7MXDBhZWgxlli0A==
+  /ts-loader/8.0.2_typescript@3.9.5:
+    dependencies:
+      chalk: 2.4.2
+      enhanced-resolve: 4.3.0
+      loader-utils: 1.4.0
+      micromatch: 4.0.2
+      semver: 6.3.0
+      typescript: 3.9.5
+    dev: false
+    engines:
+      node: '>=10.0.0'
+    peerDependencies:
+      typescript: '*'
+    resolution:
+      integrity: sha512-oYT7wOTUawYXQ8XIDsRhziyW0KUEV38jISYlE+9adP6tDtG+O5GkRe4QKQXrHVH4mJJ88DysvEtvGP65wMLlhg==
   /tslib/1.13.0:
     resolution:
       integrity: sha512-i/6DQjL8Xf3be4K/E6Wgpekn5Qasl1usyw++dAA35Ue5orEn65VIxOA+YvNNl9HV3qv70T7CNwjODHZrLwvd1Q==

@@ -1,17 +1,29 @@
+// module.exports = {
+//   resolve: {
+//     extensions: [".ts", ".js"]
+//   },
+//   module: {
+  //     ]
+  //   }
+// };
+
+const path = require('path')
+
 module.exports = {
-  mode: "development",
-  devtool: "eval-source-map",
-  resolve: {
-    extensions: [".ts", ".js"],
-  },
   module: {
-    strictExportPresence: true,
     rules: [
       {
-        test: /\.(ts|tsx|js|jsx)$/,
-        exclude: [/node_modules/],
-        loader: require.resolve("babel-loader")
+        test: /\.ts$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
       }
     ]
+  },
+  resolve: {
+    extensions: ['.ts', '.js'],
+  },
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist')
   }
-};
+}
