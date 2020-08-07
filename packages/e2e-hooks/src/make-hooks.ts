@@ -3,14 +3,16 @@ type HookMap = {
   [element: string]: string
 };
 
-type CompiledHookMap<HookMap> = {
-  [Key in keyof HookMap]: string;
+type CompiledHookMap<Hooks extends HookMap> = {
+  [elment in keyof Hooks]: string;
 };
 
 export const makeHooks = <Hooks extends HookMap>(hooks: Hooks): CompiledHookMap<Hooks> => {
-  const block = hooks.block;
-  return Object.entries(hooks).reduce<{ [key: string]: string }>((acc, [name, hook]) => {
+  const { block, ...elements } = hooks;
+  const compiledBlock = `e2e__${block}`;
+
+  return Object.entries(elements).reduce<{ [element: string]: string }>((acc, [name, hook]) => {
     acc[name] = `e2e__${block}__${hook}`;
     return acc;
-  }, {}) as CompiledHookMap<Hooks>;
+  }, { block: compiledBlock }) as CompiledHookMap<Hooks>;
 };

@@ -1,4 +1,5 @@
-// eslint-disable-next-line no-console
+/* eslint-disable no-console */
+import chalk from "chalk";
 export const info = (message: string, ...args: unknown[]): void => console.log(message, ...args);
 
 const getErrorMessage = (err: any | null | undefined): string | string[] => {
@@ -23,6 +24,8 @@ const getErrorMessage = (err: any | null | undefined): string | string[] => {
 export const error = (message:string, ...errs: unknown[]): void => {
   const errorMessages = errs.flatMap(getErrorMessage);
 
-  // eslint-disable-next-line no-console
-  console.error(message, ...errorMessages);
+  console.error([
+    message,
+    ...errorMessages
+  ].map((msg) => chalk.red(msg)).join("\n\n"));
 };

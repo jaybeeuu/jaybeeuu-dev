@@ -14,7 +14,7 @@ const useAsyncEffect = (
   }, dependencies);
 };
 
-export const useApiCall = (relativePath: string, dependencies: Inputs): ApiCallResult => {
+export const useApiCall = (relativePath: string): ApiCallResult => {
   const [result, setResult]  = useState<ApiCallResult>({ status: ApiCallStatus.PENDING });
 
   useAsyncEffect(async (signal) => {
@@ -24,7 +24,7 @@ export const useApiCall = (relativePath: string, dependencies: Inputs): ApiCallR
       }
       setResult(apiResult);
     }
-  }, dependencies);
+  }, []);
 
   return result;
 };

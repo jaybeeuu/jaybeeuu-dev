@@ -1,0 +1,4 @@
+{
+  "title": "Memoising Selectors",
+  "abstract": "Complex operations in redux selectors can result in render thrashing, but why and how does it happen?"
+}

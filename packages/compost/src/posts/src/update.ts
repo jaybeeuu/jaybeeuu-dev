@@ -13,17 +13,22 @@ import { getMetaFileContent } from "./metafile";
 import { validateSlug, getPostFileName } from "./file-paths";
 import { UpdateOptions, PostManifest } from "./types";
 
-export const update = async (options: UpdateOptions): Promise<Result<void>> => {
+export const update = async (
+  options: UpdateOptions
+): Promise<Result<PostManifest>> => {
   const oldManifest = await readJsonFile<PostManifest>(
     path.join(options.outputDir, options.manifestFileName),
     {}
   );
-  const newManifest: PostManifest = {};
 
-  await deleteDirectories(options.outputDir);
+  const newManifest: PostManifest = {};
+  const resolvedOutputDir = path.resolve(options.outputDir);
+  const resolvedSourceDir = path.resolve(options.sourceDir);
+
+  await deleteDirectories(resolvedOutputDir);
 
   for await (const markdownFileInfo of recurseDirectory(
-    path.resolve(options.sourceDir),
+    resolvedSourceDir,
     { include: [MARKDOWN_FILE_EXTENSION] })
   ) {
     const slug = markdownFileInfo.fileName.split(".")[0];
@@ -35,7 +40,7 @@ export const update = async (options: UpdateOptions): Promise<Result<void>> => {
 
     const compiledPost = await compilePost(markdownFileInfo.filePath);
     const compiledFileName = getPostFileName(slug, compiledPost);
-    const compiledFilePath = path.join(options.outputDir, compiledFileName);
+    const compiledFilePath = path.join(resolvedOutputDir, compiledFileName);
     await writeTextFile(compiledFilePath, compiledPost);
     const href = `/${compiledFileName}`;
 
@@ -57,7 +62,10 @@ export const update = async (options: UpdateOptions): Promise<Result<void>> => {
     };
   }
 
-  await writeJsonFile(path.join(options.outputDir, options.manifestFileName), newManifest);
+  await writeJsonFile(
+    path.resolve(options.outputDir, options.manifestFileName),
+    newManifest
+  );
 
-  return success();
+  return success(newManifest);
 };

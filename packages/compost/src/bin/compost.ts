@@ -4,6 +4,7 @@ import * as log from "../log";
 import { update } from "../posts";
 import { UpdateOptions } from "../posts/src/types";
 import debounce from "../utility/debounce";
+import { ResultState, Result, success, failure } from "../results";
 
 const options = getOpts(process.argv, {
   alias: {
@@ -20,13 +21,48 @@ const options = getOpts(process.argv, {
   }
 }) as unknown as UpdateOptions;
 
-if (options.watch) {
+const run = async (): Promise<Result<void>> => {
+  try {
+    log.info("Composting...");
+    const result = await update(options);
+    if (result.state === ResultState.success) {
+      log.info(`Complete:\n\n${
+        Object.entries(result.value).map(([slug, postMeta]) => {
+          return `    ${slug}: ${postMeta.fileName}`;
+        }).join("\n")
+      }`);
+      return success();
+    } else {
+      log.error(`Failed to compost: ${result.message}`);
+      return result;
+    }
+  } catch (err) {
+    log.error("Failed to compost", err);
+    return failure(err.message || err);
+  }
+};
+
+const watch = async (): Promise<void> => {
   log.info("Starting compost in watch mode...");
-  chokidar.watch(options.sourceDir).on("all", debounce(() => {
-    log.info("Rebuilding posts...", );
-    update(options);
-  }, 250));
+  await run();
+  chokidar.watch(options.sourceDir).on(
+    "all",
+    debounce(() => {
+      (async () => {
+        await run();
+        log.info("Waiting for changes.");
+      })();
+    }, 250)
+  );
+};
+
+if (options.watch) {
+  watch();
 } else {
-  log.info("Composting...");
-  update(options);
+  (async () => {
+    const result = await run();
+    process.exit(
+      result.state === ResultState.success ? 0 : 1
+    );
+  })();
 }

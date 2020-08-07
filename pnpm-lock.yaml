@@ -11,6 +11,7 @@ importers:
       '@bickley-wallace/e2e-hooks': 'link:../e2e-hooks'
       '@bickley-wallace/posts': 'link:../posts'
       '@bickley-wallace/scripts': 'link:../scripts'
+      '@prefresh/webpack': 0.8.2_preact@10.4.4+webpack@4.43.0
       '@types/jest': 26.0.4
       '@types/react': 16.9.41
       '@types/react-dom': 16.9.8
@@ -52,6 +53,7 @@ importers:
       '@bickley-wallace/e2e-hooks': 'workspace:*'
       '@bickley-wallace/posts': 'workspace:*'
       '@bickley-wallace/scripts': 'workspace:*'
+      '@prefresh/webpack': ^0.8.2
       '@types/jest': ^26.0.4
       '@types/react': ^16.9.19
       '@types/react-dom': ^16.9.5
@@ -86,6 +88,7 @@ importers:
       webpack-dev-server: ^3.10.2
   packages/compost:
     dependencies:
+      chalk: 4.1.0
       chokidar: 3.4.0
       getopts: 2.2.5
       highlight.js: 9.18.1
@@ -119,6 +122,7 @@ importers:
       '@types/sanitize-html': ^1.22.0
       '@typescript-eslint/eslint-plugin': ^2.22.0
       '@typescript-eslint/parser': ^2.22.0
+      chalk: ^4.1.0
       chokidar: ^3.4.0
       eslint: ^6.8.0
       eslint-plugin-jest: ^23.6.0
@@ -139,6 +143,7 @@ importers:
       eslint: ^6.8.0
   packages/e2e:
     dependencies:
+      '@bickley-wallace/compost': 'link:../compost'
       '@bickley-wallace/config-eslint': 'link:../config-eslint'
       '@bickley-wallace/e2e-hooks': 'link:../e2e-hooks'
       '@cypress/webpack-preprocessor': 4.1.5_webpack@4.43.0
@@ -155,6 +160,7 @@ importers:
       typescript: 3.9.5
       webpack: 4.43.0_webpack@4.43.0
     specifiers:
+      '@bickley-wallace/compost': 'workspace:*'
       '@bickley-wallace/config-eslint': 'workspace:*'
       '@bickley-wallace/e2e-hooks': 'workspace:*'
       '@cypress/webpack-preprocessor': ^4.1.3
@@ -1413,6 +1419,30 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-Uv6h1sT+0DrblvIrolFtbvM1FgWm+/sy4B3pvLp67Zys+thcukzS5ekn7HsZFGpWP4Q3fYJCljbWQE/XivMRLw==
+  /@prefresh/core/0.7.4_preact@10.4.4:
+    dependencies:
+      preact: 10.4.4
+    dev: true
+    peerDependencies:
+      preact: ^10.0.0
+    resolution:
+      integrity: sha512-Qbdjg0xH7svik4ErxMLcJUblEoi1qKt/Je3qsHqLdZjtsU4/BWW6oOtz4COAZK5KirpFS56VjBYMLzi6/ueZqQ==
+  /@prefresh/utils/0.2.1:
+    dev: true
+    resolution:
+      integrity: sha512-Ju7WHncqUKsaFp7yAFoNSR2jdr0bjqr8AwV06LtpFmwliPe4IDGRcBGhofg+SY9yld3FUF1JWmEoUOfCyCGRhA==
+  /@prefresh/webpack/0.8.2_preact@10.4.4+webpack@4.43.0:
+    dependencies:
+      '@prefresh/core': 0.7.4_preact@10.4.4
+      '@prefresh/utils': 0.2.1
+      preact: 10.4.4
+      webpack: 4.43.0_webpack@4.43.0
+    dev: true
+    peerDependencies:
+      preact: ^10.4.0
+      webpack: ^4.0.0
+    resolution:
+      integrity: sha512-c4YsahgvnaOsSu9IW12yixiYfEKbC+DjqVPSezAhN0B5wXtoaTelEY5vmPSY3bFjcFiqnWXA1NJ49WbQ5ozAcw==
   /@samverschueren/stream-to-observable/0.3.0:
     dependencies:
       any-observable: 0.3.0
@@ -2788,7 +2818,6 @@ packages:
     dependencies:
       ansi-styles: 4.2.1
       supports-color: 7.1.0
-    dev: true
     engines:
       node: '>=10'
     resolution:

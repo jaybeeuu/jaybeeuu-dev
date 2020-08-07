@@ -1,3 +1,4 @@
+const PreactRefreshPlugin = require("@prefresh/webpack");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyWebpckPlugin = require("copy-webpack-plugin");
@@ -53,7 +54,7 @@ module.exports = {
           {
             test: /\.(ts|tsx|js|jsx)$/,
             include: paths.src,
-            loader: require.resolve("babel-loader")
+            use: "babel-loader"
           },
           {
             test: /\.css$/,
@@ -94,6 +95,8 @@ module.exports = {
     new webpack.DefinePlugin(stringifiedEnv),
     new webpack.NoEmitOnErrorsPlugin(),
     new CaseSensitivePathsPlugin(),
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new PreactRefreshPlugin()
   ]
 };
