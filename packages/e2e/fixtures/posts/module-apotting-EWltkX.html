@@ -1,0 +1,197 @@
+<h1>Module Spotting</h1>
+<h2>What are we trying to solve?</h2>
+<p>As JS applications grow managing them in a single file becomes unwieldy. We all know the benefits of breaking things down into small easliy understood cohertent components which can be editted with confidence. In the old days JS had no builtin way of doing this.</p>
+<p>The best attempt in the browser was to "import" modules using a series of script tags from you html. This encouraged large JS files, whose dependencies often weren't clear. If the dependencies changed there was no automatic way to go and update all of the places they were used, and the order of imports was sacrosanct. Utility files in projects would grow and grow and often be imported on every page. dead code was hard to identify and eliminate.</p>
+<p>Because there was no definition of a module there was also no definition of how a file should export public code. The global scope was the only real choice and soon became a dumping ground. Of course this quickly led to name collisions and javascript being what it is - <code>dynamic</code> that perfectly OK from the point of view of the interpreter. Even Libraries like <code>jQuery</code> and <code>Underscore</code> whose exports and aliases were well known ran into others using their names. Techniques were used like namespacing to try and avoid collisions, but inevitably someone would overwrite someone elses behaviour, bugs ate up whole applications, tempers flared and words were said which could never be taken back.</p>
+<p>Something had to give. A few competing standards grew each with their own quirks and benefits. But the good news is that you don't need to know all of them. The two you will come in most contact with are CommonJS and ES6 Modules - and even then mostly only ES6 modules. The others are included below only because you may some across them so it's worth at least recognising the names and the syntax.</p>
+<h2>So what actually is a module anyway?</h2>
+<p>The Google definition is:</p>
+<blockquote>
+<p>module
+/ˈmɒdjuːl/</p>
+<p>noun</p>
+<ol>
+<li>each of a set of standardized parts or independent units that can be used to construct a more complex structure, such as an item of furniture or a building.<ul>
+<li>"ships are now built in modules rather than built in a whole from the base up"</li>
+</ul>
+</li>
+<li>a detachable self-contained unit of a spacecraft.<ul>
+<li>"Spacelab, an extra module for the shuttle, will quadruple the experimental facilities on board"</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+<p>The first definition is more relevant to JavaScript. A module is a unit of code which provides some cohesive reusable functionality. It might export a class or a group of functions. But whatever it contains should be closely related. In a similar fashion to classes in OO languages (like Java or C#) modules in javascript allow us to build up complex applications from smaller simpler components.</p>
+<p>A module in JS allows the author to import the dependencies of the code they define - i.e. the modules on which the module's code relies. (It's turtles the whole way down.) It must then allow the execution of some JavaScript which defines the exports of the module i.e. what should be available to the outside world. Usually a group of functions or a class but the exports could just as easily be a configuration object some HTML or CSS. Along the way modules allow code to be defined only for internal use - think <code>private</code> in OO languages. If it isn't exported other modules have no knowledge of it. This gives us the <a href="https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)">encapsulation</a> that JS otherwise lacks.</p>
+<h2>Styles of Module you might see in the wild</h2>
+<h3><a href="https://en.wikipedia.org/wiki/Asynchronous_module_definition">AMD</a></h3>
+<p>Asynchronous Module Definitions. Most notably implemented by <a href="https://requirejs.org/">Require.js</a>. One of the key features of this standard is to allow modules to be loaded in a lazy manner - i.e. as late as possible. The goal being to increase page load times by not loading anything until it is required.</p>
+<p>Here's what an AMD module looks like:</p>
+<pre><code><span class="hljs-comment">// Cat.js</span>
+define([<span class="hljs-string">"movement/prowl"</span>, <span class="hljs-string">"noises/miaow"</span>],
+    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">prowl, miaow</span>) </span>{
+        <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Cat</span> </span>{
+          speak() {
+            miaow();
+          }
+
+          move() {
+            prowl();
+          }
+
+          isBetterThanADog() {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+          }
+        }
+
+        <span class="hljs-keyword">return</span> Cat;
+    }
+);</code></pre>
+<p>The key here is the <code>define</code> function on line 1. <code>RequireJS</code> wraps the module code and supplies a couple of variables to use to define your exports and dependencies. <code>define</code> tells <code>RequireJS</code> you are going to define a module. The first arguemnt is an array of the dependencies. These are either relative paths to the modules or an alias ike <code>jQuery</code> which is defined in requires config. The second argument is the function to run to perform the module definition. It's arguments are the dependencies and that is how require gets them into your code.</p>
+<p>At the end of the definition function <code>return Cat;</code> defines the export of the module (the <code>Cat</code> class).</p>
+<p>The syntax is complex, setting it up is finicky and it's not a popular way of doing modules anymore so let's not dwell on it. But it is a bit like a penny-farthing - no one likes to use it anymore, but every now and again you see one in the street it's fun to point at it and wonder about how anyone came up with such an invention...</p>
+<p>Having said that a time when you might see something like this is if you are debugging some code which has been bundled by webpack, without source maps, and it has been configured to have an <code>AMD</code> style output so it does show up every now and again.</p>
+<h3><a href="https://en.wikipedia.org/wiki/CommonJS">CommonJS</a></h3>
+<p>Because this is the module system implemented by <a href="https://nodejs.org/en/">Node.js</a> it is more likely you will come across it. It's also worth pointing out that code transpiled and bundled by <code>webpack</code> is converted into modules with a <code>CommonJS</code> flavour so you can come across it in the browser too. It is definitely worth getting into some detail about this one.</p>
+<p>The way this works is that when node executes the JS in a module it wraps the code in a function. The function  supplies a couple of special arguments which the module can use. More details can be found <a href="https://nodejs.org/docs/latest/api/modules.html#modules_the_module_wrapper">here</a>. But the important ones for the sake of this discussion are <code>exports</code>, <code>module</code> and <code>require</code>.</p>
+<p>Here's an example ripped almost exactly from the <a href="https://nodejs.org/docs/latest/api/modules.html">node docs</a>...</p>
+<pre><code><span class="hljs-comment">// circle.js</span>
+<span class="hljs-keyword">const</span> { PI } = <span class="hljs-built_in">Math</span>;
+
+exports.area = <span class="hljs-function">(<span class="hljs-params">r</span>) =&gt;</span> PI * r ** <span class="hljs-number">2</span>;
+
+exports.circumference = <span class="hljs-function">(<span class="hljs-params">r</span>) =&gt;</span> <span class="hljs-number">2</span> * PI * r;</code></pre>
+<p>Here are two functions which are exported as named exports on the <code>exports</code> object. This makes them accessible to the outside world. The <code>exports</code> object though is just a shortcut to the <code>module.exports</code> object so you can do the same thing like this:</p>
+<pre><code><span class="hljs-built_in">module</span>.exports.circumference = <span class="hljs-function">(<span class="hljs-params">r</span>) =&gt;</span> <span class="hljs-number">2</span> * PI * r;</code></pre>
+<p>Lets have a look at the other end of this and see how the modules are consumed:</p>
+<pre><code><span class="hljs-comment">// index.js</span>
+<span class="hljs-keyword">const</span> circle = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./circle.js'</span>);
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">`The area of a circle of radius 4 is <span class="hljs-subst">${circle.area(<span class="hljs-number">4</span>)}</span>`</span>);</code></pre>
+<p>On the first line you can see the <code>require</code> function being used to import the <code>circle</code> module. After it has been executed the <code>circle</code> const will contain a reference to the object that was on <code>module.exports</code> once the circle code had been executed. In this case <code>area</code> and <code>circumference</code>. Note that the argument to <code>require</code> is a relative path from the current module (<code>index</code>) to the required module (<code>circle</code>) in this example they must be nxt to eachother in the same directory to work (<code>.</code> in a relative path refers to the current directory, <code>..</code> navigates up the tree etc.).</p>
+<p>Another common way to define an export is to write directly to the <code>module.exports</code> property. Thus defining the "default export".</p>
+<pre><code><span class="hljs-comment">// square.js</span>
+<span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Square</span> </span>{
+  <span class="hljs-keyword">constructor</span>(width) {
+    <span class="hljs-keyword">this</span>.width = width;
+  }
+
+  area() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.width ** <span class="hljs-number">2</span>;
+  }
+};</code></pre>
+<p>The square class is written straight onto the <code>module.exports</code> property and so becomes the only export which this module defines. So when it is required it can be accessed directly:</p>
+<pre><code><span class="hljs-comment">// index.js</span>
+<span class="hljs-keyword">const</span> Square = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./square.js'</span>);
+<span class="hljs-keyword">const</span> square = <span class="hljs-keyword">new</span> Square(<span class="hljs-number">2</span>);
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">`The area of a square with width 2 is <span class="hljs-subst">${square.area()}</span>`</span>);</code></pre>
+<p>A thing to note here is that the <code>exports</code> argument is a short cut to the <code>module.exports</code> property, but it is the <code>module.exports</code> object which actually gets passed to the dependents. Therefore if you overwrite it anything which is written to <code>exports</code> will be ignored and only things written to <code>module.exports</code> after it has been overwritten will be available...</p>
+<pre><code><span class="hljs-comment">// missingModule.js</span>
+
+exports.a = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Can\'t touch this'</span>); };
+<span class="hljs-built_in">module</span>.exports.b = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Nah na na na, nah na, nah na'</span>); };
+
+<span class="hljs-built_in">module</span>.exports = {
+  <span class="hljs-attr">c</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'This had better do all those other things...'</span>); }
+};
+
+<span class="hljs-built_in">module</span>.exports.d = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'hmmm... something\'s missing.'</span>); }
+exports.e = <span class="hljs-string">'A message of love and peace an how we can all just get along if we tried.'</span>;</code></pre>
+<p>In this case any module importing <code>missingModule</code> will only ba able to use <code>c</code> and <code>d</code> because <code>a</code>, <code>b</code> <code>e</code> were defined on an object which will have been tied up by the garbage collector... For this reason you should be cautious about mixing <code>module.exports</code> and <code>exports</code> and in general only use one or the other.You might also see this: <code>module.exports = exports = ...</code> which allows <code>exports</code> to be used <em>after</em> <code>module.exports</code> has been set. Still anything written to it before will be lost.</p>
+<p>On the whole though <code>CommonJS</code> is a reasonably good module system it's syntax is terse and there aren't many gotchas. It has a clean syntax and the <code>require</code> statements which pull in code can go anywhere in the file which can lend readability. On the down side the <code>require</code> statements can go anywhere so the dependencies of a file are not necessarily obvious. We haven't talked about cyclic dependencies (module A depends on B depends on A) but <code>CommonJS</code> <a href="https://nodejs.org/docs/latest/api/modules.html#cycles">handles</a> them reasonably robustly.</p>
+<h4>Running the Examples</h4>
+<p>If you want to play around with this style of module a bit then you can find some of the examples above in the <code>node-examples</code> directory in the root of this project.</p>
+<p>running <code>npm run examples</code> will run <code>node-examples/index.js</code> in node, and you can start it with a debugger with <code>npm run examples:debug</code>.</p>
+<h3><a href="https://github.com/umdjs/umd">UMD</a></h3>
+<p>UMD (Unified Module Definitions) aims to join both - library authors needed to wrap their code up as modules which worked in as many environments as possible and so UMD was born. At it's core is a series of templates in a github <a href="https://github.com/umdjs/umd">repo</a>. They work fine - but getting your head around what they do can be tricky.</p>
+<p>Here's an exmaple:</p>
+<pre><code><span class="hljs-comment">// commonjsStrictGlobal.js</span>
+(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">root, factory</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> define === <span class="hljs-string">'function'</span> &amp;&amp; define.amd) {
+        <span class="hljs-comment">// AMD. Register as an anonymous module.</span>
+        define([<span class="hljs-string">'exports'</span>, <span class="hljs-string">'b'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">exports, b</span>) </span>{
+            factory((root.commonJsStrictGlobal = exports), b);
+        });
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> exports === <span class="hljs-string">'object'</span> &amp;&amp; <span class="hljs-keyword">typeof</span> exports.nodeName !== <span class="hljs-string">'string'</span>) {
+        <span class="hljs-comment">// CommonJS</span>
+        factory(exports, <span class="hljs-built_in">require</span>(<span class="hljs-string">'b'</span>));
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-comment">// Browser globals</span>
+        factory((root.commonJsStrictGlobal = {}), root.b);
+    }
+}(<span class="hljs-keyword">typeof</span> self !== <span class="hljs-string">'undefined'</span> ? self : <span class="hljs-keyword">this</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">exports, b</span>) </span>{
+    <span class="hljs-comment">// Use b in some fashion.</span>
+
+    <span class="hljs-comment">// attach properties to the exports object to define</span>
+    <span class="hljs-comment">// the exported module properties.</span>
+    exports.action = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{};
+}));</code></pre>
+<p>So in that first top level indentation (line 2-14) you can see this thing doing some testing to effectively see what is going on in it's environment. First it tests to see if it's AMD with <code>typeof define === 'function'</code>, then <code>CommonJS</code> (<code>if (typeof exports === 'object')</code>) and finally it falls back to assuming it's dependencies must be defined in the global scope.</p>
+<p>Once if knows what the module system is it injects the <code>exports</code> object and the dependencies into the actual module definition function (lines 15-22, the second top level indentation).</p>
+<p>Again this isn't a module definition type that you are likely to come across regularly, unless you look at the source code of some older libraries, so don't worry too much. If <code>AMD</code> is a penny-farthing then I suppose <code>UMD</code> is a reasonably priced car with a penny-farthing bolted on one side and a horse tied to the other. Let's move on.</p>
+<h3><a href="http://exploringjs.com/es6/ch_modules.html">ES6 (Harmony)</a></h3>
+<p>This is the one to pay most attention to. This is the officially sanctioned module standard as per the ES6 specification. It has taken a while but many browsers now <a href="https://caniuse.com/#search=modules">support</a> the spec. Because of <a href="https://hackernoon.com/node-js-tc-39-and-modules-a1118aecf95e">differences</a> between node's CommonJS and ES6 modules it has taken longer for modules to be supported there, but it is now on it's <a href="https://nodejs.org/api/esm.html">way</a>.</p>
+<p>If you have tp support older browsers or want to use ES6 modules in node today then you can do that too. Tools like <code>webpack</code> with <code>babel</code> or <code>babel-node</code> will let you do just that. These tools replace some reference sand keywords and wrap your code in a function that convert the statements to <code>CommonJS</code> or <code>AMD</code> style modules.</p>
+<p>Lets get down to brass tacks...</p>
+<pre><code><span class="hljs-comment">// circle.js</span>
+<span class="hljs-keyword">const</span> { PI } = <span class="hljs-built_in">Math</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> area = <span class="hljs-function">(<span class="hljs-params">r</span>) =&gt;</span> PI * r ** <span class="hljs-number">2</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> circumference = <span class="hljs-function">(<span class="hljs-params">r</span>) =&gt;</span> <span class="hljs-number">2</span> * PI * r;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> diameter = <span class="hljs-function">(<span class="hljs-params">r</span>) =&gt;</span> <span class="hljs-number">2</span> * r;</code></pre>
+<p>In this adaptation of the circle example you can see 3 things being exported. The <code>area</code>, <code>circumference</code> and <code>diameter</code> functions are <em>named exports</em> from this module to access them you must use curly braces in your <code>import</code> statement. Like this:</p>
+<pre><code><span class="hljs-keyword">import</span> { circumference, diameter } <span class="hljs-keyword">from</span> <span class="hljs-string">'./circle.js'</span>
+
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">`The circumference of a circle of radius 4 is <span class="hljs-subst">${circumference(<span class="hljs-number">4</span>)}</span>`</span>);
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">`The circumference of a circle of radius 2 is <span class="hljs-subst">${diameter(<span class="hljs-number">2</span>)}</span>`</span>);</code></pre>
+<p>I import more than one named export by using a comma - this should look familiar from object spread syntax. I don't have to import everything if i don't want to - this module only uses <code>circumference</code> and <code>diameter</code> so those are the only exports I reference. If  you do want everything you can do that too with a <code>* as</code>:</p>
+<pre><code><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> circle <span class="hljs-keyword">from</span> <span class="hljs-string">'./circle.js'</span>
+
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">`The circumference of a circle of radius 4 is <span class="hljs-subst">${circle.circumference(<span class="hljs-number">4</span>)}</span>`</span>);
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">`The circumference of a circle of radius 2 is <span class="hljs-subst">${circle.diameter(<span class="hljs-number">2</span>)}</span>`</span>);</code></pre>
+<p>If I want to use a different name (perhaps to avoid a collision with another module) for the export in the dependent module then i can do that too - but the syntax diverges from the object spread syntax:</p>
+<pre><code><span class="hljs-keyword">import</span> { area <span class="hljs-keyword">as</span> circleArea } <span class="hljs-keyword">from</span> <span class="hljs-string">'./circle.js'</span>;
+<span class="hljs-keyword">import</span> { area <span class="hljs-keyword">as</span> triangleArea } <span class="hljs-keyword">from</span> <span class="hljs-string">'./triangle.js'</span>;
+
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">`The area of a circle of radius 4 is <span class="hljs-subst">${circleArea(<span class="hljs-number">4</span>)}</span>`</span>);
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">`The area of a triangle of base 4 and height of 2 is <span class="hljs-subst">${triangleArea(<span class="hljs-number">4</span>, <span class="hljs-number">2</span>)}</span>`</span>);</code></pre>
+<p>We can define a default export for the module. Which is often used when the module exports a <code>class</code> or a single object. the <code>square</code> module below does that:</p>
+<pre><code><span class="hljs-comment">// square.js</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Square</span> </span>{
+  <span class="hljs-keyword">constructor</span>(width) {
+    <span class="hljs-keyword">this</span>.width = width;
+  }
+
+  area() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.width ** <span class="hljs-number">2</span>;
+  }
+};
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Square;</code></pre>
+<p>Here the <code>default</code> keyword has been used as well as <code>export</code>. Not much more to say about that really. Importing the default is simple too - just omit the curly braces and you get the default:.</p>
+<pre><code><span class="hljs-keyword">import</span> Square <span class="hljs-keyword">from</span> <span class="hljs-string">'./circle.js'</span>
+
+<span class="hljs-keyword">const</span> square = <span class="hljs-keyword">new</span> Square(<span class="hljs-number">2</span>);
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">`The area of a square with width 2 is <span class="hljs-subst">${square.area()}</span>`</span>);</code></pre>
+<p>In the case of the default you can call the import whatever you like so if you need to us <code>as</code> if you want to call it something different in the dependent module.</p>
+<p>The final case is one where you have both named and default exports. Like in the slightly contrived triangle module below...</p>
+<pre><code><span class="hljs-comment">// triangle.js</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> area = <span class="hljs-function">(<span class="hljs-params">base, height</span>) =&gt;</span> <span class="hljs-number">1</span>/<span class="hljs-number">2</span> b * h
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Triangle</span> </span>{
+  <span class="hljs-keyword">constructor</span>(base, height) {
+    <span class="hljs-keyword">this</span>.area = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> area(base, height);
+  }
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Triangle</code></pre>
+<pre><code><span class="hljs-keyword">import</span> Triangle, { area } <span class="hljs-keyword">from</span> <span class="hljs-string">'./triangle.js'</span>;
+
+<span class="hljs-keyword">const</span> triangle = <span class="hljs-keyword">new</span> Triangle(<span class="hljs-number">4</span>, <span class="hljs-number">2</span>);
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">`The area of a triangle of base 4 and height of 2 is <span class="hljs-subst">${area(<span class="hljs-number">4</span>, <span class="hljs-number">2</span>)}</span>`</span>);
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">`The area of a triangle of base 4 and height of 2 is <span class="hljs-subst">${triangle.area()}</span>`</span>);</code></pre>
+<p>Again you don't have to import everything so if you only want either default or named exports then that is fine. Also the name exports will behave themselves if you want to use <code>as</code> or <code>* as</code> with or without the default export as you would expect.</p>
+<p>Once you get started with ES6 imports they are pretty clear. The syntax is reasonably simple and they are flexible enough to allow you to do what ever you need with them. If you dig into the <a href="http://exploringjs.com/es6/ch_modules.html#sec_cyclic-dependencies">details</a> a little then they also handle cyclic dependencies better than <code>CommonJS</code> too. There is also support for async loading of modules out of the box, in a similar manner to <code>AMD</code>. We're getting the best of both here!</p>
+<h4>Running the Examples</h4>
+<p>If you want to play around with this style of module a bit then you can find some of the examples above in the <code>public/browser-examples</code> directory in the root of this project. These are served up by express so run <code>npm run start</code> and open <code>http://localhost:3000</code> in a modern browser (see the caniuse link above for details of supported versions). It will open this readme and if you look in devtools you will be able to see the modules being loaded (checkout the network tab) and executed (see the console and sources tabs) natively in your browser...</p>

@@ -9,7 +9,6 @@
     "Josh",
     "E2E"
   ],
-  "main": "index.js",
   "scripts": {
     "e2e": "cypress",
     "lint": "eslint --ext .js,.ts --format codeframe .",

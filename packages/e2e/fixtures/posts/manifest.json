@@ -1,0 +1,29 @@
+{
+  "memoising-selectors": {
+    "title": "Memoising Selectors",
+    "abstract": "Complex operations in redux selectors can result in render thrashing, but why and how does it happen?",
+    "publishDate": "Fri, 31 Jul 2020 21:52:16 GMT",
+    "lastUpdateDate": null,
+    "slug": "memoising-selectors",
+    "fileName": "memoising-selectors-dKLBfn.html",
+    "href": "/memoising-selectors-dKLBfn.html"
+  },
+  "module-apotting": {
+    "title": "Module Spotting",
+    "abstract": "Modules in JavaScript have a long and complext history. Let's explore...",
+    "publishDate": "Fri, 31 Jul 2020 21:52:16 GMT",
+    "lastUpdateDate": null,
+    "slug": "module-apotting",
+    "fileName": "module-apotting-EWltkX.html",
+    "href": "/module-apotting-EWltkX.html"
+  },
+  "the-rewrite": {
+    "title": "The Rewrite",
+    "abstract": "One of the grads at SL asked me if they should change their entire application. These were my thoughts...",
+    "publishDate": "Fri, 31 Jul 2020 21:52:16 GMT",
+    "lastUpdateDate": null,
+    "slug": "the-rewrite",
+    "fileName": "the-rewrite-qYixgS.html",
+    "href": "/the-rewrite-qYixgS.html"
+  }
+}

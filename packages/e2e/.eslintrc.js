@@ -22,7 +22,7 @@ module.exports = mergeConfig(
     },
     overrides: [
       {
-        "files": ["cypress/plugins/**/*"],
+        "files": ["plugins/**/*"],
         env: {
           "browser": false,
           "node": true
