@@ -54,6 +54,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -71,9 +78,17 @@ var processOptions = getopts_1["default"](process.argv.slice(2), {
         caName: "ca.pem"
     }
 });
-var certFilePath = path_1["default"].resolve(process.cwd(), processOptions.directory, processOptions.certName);
-var keyFilePath = path_1["default"].resolve(process.cwd(), processOptions.directory, processOptions.keyName);
-var caFilePath = path_1["default"].resolve(process.cwd(), processOptions.directory, processOptions.keyName);
+var resolveToOutDir = function () {
+    var pathSegments = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        pathSegments[_i] = arguments[_i];
+    }
+    return path_1["default"].resolve.apply(path_1["default"], __spreadArrays([process.cwd(),
+        processOptions.directory], pathSegments));
+};
+var certFilePath = resolveToOutDir(processOptions.certName);
+var keyFilePath = resolveToOutDir(processOptions.keyName);
+var caFilePath = resolveToOutDir(processOptions.keyName);
 (function () { return __awaiter(void 0, void 0, void 0, function () {
     var ssl, err_1;
     return __generator(this, function (_a) {
