@@ -1,12 +1,12 @@
 import { h, FunctionComponent } from "preact";
-import { titleBar } from "@bickley-wallace/e2e-hooks";
+import { sideBar } from "@bickley-wallace/e2e-hooks";
 import { useApiCall } from "../custom-hooks/use-api-call";
 import { ApiCallStatus } from "../utils/api";
 
 const ApiRoot: FunctionComponent = () => {
   const call = useApiCall("/posts/manifest.json");
   return (
-    <pre className={titleBar.apiResults}>
+    <pre className={sideBar.apiResults}>
       {call.status === ApiCallStatus.FAILED ? JSON.stringify({
         status: call.status,
         error: call.error.message ?? call.error
