@@ -47,11 +47,9 @@ const watch = async (): Promise<void> => {
   await run();
   chokidar.watch(options.sourceDir).on(
     "all",
-    debounce(() => {
-      (async () => {
-        await run();
-        log.info("Waiting for changes.");
-      })();
+    debounce(async () => {
+      await run();
+      log.info("Waiting for changes.");
     }, 250)
   );
 };

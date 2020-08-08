@@ -116,19 +116,17 @@ var watch = function () { return __awaiter(void 0, void 0, void 0, function () {
                 return [4 /*yield*/, run()];
             case 1:
                 _a.sent();
-                chokidar_1["default"].watch(options.sourceDir).on("all", debounce_1["default"](function () {
-                    (function () { return __awaiter(void 0, void 0, void 0, function () {
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, run()];
-                                case 1:
-                                    _a.sent();
-                                    log.info("Waiting for changes.");
-                                    return [2 /*return*/];
-                            }
-                        });
-                    }); })();
-                }, 250));
+                chokidar_1["default"].watch(options.sourceDir).on("all", debounce_1["default"](function () { return __awaiter(void 0, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, run()];
+                            case 1:
+                                _a.sent();
+                                log.info("Waiting for changes.");
+                                return [2 /*return*/];
+                        }
+                    });
+                }); }, 250));
                 return [2 /*return*/];
         }
     });
