@@ -8,6 +8,5 @@
     "declaration": false,
     "types": ["cypress"]
   },
-  "include": ["cypress/**/*", "plugins", "integration", "support"],
   "exclude": ["node_modules"]
 }
