@@ -32,9 +32,9 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
+
       - run: sudo npm install -g pnpm@^5.4.0
-      - run: pnpm run build
-      - run: pnpm run gen-certs
+      - run: npm run build
       - store_artifacts:
           path: ./packages/client/dist
           destination: client-dist
@@ -75,6 +75,16 @@ jobs:
       - run: pnpm run test
 
 
+  e2e:
+    <<: *base
+
+    steps:
+      - attach_workspace:
+          at: *src-dir
+      - run: sudo npm install -g pnpm@^5.4.0 wait-on
+      - run: npm run gen-certs
+      - run: npm run e2e:ci
+
 workflows:
   version: 2
 
@@ -93,5 +103,8 @@ workflows:
           requires:
             - build
       - test:
+          requires:
+            - build
+      - e2e:
           requires:
             - build
