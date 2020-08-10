@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import "../test/custom-matchers";
 import * as log from "./log";
+import chalk from "chalk";
 
 interface Sample {
   args: [string, ...unknown[]];
@@ -104,7 +105,9 @@ describe("log", () => {
       it(`should call console.error(${consoleCalledWith.join(", ")}) when passed args: ${JSON.stringify(args, null, 2)}`, () => {
         log.error(...args);
 
-        expect(console.error).toHaveBeenCalledWith(...consoleCalledWith);
+        expect(console.error).toHaveBeenCalledWith(
+          consoleCalledWith.map((msg) => chalk.red(msg)).join("\n\n")
+        );
       });
     });
   });
