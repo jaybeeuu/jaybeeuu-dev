@@ -16,7 +16,7 @@ module.exports = {
   src: resolveApp("src"),
   packageJson: resolveApp("package.json"),
   certs: {
-    key: path.join(certs, "client.bickley-wallace.com.key"),
-    certificate: path.join(certs, "client.bickley-wallace.com.crt")
+    key: path.join(certs, "key.key"),
+    certificate: path.join(certs, "cert.crt")
   }
 };
