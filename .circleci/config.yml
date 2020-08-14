@@ -20,11 +20,13 @@ jobs:
 
       - run: sudo npm install -g pnpm@^5.4.0
       - run: pnpm run bootstrap
+      - run: pnpm run gen-certs
 
       - persist_to_workspace:
           root: *src-dir
           paths:
             - ./*
+            - ~/.cache/Cypress
 
   build:
     <<: *base
@@ -82,7 +84,6 @@ jobs:
       - attach_workspace:
           at: *src-dir
       - run: sudo npm install -g pnpm@^5.4.0 wait-on
-      - run: npm run gen-certs
       - run: npm run e2e:ci
 
 workflows:
