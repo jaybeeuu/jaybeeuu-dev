@@ -31,12 +31,19 @@ const certFilePath = resolveToOutDir(processOptions.certName);
 const keyFilePath = resolveToOutDir(processOptions.keyName);
 const caFilePath = resolveToOutDir(processOptions.caName);
 
+const writePem = async (filePath: string, buffer: Buffer): Promise<void> => {
+  const wholeCert = buffer.toString();
+  const beginCertIndex = wholeCert.indexOf("-----BEGIN");
+  const pemCert = wholeCert.slice(beginCertIndex);
+  await fs.promises.writeFile(filePath, pemCert);
+};
+
 (async () => {
   try {
     const ssl = await certificateFor(processOptions.domain, { getCaBuffer: true });
     await fs.promises.mkdir(processOptions.directory, { recursive: true });
     await Promise.all([
-      fs.promises.writeFile(certFilePath, ssl.cert),
+      writePem(certFilePath, ssl.cert),
       fs.promises.writeFile(keyFilePath, ssl.key),
       fs.promises.writeFile(caFilePath, ssl.ca)
     ]);

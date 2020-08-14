@@ -1,10 +1,10 @@
 import chokidar from "chokidar";
 import getOpts from "getopts";
-import * as log from "../log";
-import { update } from "../posts";
-import { UpdateOptions } from "../posts/src/types";
-import debounce from "../utility/debounce";
-import { ResultState, Result, success, failure } from "../results";
+import * as log from "./log";
+import { update } from "./posts";
+import { UpdateOptions } from "./posts/src/types";
+import debounce from "./utility/debounce";
+import { ResultState, Result, success, failure } from "./results";
 
 const options = getOpts(process.argv, {
   alias: {

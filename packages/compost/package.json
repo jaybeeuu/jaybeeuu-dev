@@ -8,9 +8,10 @@
     "Compile",
     "Posts"
   ],
-  "bin": "lib/bin/compost.js",
+  "bin": "bin/compost.js",
   "main": "lib/index.js",
   "files": [
+    "bin",
     "lib"
   ],
   "scripts": {

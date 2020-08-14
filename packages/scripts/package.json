@@ -9,10 +9,11 @@
     "CLI"
   ],
   "bin": {
-    "gen-certs": "lib/gen-certs.js"
+    "gen-certs": "bin/gen-certs.js"
   },
   "files": [
-    "./lib"
+    "bin",
+    "lib"
   ],
   "scripts": {
     "build": "tsc --pretty",
