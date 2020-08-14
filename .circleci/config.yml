@@ -70,6 +70,9 @@ jobs:
           at: *src-dir
       - run: sudo npm install -g pnpm@^5.4.0 wait-on
       - run: ls packages/client/certs
+      - run: cat packages/client/certs/cert.crt
+      - run: cat packages/client/certs/key.key
+      - run: cat packages/client/certs/ca.pem
       - run: npm run e2e:ci
 
 workflows:
