@@ -8,6 +8,7 @@ interface ProcessOptions {
   directory: string;
   certName: string;
   keyName: string;
+  caName: string;
 }
 
 const processOptions = getopts(process.argv.slice(2), {
@@ -28,7 +29,7 @@ const resolveToOutDir = (...pathSegments: string[]) => path.resolve(
 
 const certFilePath = resolveToOutDir(processOptions.certName);
 const keyFilePath = resolveToOutDir(processOptions.keyName);
-const caFilePath = resolveToOutDir(processOptions.keyName);
+const caFilePath = resolveToOutDir(processOptions.caName);
 
 (async () => {
   try {
