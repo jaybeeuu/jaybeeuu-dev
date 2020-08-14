@@ -7,6 +7,8 @@ src-dir: &src-dir ~/src
 base: &base
   docker:
     - image: circleci/node:12.18.0
+  environment:
+    - CYPRESS_CACHE_FOLDER: ./.cache/Cypress
 
   working_directory: *src-dir
 
@@ -26,7 +28,6 @@ jobs:
           root: *src-dir
           paths:
             - ./*
-            - ~/.cache/Cypress
 
   build:
     <<: *base
