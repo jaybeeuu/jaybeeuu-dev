@@ -7,8 +7,6 @@ src-dir: &src-dir ~/src
 base: &base
   docker:
     - image: circleci/node:12.18.0
-  environment:
-    - CYPRESS_CACHE_FOLDER: ./.cache/Cypress
 
   working_directory: *src-dir
 
@@ -67,11 +65,10 @@ jobs:
       - attach_workspace:
           at: *src-dir
       - run: sudo npm install -g pnpm@^5.4.0 wait-on
-      - run: ls packages/client/certs
-      - run: cat packages/client/certs/cert.crt
-      - run: cat packages/client/certs/key.key
-      - run: cat packages/client/certs/ca.pem
-      - run: npm run e2e:ci
+      # Persisting the Cypress binaries in the workspace adds a lot of time to the jobs attaching.
+      # So allow it to be lost after the install step and install it again here.
+      - run: pnpm run e2e -- install
+      - run: pnpm run e2e:ci
 
 workflows:
   version: 2
@@ -80,15 +77,15 @@ workflows:
     jobs:
       - checkout-install-build
 
-      # - lint:
-      #     requires:
-      #       - checkout-install-build
-      # - type-check:
-      #     requires:
-      #       - checkout-install-build
-      # - test:
-      #     requires:
-      #       - checkout-install-build
+      - lint:
+          requires:
+            - checkout-install-build
+      - type-check:
+          requires:
+            - checkout-install-build
+      - test:
+          requires:
+            - checkout-install-build
       - e2e:
           requires:
             - checkout-install-build
