@@ -13,7 +13,7 @@ base: &base
   working_directory: *src-dir
 
 jobs:
-  checkout-install-deps:
+  checkout-install-build:
     <<: *base
 
     steps:
@@ -23,30 +23,14 @@ jobs:
       - run: sudo npm install -g pnpm@^5.4.0
       - run: pnpm run bootstrap
       - run: pnpm run gen-certs
-
-      - persist_to_workspace:
-          root: *src-dir
-          paths:
-            - ./*
-
-  build:
-    <<: *base
-
-    steps:
-      - attach_workspace:
-          at: *src-dir
-
-      - run: sudo npm install -g pnpm@^5.4.0
       - run: npm run build
       - store_artifacts:
           path: ./packages/client/dist
           destination: client-dist
-
       - persist_to_workspace:
           root: *src-dir
           paths:
             - ./*
-
 
   lint:
     <<: *base
@@ -90,23 +74,19 @@ jobs:
 workflows:
   version: 2
 
-  install-test-build:
+  install-build-test:
     jobs:
-      - checkout-install-deps
+      - checkout-install-build
 
-      - build:
-          requires:
-            - checkout-install-deps
       - lint:
           requires:
-             - checkout-install-deps
-
+            - checkout-install-build
       - type-check:
           requires:
-            - build
+            - checkout-install-build
       - test:
           requires:
-            - build
+            - checkout-install-build
       - e2e:
           requires:
-            - build
+            - checkout-install-build
