@@ -1,7 +1,5 @@
 version: 2.1
 
-docker-image-node: &docker-image-node
-
 src-dir: &src-dir ~/src
 
 base: &base
@@ -60,6 +58,10 @@ jobs:
 
   e2e:
     <<: *base
+    docker:
+      - image: cypress/browsers:node12.18.0-chrome83-ff77
+
+    working_directory: *src-dir
 
     steps:
       - attach_workspace:
