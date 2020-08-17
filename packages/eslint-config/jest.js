@@ -1,28 +1,28 @@
-{
-  "env": {
-    "es6": true
+module.exports = {
+  env: {
+    es6: true
   },
-  "plugins": [
+  plugins: [
     "jest"
   ],
-  "extends": [
+  extends: [
     "plugin:jest/all"
   ],
-  "overrides": {
-    "jest": {
-      "files": [
+  overrides: [
+    {
+      files: [
         "test/**/*.ts",
         "**/*.spec.ts"
       ],
-      "env": {
+      env: {
         "jest/globals": true
       },
-      "rules": {
+      rules: {
         "jest/no-hooks": "off",
         "jest/prefer-expect-assertions": "off",
         "jest/valid-describe": "off",
         "jest/valid-title": ["error", { "ignoreTypeOfDescribeName": false }]
       }
     }
-  }
-}
+  ]
+};

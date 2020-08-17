@@ -21,7 +21,7 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "devDependencies": {
-    "@bickley-wallace/config-eslint": "workspace:*",
+    "@bickley-wallace/eslint-config": "workspace:*",
     "@types/node": "12.12.6",
     "@typescript-eslint/eslint-plugin": "^2.22.0",
     "@typescript-eslint/parser": "^2.22.0",

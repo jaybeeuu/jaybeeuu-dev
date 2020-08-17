@@ -16,7 +16,8 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "@bickley-wallace/config-eslint": "workspace:*",
+    "@babel/core": "^7.9.0",
+    "@bickley-wallace/eslint-config": "workspace:*",
     "@bickley-wallace/compost": "workspace:*",
     "@bickley-wallace/e2e-hooks": "workspace:*",
     "@cypress/webpack-preprocessor": "^4.1.3",

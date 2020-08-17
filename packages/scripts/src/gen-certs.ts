@@ -21,7 +21,7 @@ const processOptions = getopts(process.argv.slice(2), {
   }
 }) as unknown as ProcessOptions;
 
-const resolveToOutDir = (...pathSegments: string[]) => path.resolve(
+const resolveToOutDir = (...pathSegments: string[]): string => path.resolve(
   process.cwd(),
   processOptions.directory,
   ...pathSegments

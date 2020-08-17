@@ -1,16 +1,16 @@
-{
-  "env": {
-    "es6": true
+module.exports = {
+  env: {
+    es6: true
   },
-  "plugins": [
+  plugins: [
     "@typescript-eslint"
   ],
-  "extends": [
+  extends: [
     "eslint:recommended"
   ],
-  "rules": {
+  rules: {
     "eol-last": ["error"],
-    "indent": ["error", 2],
+    "indent": ["error", 2, { SwitchCase: 1 }],
     "no-console": ["error"],
     "no-shadow": ["error"],
     "no-unused-vars": ["off"],
@@ -18,45 +18,45 @@
     "quotes": ["error", "double"],
     "semi": ["error", "always"]
   },
-  "overrides": {
-    "typescript": {
-      "files": [
+  overrides: [
+    {
+      files: [
         "*.ts",
         "*.tsx"
       ],
-      "parser": "@typescript-eslint/parser",
-      "parserOptions": {
-        "project": "./tsconfig.json",
-        "sourceType": "module"
+      parser: "@typescript-eslint/parser",
+      parserOptions: {
+        project: "./tsconfig.json",
+        sourceType: "module"
       },
-      "extends": [
+      extends: [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking"
       ],
-      "rules": {
-        "no-unused-vars": ["off"],
+      rules: {
+        "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }],
+        "@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: false }],
         "@typescript-eslint/no-unused-vars": ["error"],
-        "@typescript-eslint/explicit-function-return-type": ["error", { "allowExpressions": true }],
-        "@typescript-eslint/no-misused-promises": ["error", { "checksVoidReturn": false }]
+        "no-unused-vars": ["off"]
       }
     },
-    "config": {
-      "files": [
+    {
+      files: [
         ".*rc.js",
         "*.config.js",
         "config/**/*.js"
       ],
-      "env": {
-        "browser": false,
-        "node": true
+      env: {
+        browser: false,
+        node: true
       },
-      "parserOptions": {
-        "ecmaVersion": 2018
+      parserOptions: {
+        ecmaVersion: 2018
       },
-      "rules": {
+      rules: {
         "no-console": "off"
       }
     }
-  }
-}
+  ]
+};

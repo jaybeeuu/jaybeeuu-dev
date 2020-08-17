@@ -32,7 +32,7 @@
     "sanitize-html": "^1.23.0"
   },
   "devDependencies": {
-    "@bickley-wallace/config-eslint": "workspace:*",
+    "@bickley-wallace/eslint-config": "workspace:*",
     "@types/highlight.js": "^9.12.3",
     "@types/jest": "^26.0.4",
     "@types/marked": "^0.7.4",

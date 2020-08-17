@@ -1,13 +1,14 @@
 {
-	"terminal.integrated.shell.linux": "/bin/bash",
-	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": true
-	},
-	"eslint.workingDirectories": [{ "pattern": "./packages/*/" }],
-	"eslint.validate": [
-		"javascript",
-		"javascriptreact",
-		"typescript",
-		"typescriptreact"
-	]
+  "terminal.integrated.shell.linux": "/bin/bash",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.packageManager": "pnpm",
+  "eslint.workingDirectories": [{ "pattern": "./packages/*/" }],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ]
 }

@@ -8,6 +8,6 @@ context("POC", (): void => {
   });
 
   it("loads", (): void => {
-    cy.title().should('equal', "Josh Bickley-Wallace");
+    cy.title().should("equal", "Josh Bickley-Wallace");
   });
 });
