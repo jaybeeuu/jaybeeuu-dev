@@ -1,9 +1,16 @@
-import { makeClassSelectors, makeHooks } from "./make-hooks";
+import { makeClassSelectors, makeHookBlock } from "./make-hooks";
 
 export { makeClassSelectors };
 
-export const sideBar = makeHooks({
-  block: "side-bar",
-  greeting: "greeting",
-  apiResults: "api-results"
-});
+const sideBarHookBlock = makeHookBlock("side-bar");
+const postBlock = sideBarHookBlock.childBlock("post");
+
+export const sideBar = {
+  block: sideBarHookBlock(),
+  post: {
+    block: postBlock(),
+    id: (slug: string): string => postBlock.modifier(slug),
+    link: postBlock.element("link"),
+    abstract: postBlock.element("abstract")
+  }
+};

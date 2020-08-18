@@ -22,6 +22,7 @@
     "@babel/plugin-transform-react-jsx": "^7.9.0",
     "@babel/preset-env": "^7.9.0",
     "@babel/preset-typescript": "^7.9.0",
+    "@bickley-wallace/compost": "workspace:*",
     "@bickley-wallace/eslint-config": "workspace:*",
     "@bickley-wallace/e2e-hooks": "workspace:*",
     "@bickley-wallace/posts": "workspace:*",

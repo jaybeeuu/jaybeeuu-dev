@@ -1,3 +1,2 @@
-export * from "./src/update";
-export * from "../files/src/json-files";
-export * from "./src/file-paths";
+export { update } from "./src/update";
+export type { PostManifest, PostMetaData } from "./src/types";

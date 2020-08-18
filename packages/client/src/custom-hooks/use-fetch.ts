@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, Inputs } from "preact/hooks";
-import { callApi, ApiCallResult, ApiCallStatus } from "../utils/api";
+import { callFetch, FetchResult, FetchStatus } from "../utils/fetch";
 
 const useAsyncEffect = (
   effect: ({ cancelled }: { cancelled: boolean }) => Promise<void>,
@@ -14,11 +14,11 @@ const useAsyncEffect = (
   }, dependencies);
 };
 
-export const useApiCall = (relativePath: string): ApiCallResult => {
-  const [result, setResult]  = useState<ApiCallResult>({ status: ApiCallStatus.PENDING });
+export const useFetchAsset = <Response>(relativePath: string): FetchResult<Response> => {
+  const [result, setResult]  = useState<FetchResult<Response>>({ status: FetchStatus.PENDING });
 
   useAsyncEffect(async (signal) => {
-    for await ( const apiResult of callApi(relativePath)) {
+    for await ( const apiResult of callFetch<Response>(relativePath)) {
       if (signal.cancelled) {
         break;
       }

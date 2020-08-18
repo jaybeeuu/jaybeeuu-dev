@@ -9,6 +9,7 @@ importers:
       '@babel/plugin-transform-react-jsx': 7.10.3_@babel+core@7.10.3
       '@babel/preset-env': 7.10.3_@babel+core@7.10.3
       '@babel/preset-typescript': 7.10.1_@babel+core@7.10.3
+      '@bickley-wallace/compost': 'link:../compost'
       '@bickley-wallace/e2e-hooks': 'link:../e2e-hooks'
       '@bickley-wallace/eslint-config': 'link:../eslint-config'
       '@bickley-wallace/posts': 'link:../posts'
@@ -51,6 +52,7 @@ importers:
       '@babel/plugin-transform-react-jsx': ^7.9.0
       '@babel/preset-env': ^7.9.0
       '@babel/preset-typescript': ^7.9.0
+      '@bickley-wallace/compost': 'workspace:*'
       '@bickley-wallace/e2e-hooks': 'workspace:*'
       '@bickley-wallace/eslint-config': 'workspace:*'
       '@bickley-wallace/posts': 'workspace:*'

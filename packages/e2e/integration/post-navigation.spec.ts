@@ -13,7 +13,9 @@ context("Post navigation", (): void => {
   });
 
   it("pings the API successfully", (): void => {
-    sideBar.getGreeting().should("have.text", "Hello, Side Bar!");
-    sideBar.getApiResults().should("contain.text", "\"status\": \"complete\"");
+    sideBar.getPostLink("memoising-selectors")
+      .should("have.text", "Memoising Selectors");
+    sideBar.getPostAbstract("memoising-selectors")
+      .should("contain.text", "Complex operations in redux selectors can result in render thrashing, but why and how does it happen?");
   });
 });

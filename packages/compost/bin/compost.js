@@ -1,1 +1,1 @@
-require("../lib/index.js");
+require("../lib/bin/compost.js");

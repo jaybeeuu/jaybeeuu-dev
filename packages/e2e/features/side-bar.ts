@@ -6,10 +6,10 @@ export const get = (): Cypress.Chainable<JQuery<HTMLElement>> => {
   return cy.get(sideBarSelectors.block);
 };
 
-export const getGreeting = (): Cypress.Chainable<JQuery<HTMLElement>> => {
-  return cy.get(sideBarSelectors.greeting);
+export const getPostLink = (slug: string): Cypress.Chainable<JQuery<HTMLElement>> => {
+  return cy.get(sideBarSelectors.post.id(slug)).find(sideBarSelectors.post.link);
 };
 
-export const getApiResults = (): Cypress.Chainable<JQuery<HTMLElement>> => {
-  return cy.get(sideBarSelectors.apiResults);
+export const getPostAbstract = (slug: string): Cypress.Chainable<JQuery<HTMLElement>> => {
+  return cy.get(sideBarSelectors.post.id(slug)).find(sideBarSelectors.post.abstract);
 };
