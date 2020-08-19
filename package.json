@@ -11,7 +11,7 @@
   ],
   "engines": {
     "node": "^12.18.0",
-    "pnpm": "^5.4.0"
+    "pnpm": "^5.5.2"
   },
   "repository": {
     "type": "git",
@@ -24,7 +24,7 @@
   "scripts": {
     "bootstrap": "pnpm install -r",
     "build": "pnpm run -r build --filter {packages}",
-    "clean": "git clean -fdX",
+    "clean": "git clean -fdx",
     "e2e": "cd packages/e2e && npm run e2e",
     "e2e:ci": "pnpm run start --filter @bickley-wallace/client & npx wait-on --timeout=60000 https://localhost:3443/ && npm run e2e run",
     "gen-certs": "pnpm run --no-bail --no-sort -r gen-certs --filter {packages}",
