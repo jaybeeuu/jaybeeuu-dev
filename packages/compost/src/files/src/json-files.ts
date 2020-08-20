@@ -3,7 +3,7 @@ import { canAccess } from "..";
 
 export const readJsonFile = async <T>(filePath: string, deflt: T): Promise<T> => {
   return await canAccess(filePath)
-    ? JSON.parse(await readTextFile(filePath))
+    ? JSON.parse(await readTextFile(filePath)) as T
     : deflt;
 };
 

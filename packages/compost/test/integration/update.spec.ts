@@ -15,7 +15,7 @@ const getOutputFile = async (filePath: string): Promise<string> => {
 };
 
 const getPostManifest = async (): Promise<PostManifest> => {
-  return JSON.parse(await getOutputFile(manifestFileName));
+  return JSON.parse(await getOutputFile(manifestFileName)) as PostManifest;
 };
 
 const getPost = (href: string): Promise<string> => {
@@ -63,8 +63,8 @@ describe("refresh", () => {
         publishDate: new Date(publishDate).toUTCString(),
         lastUpdateDate: null,
         slug,
-        fileName: expect.stringMatching(new RegExp(`${slug}-[A-z0-9]{6}.html`)),
-        href: expect.stringMatching(new RegExp(`/${slug}-[A-z0-9]{6}.html`))
+        fileName: expect.stringMatching(new RegExp(`${slug}-[A-z0-9]{6}.html`)) as unknown,
+        href: expect.stringMatching(new RegExp(`/${slug}-[A-z0-9]{6}.html`)) as unknown
       }
     });
   });

@@ -1,3 +1,5 @@
+import { asError } from "./as-error";
+
 export enum FetchStatus {
   PENDING = "pending",
   LONG_RUNNING = "long-running",
@@ -36,9 +38,9 @@ const makeRequest = async <Response>(
 ): Promise<FetchResult<Response>> => {
   try {
     const response = await fetch(input, init);
-    return { status: FetchStatus.COMPLETE, response: await response.json() };
+    return { status: FetchStatus.COMPLETE, response: await response.json() as Response };
   } catch (error) {
-    return { status: FetchStatus.FAILED, error };
+    return { status: FetchStatus.FAILED, error: asError(error) };
   }
 };
 

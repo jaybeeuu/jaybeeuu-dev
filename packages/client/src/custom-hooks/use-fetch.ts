@@ -7,7 +7,7 @@ const useAsyncEffect = (
 ): void => {
   const signal = useRef({ cancelled: false });
   useEffect(() => {
-    effect(signal.current);
+    void effect(signal.current);
     return () => {
       signal.current.cancelled = true;
     };

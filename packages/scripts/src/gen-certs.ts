@@ -38,7 +38,7 @@ const writePem = async (filePath: string, buffer: Buffer): Promise<void> => {
   await fs.promises.writeFile(filePath, pemCert);
 };
 
-(async () => {
+void (async () => {
   try {
     const ssl = await certificateFor(processOptions.domain, { getCaBuffer: true });
     await fs.promises.mkdir(processOptions.directory, { recursive: true });

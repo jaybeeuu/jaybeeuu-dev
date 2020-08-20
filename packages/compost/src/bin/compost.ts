@@ -38,7 +38,7 @@ const run = async (): Promise<Result<void>> => {
     }
   } catch (err) {
     log.error("Failed to compost", err);
-    return failure(err.message || err);
+    return failure(log.getErrorMessage(err));
   }
 };
 
@@ -55,9 +55,9 @@ const watch = async (): Promise<void> => {
 };
 
 if (options.watch) {
-  watch();
+  void watch();
 } else {
-  (async () => {
+  void (async () => {
     const result = await run();
     process.exit(
       result.state === ResultState.success ? 0 : 1

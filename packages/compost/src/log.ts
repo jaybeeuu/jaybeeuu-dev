@@ -2,7 +2,7 @@
 import chalk from "chalk";
 export const info = (message: string, ...args: unknown[]): void => console.log(message, ...args);
 
-const getErrorMessage = (err: any | null | undefined): string | string[] => {
+export const getErrorMessage = (err: any | null | undefined): string => {
   if (typeof err === "string") {
     return err || "Empty String";
   }
@@ -11,7 +11,7 @@ const getErrorMessage = (err: any | null | undefined): string | string[] => {
     return [
       err.message,
       err.stack ?? "No Stack"
-    ];
+    ].join("\n");
   }
 
   if (!err) {
@@ -24,8 +24,8 @@ const getErrorMessage = (err: any | null | undefined): string | string[] => {
 export const error = (message:string, ...errs: unknown[]): void => {
   const errorMessages = errs.flatMap(getErrorMessage);
 
-  console.error([
+  console.error(chalk.red([
     message,
     ...errorMessages
-  ].map((msg) => chalk.red(msg)).join("\n\n"));
+  ].join("\n\n")));
 };
