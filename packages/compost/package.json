@@ -8,6 +8,9 @@
     "Compile",
     "Posts"
   ],
+  "engines": {
+    "node": ">=12.18.0"
+  },
   "bin": "bin/compost.js",
   "main": "lib/index.js",
   "files": [

@@ -1,10 +1,15 @@
 {
-  "extends": "./tsconfig.build.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "target": "ES2019",
+    "module": "CommonJS",
+    "declaration": true,
     "outDir": "./lib",
     "types": [
+      "node",
       "jest"
-    ]
+    ],
+    "esModuleInterop": true,
   },
   "include": [
     "src",
