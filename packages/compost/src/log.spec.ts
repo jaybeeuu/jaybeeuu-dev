@@ -51,8 +51,7 @@ describe("log", () => {
         ],
         consoleCalledWith: [
           "{message}",
-          "{error message}",
-          "{stack}"
+          "{error message}\n{stack}"
         ]
       },
       {
@@ -66,8 +65,7 @@ describe("log", () => {
         ],
         consoleCalledWith: [
           "{message}",
-          "{error message}",
-          "No Stack"
+          "{error message}\nNo Stack"
         ]
       },
       {
@@ -106,7 +104,7 @@ describe("log", () => {
         log.error(...args);
 
         expect(console.error).toHaveBeenCalledWith(
-          consoleCalledWith.map((msg) => chalk.red(msg)).join("\n\n")
+          chalk.red(consoleCalledWith.join("\n\n"))
         );
       });
     });
