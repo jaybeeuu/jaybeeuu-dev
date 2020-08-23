@@ -2,8 +2,6 @@ importers:
   .:
     specifiers: {}
   packages/client:
-    dependencies:
-      ts-node: 8.10.2_typescript@3.9.7
     devDependencies:
       '@babel/core': 7.11.1
       '@babel/plugin-transform-react-jsx': 7.10.4_@babel+core@7.11.1
@@ -14,7 +12,7 @@ importers:
       '@bickley-wallace/eslint-config': 'link:../eslint-config'
       '@bickley-wallace/posts': 'link:../posts'
       '@bickley-wallace/scripts': 'link:../scripts'
-      '@prefresh/webpack': 1.0.0_preact@10.4.7+webpack@4.44.1
+      '@prefresh/webpack': 1.0.2_preact@10.4.7+webpack@4.44.1
       '@types/jest': 26.0.10
       '@types/react': 16.9.46
       '@types/react-dom': 16.9.8
@@ -42,6 +40,7 @@ importers:
       preact-router: 3.2.1_preact@10.4.7
       regenerator-runtime: 0.13.7
       style-loader: 1.2.1_webpack@4.44.1
+      ts-node: 8.10.2_typescript@3.9.7
       typescript: 3.9.7
       url-loader: 4.1.0_file-loader@6.0.0+webpack@4.44.1
       webpack: 4.44.1_7d74d9f6ceb0e540c1e44d9709220c58
@@ -57,7 +56,7 @@ importers:
       '@bickley-wallace/eslint-config': 'workspace:*'
       '@bickley-wallace/posts': 'workspace:*'
       '@bickley-wallace/scripts': 'workspace:*'
-      '@prefresh/webpack': ^1.0.0
+      '@prefresh/webpack': ^1.0.2
       '@types/jest': ^26.0.10
       '@types/react': ^16.9.46
       '@types/react-dom': ^16.9.8
@@ -1485,7 +1484,7 @@ packages:
     dev: true
     resolution:
       integrity: sha512-9kLzPWN4teeiKuc+Rle3SF/hyx5lzo35X4rHr+kQXnJT+BaEb1ymDWIHGkv85xjnw8+l6I1r1H7JB4BHOMJfmg==
-  /@prefresh/webpack/1.0.0_preact@10.4.7+webpack@4.44.1:
+  /@prefresh/webpack/1.0.2_preact@10.4.7+webpack@4.44.1:
     dependencies:
       '@prefresh/core': 0.8.1_preact@10.4.7
       '@prefresh/utils': 0.3.1
@@ -1496,7 +1495,7 @@ packages:
       preact: ^10.4.0
       webpack: ^4.0.0 || ^5.0.0
     resolution:
-      integrity: sha512-uQ7scEpoPRRPwiJdvBhsTW/uoFYMVdSACYRSklg6g9/0XMg/xSWi2ZvMP72iH//nONprJqHt2GJq0hcyOior9w==
+      integrity: sha512-e9r1sHsQqF0CYD5v0it7d5SvyRHvOAkkwwRzGM8CbqVTuVw6UsN2/k04nDeDd8ve10T5E6h9ry0P6cjJc8JiLg==
   /@samverschueren/stream-to-observable/0.3.1_rxjs@6.6.2:
     dependencies:
       any-observable: 0.3.0
@@ -2286,7 +2285,7 @@ packages:
     resolution:
       integrity: sha512-NTBIIbAfkJeIletyABbVtdPgeKfDafR+1mZV/AyyfC1UkVkp9iUjV+wwmqtUgphHYajbI86jejBJp5e+jkGTiQ==
   /arg/4.1.3:
-    dev: false
+    dev: true
     resolution:
       integrity: sha512-58S9QDqG0Xx27YwPSt9fJxivjYl432YCwfDMfZ+71RAqUrZef7LrKQZ3LHLOwCS4FLNBplP533Zx895SeOCHvA==
   /argparse/1.0.10:
@@ -3696,7 +3695,7 @@ packages:
     resolution:
       integrity: sha512-5j5vdRcw3CNctePNYN0Wy2e/JbWT6cAYnXv5OuqPhDpyCGc0uLu2TK0zOCJWNB9kOIfYMSpIulRaDgIi4HJ6Ig==
   /diff/4.0.2:
-    dev: false
+    dev: true
     engines:
       node: '>=0.3.1'
     resolution:
@@ -6465,6 +6464,7 @@ packages:
     resolution:
       integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==
   /make-error/1.3.6:
+    dev: true
     resolution:
       integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==
   /makeerror/1.0.11:
@@ -8897,7 +8897,7 @@ packages:
       source-map-support: 0.5.19
       typescript: 3.9.7
       yn: 3.1.1
-    dev: false
+    dev: true
     engines:
       node: '>=6.0.0'
     hasBin: true
@@ -9681,7 +9681,7 @@ packages:
     resolution:
       integrity: sha1-x+sXyT4RLLEIb6bY5R+wZnt5pfk=
   /yn/3.1.1:
-    dev: false
+    dev: true
     engines:
       node: '>=6'
     resolution:

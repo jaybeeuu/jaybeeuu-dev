@@ -76,11 +76,11 @@ module.exports = {
             loader: require.resolve("file-loader"),
             options: {
               name: "static/media/[name].[hash:8].[ext]",
-            },
-          },
-        ],
-      },
-    ],
+            }
+          }
+        ]
+      }
+    ]
   },
   plugins: [
     new CopyWebpckPlugin({
@@ -90,7 +90,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       inject: true,
-      template: paths.indexHtml,
+      template: paths.indexHtml
     }),
     new webpack.DefinePlugin(stringifiedEnv),
     new webpack.NoEmitOnErrorsPlugin(),
