@@ -70,7 +70,7 @@ jobs:
       # Persisting the Cypress binaries in the workspace adds a lot of time to the jobs attaching.
       # So allow it to be lost after the install step and install it again here.
       - run: pnpm run e2e -- install
-      - run: pnpm run e2e:ci
+      - run: pnpm run e2e-ci
 
 workflows:
   version: 2

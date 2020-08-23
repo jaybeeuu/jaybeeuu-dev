@@ -1,3 +1,5 @@
+import * as manifest from "../fixtures/posts/manifest.json";
+
 export enum PostRoutes {
   GET_MANIFEST = "@get_manifest",
   GET_MEMOISING_SELECTORS = "@get_memoising_selectors",
@@ -10,7 +12,7 @@ export const registerRoutes = (): void => {
   cy.server();
 
   cy.route("/posts/manifest.json", "fixture:posts/manifest.json").as(getALiasName(PostRoutes.GET_MANIFEST));
-  cy.route("/posts/memoising-selectors-dKLBfn.html", "fixture:posts/memoising-selectors-dKLBfn.html").as(getALiasName(PostRoutes.GET_MEMOISING_SELECTORS));
-  cy.route("/posts/module-spotting-EWltkX.html", "fixture:posts/module-spotting-EWltkX.html").as(getALiasName(PostRoutes.GET_MODULE_SPOTTING));
-  cy.route("/posts/the-rewrite-qYixgS.html", "fixture:posts/the-rewrite-qYixgS.html").as(getALiasName(PostRoutes.GET_THE_REWRITE));
+  cy.route(`/posts/${manifest["memoising-selectors"].fileName}`, `fixture:posts/${manifest["memoising-selectors"].fileName}`).as(getALiasName(PostRoutes.GET_MEMOISING_SELECTORS));
+  cy.route(`/posts/${manifest["module-spotting"].fileName}`, `fixture:posts/${manifest["module-spotting"].fileName}`).as(getALiasName(PostRoutes.GET_MODULE_SPOTTING));
+  cy.route(`/posts/${manifest["the-rewrite"].fileName}`, `fixture:posts/${manifest["the-rewrite"].fileName}`).as(getALiasName(PostRoutes.GET_THE_REWRITE));
 };
