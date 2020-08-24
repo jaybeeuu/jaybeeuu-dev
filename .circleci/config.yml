@@ -4,7 +4,7 @@ src-dir: &src-dir ~/src
 
 base: &base
   docker:
-    - image: circleci/node:12.18.0
+    - image: circleci/node:12.18.3
 
   working_directory: *src-dir
 
@@ -16,10 +16,10 @@ jobs:
       - checkout:
           path: *src-dir
 
-      - run: sudo npm install -g pnpm@^5.4.0
-      - run: pnpm run bootstrap
+      - run: npm install pnpm@^5.4.0 wait-on --no-package-lock
+      - run: npm run bootstrap
       - run: npm run build
-      - run: pnpm run gen-certs
+      - run: npm run gen-certs
       - store_artifacts:
           path: ./packages/client/dist
           destination: client-dist
@@ -34,8 +34,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: sudo npm install -g pnpm@^5.4.0
-      - run: pnpm run lint
+      - run: npm run lint
 
 
   type-check:
@@ -44,8 +43,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: sudo npm install -g pnpm@^5.4.0
-      - run: pnpm run type-check
+      - run: npm run type-check
 
   test:
     <<: *base
@@ -53,8 +51,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: sudo npm install -g pnpm@^5.4.0
-      - run: pnpm run test
+      - run: npm run test
 
   e2e:
     <<: *base
@@ -66,11 +63,10 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: npm install -g pnpm@^5.4.0 wait-on
       # Persisting the Cypress binaries in the workspace adds a lot of time to the jobs attaching.
       # So allow it to be lost after the install step and install it again here.
-      - run: pnpm run e2e -- install
-      - run: pnpm run e2e-ci
+      - run: npm run e2e -- install
+      - run: npm run e2e-ci
 
 workflows:
   version: 2
