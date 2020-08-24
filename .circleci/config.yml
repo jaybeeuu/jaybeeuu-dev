@@ -16,7 +16,7 @@ jobs:
       - checkout:
           path: *src-dir
 
-      - run: npm install pnpm@^5.5.2 wait-on --no-package-lock
+      - run: npm install --no-package-lock pnpm@^5.5.2 wait-on
       - run: npm run bootstrap
       - run: npm run build
       - run: npm run gen-certs
