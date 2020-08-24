@@ -68,7 +68,7 @@ jobs:
           at: *src-dir
       # Persisting the Cypress binaries in the workspace adds a lot of time to the jobs attaching.
       # So allow it to be lost after the install step and install it again here.
-      - run: sudo npm i -g pnpm@^5.5.3 wait-on
+      - run: npm i -g pnpm@^5.5.3 wait-on
       - run: npm run e2e -- install
       - run: npm run e2e-ci
 
