@@ -16,7 +16,7 @@ jobs:
       - checkout:
           path: *src-dir
 
-      - run: npm i -g pnpm@^5.5.3
+      - run: sudo npm i -g pnpm@^5.5.3
       - run: npm run bootstrap
       - run: npm run build
       - run: npm run gen-certs
@@ -34,7 +34,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: npm i -g pnpm@^5.5.3
+      - run: sudo npm i -g pnpm@^5.5.3
       - run: npm run lint
 
 
@@ -44,7 +44,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: npm i -g pnpm@^5.5.3
+      - run: sudo npm i -g pnpm@^5.5.3
       - run: npm run type-check
 
   test:
@@ -53,7 +53,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: npm i -g pnpm@^5.5.3
+      - run: sudo npm i -g pnpm@^5.5.3
       - run: npm run test
 
   e2e:
@@ -68,7 +68,7 @@ jobs:
           at: *src-dir
       # Persisting the Cypress binaries in the workspace adds a lot of time to the jobs attaching.
       # So allow it to be lost after the install step and install it again here.
-      - run: npm i -g pnpm@^5.5.3 wait-on
+      - run: sudo npm i -g pnpm@^5.5.3 wait-on
       - run: npm run e2e -- install
       - run: npm run e2e-ci
 
