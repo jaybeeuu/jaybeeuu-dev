@@ -10,7 +10,7 @@
     "Site"
   ],
   "engines": {
-    "node": "^12.18.0",
+    "node": "^12.18.3",
     "pnpm": "^5.5.2"
   },
   "repository": {
@@ -29,7 +29,7 @@
     "e2e-ci": "pnpm run start --filter @bickley-wallace/client & npx wait-on --timeout=60000 https://localhost:3443/ && npm run e2e run",
     "gen-certs": "pnpm run --no-bail --no-sort -r gen-certs --filter {packages}",
     "lint": "pnpm run --no-bail --no-sort -r lint --filter {packages}",
-    "nvm": "nvm use 12.18.0",
+    "nvm": "nvm use 12.18.3",
     "start": "pnpm run -r --no-sort start --filter {packages}",
     "test": "pnpm run --no-bail --no-sort -r test --filter {packages}",
     "test:watch": "pnpm run -r test:watch --filter ",
