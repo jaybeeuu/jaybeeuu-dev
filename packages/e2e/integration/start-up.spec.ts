@@ -1,10 +1,10 @@
-import { registerRoutes, PostRoutes } from "../features/routes";
+import { registerRoutes, getPostsAlias } from "../features/routes/posts";
 
-context("POC", (): void => {
+context("Start up", (): void => {
   before(() => {
     registerRoutes();
     cy.visit("/");
-    cy.wait(PostRoutes.GET_MANIFEST);
+    cy.wait(getPostsAlias("manifest"));
   });
 
   it("loads", (): void => {

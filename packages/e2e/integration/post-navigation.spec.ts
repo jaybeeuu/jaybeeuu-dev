@@ -1,21 +1,20 @@
-import { registerRoutes, PostRoutes } from "../features/routes";
+import { registerRoutes, getPostsAlias } from "../features/routes/posts";
 import * as sideBar from "../features/side-bar";
 
 context("Post navigation", (): void => {
   before(() => {
     registerRoutes();
     cy.visit("/");
-    cy.wait(PostRoutes.GET_MANIFEST);
+    cy.wait(getPostsAlias("manifest"));
   });
 
-  it("Has a sidebar", () => {
+  it("has a sidebar.", () => {
     sideBar.get().should("exist");
   });
 
-  it("pings the API successfully", (): void => {
-    sideBar.getPostLink("memoising-selectors")
-      .should("have.text", "Memoising Selectors");
-    sideBar.getPostAbstract("memoising-selectors")
-      .should("contain.text", "Complex operations in redux selectors can result in render thrashing, but why and how does it happen?");
+  it("displays the posts in the manifest.", (): void => {
+    sideBar.hasLinkToPost("memoising-selectors");
+    sideBar.hasLinkToPost("module-spotting");
+    sideBar.hasLinkToPost("the-rewrite");
   });
 });

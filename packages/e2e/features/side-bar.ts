@@ -1,4 +1,5 @@
 import { makeClassSelectors, sideBar } from "@bickley-wallace/e2e-hooks";
+import { PostSlug, withPostMetaData } from "./routes/posts";
 
 const sideBarSelectors = makeClassSelectors(sideBar);
 
@@ -6,10 +7,17 @@ export const get = (): Cypress.Chainable<JQuery<HTMLElement>> => {
   return cy.get(sideBarSelectors.block);
 };
 
-export const getPostLink = (slug: string): Cypress.Chainable<JQuery<HTMLElement>> => {
+const getPostLink = (slug: PostSlug): Cypress.Chainable<JQuery<HTMLElement>> => {
   return cy.get(sideBarSelectors.post.id(slug)).find(sideBarSelectors.post.link);
 };
 
-export const getPostAbstract = (slug: string): Cypress.Chainable<JQuery<HTMLElement>> => {
+const getPostAbstract = (slug: PostSlug): Cypress.Chainable<JQuery<HTMLElement>> => {
   return cy.get(sideBarSelectors.post.id(slug)).find(sideBarSelectors.post.abstract);
+};
+
+export const hasLinkToPost = (slug: PostSlug): void => {
+  withPostMetaData(slug).then((postMetaData) => {
+    getPostLink(slug).should("have.text", postMetaData.title);
+    getPostAbstract(slug).should("contain.text", postMetaData.abstract);
+  });
 };
