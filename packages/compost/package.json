@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@bickley-wallace/eslint-config": "workspace:*",
+    "@bickley-wallace/utilities": "workspace:*",
     "@types/highlight.js": "^9.12.4",
     "@types/jest": "^26.0.10",
     "@types/marked": "^1.1.0",

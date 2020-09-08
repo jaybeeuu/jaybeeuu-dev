@@ -1,9 +1,9 @@
+import { hasPropertyOfType } from "@bickley-wallace/utilities";
 import path from "path";
 import { PostMetaData } from "./types";
 import { FileInfo, canAccess, readTextFile } from "../../files";
 import { Result, failure, success } from "../../results";
 import { MARKDOWN_FILE_EXTENSION } from "./constants";
-import { hasPropertyOfType } from "../../utility/type-guards";
 
 export type PostMetaFileData = Pick<PostMetaData, "abstract" | "title">;
 

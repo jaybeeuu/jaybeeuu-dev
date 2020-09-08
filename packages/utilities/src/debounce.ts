@@ -1,4 +1,4 @@
-const debounce = <Args extends any[]>(
+export const debounce = <Args extends any[]>(
   actor: (...args: Args) => void,
   delay: number
 ): (...args: Args) => void => {
@@ -21,5 +21,3 @@ const debounce = <Args extends any[]>(
   nextStrategy = scheduleExecution;
   return (...args) => nextStrategy(...args);
 };
-
-export default debounce;

@@ -1,4 +1,4 @@
-import debounce from "./debounce";
+import { debounce } from "./debounce";
 
 jest.useFakeTimers();
 type Args = [number, string, { id: number }];

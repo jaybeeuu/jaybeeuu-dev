@@ -1,4 +1,4 @@
-import { getHash } from "../../utilities/hash";
+import { getHash } from "../../hash";
 import { success, failure, Result } from "../../results";
 
 const HASH_LENGTH = 6;
