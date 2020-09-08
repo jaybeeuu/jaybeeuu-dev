@@ -23,6 +23,15 @@ module.exports = {
         "jest/valid-describe": "off",
         "jest/valid-title": ["error", { "ignoreTypeOfDescribeName": false }]
       }
+    },
+    {
+      files: ["jest-setup.js"],
+      env: {
+        node: true
+      },
+      globals: {
+        global: "writable"
+      }
     }
   ]
 };

@@ -37,7 +37,7 @@ module.exports = {
       rules: {
         "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }],
         "@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: false }],
-        "@typescript-eslint/no-unused-vars": ["error"],
+        "@typescript-eslint/no-unused-vars": ["error", { ignoreRestSiblings: true }],
         "no-unused-vars": ["off"]
       }
     },
