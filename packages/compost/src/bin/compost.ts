@@ -3,7 +3,7 @@ import getOpts from "getopts";
 import * as log from "../log";
 import { update } from "../posts";
 import { UpdateOptions } from "../posts/src/types";
-import debounce from "../utility/debounce";
+import debounce from "../utilities/debounce";
 import { ResultState, Result, success, failure } from "../results";
 
 const options = getOpts(process.argv, {
@@ -45,11 +45,12 @@ const run = async (): Promise<Result<void>> => {
 const watch = async (): Promise<void> => {
   log.info("Starting compost in watch mode...");
   await run();
+  log.info("Waiting for changes...");
   chokidar.watch(options.sourceDir).on(
     "all",
     debounce(async () => {
       await run();
-      log.info("Waiting for changes.");
+      log.info("Waiting for changes...");
     }, 250)
   );
 };
