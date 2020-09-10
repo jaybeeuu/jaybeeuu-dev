@@ -32,7 +32,8 @@
     "highlight.js": "^10.1.2",
     "marked": "^1.1.1",
     "rmfr": "^2.0.0",
-    "sanitize-html": "^1.27.3"
+    "sanitize-html": "^1.27.3",
+    "tslib": "^2.0.1"
   },
   "devDependencies": {
     "@bickley-wallace/eslint-config": "workspace:*",

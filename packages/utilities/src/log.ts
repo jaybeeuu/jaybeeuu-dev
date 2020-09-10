@@ -23,7 +23,6 @@ export const getErrorMessage = (err: any | null | undefined): string => {
 
 export const error = (message:string, ...errs: unknown[]): void => {
   const errorMessages = errs.flatMap(getErrorMessage);
-
   console.error(chalk.red([
     message,
     ...errorMessages

@@ -1,4 +1,4 @@
-import { registerRoutes, getPostsAlias } from "../features/routes/posts";
+import { registerRoutes, getPostsAlias } from "../routes/posts";
 
 context("Start up", (): void => {
   before(() => {

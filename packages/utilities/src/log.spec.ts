@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import "../test/custom-matchers";
+import "../../compost/test/custom-matchers";
 import * as log from "./log";
 import chalk from "chalk";
 

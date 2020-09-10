@@ -1,5 +1,5 @@
 import { makeClassSelectors, sideBar } from "@bickley-wallace/e2e-hooks";
-import { PostSlug, withPostMetaData } from "./routes/posts";
+import { PostSlug, withPostMetaData, getPostsAlias } from "../routes/posts";
 
 const sideBarSelectors = makeClassSelectors(sideBar);
 
@@ -20,4 +20,9 @@ export const hasLinkToPost = (slug: PostSlug): void => {
     getPostLink(slug).should("have.text", postMetaData.title);
     getPostAbstract(slug).should("contain.text", postMetaData.abstract);
   });
+};
+
+export const openPost = (slug: PostSlug): void => {
+  getPostLink(slug).click();
+  cy.wait(getPostsAlias("memoising-selectors"));
 };

@@ -11,7 +11,7 @@ module.exports = (api) => {
           useBuiltIns: "usage",
           corejs: "3.6",
           targets: "> 0.25%, not dead",
-          modules: false
+          modules: "commonjs"
         }
       ]
     ],

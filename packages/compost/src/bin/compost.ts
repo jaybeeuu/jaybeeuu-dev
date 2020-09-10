@@ -1,7 +1,6 @@
-import { debounce } from "@bickley-wallace/utilities";
+import { debounce, log } from "@bickley-wallace/utilities";
 import chokidar from "chokidar";
 import getOpts from "getopts";
-import * as log from "../log";
 import { update } from "../posts";
 import { UpdateOptions } from "../posts/src/types";
 import { ResultState, Result, success, failure } from "../results";

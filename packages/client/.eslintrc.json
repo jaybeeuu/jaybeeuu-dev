@@ -1,6 +1,7 @@
 {
   "extends": [
     "@bickley-wallace/eslint-config/base",
+    "@bickley-wallace/eslint-config/jest",
     "plugin:react/recommended"
   ],
   "env": {

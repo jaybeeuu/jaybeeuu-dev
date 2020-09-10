@@ -1,10 +1,16 @@
 import { h, FunctionComponent } from "preact";
-import SideBar from "./side-bar";
+import { Manifest } from "./manifest";
+import { SideBar } from "./side-bar";
+import { PostRoute } from "./post";
+import Router from "preact-router";
 
 const App: FunctionComponent = () => (
-  <div>
+  <Manifest>
     <SideBar/>
-  </div>
+    <Router>
+      <PostRoute path={"post/:slug"} />
+    </Router>
+  </Manifest>
 );
 
 export default App;
