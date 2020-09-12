@@ -24,5 +24,5 @@ export const hasLinkToPost = (slug: PostSlug): void => {
 
 export const openPost = (slug: PostSlug): void => {
   getPostLink(slug).click();
-  cy.wait(getPostsAlias("memoising-selectors"));
+  cy.wait(getPostsAlias(slug));
 };

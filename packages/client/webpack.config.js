@@ -96,6 +96,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       inject: true,
+      base: "/",
       template: paths.indexHtml
     }),
     new webpack.DefinePlugin(stringifiedEnv),

@@ -7,7 +7,7 @@ context("Start up", (): void => {
     cy.wait(getPostsAlias("manifest"));
   });
 
-  it("loads", (): void => {
+  it("loads the home page", (): void => {
     cy.title().should("equal", "Josh Bickley-Wallace");
   });
 });

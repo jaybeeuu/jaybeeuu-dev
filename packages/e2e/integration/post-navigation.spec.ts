@@ -23,4 +23,14 @@ context("Post navigation", (): void => {
     sideBar.openPost("memoising-selectors");
     post.getArticle().should("contain.text", "thing");
   });
+
+  it("opens the module-spotting post when the link is clicked.", () => {
+    sideBar.openPost("module-spotting");
+    post.getArticle().should("contain.text", "thing");
+  });
+
+  it("opens the the-rewrite post when navigated to directly.", () => {
+    post.navigateTo("the-rewrite");
+    post.getArticle().should("contain.text", "thing");
+  });
 });
