@@ -1,7 +1,7 @@
 const PreactRefreshPlugin = require("@prefresh/webpack");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const CopyWebpckPlugin = require("copy-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
@@ -16,6 +16,7 @@ module.exports = {
   watch: !isProduction,
   devServer: ! isProduction ? {
     compress: true,
+    historyApiFallback: true,
     host: env.CLIENT_HOST_NAME,
     hot: true,
     https: {
@@ -25,7 +26,8 @@ module.exports = {
     overlay: true,
     port: env.CLIENT_PORT,
     quiet: true,
-    watchContentBase: true
+    watchContentBase: true,
+    clientLogLevel: "info"
   } : undefined,
   entry: [
     paths.srcIndex,
@@ -48,7 +50,7 @@ module.exports = {
             loader: require.resolve("url-loader"),
             options: {
               limit: 10000,
-              name: "static/media/[name].[hash:8].[ext]",
+              name: "static/[name].[hash:8].[ext]",
             },
           },
           {
@@ -65,7 +67,7 @@ module.exports = {
                 options: {
                   modules: true,
                   localIdentName: isProduction ? "bw-[hash:base64:5]" : "[name]__[local]--[hash:base64:5]",
-                  camelCase: true,
+                  localsConvention: "camelCase",
                   sourceMap: true
                 }
               }
@@ -75,7 +77,7 @@ module.exports = {
             exclude: [/\.(ts|tsx|js|jsx)$/, /\.css$/, /\.html$/, /\.json$/],
             loader: require.resolve("file-loader"),
             options: {
-              name: "static/media/[name].[hash:8].[ext]",
+              name: "static/[name].[hash:8].[ext]",
             }
           }
         ]
@@ -83,7 +85,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new CopyWebpckPlugin({
+    new CopyWebpackPlugin({
       patterns: [
         { from: "node_modules/@bickley-wallace/posts/lib/*", to: "posts/[name].[ext]" }
       ]
@@ -93,7 +95,6 @@ module.exports = {
       template: paths.indexHtml
     }),
     new webpack.DefinePlugin(stringifiedEnv),
-    new webpack.NoEmitOnErrorsPlugin(),
     new CaseSensitivePathsPlugin(),
     new CleanWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),

@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, Inputs } from "preact/hooks";
+import { useRef, useState, useEffect, Inputs, useMemo } from "preact/hooks";
 import { makeTextRequest, makeJsonRequest, Request, RequestStatus } from "../utils/request";
 
 const useAsyncEffect = (
@@ -7,15 +7,31 @@ const useAsyncEffect = (
 ): void => {
   const signal = useRef({ cancelled: false });
   useEffect(() => {
+    signal.current.cancelled = false;
     void effect(signal.current);
+
     return () => {
       signal.current.cancelled = true;
     };
   }, dependencies);
 };
 
-const useRequestIterable = <Response>(iterable: AsyncIterable<Request<Response>>): Request<Response> => {
+type MakeIterable<Response> = (
+  input: RequestInfo,
+  init?: RequestInit
+) => AsyncIterable<Request<Response>>;
+
+const useRequest = <Response>(
+  makeIterable: MakeIterable<Response>,
+  input: RequestInfo,
+  init?: RequestInit
+): Request<Response> => {
   const [request, setRequest]  = useState<Request<Response>>({ status: RequestStatus.PENDING });
+
+  const iterable = useMemo(
+    () => makeIterable(input, init),
+    [input, init]
+  );
 
   useAsyncEffect(async (signal) => {
     for await ( const apiResult of iterable) {
@@ -24,7 +40,7 @@ const useRequestIterable = <Response>(iterable: AsyncIterable<Request<Response>>
       }
       setRequest(apiResult);
     }
-  }, []);
+  }, [iterable]);
 
   return request;
 };
@@ -33,13 +49,13 @@ export const useJsonRequest = <Response>(
   input: RequestInfo,
   init?: RequestInit
 ): Request<Response> => {
-  return useRequestIterable(makeJsonRequest<Response>(input, init));
+  return useRequest<Response>(makeJsonRequest, input, init);
 };
 
 export const useTextRequest = (
   input: RequestInfo,
   init?: RequestInit
 ): Request<string> => {
-  return useRequestIterable(makeTextRequest(input, init));
+  return useRequest<string>(makeTextRequest, input, init);
 };
 
