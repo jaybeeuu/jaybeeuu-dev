@@ -6,6 +6,8 @@ import { withRequest } from "./with-request";
 import { useTextRequest } from "../custom-hooks/use-request";
 import { asRoute } from "./route-hoc";
 
+import "./night-owl.css";
+
 const PostComponent = withRequest<string>(({ response: post }) => (
   <article className={postHooks.article} dangerouslySetInnerHTML={{ __html: post }}/>
 ));

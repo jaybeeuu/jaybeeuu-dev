@@ -60,6 +60,10 @@ module.exports = {
           },
           {
             test: /\.css$/,
+            use: ["style-loader", "css-loader"]
+          },
+          {
+            test: /\.mcss$/,
             use: [
               "style-loader",
               {
@@ -74,7 +78,7 @@ module.exports = {
             ]
           },
           {
-            exclude: [/\.(ts|tsx|js|jsx)$/, /\.css$/, /\.html$/, /\.json$/],
+            exclude: [/\.(ts|tsx|js|jsx)$/, /\.(css|mcss)$/, /\.html$/, /\.json$/],
             loader: require.resolve("file-loader"),
             options: {
               name: "static/[name].[hash:8].[ext]",
