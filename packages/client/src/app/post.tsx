@@ -2,11 +2,11 @@ import { post as postHooks } from "@bickley-wallace/e2e-hooks";
 import { h, FunctionComponent } from "preact";
 import { ManifestContext } from "./manifest";
 import { useContext } from "preact/hooks";
-import { FetchRequest } from "./fetch-request";
+import { withRequest } from "./with-request";
 import { useTextRequest } from "../custom-hooks/use-request";
 import { asRoute } from "./route-hoc";
 
-const PostComponent = FetchRequest<string>(({ response: post }) => (
+const PostComponent = withRequest<string>(({ response: post }) => (
   <article className={postHooks.article} dangerouslySetInnerHTML={{ __html: post }}/>
 ));
 

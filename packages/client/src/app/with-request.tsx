@@ -11,7 +11,7 @@ export interface InjectedProps<Response> {
   response: Response
 }
 
-export const FetchRequest = <Response, ContentProps extends {} = {}>(
+export const withRequest = <Response, ContentProps extends {} = {}>(
   Content: ComponentType<ContentProps & InjectedProps<Response>>
 ): FunctionComponent<ContentProps & OwnProps<Response>> => {
   const FetchCompleteComponent = (
