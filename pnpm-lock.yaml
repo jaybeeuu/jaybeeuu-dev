@@ -34,10 +34,11 @@ importers:
       eslint: 7.7.0
       eslint-plugin-jest: 23.20.0_eslint@7.7.0+typescript@3.9.7
       eslint-plugin-react: 7.20.6_eslint@7.7.0
-      fetch-mock: 9.10.7
+      fetch-mock: 9.10.7_node-fetch@2.6.1
       file-loader: 6.0.0_webpack@4.44.1
       html-webpack-plugin: 4.3.0_webpack@4.44.1
       jest: 26.4.2
+      node-fetch: 2.6.1
       preact: 10.4.7
       preact-router: 3.2.1_preact@10.4.7
       regenerator-runtime: 0.13.7
@@ -84,6 +85,7 @@ importers:
       file-loader: ^6.0.0
       html-webpack-plugin: ^4.3.0
       jest: ^26.4.0
+      node-fetch: ^2.6.1
       preact: ^10.4.7
       preact-router: ^3.2.1
       regenerator-runtime: ^0.13.7
@@ -2514,7 +2516,7 @@ packages:
       mkdirp: 0.5.5
       pify: 4.0.1
       schema-utils: 2.7.0
-      webpack: 4.44.1_webpack@4.44.1
+      webpack: 4.44.1_7d74d9f6ceb0e540c1e44d9709220c58
     engines:
       node: '>= 6.9'
     peerDependencies:
@@ -4462,7 +4464,7 @@ packages:
     dev: false
     resolution:
       integrity: sha1-JcfInLH5B3+IkbvmHY85Dq4lbx4=
-  /fetch-mock/9.10.7:
+  /fetch-mock/9.10.7_node-fetch@2.6.1:
     dependencies:
       babel-runtime: 6.26.0
       core-js: 3.6.5
@@ -4470,6 +4472,7 @@ packages:
       glob-to-regexp: 0.4.1
       is-subset: 0.1.1
       lodash.isequal: 4.5.0
+      node-fetch: 2.6.1
       path-to-regexp: 2.4.0
       querystring: 0.2.0
       whatwg-url: 6.5.0
@@ -6843,6 +6846,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-ehY/mVQCf9BL0gKfsJBvFJen+1V//U+0HQMPrWct40ixE4jnv0bfvxDbWtAHL9EcaPEOJHVVYKoQn1TlZUB8Tw==
+  /node-fetch/2.6.1:
+    dev: true
+    engines:
+      node: 4.x || >=6.0.0
+    resolution:
+      integrity: sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
   /node-forge/0.9.0:
     dev: true
     engines:
@@ -8770,7 +8779,7 @@ packages:
       serialize-javascript: 4.0.0
       source-map: 0.6.1
       terser: 4.8.0
-      webpack: 4.44.1_webpack@4.44.1
+      webpack: 4.44.1_7d74d9f6ceb0e540c1e44d9709220c58
       webpack-sources: 1.4.3
       worker-farm: 1.7.0
     engines:

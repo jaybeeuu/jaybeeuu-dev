@@ -19,6 +19,7 @@ const getNextValue = async <Result>(asyncIterator: AsyncIterator<Result>): Promi
     return result.value;
   }
   throw new Error("Iterator is done.");
+
 };
 
 describe("makeRequest", () => {
@@ -79,7 +80,7 @@ describe("makeRequest", () => {
       error: asError({
         status: 500,
         statusText: "Internal Server Error",
-        body: errorResponse
+        body: JSON.stringify(errorResponse)
       })
     });
   });

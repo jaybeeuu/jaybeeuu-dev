@@ -55,6 +55,7 @@
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
     "jest": "^26.4.0",
+    "node-fetch": "^2.6.1",
     "preact": "^10.4.7",
     "preact-router": "^3.2.1",
     "regenerator-runtime": "^0.13.7",
