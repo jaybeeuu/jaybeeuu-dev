@@ -8,11 +8,15 @@ import { withRequest } from "./with-request";
 
 export const ManifestContext = createContext<PostManifest>({});
 
-const makeContentComponent = (content: ComponentChildren): FunctionComponent<{ request: Request<PostManifest> }> => withRequest<PostManifest>(({ response }) => (
-  <ManifestContext.Provider value={response}>
-    {content}
-  </ManifestContext.Provider>
-));
+const makeContentComponent = (
+  content: ComponentChildren
+): FunctionComponent<{ request: Request<PostManifest> }> => withRequest<PostManifest>(
+  ({ response }) => (
+    <ManifestContext.Provider value={response}>
+      {content}
+    </ManifestContext.Provider>
+  )
+);
 
 export const Manifest = ({ children }: { children: ComponentChildren }): VNode => {
   const request = useJsonRequest<PostManifest>("/posts/manifest.json");

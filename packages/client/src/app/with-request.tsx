@@ -28,8 +28,8 @@ export const withRequest = <Response, ContentProps extends {} = {}>(
 
     // TODO: Can I avoid the cast here?
     const injectableContentProps = {
-      response: request.response,
-      ...contentProps
+      ...contentProps,
+      response: request.response
     } as unknown as ContentProps & InjectedProps<Response>;
 
     return (
