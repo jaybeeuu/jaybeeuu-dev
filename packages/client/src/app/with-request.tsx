@@ -26,13 +26,14 @@ export const withRequest = <Response, ContentProps extends {} = {}>(
       );
     }
 
-    // TODO: Can I avoid the cast here?
     const injectableContentProps = {
       ...contentProps,
       response: request.response
-    } as unknown as ContentProps & InjectedProps<Response>;
+    };
 
     return (
+      // TODO: Can i avoid having to cast the object above?
+      // @ts-expect-error
       <Content {...injectableContentProps}/>
     );
   };
