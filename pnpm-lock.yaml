@@ -2,6 +2,8 @@ importers:
   .:
     specifiers: {}
   packages/client:
+    dependencies:
+      classnames: 2.2.6
     devDependencies:
       '@babel/core': 7.11.4
       '@babel/plugin-transform-react-jsx': 7.10.4_@babel+core@7.11.4
@@ -14,6 +16,7 @@ importers:
       '@bickley-wallace/scripts': 'link:../scripts'
       '@bickley-wallace/utilities': 'link:../utilities'
       '@prefresh/webpack': 1.1.0_preact@10.4.7+webpack@4.44.1
+      '@types/classnames': 2.2.10
       '@types/jest': 26.0.10
       '@types/react': 16.9.46
       '@types/react-dom': 16.9.8
@@ -61,6 +64,7 @@ importers:
       '@bickley-wallace/scripts': 'workspace:*'
       '@bickley-wallace/utilities': 'workspace:*'
       '@prefresh/webpack': ^1.1.0
+      '@types/classnames': ^2.2.10
       '@types/jest': ^26.0.10
       '@types/react': ^16.9.46
       '@types/react-dom': ^16.9.8
@@ -72,6 +76,7 @@ importers:
       babel-eslint: ^10.1.0
       babel-loader: ^8.1.0
       case-sensitive-paths-webpack-plugin: ^2.3.0
+      classnames: ^2.2.6
       clean-webpack-plugin: ^3.0.0
       copy-webpack-plugin: ^6.0.3
       core-js: ^3.6.5
@@ -1599,6 +1604,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-W98JrE0j2K78swW4ukqMleo8R7h/pFETjM2DQ90MF6XK2i4LO4W3gQ71Lt4w3bfm2EvVSyWHplECvB5sK22yFQ==
+  /@types/classnames/2.2.10:
+    dev: true
+    resolution:
+      integrity: sha512-1UzDldn9GfYYEsWWnn/P4wkTlkZDH7lDb0wBMGbtIQc9zXEQq7FlKBdZUn6OBqD8sKZZ2RQO2mAjGpXiDGoRmQ==
   /@types/color-name/1.1.1:
     resolution:
       integrity: sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
@@ -2516,7 +2525,7 @@ packages:
       mkdirp: 0.5.5
       pify: 4.0.1
       schema-utils: 2.7.0
-      webpack: 4.44.1_7d74d9f6ceb0e540c1e44d9709220c58
+      webpack: 4.44.1_webpack@4.44.1
     engines:
       node: '>= 6.9'
     peerDependencies:
@@ -3054,6 +3063,10 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-qOhPa/Fj7s6TY8H8esGu5QNpMMQxz79h+urzrNYN6mn+9BnxlDGf5QZ+XeCDsxSjPqsSR56XOZOJmpeurnLMeg==
+  /classnames/2.2.6:
+    dev: false
+    resolution:
+      integrity: sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
   /clean-css/4.2.3:
     dependencies:
       source-map: 0.6.1
@@ -8779,7 +8792,7 @@ packages:
       serialize-javascript: 4.0.0
       source-map: 0.6.1
       terser: 4.8.0
-      webpack: 4.44.1_7d74d9f6ceb0e540c1e44d9709220c58
+      webpack: 4.44.1_webpack@4.44.1
       webpack-sources: 1.4.3
       worker-farm: 1.7.0
     engines:

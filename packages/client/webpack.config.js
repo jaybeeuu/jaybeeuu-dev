@@ -60,25 +60,23 @@ module.exports = {
           },
           {
             test: /\.css$/,
-            use: ["style-loader", "css-loader"]
-          },
-          {
-            test: /\.mcss$/,
             use: [
               "style-loader",
               {
                 loader: "css-loader",
                 options: {
-                  modules: true,
-                  localIdentName: isProduction ? "bw-[hash:base64:5]" : "[name]__[local]--[hash:base64:5]",
-                  localsConvention: "camelCase",
+                  modules: {
+                    auto: /.module.css$/,
+                    localIdentName: isProduction ? "bw-[hash:base64:5]" : "[name]__[local]--[hash:base64:5]",
+                    exportLocalsConvention: "camelCaseOnly"
+                  },
                   sourceMap: true
                 }
               }
             ]
           },
           {
-            exclude: [/\.(ts|tsx|js|jsx)$/, /\.(css|mcss)$/, /\.html$/, /\.json$/],
+            exclude: [/\.(ts|tsx|js|jsx)$/, /\.css$/, /\.html$/, /\.json$/],
             loader: require.resolve("file-loader"),
             options: {
               name: "static/[name].[hash:8].[ext]",
