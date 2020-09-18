@@ -1,4 +1,4 @@
-import { h, FunctionComponent } from "preact";
+import { h, Fragment, FunctionComponent } from "preact";
 import { useMemo } from "preact/hooks";
 import { PostManifest } from "@bickley-wallace/compost";
 import { createContext, VNode, ComponentChildren } from "preact";
@@ -25,9 +25,7 @@ export const Manifest = ({ children }: { children: ComponentChildren }): VNode =
     [children]
   );
   return (
-    <div>
-      <ContentComponent request={request} />
-    </div>
+    <ContentComponent request={request} />
   );
 };
 

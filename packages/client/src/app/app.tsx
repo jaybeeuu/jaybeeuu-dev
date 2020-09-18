@@ -5,12 +5,14 @@ import { PostRoute } from "./post";
 import Router from "preact-router";
 
 const App: FunctionComponent = () => (
-  <Manifest>
-    <SideBar/>
-    <Router>
-      <PostRoute path={"post/:slug"} />
-    </Router>
-  </Manifest>
+  <div>
+    <Manifest>
+      <SideBar/>
+      <Router>
+        <PostRoute path={"post/:slug"} />
+      </Router>
+    </Manifest>
+  </div>
 );
 
 export default App;
