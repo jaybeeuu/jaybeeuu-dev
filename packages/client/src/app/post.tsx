@@ -4,7 +4,7 @@ import { ManifestContext } from "./manifest";
 import { useContext } from "preact/hooks";
 import { withRequest } from "./with-request";
 import { useTextRequest } from "../custom-hooks/use-request";
-import { asRoute } from "./route-hoc";
+import { asRoute } from "./as-route";
 
 import "./night-owl.css";
 
