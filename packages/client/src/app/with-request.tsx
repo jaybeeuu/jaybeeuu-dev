@@ -20,6 +20,7 @@ export const withRequest = <Response, ContentProps extends {} = {}>(
     if (request.status === RequestStatus.FAILED) {
       log.error("Request failed", request.error);
     }
+
     if (request.status !== RequestStatus.COMPLETE) {
       return (
         <pre>{JSON.stringify(request, null, 2)}</pre>
@@ -32,7 +33,6 @@ export const withRequest = <Response, ContentProps extends {} = {}>(
     };
 
     return (
-      // TODO: Can i avoid having to cast the object above?
       // @ts-expect-error
       <Content {...injectableContentProps}/>
     );
