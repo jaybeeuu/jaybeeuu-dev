@@ -7,6 +7,7 @@ import { update } from "../../src/posts";
 const jestWorkerId = +(process.env.JEST_WORKER_ID || 0);
 const sourceDir = path.resolve(`./fs/test/${jestWorkerId.toString()}/src`);
 const outputDir = path.resolve(`./fs/test/${jestWorkerId.toString()}/out`);
+const hrefRoot = "posts";
 const manifestFileName = "mainfest.json";
 
 const getOutputFile = async (filePath: string): Promise<string> => {
@@ -15,7 +16,9 @@ const getOutputFile = async (filePath: string): Promise<string> => {
 };
 
 const getPostManifest = async (): Promise<PostManifest> => {
-  return JSON.parse(await getOutputFile(manifestFileName)) as PostManifest;
+  const fileName = path.join("posts", manifestFileName);
+  const fileContent = await getOutputFile(fileName);
+  return JSON.parse(fileContent) as PostManifest;
 };
 
 const getPost = (href: string): Promise<string> => {
@@ -24,10 +27,11 @@ const getPost = (href: string): Promise<string> => {
 
 const compilePosts = async (): Promise<void> => {
   await update({
-    outputDir,
-    sourceDir,
+    hrefRoot,
     manifestFileName,
-    watch: false
+    outputDir: path.join(outputDir, hrefRoot),
+    sourceDir,
+    watch: false,
   });
 };
 
@@ -64,7 +68,7 @@ describe("refresh", () => {
         lastUpdateDate: null,
         slug,
         fileName: expect.stringMatching(new RegExp(`${slug}-[A-z0-9]{6}.html`)) as unknown,
-        href: expect.stringMatching(new RegExp(`/${slug}-[A-z0-9]{6}.html`)) as unknown
+        href: expect.stringMatching(new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`)) as unknown
       }
     });
   });

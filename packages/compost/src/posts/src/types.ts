@@ -17,6 +17,7 @@ export interface PostRedirectsMap {
 }
 
 export interface UpdateOptions {
+  hrefRoot: string;
   manifestFileName: string;
   outputDir: string;
   sourceDir: string;

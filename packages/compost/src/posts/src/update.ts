@@ -13,6 +13,14 @@ import { getMetaFileContent } from "./metafile";
 import { validateSlug, getPostFileName } from "./file-paths";
 import { UpdateOptions, PostManifest } from "./types";
 
+const joinUrlPath = (...pathFragments: string[]): string => {
+  const builtPath = pathFragments
+    .map((fragment) => fragment.trimEnd().replace(/(^\/|\/$)/g, ""))
+    .filter(Boolean)
+    .join("/");
+  return `/${builtPath}`;
+};
+
 export const update = async (
   options: UpdateOptions
 ): Promise<Result<PostManifest>> => {
@@ -42,7 +50,7 @@ export const update = async (
     const compiledFileName = getPostFileName(slug, compiledPost);
     const compiledFilePath = path.join(resolvedOutputDir, compiledFileName);
     await writeTextFile(compiledFilePath, compiledPost);
-    const href = `/${compiledFileName}`;
+    const href = joinUrlPath(options.hrefRoot, compiledFileName);
 
     const metaFileContentResult = await getMetaFileContent(markdownFileInfo);
     if (metaFileContentResult.state === ResultState.failure) {

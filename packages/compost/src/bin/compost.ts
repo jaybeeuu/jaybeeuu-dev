@@ -10,12 +10,14 @@ const options = getOpts(process.argv, {
     manifestFileName: "m",
     outputDir: "o",
     sourceDir: "s",
-    watch: "w"
+    watch: "w",
+    hrefRoot: "h"
   },
   default: {
     manifestFileName: "manifest.json",
     outputDir: "./lib",
     sourceDir: "./src",
+    hrefRoot: "/",
     watch: false
   }
 }) as unknown as UpdateOptions;
