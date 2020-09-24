@@ -13,6 +13,7 @@ module.exports = {
     "indent": ["error", 2, { SwitchCase: 1 }],
     "no-console": ["error"],
     "no-shadow": ["error"],
+    "no-trailing-spaces": "error",
     "no-unused-vars": ["off"],
     "operator-linebreak": ["error", "before"],
     "quotes": ["error", "double"],
