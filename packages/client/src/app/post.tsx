@@ -1,25 +1,30 @@
 import { post as postHooks } from "@bickley-wallace/e2e-hooks";
-import { h, FunctionComponent } from "preact";
-import { ManifestContext } from "./manifest";
-import { useContext } from "preact/hooks";
-import { withRequest } from "./with-request";
-import { useTextRequest } from "../custom-hooks/use-request";
+import { h, FunctionComponent, JSX } from "preact";
+import { withPromise } from "./with-promise";
 import { asRoute } from "./as-route";
 
 import "./night-owl.css";
+import { useValue } from "../recoilless/use-value";
+import { currentPostHtml, currentPostSlug } from "./state";
+import { useEffect } from "preact/hooks";
 
-const PostComponent = withRequest<string>(({ response: post }) => (
+const PostComponent = withPromise(({ value: post }: { value: string }): JSX.Element => (
   <article className={postHooks.article} dangerouslySetInnerHTML={{ __html: post }}/>
 ));
 
 export type PostProps = { path: string, slug: string };
 
 const Post: FunctionComponent<PostProps> = ({ slug }) => {
-  const manifest = useContext(ManifestContext);
-  const postMeta = manifest[slug];
-  const postRequest = useTextRequest(`/posts/${postMeta.fileName}`);
+  const [selectedSlug, setSlug] = useValue(currentPostSlug);
+  useEffect(() => {
+    setSlug(slug);
+  }, [slug]);
+  if (!selectedSlug) {
+    return null;
+  }
 
-  return <PostComponent request={postRequest} />;
+  const htmlPromise = useValue(currentPostHtml);
+  return <PostComponent promise={htmlPromise} />;
 };
 
 Post.displayName = "Post";

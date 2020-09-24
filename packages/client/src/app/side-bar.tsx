@@ -1,15 +1,15 @@
-import classNames from "classnames";
-import { h, FunctionComponent } from "preact";
+import { h, VNode } from "preact";
+import { PostManifest } from "@bickley-wallace/compost";
 import { sideBar as e2eHooks } from "@bickley-wallace/e2e-hooks";
-import { ManifestContext } from "./manifest";
+import classNames from "classnames";
 import { Link } from "preact-router";
-import { useContext } from "preact/hooks";
 
+import { useValue } from "../recoilless/use-value";
 import css from "./side-bar.module.css";
+import { postsManifest } from "./state";
+import { withPromise as withPromise } from "./with-promise";
 
-export const SideBar: FunctionComponent = () => {
-  const manifest = useContext(ManifestContext);
-
+export const SideBar = withPromise(({ value: manifest }: { value: PostManifest }) => {
   return (
     <div className={classNames(css.block, e2eHooks.block)}>
       <ul>
@@ -25,6 +25,12 @@ export const SideBar: FunctionComponent = () => {
       </ul>
     </div>
   );
-};
+});
 
 SideBar.displayName = "SideBar";
+
+export const SidebarWithManifest = (): VNode<any> => {
+  const manifest = useValue(postsManifest);
+  return <SideBar promise={manifest} />;
+};
+
