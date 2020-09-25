@@ -15,7 +15,7 @@ import { UpdateOptions, PostManifest } from "./types";
 
 const joinUrlPath = (...pathFragments: string[]): string => {
   const builtPath = pathFragments
-    .map((fragment) => fragment.trimEnd().replace(/(^\/|\/$)/g, ""))
+    .map((fragment) => fragment.replace(/(^\/|\/$)/g, ""))
     .filter(Boolean)
     .join("/");
   return `/${builtPath}`;
