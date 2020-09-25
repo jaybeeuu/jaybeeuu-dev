@@ -2,12 +2,15 @@ const PreactRefreshPlugin = require("@prefresh/webpack");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const { env, stringifiedEnv } = require("./config/env");
 const paths = require("./config/paths");
-
 const isProduction = env.NODE_ENV === "production";
 
 module.exports = {
@@ -61,7 +64,7 @@ module.exports = {
           {
             test: /\.css$/,
             use: [
-              "style-loader",
+              isProduction ? MiniCssExtractPlugin.loader : "style-loader",
               {
                 loader: "css-loader",
                 options: {
@@ -86,6 +89,17 @@ module.exports = {
       }
     ]
   },
+  optimization: {
+    minimize: isProduction,
+    minimizer: [
+      new TerserPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true
+      }),
+      new CssMinimizerPlugin()
+    ],
+  },
   plugins: [
     new CopyWebpackPlugin({
       patterns: [
@@ -101,6 +115,8 @@ module.exports = {
     new CaseSensitivePathsPlugin(),
     new CleanWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new PreactRefreshPlugin()
-  ]
+    new PreactRefreshPlugin(),
+    new BundleAnalyzerPlugin(),
+    isProduction ? new MiniCssExtractPlugin() : null
+  ].filter(Boolean)
 };
