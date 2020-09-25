@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "e2e": "cypress",
-    "build": "compost --sourceDir=./fixtures/src/posts --outputDir=./fixtures/posts",
+    "build": "compost --sourceDir=./fixtures/src/posts --outputDir=./fixtures/posts --hrefRoot=posts",
     "lint": "eslint --ext .js,.ts --format codeframe .",
     "type-check": "tsc --noEmit --pretty"
   },
