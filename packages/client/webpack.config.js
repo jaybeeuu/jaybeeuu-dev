@@ -116,7 +116,9 @@ module.exports = {
     new CleanWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new PreactRefreshPlugin(),
-    new BundleAnalyzerPlugin(),
+    isProduction ? new BundleAnalyzerPlugin({
+      analyzerMode: "static"
+    }) : null,
     isProduction ? new MiniCssExtractPlugin() : null
   ].filter(Boolean)
 };
