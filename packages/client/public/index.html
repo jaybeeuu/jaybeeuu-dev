@@ -7,11 +7,64 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Josh Bickley-Wallace</title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        html, body, #app {
+            height: 100%;
+            width: 100%;
+            background: #45474b;
+            color: white;
+        }
+
+        .fade-in {
+            animation: fade-in ease-in-out 2s;
+            -webkit-animation: fade-in ease-in-out 2s;
+        }
+        @keyframes fade-in {
+            0% { opacity: 0; }
+            60% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        @-webkit-keyframes fade-in {
+            0% { opacity: 0; }
+            60% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .spinner {
+            margin:auto;
+            position:fixed;
+            top:0;
+            bottom:0;
+            left:0;
+            right:0;
+
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, .3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spinner 2s ease-in-out infinite;
+            -webkit-animation: spinner 2s ease-in-out infinite;
+        }
+        @keyframes spinner {
+            0% { transform: rotate(40deg); }
+            25% { transform: rotate(-40deg); }
+            100% { transform: rotate(400deg); }
+        }
+        @-webkit-keyframes spinner {
+            0% { -webkit-transform: rotate(40deg); }
+            25% { -webkit-transform: rotate(-40deg); }
+            100% { -webkit-transform: rotate(400deg); }
+        }
+    </style>
 </head>
 
 <body>
     <div id="app">
-        <div>App hasn't started.</div>
+        <div class="fade-in">
+            <div class="spinner"></div>
+        </div>
     </div>
 </body>
 

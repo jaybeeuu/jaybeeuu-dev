@@ -2,6 +2,7 @@ import { log } from "@bickley-wallace/utilities";
 import { h, VNode, ComponentType, FunctionComponent } from "preact";
 import { PromiseStatus } from "../recoilless/promise-status";
 import { getDisplayName } from "../utils/component";
+import { LoadingSpinner } from "./loading-spinner";
 
 export interface OwnProps<Value> {
   promise: PromiseStatus<Value>
@@ -21,17 +22,14 @@ export const withPromise = <Value, ContentProps extends InjectedProps<Value>>(
   ): VNode<any> | null => {
     switch (promise.status)
     {
-      case "pending": return null;
-      case "slow": return <div>Loading...</div>;
+      case "pending": return <LoadingSpinner />;
       case "complete": {
         const injectableContentProps = {
           ...contentProps,
           value: promise.value
         };
-        return (
-          // @ts-expect-error
-          <Content {...injectableContentProps}/>
-        );
+        // @ts-expect-error
+        return <Content {...injectableContentProps}/>;
       }
       case "failed": {
         log.error("Request failed", promise.error);

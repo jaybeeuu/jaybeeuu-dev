@@ -31,28 +31,6 @@ describe("makeRequest", () => {
     });
   });
 
-  it("returns a slow request status if the request takes longer than 500ms.", async () => {
-    const requestIterator = getIterator(echoDelayed("Pears", 501));
-
-    const firstResult = await getNextValue(requestIterator);
-    expect(firstResult.status).toStrictEqual("pending");
-
-    jest.advanceTimersByTime(500);
-
-    const secondResult = await getNextValue(requestIterator);
-    expect(secondResult).toStrictEqual({
-      status: "slow"
-    });
-
-    jest.advanceTimersByTime(1);
-
-    const thirdResult = await getNextValue(requestIterator);
-    expect(thirdResult).toStrictEqual({
-      status: "complete",
-      value: "Pears"
-    });
-  });
-
   it("returns an error if the request fails.", async () => {
     const errorResponse = { message: "Whoops!" };
 
