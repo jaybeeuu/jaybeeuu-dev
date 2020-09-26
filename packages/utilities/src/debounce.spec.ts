@@ -4,7 +4,7 @@ jest.useFakeTimers();
 type Args = [number, string, { id: number }];
 
 describe("debounce", () => {
-  it("returns a function that does not execute the supplied actor within the specified delay.", () => {
+  it("does not execute the supplied actor within the specified delay.", () => {
     const actor = jest.fn();
     const delay = 500;
 
@@ -14,7 +14,7 @@ describe("debounce", () => {
     expect(actor).toHaveBeenCalledTimes(0);
   });
 
-  it("returns a function executes the supplied actor after the specified delay.", () => {
+  it("executes the supplied actor after the specified delay.", () => {
     const actor = jest.fn();
     const delay = 500;
 
@@ -24,7 +24,7 @@ describe("debounce", () => {
     expect(actor).toHaveBeenCalledTimes(1);
   });
 
-  it("returns a function that executes the actor with the supplied arguemtns.", () => {
+  it("executes the actor with the supplied arguments.", () => {
     const args: Args =  [1, "2", { id: 3 }];
     const actor = jest.fn<void, Args>();
     const delay = 500;
@@ -35,7 +35,7 @@ describe("debounce", () => {
     expect(actor).toHaveBeenCalledWith(...args);
   });
 
-  it("returns a function that will not execute the actor twice within the specified delay.", () => {
+  it("will not execute the actor twice within the specified delay.", () => {
     const actor = jest.fn();
     const delay = 500;
 
@@ -48,7 +48,7 @@ describe("debounce", () => {
     expect(actor).toHaveBeenCalledTimes(1);
   });
 
-  it("returns a function that executes the actor with the most recent arguments.", () => {
+  it("executes the actor with the most recent arguments.", () => {
     const actor = jest.fn<void, Args>();
     const delay = 500;
 
@@ -62,7 +62,7 @@ describe("debounce", () => {
     expect(actor).toHaveBeenCalledWith(...laastrgs);
   });
 
-  it("returns a function that executes the actor once after the given delay even if it has been called more than once within the specified delay.", () => {
+  it("executes the actor once after the given delay even if it has been called more than once within the specified delay.", () => {
     const actor = jest.fn();
     const delay = 500;
     const debounced = debounce(actor, delay);
@@ -77,7 +77,7 @@ describe("debounce", () => {
     expect(actor).toHaveBeenCalledTimes(1);
   });
 
-  it("returns a function that, if called since the  actor has been executed, will schedule another delayed execution.", () => {
+  it("will schedule another delayed execution if called since the actor has been executed, .", () => {
     const actor = jest.fn();
     const delay = 500;
     const debounced = debounce(actor, delay);
