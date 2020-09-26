@@ -17,7 +17,7 @@ module.exports = {
   mode: isProduction ? "production" : "development",
   devtool: isProduction ? "source-map" : "source-map",
   watch: !isProduction,
-  devServer: ! isProduction ? {
+  devServer: !isProduction ? {
     compress: true,
     historyApiFallback: true,
     host: env.CLIENT_HOST_NAME,
@@ -90,7 +90,6 @@ module.exports = {
     ]
   },
   optimization: {
-    minimize: isProduction,
     minimizer: [
       new TerserPlugin({
         cache: true,
@@ -98,12 +97,15 @@ module.exports = {
         sourceMap: true
       }),
       new CssMinimizerPlugin()
-    ],
+    ]
   },
   plugins: [
     new CopyWebpackPlugin({
       patterns: [
-        { from: "node_modules/@bickley-wallace/posts/lib/*", to: "posts/[name].[ext]" }
+        {
+          from: "node_modules/@bickley-wallace/posts/lib/*",
+          to: "posts/[name].[ext]"
+        }
       ]
     }),
     new HtmlWebpackPlugin({
