@@ -1,6 +1,5 @@
 import { monitorPromise, PromiseStatus } from "./promise-status";
 import { asError } from "../utils/as-error";
-import { echoDelayed } from "@bickley-wallace/utilities";
 
 jest.useFakeTimers();
 
