@@ -23,7 +23,7 @@
   "homepage": "https://github.com/jayseeare/bickleywallace-site#readme",
   "scripts": {
     "bootstrap": "pnpm install -r",
-    "build": "pnpm run -r build --filter {packages}",
+    "build": "pnpm run -r --stream build --filter {packages}",
     "clean": "git clean -fdx",
     "e2e": "cd packages/e2e && npm run e2e",
     "e2e-ci": "pnpm run start --filter @bickley-wallace/client & npx wait-on --timeout=60000 https://localhost:3443/ && pnpm run e2e run",
