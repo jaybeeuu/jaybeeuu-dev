@@ -22,7 +22,8 @@ export const withPromise = <Value, ContentProps extends InjectedProps<Value>>(
   ): VNode<any> | null => {
     switch (promise.status)
     {
-      case "pending": return <LoadingSpinner />;
+      case "pending":
+      case "slow": return <LoadingSpinner />;
       case "complete": {
         const injectableContentProps = {
           ...contentProps,

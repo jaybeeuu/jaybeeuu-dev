@@ -1,5 +1,6 @@
 import { monitorPromise, PromiseStatus } from "./promise-status";
 import { asError } from "../utils/as-error";
+import { echoDelayed } from "@bickley-wallace/utilities";
 
 jest.useFakeTimers();
 
@@ -27,6 +28,28 @@ describe("makeRequest", () => {
     expect(secondResult).toStrictEqual({
       status: "complete",
       value: "Apples"
+    });
+  });
+
+  it("returns a slow request status if the request takes longer than 500ms.", async () => {
+    const requestIterator = getIterator(echoDelayed("Pears", 501));
+
+    const firstResult = await getNextValue(requestIterator);
+    expect(firstResult.status).toStrictEqual("pending");
+
+    jest.advanceTimersByTime(500);
+
+    const secondResult = await getNextValue(requestIterator);
+    expect(secondResult).toStrictEqual({
+      status: "slow"
+    });
+
+    jest.advanceTimersByTime(1);
+
+    const thirdResult = await getNextValue(requestIterator);
+    expect(thirdResult).toStrictEqual({
+      status: "complete",
+      value: "Pears"
     });
   });
 
