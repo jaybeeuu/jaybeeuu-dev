@@ -43,17 +43,13 @@ const run = async (): Promise<Result<void>> => {
   }
 };
 
-const watch = async (): Promise<void> => {
+const watch = (): void => {
   log.info("Starting compost in watch mode...");
-  await run();
-  log.info("Waiting for changes...");
-  chokidar.watch(options.sourceDir).on(
-    "all",
-    debounce(async () => {
-      await run();
-      log.info("Waiting for changes...");
-    }, 250)
-  );
+  const debounced = debounce(async () => {
+    await run();
+    log.info("Waiting for changes...");
+  }, 250);
+  chokidar.watch(options.sourceDir).on("all", debounced);
 };
 
 if (options.watch) {
