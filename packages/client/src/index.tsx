@@ -1,5 +1,5 @@
 import { h, render } from "preact";
-import App from "./app/app";
+import { App } from "./app/app";
 
 const appSelector = "#app";
 const app = document.querySelector(appSelector);

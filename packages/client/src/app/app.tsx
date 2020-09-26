@@ -4,13 +4,13 @@ import { StoreProvider } from "../recoilless/store-provider";
 import { SidebarWithManifest } from "./side-bar";
 import { PostRoute } from "./post";
 
-const App: FunctionComponent = () => (
-  <StoreProvider>
-    <SidebarWithManifest/>
-    <Router>
-      <PostRoute path={"post/:slug"} />
-    </Router>
-  </StoreProvider>
+export const App: FunctionComponent = () => (
+  <div>
+    <StoreProvider>
+      <SidebarWithManifest/>
+      <Router>
+        <PostRoute path={"post/:slug"} />
+      </Router>
+    </StoreProvider>
+  </div>
 );
-
-export default App;
