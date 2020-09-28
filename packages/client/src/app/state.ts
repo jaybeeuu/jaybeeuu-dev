@@ -20,9 +20,15 @@ export const currentPostHtml: DerivedValueSeed<Promise<string>> = {
     const manifest = await get(postsManifest);
     const slug = get(currentPostSlug);
     if (slug && slug in manifest) {
-      // `/posts/${postMeta.fileName}`
       return fetchText(manifest[slug].href);
     }
     throw new Error(`Slug "${String(slug)}" does not exist in the manifest.`);
   }
+};
+
+export type Theme = "light" | "dark";
+
+export const theme: PrimitiveValueSeed<Theme> = {
+  name: "theme",
+  initialValue: "light"
 };

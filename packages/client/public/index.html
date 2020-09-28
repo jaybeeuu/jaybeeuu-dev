@@ -8,11 +8,16 @@
     <title>Josh Bickley-Wallace</title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <style>
-        html, body, #app {
+        html, body, #app, #theme-root {
             height: 100%;
             width: 100%;
-            background: #45474b;
-            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        #theme-root {
+            background: var(--background-main,  #45474b);
+            color: var(--text-main, #dddddd);
         }
 
         .fade-in {
@@ -31,8 +36,8 @@
         }
 
         .spinner {
-            margin:auto;
-            position:fixed;
+            margin: auto;
+            position: fixed;
             top:0;
             bottom:0;
             left:0;
@@ -41,9 +46,9 @@
             display: inline-block;
             width: 50px;
             height: 50px;
-            border: 3px solid rgba(255, 255, 255, .3);
+            border: 3px solid var(--spinner-secondary, rgba(255, 255, 255, .3));
+            border-top-color: var(--spinner-main, #ffffff);
             border-radius: 50%;
-            border-top-color: #fff;
             animation: spinner 2s ease-in-out infinite;
             -webkit-animation: spinner 2s ease-in-out infinite;
         }
@@ -62,8 +67,10 @@
 
 <body>
     <div id="app">
-        <div class="fade-in">
-            <div class="spinner"></div>
+        <div class="light">
+            <div class="fade-in">
+                <div class="spinner"></div>
+            </div>
         </div>
     </div>
 </body>

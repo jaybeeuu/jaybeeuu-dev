@@ -1,3 +1,4 @@
 .block {
-  /* background: red; */
+  margin: 0;
+  padding: 16px 0;
 }

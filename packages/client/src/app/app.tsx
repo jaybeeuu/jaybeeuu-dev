@@ -1,16 +1,19 @@
 import { h, FunctionComponent } from "preact";
 import Router from "preact-router";
 import { StoreProvider } from "../recoilless/store-provider";
-import { SidebarWithManifest } from "./side-bar";
 import { PostRoute } from "./post";
+import { Sidebar } from "./side-bar";
+import { Theme } from "./theme";
+
+import "../style/theme-colours.css";
 
 export const App: FunctionComponent = () => (
-  <div>
+  <Theme>
     <StoreProvider>
-      <SidebarWithManifest/>
+      <Sidebar/>
       <Router>
         <PostRoute path={"post/:slug"} />
       </Router>
     </StoreProvider>
-  </div>
+  </Theme>
 );
