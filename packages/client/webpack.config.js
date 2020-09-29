@@ -66,6 +66,12 @@ module.exports = {
             use: [
               isProduction ? MiniCssExtractPlugin.loader : "style-loader",
               {
+                loader: "css-modules-typescript-loader",
+                options: {
+                  mode: isProduction ? "verify" : "emit"
+                }
+              },
+              {
                 loader: "css-loader",
                 options: {
                   modules: {

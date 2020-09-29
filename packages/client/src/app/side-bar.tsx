@@ -10,29 +10,31 @@ import { withPromise as withPromise } from "./with-promise";
 
 import css from "./side-bar.module.css";
 
-const SidebarWithManifest = withPromise(({ value: manifest }: { value: PostManifest }) => {
+const PostList = withPromise(({ value: manifest }: { value: PostManifest }) => {
   return (
-    <div className={classNames(css.block, e2eHooks.block)}>
-      <ul>
-        {Object.values(manifest).map((meta) => (
-          <li className={e2eHooks.post.id(meta.slug)} key={meta.slug}>
-            <h3>
-              <Link href={`/post/${meta.slug}`} className={e2eHooks.post.link}>{meta.title}</Link>
-            </h3>
-            <h4>{meta.lastUpdateDate}</h4>
-            <summary className={e2eHooks.post.abstract}>{meta.abstract}</summary>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <ul>
+      {Object.values(manifest).map((meta) => (
+        <li className={e2eHooks.post.id(meta.slug)} key={meta.slug}>
+          <h3>
+            <Link href={`/post/${meta.slug}`} className={e2eHooks.post.link}>{meta.title}</Link>
+          </h3>
+          <h4>{meta.lastUpdateDate}</h4>
+          <summary className={e2eHooks.post.abstract}>{meta.abstract}</summary>
+        </li>
+      ))}
+    </ul>
   );
 });
 
-SidebarWithManifest.displayName = "SideBarWithManifest";
+PostList.displayName = "SideBarWithManifest";
 
 export const Sidebar = (): VNode<any> => {
   const manifest = useValue(postsManifest);
-  return <SidebarWithManifest promise={manifest} />;
+  return (
+    <div className={classNames(css.element, e2eHooks.block)}>
+      <PostList promise={manifest} />;
+    </div>
+  );
 };
 Sidebar.displayName  = "Sidebar";
 

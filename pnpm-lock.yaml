@@ -2,6 +2,8 @@ importers:
   .:
     specifiers: {}
   packages/client:
+    dependencies:
+      css-modules-typescript-loader: 4.0.1
     devDependencies:
       '@babel/core': 7.11.4
       '@babel/plugin-proposal-class-properties': 7.10.4_@babel+core@7.11.4
@@ -86,6 +88,7 @@ importers:
       cross-env: ^7.0.2
       css-loader: ^4.2.1
       css-minimizer-webpack-plugin: ^1.1.4
+      css-modules-typescript-loader: ^4.0.1
       dotenv: ^8.2.0
       eslint: ^7.7.0
       eslint-plugin-jest: ^23.20.0
@@ -3635,6 +3638,13 @@ packages:
       webpack: ^4.0.0 || ^5.0.0
     resolution:
       integrity: sha512-ERPm6KtVgwpV2EaquV+we3H0siWjNl5IpRAah4QSo0j0CDMeowJI12yR6qHIWSJNjDdkrF1HaHZbR3L9CFr8MQ==
+  /css-modules-typescript-loader/4.0.1:
+    dependencies:
+      line-diff: 2.1.1
+      loader-utils: 1.4.0
+    dev: false
+    resolution:
+      integrity: sha512-vXrUAwPGcRaopnGdg7I5oqv/NSSKQRN5L80m3f49uSGinenU5DTNsMFHS+2roh5tXqpY5+yAAKAl7A2HDvumzg==
   /css-select-base-adapter/0.1.1:
     dev: true
     resolution:
@@ -6747,6 +6757,10 @@ packages:
       node: '> 0.8'
     resolution:
       integrity: sha1-eZllXoZGwX8In90YfRUNMyTVRRM=
+  /levdist/1.0.0:
+    dev: false
+    resolution:
+      integrity: sha1-kdejBElk8szEIaBHfKyCf+dcVxg=
   /leven/3.1.0:
     engines:
       node: '>=6'
@@ -6776,6 +6790,12 @@ packages:
       node: '>= 0.8.0'
     resolution:
       integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==
+  /line-diff/2.1.1:
+    dependencies:
+      levdist: 1.0.0
+    dev: false
+    resolution:
+      integrity: sha512-vswdynAI5AMPJacOo2o+JJ4caDJbnY2NEqms4MhMW0NJbjh3skP/brpVTAgBxrg55NRZ2Vtw88ef18hnagIpYQ==
   /lines-and-columns/1.1.6:
     dev: true
     resolution:
