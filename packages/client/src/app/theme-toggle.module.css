@@ -1,0 +1,30 @@
+.element {
+
+}
+
+.label {
+
+}
+
+.track {
+  border-radius: 50%;
+  display: inline-block;
+  border: 0.25rem solid var(--toggle-secondary);
+  border-radius: 0.2rem;
+  width: 2rem;
+  position: relative;
+}
+
+.switch {
+  display: inline-block;
+  border: 0.6rem solid var(--toggle-main);
+  border-radius: 50%;
+  position: absolute;
+  transition: left 200ms ease-in-out;
+  left: -0.2rem;
+  top: -0.6rem
+}
+
+.right {
+  left: 1.1rem;
+}

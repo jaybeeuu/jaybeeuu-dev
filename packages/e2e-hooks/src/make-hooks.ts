@@ -21,7 +21,6 @@ const asClassSelector = (identifier: string): string => `.${identifier}`;
 export type Hook = string | ((identifier: string) => string) | HookMap;
 
 export type HookMap = {
-  block: string;
   [element: string]: Hook;
 };
 

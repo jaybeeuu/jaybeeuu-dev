@@ -6,6 +6,7 @@ import { Link } from "preact-router";
 
 import { useValue } from "../recoilless/use-value";
 import { postsManifest } from "./state";
+import { ThemeToggle } from "./theme-toggle";
 import { withPromise as withPromise } from "./with-promise";
 
 import css from "./side-bar.module.css";
@@ -32,6 +33,7 @@ export const Sidebar = (): VNode<any> => {
   const manifest = useValue(postsManifest);
   return (
     <div className={classNames(css.element, e2eHooks.block)}>
+      <ThemeToggle />
       <PostList promise={manifest} />;
     </div>
   );

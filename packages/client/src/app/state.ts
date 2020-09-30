@@ -30,5 +30,5 @@ export type Theme = "light" | "dark";
 
 export const theme: PrimitiveValueSeed<Theme> = {
   name: "theme",
-  initialValue: "light"
+  initialValue: "dark"
 };

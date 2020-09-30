@@ -5,6 +5,10 @@
 
   --spinner-main: #dddddd;
   --spinner-secondary:  rgba(255, 255, 255, .3);
+
+
+  --toggle-main: #dddddd;
+  --toggle-secondary:  rgba(255, 255, 255, .3);
 }
 
 .light {
@@ -14,4 +18,7 @@
 
   --spinner-main: #343438;
   --spinner-secondary:  rgba(255, 255, 255, .6);
+
+  --toggle-main: #343438;
+  --toggle-secondary:  rgba(100, 100, 100, .4);
 }

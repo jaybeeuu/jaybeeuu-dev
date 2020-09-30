@@ -19,3 +19,9 @@ export const sideBar = {
     abstract: postBlock.element("abstract")
   }
 };
+
+const themeHookBlock = makeHookBlock("theme");
+export const theme = {
+  root: themeHookBlock.element("root"),
+  switch: themeHookBlock.element("switch")
+};

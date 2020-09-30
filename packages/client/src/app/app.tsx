@@ -8,12 +8,12 @@ import { Theme } from "./theme";
 import "../style/theme-colours.css";
 
 export const App: FunctionComponent = () => (
-  <Theme>
-    <StoreProvider>
+  <StoreProvider>
+    <Theme>
       <Sidebar/>
       <Router>
         <PostRoute path={"post/:slug"} />
       </Router>
-    </StoreProvider>
-  </Theme>
+    </Theme>
+  </StoreProvider>
 );
