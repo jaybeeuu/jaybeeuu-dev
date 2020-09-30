@@ -34,7 +34,7 @@ export const Sidebar = (): VNode<any> => {
   return (
     <div className={classNames(css.element, e2eHooks.block)}>
       <ThemeToggle />
-      <PostList promise={manifest} />;
+      <PostList promise={manifest} />
     </div>
   );
 };
