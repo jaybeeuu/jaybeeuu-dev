@@ -2,7 +2,7 @@ import { getThemeRoot, getThemeSwitch } from "../features/theme";
 
 context("Theme", (): void => {
   before(() => {
-    cy.reload();
+    cy.visit("/");
   });
 
   it("defaults to the dark theme.", (): void => {
