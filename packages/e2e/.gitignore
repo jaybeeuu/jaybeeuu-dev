@@ -1,3 +1,4 @@
-node_modules
-.screenshots
-fixtures/posts
+/node_modules
+/.screenshots
+/.videos
+/fixtures/posts
