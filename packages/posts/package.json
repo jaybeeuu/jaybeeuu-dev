@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "start": "compost --watch --hrefRoot=posts",
-    "build": "compost"
+    "build": "compost --hrefRoot=posts"
   },
   "devDependencies": {
     "@bickley-wallace/compost": "workspace:*"
