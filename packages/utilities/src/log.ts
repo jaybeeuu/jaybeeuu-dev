@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import chalk from "chalk";
 export const info = (message: string, ...args: unknown[]): void => console.log(message, ...args);
 
 export const getErrorMessage = (err: any | null | undefined): string => {
@@ -21,10 +20,6 @@ export const getErrorMessage = (err: any | null | undefined): string => {
   return JSON.stringify(err, null, 2);
 };
 
-export const error = (message:string, ...errs: unknown[]): void => {
-  const errorMessages = errs.flatMap(getErrorMessage);
-  console.error(chalk.red([
-    message,
-    ...errorMessages
-  ].join("\n\n")));
+export const error = (...errs: unknown[]): void => {
+  console.error(...errs);
 };

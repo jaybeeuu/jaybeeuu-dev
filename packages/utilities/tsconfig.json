@@ -6,6 +6,7 @@
     "module": "commonjs",
     "outDir": "./lib",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "sourceMap": true,
     "target": "ES2018",
     "types": ["jest"]
   },

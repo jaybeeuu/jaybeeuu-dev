@@ -23,7 +23,6 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "chalk": "^4.1.0",
     "tslib": "^2.0.1"
   },
   "devDependencies": {
