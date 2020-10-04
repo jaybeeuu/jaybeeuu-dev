@@ -77,16 +77,7 @@ module.exports = {
             ]
           },
           {
-            test: /\.svg$/,
-            use: [{
-              loader: "file-loader",
-              options: {
-                name: "static/[name].[hash:8].[ext]",
-              }
-            }]
-          },
-          {
-            test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+            test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.svg$/],
             loader: "url-loader",
             options: {
               limit: 10000,
@@ -112,7 +103,8 @@ module.exports = {
         sourceMap: true
       }),
       new CssMinimizerPlugin()
-    ]
+    ],
+
   },
   plugins: [
     new CopyWebpackPlugin({
