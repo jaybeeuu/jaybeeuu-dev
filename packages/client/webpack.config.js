@@ -49,14 +49,6 @@ module.exports = {
       {
         oneOf: [
           {
-            test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-            loader: require.resolve("url-loader"),
-            options: {
-              limit: 10000,
-              name: "static/[name].[hash:8].[ext]",
-            },
-          },
-          {
             test: /\.(ts|tsx|js|jsx)$/,
             include: paths.src,
             use: "babel-loader"
@@ -85,8 +77,25 @@ module.exports = {
             ]
           },
           {
+            test: /\.svg$/,
+            use: [{
+              loader: "file-loader",
+              options: {
+                name: "static/[name].[hash:8].[ext]",
+              }
+            }]
+          },
+          {
+            test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+            loader: "url-loader",
+            options: {
+              limit: 10000,
+              name: "static/[name].[hash:8].[ext]",
+            }
+          },
+          {
             exclude: [/\.(ts|tsx|js|jsx)$/, /\.css$/, /\.html$/, /\.json$/],
-            loader: require.resolve("file-loader"),
+            loader: "file-loader",
             options: {
               name: "static/[name].[hash:8].[ext]",
             }

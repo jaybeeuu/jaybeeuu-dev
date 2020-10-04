@@ -1,17 +1,18 @@
 .dark {
   --background-main: #45474b;
-
   --text-main: #dddddd;
 
   --spinner-main: #dddddd;
   --spinner-secondary:  rgba(255, 255, 255, .3);
 
-
   --toggle-main: #dddddd;
   --toggle-secondary:  rgba(255, 255, 255, .3);
+
+  --icon-fill: #dddddd;
 }
 
 .light {
+  --background-main: #dce0e7;
   --background-main: #dce0e7;
 
   --text-main: #343438;
@@ -21,4 +22,6 @@
 
   --toggle-main: #343438;
   --toggle-secondary:  rgba(100, 100, 100, .4);
+
+  --icon-fill: #343438;
 }

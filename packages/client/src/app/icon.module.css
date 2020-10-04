@@ -1,0 +1,5 @@
+.element {
+  fill: var(--icon-fill);
+  width: 1.5rem;
+  height: 1.5rem;
+}

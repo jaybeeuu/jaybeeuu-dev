@@ -24,13 +24,14 @@
   "scripts": {
     "bootstrap": "pnpm install -r",
     "build": "pnpm run -r --stream build --filter {packages}",
+    "build-changes": "pnpm run -r --stream build --filter {packages}[HEAD]",
     "clean": "git clean -fdx",
     "e2e": "cd packages/e2e && npm run e2e",
     "e2e-ci": "pnpm run start --filter @bickley-wallace/client & npx wait-on --timeout=60000 https://localhost:3443/ && pnpm run e2e run",
     "gen-certs": "pnpm run --no-bail --no-sort -r gen-certs --filter {packages}",
     "lint": "pnpm run --no-bail --no-sort -r lint --filter {packages}",
-    "nvm": "nvm use 12.18.3",
-    "start": "pnpm run -r --no-sort start --filter {packages}",
+    "nvm": "nvm use 12.18.4",
+    "start-client": "pnpm run -r --no-sort start --filter @bickley-wallace/client",
     "test": "pnpm run --no-bail --no-sort -r test --filter {packages}",
     "test:watch": "pnpm run -r test:watch --filter ",
     "type-check": "pnpm run --no-bail --no-sort -r type-check --filter {packages}"

@@ -6,6 +6,7 @@ import { theme, Theme } from "./state";
 import { theme as e2eHooks } from "@bickley-wallace/e2e-hooks";
 
 import css from "./theme-toggle.module.css";
+import { Icon } from "./icon";
 
 const toggleTheme = (currentTheme: Theme, setTheme: (newTheme: Theme) => void) => () => {
   setTheme(currentTheme === "light" ? "dark" : "light");
@@ -14,12 +15,12 @@ const toggleTheme = (currentTheme: Theme, setTheme: (newTheme: Theme) => void) =
 export const ThemeToggle = (): JSX.Element => {
   const [currentTheme, setTheme] = useValue(theme);
   return (
-    <div className={classNames(css.element, e2eHooks.switch)} onClick={toggleTheme(currentTheme, setTheme)}>
-      <span className={css.label}>Light</span>
+    <div className={e2eHooks.switch} onClick={toggleTheme(currentTheme, setTheme)}>
+      <Icon name={"sun"} />
       <span className={css.track}>
         <span className={classNames(css.switch, { [css.right]: currentTheme === "dark" })}/>
       </span>
-      <span className={css.label}>Dark</span>
+      <Icon name={"moon"} />
     </div>
   );
 };
