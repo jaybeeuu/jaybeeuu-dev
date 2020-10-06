@@ -103,8 +103,7 @@ module.exports = {
         sourceMap: true
       }),
       new CssMinimizerPlugin()
-    ],
-
+    ]
   },
   plugins: [
     new CopyWebpackPlugin({

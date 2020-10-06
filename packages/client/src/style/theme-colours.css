@@ -1,6 +1,9 @@
 .dark {
   --background-main: #45474b;
+  --background-code: #232529;
+
   --text-main: #dddddd;
+  --text-code: #dddddd;
 
   --spinner-main: #dddddd;
   --spinner-secondary:  rgba(255, 255, 255, .3);
@@ -13,9 +16,10 @@
 
 .light {
   --background-main: #dce0e7;
-  --background-main: #dce0e7;
+  --background-code: #45474b;
 
   --text-main: #343438;
+  --text-code: #dddddd;
 
   --spinner-main: #343438;
   --spinner-secondary:  rgba(255, 255, 255, .6);
