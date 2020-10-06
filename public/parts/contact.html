@@ -1,0 +1,26 @@
+
+			<link rel="stylesheet" href="styles/contact.css" type="text/css" />
+			<div id="scroller">
+				<form id="contactForm" name="contactform" method="post" action="parts/emailFrom.php">
+					<label id="nameLabel" class="single-line-label" for="name">Name</label>
+					<input  id="name" type="text" name="name" maxlength="100" /><br />
+						
+					<label id="organisationLabel" class="single-line-label" for="organisation">Organisation</label>
+					<input  id="organisation" type="text" name="organisation" maxlength="100" /><br />
+						
+					<label id="emailLabel" class="label-single-line" for="email">Email</label>
+					<input  id="email" type="text" name="email" maxlength="80" /><br />
+
+					<label id="subjectLabel" class="label-single-line" for="subject">Subject</label>
+					<input  id="subject" type="text" name="subject" maxlength="256" /><br />
+						
+					<label id="contentLabel" class="label-multi-line" for="content">Content</label>
+					<textarea  id="content" name="content" maxlength="1000" cols="25" rows="6"></textarea><br />
+					
+					<input id="submit" type="submit" value="Submit" />
+						
+					<div id="errors"></div>
+				</form>
+			</div>
+			<script src="scripts/validation.js"></script>
+			<script src="scripts/contact.js"></script>

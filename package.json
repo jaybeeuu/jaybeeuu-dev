@@ -1,0 +1,22 @@
+{
+  "name": "joshwallace.uk",
+  "version": "1.0.0",
+  "description": "My personal site",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jayseeare/bickleywallace-site.git"
+  },
+  "author": "Josh Bickley-Wallace <joshbickkleywallace@outlook.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jayseeare/bickleywallace-site/issues"
+  },
+  "homepage": "https://github.com/jayseeare/bickleywallace-site#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
