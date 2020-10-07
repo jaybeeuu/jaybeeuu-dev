@@ -2,9 +2,9 @@
 import { h, JSX } from "preact";
 import { theme as e2eHooks } from "@bickley-wallace/e2e-hooks";
 import classNames from "classnames";
-import { useValue } from "../recoilless/use-value";
-import { Icon } from "./icon";
-import { theme, Theme } from "./state";
+import { useValue } from "../../recoilless/use-value";
+import { Icon } from "../icon";
+import { theme, Theme } from "../state";
 
 import css from "./theme-toggle.module.css";
 
