@@ -1,12 +1,11 @@
-import classNames from "classnames";
 import { h, FunctionComponent, JSX } from "preact";
 import { post as postHooks } from "@bickley-wallace/e2e-hooks";
-import { withPromise } from "./with-promise";
-import { asRoute } from "./as-route";
-
-import { useValue } from "../recoilless/use-value";
-import { currentPostHtml, currentPostSlug } from "./state";
+import classNames from "classnames";
 import { useEffect } from "preact/hooks";
+import { useValue } from "../../recoilless/use-value";
+import { withPromise } from "../with-promise";
+import { asRoute } from "../as-route";
+import { currentPostHtml, currentPostSlug } from "../state";
 
 import css from "./post.module.css";
 

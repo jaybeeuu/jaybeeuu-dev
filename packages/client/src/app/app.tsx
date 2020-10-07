@@ -10,7 +10,7 @@ export const App: FunctionComponent = () => (
   <Theme>
     <Sidebar/>
     <Router>
-      <PostRoute path={"post/:slug"} />
+      <PostRoute path={"post/:slug"}/>
     </Router>
   </Theme>
 );
