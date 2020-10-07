@@ -8,7 +8,7 @@ import { postsManifest } from "../state";
 import { ThemeToggle } from "../theme-toggle";
 import { withPromise as withPromise } from "../with-promise";
 
-import css from "./side-bar.module.css";
+import css from "./nav-bar.module.css";
 
 const PostList = withPromise(({ value: manifest }: { value: PostManifest }) => {
   return (
@@ -28,7 +28,7 @@ const PostList = withPromise(({ value: manifest }: { value: PostManifest }) => {
 
 PostList.displayName = "SideBarWithManifest";
 
-export const Sidebar = (): VNode<any> => {
+export const NavBar = (): VNode<any> => {
   const manifest = useValue(postsManifest);
   return (
     <div className={classNames(css.element, e2eHooks.block)}>
@@ -37,5 +37,5 @@ export const Sidebar = (): VNode<any> => {
     </div>
   );
 };
-Sidebar.displayName  = "Sidebar";
+NavBar.displayName  = "NavBar";
 
