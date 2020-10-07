@@ -3,11 +3,10 @@ import { PostManifest } from "@bickley-wallace/compost";
 import { sideBar as e2eHooks } from "@bickley-wallace/e2e-hooks";
 import classNames from "classnames";
 import { Link } from "preact-router";
-
-import { useValue } from "../recoilless/use-value";
-import { postsManifest } from "./state";
-import { ThemeToggle } from "./theme-toggle";
-import { withPromise as withPromise } from "./with-promise";
+import { useValue } from "../../recoilless/use-value";
+import { postsManifest } from "../state";
+import { ThemeToggle } from "../theme-toggle";
+import { withPromise as withPromise } from "../with-promise";
 
 import css from "./side-bar.module.css";
 
