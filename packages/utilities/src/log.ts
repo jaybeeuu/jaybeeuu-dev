@@ -3,7 +3,7 @@ export const info = (message: string, ...args: unknown[]): void => console.log(m
 
 export const getErrorMessage = (err: any | null | undefined): string => {
   if (typeof err === "string") {
-    return err || "Empty String";
+    return err || "{empty string}";
   }
 
   if (err instanceof Error) {
@@ -21,5 +21,5 @@ export const getErrorMessage = (err: any | null | undefined): string => {
 };
 
 export const error = (...errs: unknown[]): void => {
-  console.error(...errs);
+  console.error(...errs.map(getErrorMessage));
 };

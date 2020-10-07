@@ -74,7 +74,7 @@ describe("log", () => {
         ],
         consoleCalledWith: [
           "{message}",
-          "Empty String"
+          "{empty string}"
         ]
       },
       {
