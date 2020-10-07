@@ -1,5 +1,5 @@
 import { registerRoutes, getPostsAlias } from "../routes/posts";
-import * as sideBar from "../features/side-bar";
+import * as navBar from "../features/nav-bar";
 import * as post from "../features/post";
 
 context("Post navigation", (): void => {
@@ -9,23 +9,23 @@ context("Post navigation", (): void => {
     cy.wait(getPostsAlias("manifest"));
   });
 
-  it("has a sidebar.", () => {
-    sideBar.get().should("exist");
+  it("has a nav bar.", () => {
+    navBar.get().should("exist");
   });
 
   it("displays the posts in the manifest.", (): void => {
-    sideBar.hasLinkToPost("memoising-selectors");
-    sideBar.hasLinkToPost("module-spotting");
-    sideBar.hasLinkToPost("the-rewrite");
+    navBar.hasLinkToPost("memoising-selectors");
+    navBar.hasLinkToPost("module-spotting");
+    navBar.hasLinkToPost("the-rewrite");
   });
 
   it("opens the memoising-selectors post when the link is clicked.", () => {
-    sideBar.openPost("memoising-selectors");
+    navBar.openPost("memoising-selectors");
     post.getArticle().should("contain.post", "memoising-selectors");
   });
 
   it("opens the module-spotting post when the link is clicked.", () => {
-    sideBar.openPost("module-spotting");
+    navBar.openPost("module-spotting");
     post.getArticle().should("contain.post", "module-spotting");
   });
 

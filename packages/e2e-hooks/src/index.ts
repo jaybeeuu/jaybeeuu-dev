@@ -8,10 +8,10 @@ export const post = {
   article: mainPanelHookBlock.element("article")
 };
 
-const sideBarHookBlock = makeHookBlock("side-bar");
-const postBlock = sideBarHookBlock.childBlock("post");
-export const sideBar = {
-  block: sideBarHookBlock(),
+const navBarHookBlock = makeHookBlock("nav-bar");
+const postBlock = navBarHookBlock.childBlock("post");
+export const navBar = {
+  block: navBarHookBlock(),
   post: {
     block: postBlock(),
     id: (slug: string): string => postBlock.modifier(slug),

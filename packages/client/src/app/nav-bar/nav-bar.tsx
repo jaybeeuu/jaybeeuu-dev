@@ -1,6 +1,6 @@
 import { h, VNode } from "preact";
 import { PostManifest } from "@bickley-wallace/compost";
-import { sideBar as e2eHooks } from "@bickley-wallace/e2e-hooks";
+import { navBar as e2eHooks } from "@bickley-wallace/e2e-hooks";
 import classNames from "classnames";
 import { Link } from "preact-router";
 import { useValue } from "../../recoilless/use-value";
