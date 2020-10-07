@@ -9,7 +9,7 @@ import css from "./theme-colours.module.css";
 export const Theme = ({ children }: { children: ComponentChildren }): JSX.Element => {
   const [theme] = useValue(themeSeed);
   return (
-    <div id="theme-root" className={classNames(css[theme], e2eHooks.root)}>
+    <div id="theme-root" className={classNames(css[theme], theme, e2eHooks.root)}>
       {children}
     </div>
   );
