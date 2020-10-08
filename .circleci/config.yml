@@ -71,6 +71,12 @@ jobs:
       - run: npm i -g pnpm@^5.5.3 wait-on
       - run: npm run e2e -- install
       - run: npm run e2e-ci
+      - store_artifacts:
+          path: ./packages/e2e/.screenshots
+          destination: e2e-screenshots
+      - store_artifacts:
+          path: ./packages/e2e/.videos
+          destination: e2e-videos
 
 workflows:
   version: 2
