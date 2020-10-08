@@ -4,7 +4,7 @@ import { theme as e2eHooks } from "@bickley-wallace/e2e-hooks";
 import classNames from "classnames";
 import { useValue } from "../../recoilless/use-value";
 import { Icon } from "../icon";
-import { themeValue, Theme } from "../state";
+import { theme, Theme } from "../state";
 
 import css from "./theme-toggle.module.css";
 
@@ -13,7 +13,7 @@ const toggleTheme = (currentTheme: Theme, setTheme: (newTheme: Theme) => void) =
 };
 
 export const ThemeToggle = (): JSX.Element => {
-  const [currentTheme, setTheme] = useValue(themeValue);
+  const [currentTheme, setTheme] = useValue(theme);
   return (
     <div className={e2eHooks.switch} onClick={toggleTheme(currentTheme, setTheme)}>
       <Icon name={"sun"} />
