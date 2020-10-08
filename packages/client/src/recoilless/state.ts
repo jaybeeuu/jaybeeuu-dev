@@ -1,19 +1,19 @@
 export type Unsubscribe = () => void;
 export type RemoveFromStore = () => void;
 
-export interface PrimitiveValueSeed<Val> {
+export interface PrimitiveValue<Val> {
   name: string;
   initialValue: Val;
 }
 
-export interface DerivedValueSeed<Val> {
+export interface DerivedValue<Val> {
   name: string;
   derive: Derive<Val>;
 }
 
-export type ValueSeed<Val> = PrimitiveValueSeed<Val> | DerivedValueSeed<Val>;
+export type Value<Val> = PrimitiveValue<Val> | DerivedValue<Val>;
 
-export class Value<Val> {
+export class ValueState<Val> {
   private readonly listeners = new Set<(value: Val) => void>();
   private name: string;
   private value: Val;
@@ -58,9 +58,9 @@ export class Value<Val> {
   }
 }
 
-export class PrimitiveValue<Val> extends Value<Val> {
+export class PrimitiveValueState<Val> extends ValueState<Val> {
   constructor(
-    { name, initialValue }: PrimitiveValueSeed<Val>,
+    { name, initialValue }: PrimitiveValue<Val>,
     removeFromStore: () => void
   ) {
     super(name, initialValue, removeFromStore);
@@ -72,20 +72,20 @@ export class PrimitiveValue<Val> extends Value<Val> {
 }
 
 export type DerivationContext = {
-  get: <Val>(dependency: ValueSeed<Val>) => Val;
+  get: <Val>(dependency: Value<Val>) => Val;
 }
 
 export type Derive<Val> = (context: DerivationContext) => Val;
-export type GetDependency = <Val>(valueSeed: ValueSeed<Val>) => Value<Val>;
+export type GetDependency = <Val>(value: Value<Val>) => ValueState<Val>;
 
-export class DerivedValue<Val> extends Value<Val> {
+export class DerivedValueState<Val> extends ValueState<Val> {
   private readonly derive: Derive<Val>;
   private readonly getDependency: GetDependency;
-  private readonly registeredDependencies = new Set<Value<any>>();
+  private readonly registeredDependencies = new Set<ValueState<any>>();
   private readonly unsubscribes: Unsubscribe[] = [];
 
   constructor(
-    { name, derive }: DerivedValueSeed<Val>,
+    { name, derive }: DerivedValue<Val>,
     removeFromStore: () => void,
     getDependency: GetDependency,
   ) {
@@ -100,15 +100,15 @@ export class DerivedValue<Val> extends Value<Val> {
     this.setValue(this.derive({ get }));
   }
 
-  private getDependencyValue<DependencyValue>(dependencySeed: ValueSeed<DependencyValue>): DependencyValue {
-    const dependency = this.getDependency(dependencySeed);
+  private getDependencyValue<Dependency>(dependency: Value<Dependency>): Dependency {
+    const dependencyState = this.getDependency(dependency);
 
-    if(!this.registeredDependencies.has(dependency)) {
-      this.registeredDependencies.add(dependency);
-      this.unsubscribes.push(dependency.subscribe(() => this.deriveAgain()));
+    if(!this.registeredDependencies.has(dependencyState)) {
+      this.registeredDependencies.add(dependencyState);
+      this.unsubscribes.push(dependencyState.subscribe(() => this.deriveAgain()));
     }
 
-    return dependency.current;
+    return dependencyState.current;
   }
 
   public subscribe(listener: (value: Val) => void): Unsubscribe {
@@ -123,14 +123,14 @@ export class DerivedValue<Val> extends Value<Val> {
   }
 }
 
-export const isDerivedValueSeed = <Value>(
-  valueSeed: ValueSeed<Value>
-): valueSeed is DerivedValueSeed<Value> => {
-  return "derive" in valueSeed && typeof valueSeed.derive === "function";
+export const isDerivedValue = <Val>(
+  value: Value<Val>
+): value is DerivedValue<Val> => {
+  return "derive" in value && typeof value.derive === "function";
 };
 
-export const isPrimitiveValueSeed = <Value>(
-  valueSeed: ValueSeed<Value>
-): valueSeed is PrimitiveValueSeed<Value> => {
-  return "initialValue" in valueSeed;
+export const isPrimitiveValue = <Val>(
+  value: Value<Val>
+): value is PrimitiveValue<Val> => {
+  return "initialValue" in value;
 };

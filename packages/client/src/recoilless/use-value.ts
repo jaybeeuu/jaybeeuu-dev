@@ -1,30 +1,30 @@
 import { useContext, useEffect, useMemo, useState } from "preact/hooks";
 import { useAsyncGenerator } from "./async-hooks";
 import { monitorPromise, PromiseStatus } from "./promise-status";
-import { DerivedValueSeed, isPrimitiveValueSeed, PrimitiveValue, PrimitiveValueSeed, ValueSeed } from "./state";
+import { DerivedValue, isPrimitiveValue, PrimitiveValueState, PrimitiveValue, Value } from "./state";
 import { StoreContext } from "./store-provider";
 
-export function useValue<Value>(valueSeed: DerivedValueSeed<Promise<Value>>): PromiseStatus<Value>;
-export function useValue<Value>(valueSeed: DerivedValueSeed<Value>): Value;
-export function useValue<Value>(valueSeed: PrimitiveValueSeed<Value>): [Value, (newValue: Value) => void];
-export function useValue<Value>(
-  valueSeed: ValueSeed<Value | Promise<Value>>
-): Value | PromiseStatus<Value> | [Value, (newValue: Value) => void] {
+export function useValue<Val>(value: DerivedValue<Promise<Val>>): PromiseStatus<Val>;
+export function useValue<Val>(value: DerivedValue<Val>): Val;
+export function useValue<Val>(value: PrimitiveValue<Val>): [Val, (newValue: Val) => void];
+export function useValue<Val>(
+  value: Value<Val | Promise<Val>>
+): Val | PromiseStatus<Val> | [Val, (newValue: Val) => void] {
   const [, updateState] = useState({});
   const store = useContext(StoreContext);
-  const value = store.getValue(valueSeed);
+  const valueState = store.getValue(value);
 
   useEffect(() => {
-    const unsubscribe = value.subscribe(() => updateState({}));
+    const unsubscribe = valueState.subscribe(() => updateState({}));
     return () => unsubscribe();
   }, [value]);
 
-  if (isPrimitiveValueSeed(valueSeed)) {
-    const primitiveValue = value as PrimitiveValue<Value>;
+  if (isPrimitiveValue(value)) {
+    const primitiveValue = valueState as PrimitiveValueState<Val>;
     return [primitiveValue.current, primitiveValue.setValue];
   }
 
-  const current = value.current;
+  const current = valueState.current;
   if (current instanceof Promise) {
     const promiseStatus = useMemo(() => monitorPromise(current), [current]);
     return useAsyncGenerator(promiseStatus);

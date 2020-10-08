@@ -1,20 +1,20 @@
 import { PostManifest } from "@bickley-wallace/compost";
 import { fetchJson, fetchText } from "../recoilless/request";
-import { DerivedValueSeed, PrimitiveValueSeed } from "../recoilless/state";
+import { DerivedValue, PrimitiveValue } from "../recoilless/state";
 
-export const postsManifest: DerivedValueSeed<Promise<PostManifest>> = {
-  name: "posstManifest",
+export const postsManifest: DerivedValue<Promise<PostManifest>> = {
+  name: "postManifest",
   derive: async (): Promise<PostManifest> => {
     return fetchJson<PostManifest>("/posts/manifest.json");
   }
 };
 
-export const currentPostSlug: PrimitiveValueSeed<string | null> = {
+export const currentPostSlug: PrimitiveValue<string | null> = {
   name: "currentPostSlug",
   initialValue: null
 };
 
-export const currentPostHtml: DerivedValueSeed<Promise<string>> = {
+export const currentPostHtml: DerivedValue<Promise<string>> = {
   name: "currentPostHtml",
   derive: async ({ get }): Promise<string> => {
     const manifest = await get(postsManifest);
@@ -28,7 +28,7 @@ export const currentPostHtml: DerivedValueSeed<Promise<string>> = {
 
 export type Theme = "light" | "dark";
 
-export const theme: PrimitiveValueSeed<Theme> = {
+export const theme: PrimitiveValue<Theme> = {
   name: "theme",
   initialValue: "dark"
 };

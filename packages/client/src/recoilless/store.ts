@@ -1,41 +1,41 @@
 import {
-  DerivedValue,
+  DerivedValueState,
   GetDependency,
-  isDerivedValueSeed,
-  PrimitiveValue,
+  isDerivedValue,
+  PrimitiveValueState,
   RemoveFromStore,
-  Value,
-  ValueSeed
+  ValueState,
+  Value
 } from "./state";
 
 const createValue = <Val>(
-  valueSeed: ValueSeed<Val>,
+  value: Value<Val>,
   removeFromStore: RemoveFromStore,
   getDependency: GetDependency
-): Value<Val> => {
-  if (isDerivedValueSeed(valueSeed)) {
-    return new DerivedValue(valueSeed, removeFromStore, getDependency);
+): ValueState<Val> => {
+  if (isDerivedValue(value)) {
+    return new DerivedValueState(value, removeFromStore, getDependency);
   }
 
-  return new PrimitiveValue(valueSeed, removeFromStore);
+  return new PrimitiveValueState(value, removeFromStore);
 };
 
 
 export class Store {
-  private readonly values: { [name:string]: Value<any> } = {};
+  private readonly values: { [name:string]: ValueState<any> } = {};
 
-  private removeValue = <Val>(valueSeed: ValueSeed<Val>): void => {
-    delete this.values[valueSeed.name];
+  private removeValue = <Val>(value: Value<Val>): void => {
+    delete this.values[value.name];
   };
 
-  public getValue = <Val>(valueSeed: ValueSeed<Val>): Value<Val> => {
-    if(!(valueSeed.name in this.values)) {
-      this.values[valueSeed.name] = createValue(
-        valueSeed,
-        () => this.removeValue(valueSeed),
+  public getValue = <Val>(value: Value<Val>): ValueState<Val> => {
+    if(!(value.name in this.values)) {
+      this.values[value.name] = createValue(
+        value,
+        () => this.removeValue(value),
         this.getValue
       );
     }
-    return this.values[valueSeed.name] as Value<Val>;
+    return this.values[value.name] as ValueState<Val>;
   }
 }
