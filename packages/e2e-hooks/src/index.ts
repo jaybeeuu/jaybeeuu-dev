@@ -2,26 +2,28 @@ import { makeClassSelectors, makeHookBlock } from "./make-hooks";
 
 export { makeClassSelectors };
 
-const mainPanelHookBlock = makeHookBlock("post");
+const postHookBlock = makeHookBlock("post");
 export const post = {
-  block: mainPanelHookBlock(),
-  article: mainPanelHookBlock.element("article")
+  block: postHookBlock(),
+  article: postHookBlock.element("article")
 };
 
 const navBarHookBlock = makeHookBlock("nav-bar");
-const postBlock = navBarHookBlock.childBlock("post");
 export const navBar = {
   block: navBarHookBlock(),
-  post: {
-    block: postBlock(),
-    id: (slug: string): string => postBlock.modifier(slug),
-    link: postBlock.element("link"),
-    abstract: postBlock.element("abstract")
-  }
+  postListLink: navBarHookBlock.element("post-list-link"),
+  switch: navBarHookBlock.element("switch")
+};
+
+const postListHookBlock = makeHookBlock("post-list");
+export const postList = {
+  block: postListHookBlock(),
+  id: (slug: string): string => postListHookBlock.modifier(slug),
+  link: postListHookBlock.element("link"),
+  abstract: postListHookBlock.element("abstract")
 };
 
 const themeHookBlock = makeHookBlock("theme");
 export const theme = {
   root: themeHookBlock.element("root"),
-  switch: themeHookBlock.element("switch")
 };

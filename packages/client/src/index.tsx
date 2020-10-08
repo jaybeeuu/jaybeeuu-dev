@@ -11,10 +11,10 @@ if (!app) {
 }
 
 render(
-  <ErrorBoundary>
-    <StoreProvider>
-      <App />
-    </StoreProvider>
-  </ErrorBoundary>,
+  // <ErrorBoundary>
+  <StoreProvider>
+    <App />
+  </StoreProvider>,
+  // </ErrorBoundary>
   app
 );

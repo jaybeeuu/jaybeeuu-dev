@@ -1,2 +1,9 @@
 packages:
-  - 'packages/*'
+  - 'packages/client'
+  - 'packages/compost'
+  - 'packages/e2e'
+  - 'packages/e2e-hooks'
+  - 'packages/eslint-config'
+  - 'packages/posts'
+  - 'packages/scripts'
+  - 'packages/utilities'

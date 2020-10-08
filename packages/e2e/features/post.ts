@@ -39,5 +39,5 @@ export const getArticle = (): Cypress.Chainable<JQuery<HTMLElement>> & {
 };
 
 export const navigateTo = (slug: PostSlug): void => {
-  cy.visit(`/post/${slug}`);
+  cy.visit(`/posts/${slug}`);
 };

@@ -1,4 +1,5 @@
-import { getThemeRoot, getThemeSwitch } from "../features/theme";
+import { getThemeRoot } from "../features/theme";
+import { getThemeSwitch } from "../features/nav-bar";
 
 context("Theme", (): void => {
   before(() => {

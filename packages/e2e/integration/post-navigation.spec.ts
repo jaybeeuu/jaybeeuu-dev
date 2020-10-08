@@ -1,31 +1,36 @@
 import { registerRoutes, getPostsAlias } from "../routes/posts";
 import * as navBar from "../features/nav-bar";
 import * as post from "../features/post";
+import * as postList from "../features/post-list";
 
 context("Post navigation", (): void => {
-  beforeEach(() => {
-    registerRoutes();
+  before(() => {
     cy.visit("/");
-    cy.wait(getPostsAlias("manifest"));
   });
 
-  it("has a nav bar.", () => {
-    navBar.get().should("exist");
+  beforeEach(() => {
+    registerRoutes();
+  });
+
+  it("the post list link in the nav bar opens a list of the posts.", () => {
+    navBar.getPostListLink().click();
+    cy.wait(getPostsAlias("manifest"));
+    postList.get().should("be.visible");
   });
 
   it("displays the posts in the manifest.", (): void => {
-    navBar.hasLinkToPost("memoising-selectors");
-    navBar.hasLinkToPost("module-spotting");
-    navBar.hasLinkToPost("the-rewrite");
+    postList.hasLinkToPost("memoising-selectors");
+    postList.hasLinkToPost("module-spotting");
+    postList.hasLinkToPost("the-rewrite");
   });
 
   it("opens the memoising-selectors post when the link is clicked.", () => {
-    navBar.openPost("memoising-selectors");
+    postList.openPost("memoising-selectors");
     post.getArticle().should("contain.post", "memoising-selectors");
   });
 
   it("opens the module-spotting post when the link is clicked.", () => {
-    navBar.openPost("module-spotting");
+    postList.openPost("module-spotting");
     post.getArticle().should("contain.post", "module-spotting");
   });
 

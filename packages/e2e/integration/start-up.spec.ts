@@ -1,13 +1,11 @@
-import { registerRoutes, getPostsAlias } from "../routes/posts";
+import * as navBar from "../features/nav-bar";
+import { registerRoutes } from "../routes/posts";
 
 context("Start up", (): void => {
-  before(() => {
+  it("loads the page.", () => {
     registerRoutes();
     cy.visit("/");
-    cy.wait(getPostsAlias("manifest"));
-  });
-
-  it("loads the home page", (): void => {
     cy.title().should("equal", "Josh Bickley-Wallace");
+    navBar.get().should("exist");
   });
 });

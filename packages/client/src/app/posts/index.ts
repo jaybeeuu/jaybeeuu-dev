@@ -1,0 +1,1 @@
+export { PostsRoute } from "./posts";
