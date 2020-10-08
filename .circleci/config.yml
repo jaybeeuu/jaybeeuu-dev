@@ -5,6 +5,9 @@ src-dir: &src-dir ~/src
 base: &base
   docker:
     - image: circleci/node:12.18.3
+      auth:
+        username: $DOCKERHUB_USERNAME
+        password: $DOCKERHUB_PASSWORD
 
   working_directory: *src-dir
 
@@ -60,6 +63,9 @@ jobs:
     <<: *base
     docker:
       - image: cypress/browsers:node12.18.0-chrome83-ff77
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
 
     working_directory: *src-dir
 
