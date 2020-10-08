@@ -20,7 +20,6 @@ const createValue = <Val>(
   return new PrimitiveValueState(value, removeFromStore);
 };
 
-
 export class Store {
   private readonly values: { [name:string]: ValueState<any> } = {};
 
