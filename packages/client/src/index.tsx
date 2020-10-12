@@ -1,6 +1,5 @@
 import { h, render } from "preact";
 import { App } from "./app/app";
-import { ErrorBoundary } from "./app/error-boundary";
 import { StoreProvider } from "./recoilless/store-provider";
 
 const appSelector = "#app";
@@ -11,10 +10,8 @@ if (!app) {
 }
 
 render(
-  // <ErrorBoundary>
   <StoreProvider>
     <App />
   </StoreProvider>,
-  // </ErrorBoundary>
   app
 );
