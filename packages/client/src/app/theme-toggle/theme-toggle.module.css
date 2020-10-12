@@ -1,22 +1,35 @@
+.toggle-wrapper {
+  font-size: 4rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
 .track {
-  border-radius: 50%;
   display: inline-block;
-  border: 0.25rem solid var(--toggle-secondary);
-  border-radius: 0.2rem;
-  width: 2rem;
+  border: 0.1em solid var(--toggle-secondary);
+  border-radius: 0.1em;
+  width: 1em;
   position: relative;
+  height: 0;
 }
 
 .switch {
   display: inline-block;
-  border: 0.6rem solid var(--toggle-main);
+  border: 0.2em solid var(--toggle-main);
   border-radius: 50%;
   position: absolute;
+  left: -0.1em;
+  top: -0.2em;
   transition: left 200ms ease-in-out;
-  left: -0.2rem;
-  top: -0.6rem
 }
 
 .right {
-  left: 1.1rem;
+  left: 0.7em;
+}
+
+.icon {
+  width: 0.8em;
+  height: 0.8em;
 }

@@ -18,12 +18,12 @@ export interface ThemeToggleProps {
 export const ThemeToggle = ({ className }: ThemeToggleProps): JSX.Element => {
   const [currentTheme, setTheme] = useValue(theme);
   return (
-    <div className={className} onClick={toggleTheme(currentTheme, setTheme)}>
-      <Icon name={"sun"} />
+    <div className={classNames(css.toggleWrapper, className)} onClick={toggleTheme(currentTheme, setTheme)}>
+      <Icon className={css.icon} name={"sun"} />
       <span className={css.track}>
         <span className={classNames(css.switch, { [css.right]: currentTheme === "dark" })}/>
       </span>
-      <Icon name={"moon"} />
+      <Icon className={css.icon} name={"moon"} />
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import { h, JSX } from "preact";
+import classNames from "classnames";
 import iconSprite from "./icons.svg";
 import css from "./icon.module.css";
 
@@ -8,10 +9,11 @@ export type IconName
 
 export interface IconProps {
   name: IconName;
+  className?: string
 }
 
-export const Icon = ({ name}: IconProps): JSX.Element => (
-  <svg className={css.element}>
+export const Icon = ({ name, className }: IconProps): JSX.Element => (
+  <svg className={classNames(css.element, className)}>
     <use xlinkHref={`${iconSprite}#${name}`} />
   </svg>
 );
