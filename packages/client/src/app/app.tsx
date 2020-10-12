@@ -5,12 +5,16 @@ import { PostsRoute } from "./posts";
 import { NavBar } from "./nav-bar";
 import { Theme } from "./theme";
 
+import css from "./app.module.css";
+
 export const App: FunctionComponent = () => (
-  <Theme>
-    <Router>
-      <PostsRoute path={"posts"}/>
-      <PostRoute path={"posts/:slug"}/>
-    </Router>
-    <NavBar/>
+  <Theme className={css.root}>
+    <div className={css.main}>
+      <Router>
+        <PostsRoute path={"posts"}/>
+        <PostRoute path={"posts/:slug"}/>
+      </Router>
+    </div>
+    <NavBar className={css.footer} />
   </Theme>
 );

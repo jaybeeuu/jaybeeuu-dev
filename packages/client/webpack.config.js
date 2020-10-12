@@ -97,12 +97,13 @@ module.exports = {
   },
   optimization: {
     minimizer: [
+      new CssMinimizerPlugin(),
+      // new HtmlMinimizerPlugin(),
       new TerserPlugin({
         cache: true,
         parallel: true,
         sourceMap: true
       }),
-      new CssMinimizerPlugin()
     ]
   },
   plugins: [

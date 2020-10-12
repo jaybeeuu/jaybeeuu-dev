@@ -1,5 +1,5 @@
 .toggle-wrapper {
-  font-size: 4rem;
+  font-size: 3rem;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -13,6 +13,7 @@
   width: 1em;
   position: relative;
   height: 0;
+  margin: 0 0.2em;
 }
 
 .switch {

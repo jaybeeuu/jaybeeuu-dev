@@ -1,0 +1,14 @@
+.root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  overflow: auto;
+  flex: 1 1 auto;
+}
+
+.footer {
+  flex: 0 0 auto;
+}

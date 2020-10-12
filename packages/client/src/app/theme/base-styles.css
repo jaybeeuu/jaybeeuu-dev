@@ -1,8 +1,8 @@
-.element article {
+article {
   margin: 2rem;
   font-size: 1.8rem;
 }
 
-.element pre {
+pre {
   background-color: var(--background-code);
 }
