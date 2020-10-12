@@ -1,17 +1,28 @@
 import sanitizeHtml, { IOptions } from "sanitize-html";
 import highlight from "highlight.js";
-import marked  from "marked";
+import marked, { MarkedOptions }  from "marked";
 import { readTextFile } from "../../files";
 
+class CustomRenderer extends marked.Renderer {
+  constructor(markedOptions?: MarkedOptions) {
+    super(markedOptions);
+  }
+
+  code(code: string, language: string | undefined, isEscaped: any): string {
+    const rendered = super.code(code, language, isEscaped);
+    const adjusted = rendered.replace(/<pre>/, "<pre class=\"hljs\">");
+    return adjusted;
+  }
+}
+
 const markedOptions = {
-  renderer: new marked.Renderer(),
+  renderer: new CustomRenderer(),
   highlight: (code: string, language: string): string => {
     const validLanguage = highlight.getLanguage(language) ? language : "plaintext";
-    return highlight.highlight(validLanguage, code).value;
+    const highlighted = highlight.highlight(validLanguage, code).value;
+    return highlighted;
   },
-  pedantic: false,
   gfm: true,
-  breaks: false,
   sanitize: false,
   smartLists: true,
   smartypants: false,
@@ -24,7 +35,8 @@ const sanitizeOptions: IOptions = {
   allowedTags: [ ...sanitizeHtml.defaults.allowedTags, "h1", "h2", "span" ],
   allowedAttributes: {
     ...sanitizeHtml.defaults.allowedAttributes,
-    span: ["class"]
+    span: ["class"],
+    pre: ["class"]
   }
 };
 

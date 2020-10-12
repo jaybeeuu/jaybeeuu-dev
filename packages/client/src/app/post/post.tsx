@@ -1,18 +1,15 @@
 import { h, FunctionComponent, JSX } from "preact";
 import { post as postHooks } from "@bickley-wallace/e2e-hooks";
-import classNames from "classnames";
 import { useEffect } from "preact/hooks";
 import { useValue } from "../../recoilless/use-value";
 import { withPromise } from "../with-promise";
 import { asRoute } from "../as-route";
 import { currentPostHtml, currentPostSlug } from "../state";
 
-import css from "./post.module.css";
-
 import "./night-owl.css";
 
 const PostComponent = withPromise(({ value: post }: { value: string }): JSX.Element => (
-  <article className={classNames(css.element, postHooks.article)} dangerouslySetInnerHTML={{ __html: post }}/>
+  <article className={postHooks.article} dangerouslySetInnerHTML={{ __html: post }}/>
 ));
 
 export type PostProps = { path: string, slug: string };

@@ -4,5 +4,10 @@ article {
 }
 
 pre {
-  background-color: var(--background-code);
+  padding: 1rem;
+  /* background-color: var(--background-code); */
+  color: var(--text-code);
+  overflow: auto;
+  counter-reset: code-line;
 }
+
