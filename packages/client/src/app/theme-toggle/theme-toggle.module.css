@@ -7,18 +7,18 @@
 }
 
 .track {
-  display: inline-block;
   border: 0.1em solid var(--toggle-secondary);
+  background-color: var(--toggle-secondary);
   border-radius: 0.1em;
   width: 1em;
   position: relative;
   height: 0;
-  margin: 0 0.2em;
+  margin: 0 0.15em;
 }
 
 .switch {
-  display: inline-block;
   border: 0.2em solid var(--toggle-main);
+  background-color: var(--toggle-main);
   border-radius: 50%;
   position: absolute;
   left: -0.1em;
