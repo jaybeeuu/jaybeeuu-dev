@@ -11,3 +11,8 @@ pre {
   counter-reset: code-line;
 }
 
+a {
+  color: var(--text-link);
+  text-decoration: none;
+  border-bottom: 1px dotted
+}

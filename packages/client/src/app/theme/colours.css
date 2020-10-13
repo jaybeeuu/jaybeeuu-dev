@@ -4,6 +4,7 @@
 
   --text-main: #dddddd;
   --text-code: #dddddd;
+  --text-link: #aaaaaa;
 
   --spinner-main: #dddddd;
   --spinner-secondary:  rgba(255, 255, 255, .3);
@@ -20,6 +21,7 @@
 
   --text-main: #343438;
   --text-code: #dddddd;
+  --text-link: #121216;
 
   --spinner-main: #343438;
   --spinner-secondary:  rgba(255, 255, 255, .6);
