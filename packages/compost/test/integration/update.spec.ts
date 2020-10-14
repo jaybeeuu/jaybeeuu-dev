@@ -132,7 +132,7 @@ describe("refresh", () => {
     const post = await getPost(manifest[slug].href);
 
     expect(post).toContain(
-      "<pre><code><span class=\"hljs-built_in\">console</span>.log(<span class=\"hljs-string\">\"Here's a message\"</span>)</code></pre>"
+      "<pre class=\"hljs\"><code><span class=\"hljs-built_in\">console</span>.log(<span class=\"hljs-string\">\"Here's a message\"</span>)</code></pre>"
     );
   });
 
