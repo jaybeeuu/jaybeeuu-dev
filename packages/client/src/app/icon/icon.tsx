@@ -5,7 +5,8 @@ import css from "./icon.module.css";
 
 export type IconName
   = "moon"
-  | "sun";
+  | "sun"
+  | "link";
 
 export interface IconProps {
   name: IconName;
