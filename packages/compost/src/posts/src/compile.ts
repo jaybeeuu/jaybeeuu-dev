@@ -1,6 +1,6 @@
 import sanitizeHtml, { IOptions } from "sanitize-html";
 import highlight from "highlight.js";
-import marked, { MarkedOptions }  from "marked";
+import marked, { MarkedOptions, Slugger }  from "marked";
 import { readTextFile } from "../../files";
 
 class CustomRenderer extends marked.Renderer {
@@ -12,6 +12,19 @@ class CustomRenderer extends marked.Renderer {
     const rendered = super.code(code, language, isEscaped);
     const adjusted = rendered.replace(/<pre>/, "<pre class=\"hljs\">");
     return adjusted;
+  }
+
+  heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6, raw: string, slugger: Slugger): string {
+    const escapedText = text.toLowerCase().replace(/[^\w]+/g, "-");
+    const href = slugger.slug(escapedText);
+
+    return [
+      "",
+      `<h${level}>`,
+      `  <a name="${escapedText}" href="#${href}"></a>`,
+      `  ${text}`,
+      `</h${level}>`
+    ].join("\n");
   }
 }
 

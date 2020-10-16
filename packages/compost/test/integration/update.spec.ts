@@ -101,6 +101,37 @@ describe("refresh", () => {
     expect(post).toContain(postContent);
   });
 
+  it("recurses the all the directories.", async () => {
+    await deleteDirectories(sourceDir, outputDir);
+
+    const slug = "first-post";
+    const postContent = "It has some content";
+    await writeTextFiles(
+      sourceDir,
+      [{
+        path: `./sub-directory/${slug}.md`,
+        content: [
+          "# This is the first post",
+          postContent
+        ].join("\n")
+      }, {
+        path: `./sub-directory/${slug}.json`,
+        content: JSON.stringify({
+          title: "This is the first post",
+          abstract: "This is the very first post."
+        }, null, 2)
+      }]
+    );
+
+    await compilePosts();
+
+    const manifest = await getPostManifest();
+
+    const post = await getPost(manifest[slug].href);
+
+    expect(post).toContain(postContent);
+  });
+
   it("compiles a code block.", async () => {
     await deleteDirectories(sourceDir, outputDir);
     const slug = "first-post";
@@ -169,21 +200,18 @@ describe("refresh", () => {
     expect(post).toContain(codeLine);
   });
 
-  it("recurses the all the directories.", async () => {
+  it("compiles a heading to contain a link.", async () => {
     await deleteDirectories(sourceDir, outputDir);
-
     const slug = "first-post";
-    const postContent = "It has some content";
     await writeTextFiles(
       sourceDir,
       [{
-        path: `./sub-directory/${slug}.md`,
+        path: `./${slug}.md`,
         content: [
           "# This is the first post",
-          postContent
         ].join("\n")
       }, {
-        path: `./sub-directory/${slug}.json`,
+        path: "./first-post.json",
         content: JSON.stringify({
           title: "This is the first post",
           abstract: "This is the very first post."
@@ -197,6 +225,51 @@ describe("refresh", () => {
 
     const post = await getPost(manifest[slug].href);
 
-    expect(post).toContain(postContent);
+    expect(post).toContain([
+      "",
+      "<h1>",
+      "  <a name=\"this-is-the-first-post\" href=\"#this-is-the-first-post\"></a>",
+      "  This is the first post",
+      "</h1>"
+    ].join("\n"));
+  });
+
+  it("compiles a heading to contain a unique link.", async () => {
+    await deleteDirectories(sourceDir, outputDir);
+    const slug = "first-post";
+    await writeTextFiles(
+      sourceDir,
+      [{
+        path: `./${slug}.md`,
+        content: [
+          "# This is the first post",
+          "# This is the first post"
+        ].join("\n")
+      }, {
+        path: "./first-post.json",
+        content: JSON.stringify({
+          title: "This is the first post",
+          abstract: "This is the very first post."
+        }, null, 2)
+      }]
+    );
+
+    await compilePosts();
+
+    const manifest = await getPostManifest();
+
+    const post = await getPost(manifest[slug].href);
+
+    expect(post).toContain([
+      "",
+      "<h1>",
+      "  <a name=\"this-is-the-first-post\" href=\"#this-is-the-first-post\"></a>",
+      "  This is the first post",
+      "</h1>",
+      "<h1>",
+      "  <a name=\"this-is-the-first-post\" href=\"#this-is-the-first-post-1\"></a>",
+      "  This is the first post",
+      "</h1>"
+    ].join("\n"));
   });
 });
