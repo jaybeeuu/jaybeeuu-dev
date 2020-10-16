@@ -80,7 +80,7 @@ module.exports = {
             test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.svg$/],
             loader: "url-loader",
             options: {
-              limit: 10000,
+              limit: 5000,
               name: "static/[name].[hash:8].[ext]",
             }
           },
