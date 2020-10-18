@@ -1,3 +1,4 @@
+import { joinUrlPath } from"@bickley-wallace/utilities";
 import path from "path";
 import {
   readJsonFile,
@@ -12,14 +13,6 @@ import { MARKDOWN_FILE_EXTENSION } from "./constants";
 import { getMetaFileContent } from "./metafile";
 import { validateSlug, getPostFileName } from "./file-paths";
 import { UpdateOptions, PostManifest } from "./types";
-
-const joinUrlPath = (...pathFragments: string[]): string => {
-  const builtPath = pathFragments
-    .map((fragment) => fragment.replace(/(^\/|\/$)/g, ""))
-    .filter(Boolean)
-    .join("/");
-  return `/${builtPath}`;
-};
 
 export const update = async (
   options: UpdateOptions
@@ -46,7 +39,7 @@ export const update = async (
       return slugValidation;
     }
 
-    const compiledPost = await compilePost(markdownFileInfo.filePath);
+    const compiledPost = await compilePost(markdownFileInfo.filePath, { postSlug: slug, hrefRoot: options.hrefRoot });
     const compiledFileName = getPostFileName(slug, compiledPost);
     const compiledFilePath = path.join(resolvedOutputDir, compiledFileName);
     await writeTextFile(compiledFilePath, compiledPost);

@@ -1,11 +1,19 @@
-import sanitizeHtml, { IOptions } from "sanitize-html";
+import { joinUrlPath } from"@bickley-wallace/utilities";
 import highlight from "highlight.js";
 import marked, { MarkedOptions, Slugger }  from "marked";
+import sanitizeHtml, { IOptions } from "sanitize-html";
 import { readTextFile } from "../../files";
 
+interface RenderContext {
+  hrefRoot: string;
+  postSlug: string
+}
+
 class CustomRenderer extends marked.Renderer {
-  constructor(markedOptions?: MarkedOptions) {
+  private renderContext: RenderContext;
+  constructor(renderContext: RenderContext, markedOptions?: MarkedOptions) {
     super(markedOptions);
+    this.renderContext = renderContext;
   }
 
   code(code: string, language: string | undefined, isEscaped: any): string {
@@ -17,13 +25,19 @@ class CustomRenderer extends marked.Renderer {
   heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6, raw: string, slugger: Slugger): string {
     const escapedText = text.toLowerCase()
       .replace(/<.*?>/g, "")
-      .replace(/[^\w]+/g, "-");
-    const href = slugger.slug(escapedText);
+      .replace(/[^ a-z]+/g, "")
+      .replace(/[ ]/g, "-");
+
+    const headerSlug = slugger.slug(escapedText);
+    const href = `${joinUrlPath(
+      this.renderContext.hrefRoot,
+      this.renderContext.postSlug,
+    )}#${headerSlug}`;
 
     return [
       "",
       `<h${level}>`,
-      `  <a name="${escapedText}" href="#${href}"></a>`,
+      `  <a name="${headerSlug}" href="${href}"></a>`,
       `  ${text}`,
       `</h${level}>`
     ].join("\n");
@@ -31,7 +45,6 @@ class CustomRenderer extends marked.Renderer {
 }
 
 const markedOptions = {
-  renderer: new CustomRenderer(),
   highlight: (code: string, language: string): string => {
     const validLanguage = highlight.getLanguage(language) ? language : "plaintext";
     const highlighted = highlight.highlight(validLanguage, code).value;
@@ -55,8 +68,9 @@ const sanitizeOptions: IOptions = {
   }
 };
 
-export const compilePost = async (markdownFilePath: string): Promise<string> => {
+export const compilePost = async (markdownFilePath: string, renderContext: RenderContext): Promise<string> => {
   const fileAsString = await readTextFile(markdownFilePath);
-  const html = marked(fileAsString, markedOptions);
+  const renderer = new CustomRenderer(renderContext);
+  const html = marked(fileAsString, { renderer, ...markedOptions });
   return sanitizeHtml(html, sanitizeOptions);
 };

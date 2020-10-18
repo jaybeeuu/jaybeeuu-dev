@@ -1,13 +1,12 @@
 import path from "path";
 import { advanceTo } from "jest-date-mock";
 import { writeTextFiles, readTextFile, deleteDirectories } from "../../src/files";
-import { PostManifest } from "../../src/posts/src/types";
+import { PostManifest, UpdateOptions } from "../../src/posts/src/types";
 import { update } from "../../src/posts";
 
 const jestWorkerId = +(process.env.JEST_WORKER_ID || 0);
 const sourceDir = path.resolve(`./fs/test/${jestWorkerId.toString()}/src`);
 const outputDir = path.resolve(`./fs/test/${jestWorkerId.toString()}/out`);
-const hrefRoot = "posts";
 const manifestFileName = "mainfest.json";
 
 const getOutputFile = async (filePath: string): Promise<string> => {
@@ -25,13 +24,14 @@ const getPost = (href: string): Promise<string> => {
   return getOutputFile(`.${href}`);
 };
 
-const compilePosts = async (): Promise<void> => {
+const compilePosts = async (options?: Partial<UpdateOptions>): Promise<void> => {
   await update({
-    hrefRoot,
+    hrefRoot: "posts",
     manifestFileName,
-    outputDir: path.join(outputDir, hrefRoot),
+    outputDir: path.join(outputDir, "posts"),
     sourceDir,
     watch: false,
+    ...options
   });
 };
 
@@ -56,8 +56,8 @@ describe("compile", () => {
         content: JSON.stringify(meta, null, 2)
       }]
     );
-
-    await compilePosts();
+    const hrefRoot = "posts";
+    await compilePosts({ hrefRoot });
 
     const manifest = await getPostManifest();
 
@@ -68,7 +68,7 @@ describe("compile", () => {
         lastUpdateDate: null,
         slug,
         fileName: expect.stringMatching(new RegExp(`${slug}-[A-z0-9]{6}.html`)) as unknown,
-        href: expect.stringMatching(new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`)) as unknown
+        href: expect.stringMatching(new RegExp(`/${hrefRoot}/${slug}-[A-z0-9]{6}.html`)) as unknown
       }
     });
   });
@@ -145,11 +145,17 @@ describe("compile", () => {
     );
   };
 
-  const getCompiledPostWithContent = async (contentLines: string[]): Promise<string> => {
+  const getCompiledPostWithContent = async (
+    contentLines: string[],
+    options: RecursivePartial<{
+      slug: string
+      updateOptions: UpdateOptions
+    }> = {}
+  ): Promise<string> => {
+    const { slug = "{slug}", updateOptions } = options;
     await deleteDirectories(sourceDir, outputDir);
-    const slug = "{slug}";
     await setupPostFiles(slug, contentLines);
-    await compilePosts();
+    await compilePosts(updateOptions);
     const manifest = await getPostManifest();
     return await getPost(manifest[slug].href);
   };
@@ -183,33 +189,37 @@ describe("compile", () => {
   });
 
   it("compiles a heading to contain a link.", async () => {
+    const hrefRoot = "posts";
+    const slug = "{slug}";
     const post = await getCompiledPostWithContent([
-      "# This is the first post",
-    ]);
+      "# This is the first post"
+    ],  { slug, updateOptions: { hrefRoot } });
 
     expect(post).toContain([
       "",
       "<h1>",
-      "  <a name=\"this-is-the-first-post\" href=\"#this-is-the-first-post\"></a>",
+      `  <a name="this-is-the-first-post" href="/${hrefRoot}/${slug}#this-is-the-first-post"></a>`,
       "  This is the first post",
       "</h1>"
     ].join("\n"));
   });
 
   it("compiles a heading to contain a unique link.", async () => {
+    const hrefRoot = "posts";
+    const slug = "{slug}";
     const post = await getCompiledPostWithContent([
       "# This is the first post",
       "# This is the first post"
-    ]);
+    ],  { slug, updateOptions: { hrefRoot } });
 
     expect(post).toContain([
       "",
       "<h1>",
-      "  <a name=\"this-is-the-first-post\" href=\"#this-is-the-first-post\"></a>",
+      `  <a name="this-is-the-first-post" href="/${hrefRoot}/${slug}#this-is-the-first-post"></a>`,
       "  This is the first post",
       "</h1>",
       "<h1>",
-      "  <a name=\"this-is-the-first-post\" href=\"#this-is-the-first-post-1\"></a>",
+      `  <a name="this-is-the-first-post-1" href="/${hrefRoot}/${slug}#this-is-the-first-post-1"></a>`,
       "  This is the first post",
       "</h1>"
     ].join("\n"));
@@ -225,14 +235,16 @@ describe("compile", () => {
   ];
   headingSamples.forEach(({ level }) => {
     it(`compiles subheading ${level} correctly.`, async () => {
+      const hrefRoot = "posts";
+      const slug = "{slug}";
       const post = await getCompiledPostWithContent([
-        `${"".padEnd(level, "#")} This is the first post`
-      ]);
+        `${"".padEnd(level, "#")} This is the first post`,
+      ],  { slug, updateOptions: { hrefRoot } });
 
       expect(post).toContain([
         "",
         `<h${level}>`,
-        "  <a name=\"this-is-the-first-post\" href=\"#this-is-the-first-post\"></a>",
+        `  <a name="this-is-the-first-post" href="/${hrefRoot}/${slug}#this-is-the-first-post"></a>`,
         "  This is the first post",
         `</h${level}>`
       ].join("\n"));
@@ -240,14 +252,16 @@ describe("compile", () => {
   });
 
   it("compiles a heading link to contain a link which only includes the text - not the rest of the link.", async () => {
+    const hrefRoot = "posts";
+    const slug = "{slug}";
     const post = await getCompiledPostWithContent([
-      "# [This is the first post](www.example.com)",
-    ]);
+      "# [This is the first post](www.example.com)"
+    ],  { slug, updateOptions: { hrefRoot } });
 
     expect(post).toContain([
       "",
       "<h1>",
-      "  <a name=\"this-is-the-first-post\" href=\"#this-is-the-first-post\"></a>",
+      `  <a name="this-is-the-first-post" href="/${hrefRoot}/${slug}#this-is-the-first-post"></a>`,
       "  <a href=\"www.example.com\">This is the first post</a>",
       "</h1>"
     ].join("\n"));
