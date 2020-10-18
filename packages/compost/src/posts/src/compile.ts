@@ -15,7 +15,9 @@ class CustomRenderer extends marked.Renderer {
   }
 
   heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6, raw: string, slugger: Slugger): string {
-    const escapedText = text.toLowerCase().replace(/[^\w]+/g, "-");
+    const escapedText = text.toLowerCase()
+      .replace(/<.*?>/g, "")
+      .replace(/[^\w]+/g, "-");
     const href = slugger.slug(escapedText);
 
     return [

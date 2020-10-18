@@ -214,4 +214,42 @@ describe("compile", () => {
       "</h1>"
     ].join("\n"));
   });
+
+  const headingSamples: { level: number }[] = [
+    { level: 1 },
+    { level: 2 },
+    { level: 3 },
+    { level: 4 },
+    { level: 5 },
+    { level: 6 }
+  ];
+  headingSamples.forEach(({ level }) => {
+    it(`compiles subheading ${level} correctly.`, async () => {
+      const post = await getCompiledPostWithContent([
+        `${"".padEnd(level, "#")} This is the first post`
+      ]);
+
+      expect(post).toContain([
+        "",
+        `<h${level}>`,
+        "  <a name=\"this-is-the-first-post\" href=\"#this-is-the-first-post\"></a>",
+        "  This is the first post",
+        `</h${level}>`
+      ].join("\n"));
+    });
+  });
+
+  it("compiles a heading link to contain a link which only includes the text - not the rest of the link.", async () => {
+    const post = await getCompiledPostWithContent([
+      "# [This is the first post](www.example.com)",
+    ]);
+
+    expect(post).toContain([
+      "",
+      "<h1>",
+      "  <a name=\"this-is-the-first-post\" href=\"#this-is-the-first-post\"></a>",
+      "  <a href=\"www.example.com\">This is the first post</a>",
+      "</h1>"
+    ].join("\n"));
+  });
 });
