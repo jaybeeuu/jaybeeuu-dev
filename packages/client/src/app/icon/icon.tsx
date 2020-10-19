@@ -1,6 +1,7 @@
 import { h, JSX } from "preact";
 import classNames from "classnames";
 import iconSprite from "./icons.svg";
+
 import css from "./icon.module.css";
 
 export type IconName
