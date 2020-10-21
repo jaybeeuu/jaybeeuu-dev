@@ -26,16 +26,16 @@ context("Post navigation", (): void => {
 
   it("opens the memoising-selectors post when the link is clicked.", () => {
     postList.openPost("memoising-selectors");
-    post.getArticle().should("contain.post", "memoising-selectors");
+    post.getArticle().should("contain.post.paragraphs", "memoising-selectors");
   });
 
   it("opens the module-spotting post when the link is clicked.", () => {
     postList.openPost("module-spotting");
-    post.getArticle().should("contain.post", "module-spotting");
+    post.getArticle().should("contain.post.paragraphs", "module-spotting");
   });
 
   it("opens the the-rewrite post when navigated to directly.", () => {
     post.navigateTo("the-rewrite");
-    post.getArticle().should("contain.post", "the-rewrite");
+    post.getArticle().should("contain.post.paragraphs", "the-rewrite");
   });
 });

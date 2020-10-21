@@ -8,7 +8,7 @@ export const get = (): Cypress.Chainable<JQuery<HTMLElement>> => {
   return cy.get(mainPanelSelectors.block);
 };
 
-export type ShouldContainPostParameters = ["contain.post", PostSlug];
+export type ShouldContainPostParameters = ["contain.post.paragraphs", PostSlug];
 
 export interface ArticleChainer extends Cypress.Chainer<JQuery<HTMLElement>> {
   (...[chainer, slug]: ShouldContainPostParameters): Cypress.Chainable<JQuery<HTMLElement>>;
@@ -32,11 +32,18 @@ export const getArticle = (): ArticleChainable => {
   const articleShould: ArticleChainer = (
     ...args: [any, ...any[]]
   ): Cypress.Chainable<JQuery<HTMLElement>> => {
-    if (isChainer<ShouldContainPostParameters>("contain.post", args)) {
+    if (isChainer<ShouldContainPostParameters>("contain.post.paragraphs", args)) {
       const [, slug] = args;
       return withPostMetaData(slug).then((meta) => {
-        return cy.fixture(`posts/${meta.fileName}`).then((postContent) => {
-          return cy.get(mainPanelSelectors.article).should("contain.html", postContent);
+        return cy.fixture(`posts/${meta.fileName}`).then((postContent: string) => {
+          const paragraphs = [...postContent.matchAll(/(<p>.*?<\/p>)/g)].flat();
+          if (!paragraphs) {
+            throw new Error("Post did not contain any paragraphs.");
+          }
+          paragraphs.forEach((paragraph) => {
+            cy.get(mainPanelSelectors.article).should("contain.html", paragraph);
+          });
+          return article;
         });
       });
     }
