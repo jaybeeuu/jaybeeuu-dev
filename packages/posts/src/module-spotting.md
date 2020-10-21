@@ -39,23 +39,23 @@ Here's what an AMD module looks like:
 ```js
 // Cat.js
 define(["movement/prowl", "noises/miaow"],
-    function (prowl, miaow) {
-        class Cat {
-          speak() {
-            miaow();
-          }
+  function (prowl, miaow) {
+    class Cat {
+      speak() {
+        miaow();
+      }
 
-          move() {
-            prowl();
-          }
+      move() {
+        prowl();
+      }
 
-          isBetterThanADog() {
-            return true;
-          }
-        }
-
-        return Cat;
+      isBetterThanADog() {
+        return true;
+      }
     }
+
+    return Cat;
+  }
 );
 ```
 
