@@ -37,7 +37,7 @@ class CustomRenderer extends marked.Renderer {
     return [
       "",
       `<h${level}>`,
-      `  <a name="${headerSlug}" href="${href}"></a>`,
+      `  <a class="hash-link" name="${headerSlug}" href="${href}"></a>`,
       `  ${text}`,
       `</h${level}>`
     ].join("\n");
@@ -64,7 +64,8 @@ const sanitizeOptions: IOptions = {
   allowedAttributes: {
     ...sanitizeHtml.defaults.allowedAttributes,
     span: ["class"],
-    pre: ["class"]
+    pre: ["class"],
+    a: ["class", ...sanitizeHtml.defaults.allowedAttributes.a],
   }
 };
 

@@ -15,3 +15,7 @@ a {
   text-decoration: none;
   border-bottom: 1px dotted var(--text-link);
 }
+
+a.hash-link {
+  border-bottom: none;
+}

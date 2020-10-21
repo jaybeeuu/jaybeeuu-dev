@@ -198,7 +198,7 @@ describe("compile", () => {
     expect(post).toContain([
       "",
       "<h1>",
-      `  <a name="this-is-the-first-post" href="/${hrefRoot}/${slug}#this-is-the-first-post"></a>`,
+      `  <a class="hash-link" name="this-is-the-first-post" href="/${hrefRoot}/${slug}#this-is-the-first-post"></a>`,
       "  This is the first post",
       "</h1>"
     ].join("\n"));
@@ -215,11 +215,11 @@ describe("compile", () => {
     expect(post).toContain([
       "",
       "<h1>",
-      `  <a name="this-is-the-first-post" href="/${hrefRoot}/${slug}#this-is-the-first-post"></a>`,
+      `  <a class="hash-link" name="this-is-the-first-post" href="/${hrefRoot}/${slug}#this-is-the-first-post"></a>`,
       "  This is the first post",
       "</h1>",
       "<h1>",
-      `  <a name="this-is-the-first-post-1" href="/${hrefRoot}/${slug}#this-is-the-first-post-1"></a>`,
+      `  <a class="hash-link" name="this-is-the-first-post-1" href="/${hrefRoot}/${slug}#this-is-the-first-post-1"></a>`,
       "  This is the first post",
       "</h1>"
     ].join("\n"));
@@ -244,7 +244,7 @@ describe("compile", () => {
       expect(post).toContain([
         "",
         `<h${level}>`,
-        `  <a name="this-is-the-first-post" href="/${hrefRoot}/${slug}#this-is-the-first-post"></a>`,
+        `  <a class="hash-link" name="this-is-the-first-post" href="/${hrefRoot}/${slug}#this-is-the-first-post"></a>`,
         "  This is the first post",
         `</h${level}>`
       ].join("\n"));
@@ -261,7 +261,7 @@ describe("compile", () => {
     expect(post).toContain([
       "",
       "<h1>",
-      `  <a name="this-is-the-first-post" href="/${hrefRoot}/${slug}#this-is-the-first-post"></a>`,
+      `  <a class="hash-link" name="this-is-the-first-post" href="/${hrefRoot}/${slug}#this-is-the-first-post"></a>`,
       "  <a href=\"www.example.com\">This is the first post</a>",
       "</h1>"
     ].join("\n"));
