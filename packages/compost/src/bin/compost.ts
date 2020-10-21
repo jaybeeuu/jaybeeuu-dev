@@ -54,7 +54,7 @@ const watch = (): void => {
   const watchPaths = [
     options.sourceDir,
     ...options.additionalWatchPaths.split(",").map((path) => path.trim())
-  ];
+  ].filter(Boolean);
   chokidar.watch(watchPaths).on("all", debounced);
 };
 
