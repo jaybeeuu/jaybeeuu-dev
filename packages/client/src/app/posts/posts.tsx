@@ -24,7 +24,7 @@ const PostList = withPromise(({ value: manifest }: { value: PostManifest }) => {
             <h3>
               <Link href={`/posts/${meta.slug}`} className={e2eHooks.link}>{meta.title}</Link>
             </h3>
-            <h4>{meta.lastUpdateDate}</h4>
+            <h4>{meta.lastUpdateDate ?? meta.publishDate}</h4>
             <summary className={e2eHooks.abstract}>{meta.abstract}</summary>
           </li>
         ))}
