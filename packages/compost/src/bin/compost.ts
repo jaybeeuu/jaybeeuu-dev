@@ -7,17 +7,19 @@ import { ResultState, Result, success, failure } from "../results";
 
 const options = getOpts(process.argv, {
   alias: {
+    additionalWatchPaths: "a",
+    hrefRoot: "h",
     manifestFileName: "m",
     outputDir: "o",
     sourceDir: "s",
-    watch: "w",
-    hrefRoot: "h"
+    watch: "w"
   },
   default: {
+    additionalWatchPaths: "",
+    hrefRoot: "/",
     manifestFileName: "manifest.json",
     outputDir: "./lib",
     sourceDir: "./src",
-    hrefRoot: "/",
     watch: false
   }
 }) as unknown as UpdateOptions;
@@ -49,7 +51,11 @@ const watch = (): void => {
     await run();
     log.info("Waiting for changes...");
   }, 250);
-  chokidar.watch(options.sourceDir).on("all", debounced);
+  const watchPaths = [
+    options.sourceDir,
+    ...options.additionalWatchPaths.split(",").map((path) => path.trim())
+  ];
+  chokidar.watch(watchPaths).on("all", debounced);
 };
 
 if (options.watch) {
