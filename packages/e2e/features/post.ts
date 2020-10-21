@@ -8,33 +8,43 @@ export const get = (): Cypress.Chainable<JQuery<HTMLElement>> => {
   return cy.get(mainPanelSelectors.block);
 };
 
-export type ArticleShould = Cypress.Chainer<JQuery<HTMLElement>> & {
-  (chainer: "contain.post", slug: PostSlug): Cypress.Chainable<JQuery<HTMLElement>>
+export type ShouldContainPostParameters = ["contain.post", PostSlug];
+
+export interface ArticleChainer extends Cypress.Chainer<JQuery<HTMLElement>> {
+  (...[chainer, slug]: ShouldContainPostParameters): Cypress.Chainable<JQuery<HTMLElement>>;
+}
+
+export type ArticleChainable = Cypress.Chainable<JQuery<HTMLElement>> & {
+  should: ArticleChainer
 };
 
-export const getArticle = (): Cypress.Chainable<JQuery<HTMLElement>> & {
-  should: ArticleShould
-} => {
+const isChainer = <ChainerArgs extends [string, ...any[]]>(
+  chainerType: ChainerArgs[0],
+  args: any[]
+): args is ChainerArgs => {
+  return args[0] === chainerType;
+};
+
+export const getArticle = (): ArticleChainable => {
   // eslint-disable-next-line cypress/no-assigning-return-values
   const article = cy.get(mainPanelSelectors.article).as("article");
 
-  const articleShould: ArticleShould = (
-    chainer: any, ...args: any[]
+  const articleShould: ArticleChainer = (
+    ...args: [any, ...any[]]
   ): Cypress.Chainable<JQuery<HTMLElement>> => {
-    if (chainer === "contain.post") {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const [slug] = args;
-      return withPostMetaData(slug).then((meta) =>{
+    if (isChainer<ShouldContainPostParameters>("contain.post", args)) {
+      const [, slug] = args;
+      return withPostMetaData(slug).then((meta) => {
         return cy.fixture(`posts/${meta.fileName}`).then((postContent) => {
           return cy.get(mainPanelSelectors.article).should("contain.html", postContent);
         });
       });
     }
-    return cy.get(mainPanelSelectors.article).should(chainer, ...args);
+    cy.get(mainPanelSelectors.article).should(...args);
+    return article;
   };
 
   article.should = articleShould;
-
   return article;
 };
 
