@@ -16,13 +16,10 @@ export interface Failure {
 
 export type Result<TValue> = Success<TValue> | Failure;
 
-export function success(): Success<void>;
+export function success(): Success<never>;
 export function success<TValue>(value: TValue): Success<TValue>;
-export function success<TValue>(value?: TValue): Success<TValue> {
-  return {
-    state: ResultState.success,
-    value: value as TValue
-  };
+export function success<Value>(value?: Value): Success<Value> {
+  return { state: ResultState.success, value: value as Value };
 }
 
 export const failure = (message: string): Failure => ({
