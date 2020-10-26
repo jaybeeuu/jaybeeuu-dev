@@ -27,13 +27,11 @@ const pending = (): Pending => ({ status: "pending" });
 const slow = (): Slow => ({ status: "slow" });
 const failed = (error: Error | Error[]): Failed => ({ status: "failed", error });
 
-interface MakeComplete {
-  (): Complete<never>
-  <Value>(value: Value): Complete<Value>
-}
-const complete: MakeComplete = <Value>(value: Value extends never ? undefined : Value): Complete<Value> => {
+function complete(): Complete<never>
+function complete<Value>(value: Value): Complete<Value>
+function complete<Value>(value?: Value): Complete<Value> {
   return { status: "complete", value: value as Value };
-};
+}
 
 export type PromiseState<Response = unknown> = Pending | Slow | Failed | Complete<Response>;
 
@@ -45,11 +43,6 @@ const isAnyPromiseState = (candidate: unknown): candidate is PromiseState => {
   return isObjectWithProp(candidate, "status")
     && typeof candidate.status === "string"
     && PromiseStatuses.has(candidate.status);
-};
-
-const isPromiseState = <State extends PromiseState>(candidate: unknown, status: State["status"]): candidate is State => {
-  return isObjectWithProp(candidate, "status")
-    && candidate.status === status;
 };
 
 const valueOrError = async <Value>(promise: Promise<Value>): Promise<Complete<Value> | Failed> => {
