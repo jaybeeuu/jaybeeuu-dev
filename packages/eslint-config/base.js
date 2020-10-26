@@ -37,6 +37,8 @@ module.exports = {
       ],
       rules: {
         "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }],
+        "indent": "off",
+        "@typescript-eslint/indent": ["error", 2, { SwitchCase: 1 }],
         "@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: false }],
         "@typescript-eslint/no-unused-vars": ["error", { ignoreRestSiblings: true }],
         "@typescript-eslint/switch-exhaustiveness-check": "error",
