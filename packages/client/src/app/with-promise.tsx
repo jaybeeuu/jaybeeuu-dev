@@ -1,36 +1,27 @@
 import { log } from "@bickley-wallace/utilities";
 import { h, VNode, ComponentType, FunctionComponent } from "preact";
-import { PromiseStatus } from "../recoilless/promise-status";
+import { PromiseState, useCombinePromises } from "../recoilless/promise-status";
 import { getDisplayName } from "../utils/component";
 import { LoadingSpinner } from "./loading-spinner";
 
-export interface OwnProps<Value> {
-  promise: PromiseStatus<Value>
+export type MaybePromises<ContentProps extends object> = {
+  [Key in keyof ContentProps]: PromiseState<ContentProps[Key]> | ContentProps[Key];
 }
 
-export interface InjectedProps<Value> {
-  value: Value
-}
-
-export const withPromise = <Value, ContentProps extends InjectedProps<Value>>(
+export const withPromise = <ContentProps extends object>(
   Content: ComponentType<ContentProps>
-): FunctionComponent<
-  Omit<ContentProps, keyof InjectedProps<Value>> & OwnProps<Value>
-> => {
+): FunctionComponent<MaybePromises<ContentProps>> => {
   const FetchCompleteComponent = (
-    { promise, ...contentProps }: Omit<ContentProps, keyof InjectedProps<Value>> & OwnProps<Value>
+    ownProps: MaybePromises<ContentProps>
   ): VNode<any> | null => {
+    const promise = useCombinePromises(ownProps);
     switch (promise.status)
     {
       case "pending":
       case "slow": return <LoadingSpinner />;
       case "complete": {
-        const injectableContentProps = {
-          ...contentProps,
-          value: promise.value
-        };
         // @ts-expect-error
-        return <Content {...injectableContentProps}/>;
+        return <Content {...promise.value}/>;
       }
       case "failed": {
         log.error("Request failed", promise.error);

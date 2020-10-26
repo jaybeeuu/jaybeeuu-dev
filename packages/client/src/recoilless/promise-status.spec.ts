@@ -1,10 +1,10 @@
-import { monitorPromise, PromiseStatus } from "./promise-status";
+import { monitorPromise, PromiseState } from "./promise-status";
 import { asError } from "../utils/as-error";
 import { echoDelayed } from "@bickley-wallace/utilities";
 
 jest.useFakeTimers();
 
-const getIterator = <Value>(promise: Promise<Value>): AsyncIterator<PromiseStatus<Value>> => {
+const getIterator = <Value>(promise: Promise<Value>): AsyncIterator<PromiseState<Value>> => {
   const request = monitorPromise(promise);
   return request[Symbol.asyncIterator]();
 };

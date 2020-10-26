@@ -1,4 +1,4 @@
-import { PostManifest } from "@bickley-wallace/compost";
+import { PostManifest, PostMetaData } from "@bickley-wallace/compost";
 import { fetchJson, fetchText } from "../recoilless/request";
 import { DerivedValue, PrimitiveValue } from "../recoilless/state";
 
@@ -14,15 +14,23 @@ export const currentPostSlug: PrimitiveValue<string | null> = {
   initialValue: null
 };
 
-export const currentPostHtml: DerivedValue<Promise<string>> = {
-  name: "currentPostHtml",
-  derive: async ({ get }): Promise<string> => {
+export const currentPostMeta: DerivedValue<Promise<PostMetaData>> = {
+  name: "currentPostMeta",
+  derive: async ({ get }): Promise<PostMetaData> => {
     const manifest = await get(postsManifest);
     const slug = get(currentPostSlug);
     if (slug && slug in manifest) {
-      return fetchText(manifest[slug].href);
+      return manifest[slug];
     }
     throw new Error(`Slug "${String(slug)}" does not exist in the manifest.`);
+  }
+};
+
+export const currentPostHtml: DerivedValue<Promise<string>> = {
+  name: "currentPostHtml",
+  derive: async ({ get }): Promise<string> => {
+    const postMeta = await get(currentPostMeta);
+    return fetchText(postMeta.href);
   }
 };
 

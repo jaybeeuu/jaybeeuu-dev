@@ -15,7 +15,7 @@ const compareDateString = (
   right: PostMetaData
 ): number => Date.parse(left.publishDate) - Date.parse(right.publishDate);
 
-const PostList = withPromise(({ value: manifest }: { value: PostManifest }) => {
+const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
   return (
     <div className={classNames(css.element, e2eHooks.block)}>
       <ul>
@@ -37,6 +37,6 @@ PostList.displayName = "PostList";
 export const PostsRoute = asRoute((): VNode<any> => {
   const manifest = useValue(postsManifest);
   return (
-    <PostList promise={manifest} />
+    <PostList manifest={manifest} />
   );
 });

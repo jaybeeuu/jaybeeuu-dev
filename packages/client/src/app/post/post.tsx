@@ -1,17 +1,19 @@
 import { h, FunctionComponent, JSX, createRef, render } from "preact";
+import { PostMetaData } from "@bickley-wallace/compost";
 import { post as e2eHooks } from "@bickley-wallace/e2e-hooks";
 import { useEffect } from "preact/hooks";
+import { useCombinePromises } from "../../recoilless/promise-status";
 import { useValue } from "../../recoilless/use-value";
 import { withPromise } from "../with-promise";
 import { asRoute } from "../as-route";
-import { currentPostHtml, currentPostSlug } from "../state";
+import { Icon } from "../icon";
+import { currentPostHtml, currentPostMeta, currentPostSlug, postsManifest } from "../state";
 
 import "./night-owl.css";
-import { Icon } from "../icon";
 
 const headingLinkSelector = "h1 a:empty, h2 a:empty, h3 a:empty, h4 a:empty, h5 a:empty, h6 a:empty";
 
-const PostComponent = withPromise(({ value: post }: { value: string }): JSX.Element => {
+const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, postMeta: PostMetaData }): JSX.Element => {
   const articleRef = createRef<HTMLElement>();
 
   useEffect(() => {
@@ -19,14 +21,19 @@ const PostComponent = withPromise(({ value: post }: { value: string }): JSX.Elem
     links?.forEach((link) => {
       render(<Icon name="link"/>, link);
     });
-  }, [post]);
+  }, [postHtml]);
 
   return (
-    <article
-      ref={articleRef}
-      className={e2eHooks.article}
-      dangerouslySetInnerHTML={{ __html: post }}
-    />
+    <div>
+      <div>
+        <h1>{postMeta.title}</h1>
+      </div>
+      <article
+        ref={articleRef}
+        className={e2eHooks.article}
+        dangerouslySetInnerHTML={{ __html: postHtml }}
+      />
+    </div>
   );
 });
 
@@ -42,8 +49,9 @@ const Post: FunctionComponent<PostProps> = ({ slug }) => {
     return null;
   }
 
-  const htmlPromise = useValue(currentPostHtml);
-  return <PostComponent promise={htmlPromise} />;
+  const postMeta = useValue(currentPostMeta);
+  const postHtml = useValue(currentPostHtml);
+  return <PostComponent {...{ postMeta, postHtml }} />;
 };
 
 Post.displayName = "Post";

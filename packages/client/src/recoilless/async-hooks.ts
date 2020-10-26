@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect, Inputs } from "preact/hooks";
-import { PromiseStatus } from "./promise-status";
 
 const useAsyncEffect = (
   effect: ({ cancelled }: { cancelled: boolean }) => Promise<void>,
@@ -17,18 +16,19 @@ const useAsyncEffect = (
 };
 
 export const useAsyncGenerator = <Value>(
-  generator: AsyncGenerator<PromiseStatus<Value>>,
-): PromiseStatus<Value> => {
-  const [status, setStatus]  = useState<PromiseStatus<Value>>({ status: "pending" });
+  generator: AsyncGenerator<Value>,
+  initialValue: Value
+): Value => {
+  const [value, setValue]  = useState<Value>(initialValue);
 
   useAsyncEffect(async (signal) => {
-    for await (const nextStatus of generator) {
+    for await (const nextValue of generator) {
       if (signal.cancelled) {
         break;
       }
-      setStatus(nextStatus);
+      setValue(nextValue);
     }
   }, [generator]);
 
-  return status;
+  return value;
 };
