@@ -29,6 +29,11 @@ context("Post navigation", (): void => {
     post.getArticle().should("contain.post.paragraphs", "memoising-selectors");
   });
 
+  it("the title of the memoising-selectors post when the link is clicked.", () => {
+    postList.openPost("memoising-selectors");
+    post.getArticle().should("contain.post.title", "memoising-selectors");
+  });
+
   it("opens the module-spotting post when the link is clicked.", () => {
     postList.openPost("module-spotting");
     post.getArticle().should("contain.post.paragraphs", "module-spotting");

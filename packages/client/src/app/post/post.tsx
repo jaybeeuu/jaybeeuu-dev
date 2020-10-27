@@ -24,13 +24,12 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
   }, [postHtml]);
 
   return (
-    <div>
+    <div className={e2eHooks.article}>
       <div>
         <h1>{postMeta.title}</h1>
       </div>
       <article
         ref={articleRef}
-        className={e2eHooks.article}
         dangerouslySetInnerHTML={{ __html: postHtml }}
       />
     </div>

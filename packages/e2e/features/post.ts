@@ -8,14 +8,36 @@ export const get = (): Cypress.Chainable<JQuery<HTMLElement>> => {
   return cy.get(mainPanelSelectors.block);
 };
 
-export type ShouldContainPostParameters = ["contain.post.paragraphs", PostSlug];
+export type ShouldContainPostParagraphsParameters = ["contain.post.paragraphs", PostSlug];
+export type ShouldContainPostTitleParameters = ["contain.post.title", PostSlug];
 
 export interface ArticleChainer extends Cypress.Chainer<JQuery<HTMLElement>> {
-  (...[chainer, slug]: ShouldContainPostParameters): Cypress.Chainable<JQuery<HTMLElement>>;
+  (...[chainer, slug]: ShouldContainPostParagraphsParameters): Cypress.Chainable<JQuery<HTMLElement>>;
+  (...[chainer, slug]: ShouldContainPostTitleParameters): Cypress.Chainable<JQuery<HTMLElement>>;
 }
 
 export type ArticleChainable = Cypress.Chainable<JQuery<HTMLElement>> & {
   should: ArticleChainer
+};
+
+const shouldContainPostParagraphs = (...[, slug]: ShouldContainPostParagraphsParameters): void => {
+  withPostMetaData(slug).then((meta) => {
+    cy.fixture(`posts/${meta.fileName}`).then((postContent: string) => {
+      const paragraphs = [...postContent.matchAll(/(<p>.*?<\/p>)/g)].flat();
+      if (!paragraphs) {
+        throw new Error("Post did not contain any paragraphs.");
+      }
+      paragraphs.forEach((paragraph) => {
+        cy.get(mainPanelSelectors.article).find("article").should("contain.html", paragraph);
+      });
+    });
+  });
+};
+
+const shouldContainPostTitle = (...[, slug]: ShouldContainPostTitleParameters): void => {
+  withPostMetaData(slug).then((meta) => {
+    cy.get(mainPanelSelectors.article).should("contain.text", meta.title);
+  });
 };
 
 const isChainer = <ChainerArgs extends [string, ...any[]]>(
@@ -32,20 +54,13 @@ export const getArticle = (): ArticleChainable => {
   const articleShould: ArticleChainer = (
     ...args: [any, ...any[]]
   ): Cypress.Chainable<JQuery<HTMLElement>> => {
-    if (isChainer<ShouldContainPostParameters>("contain.post.paragraphs", args)) {
-      const [, slug] = args;
-      return withPostMetaData(slug).then((meta) => {
-        return cy.fixture(`posts/${meta.fileName}`).then((postContent: string) => {
-          const paragraphs = [...postContent.matchAll(/(<p>.*?<\/p>)/g)].flat();
-          if (!paragraphs) {
-            throw new Error("Post did not contain any paragraphs.");
-          }
-          paragraphs.forEach((paragraph) => {
-            cy.get(mainPanelSelectors.article).should("contain.html", paragraph);
-          });
-          return article;
-        });
-      });
+    if (isChainer<ShouldContainPostParagraphsParameters>("contain.post.paragraphs", args)) {
+      shouldContainPostParagraphs(...args);
+      return article;
+    }
+    if (isChainer<ShouldContainPostTitleParameters>("contain.post.title", args)) {
+      shouldContainPostTitle(...args);
+      return article;
     }
     cy.get(mainPanelSelectors.article).should(...args);
     return article;
