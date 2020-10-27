@@ -24,23 +24,33 @@ context("Post navigation", (): void => {
     postList.hasLinkToPost("the-rewrite");
   });
 
-  it("opens the memoising-selectors post when the link is clicked.", () => {
+  it("shows the paragraphs of the memoising-selectors post when the link is clicked.", () => {
     postList.openPost("memoising-selectors");
     post.getArticle().should("contain.post.paragraphs", "memoising-selectors");
   });
 
-  it("the title of the memoising-selectors post when the link is clicked.", () => {
+  it("shows the title of the memoising-selectors post when the link is clicked.", () => {
     postList.openPost("memoising-selectors");
     post.getArticle().should("contain.post.title", "memoising-selectors");
   });
 
-  it("opens the module-spotting post when the link is clicked.", () => {
+  it("shows the paragraphs of the module-spotting post when the link is clicked.", () => {
     postList.openPost("module-spotting");
     post.getArticle().should("contain.post.paragraphs", "module-spotting");
   });
 
-  it("opens the the-rewrite post when navigated to directly.", () => {
+  it("shows the title of the module-spotting post when the link is clicked.", () => {
+    postList.openPost("module-spotting");
+    post.getArticle().should("contain.post.title", "module-spotting");
+  });
+
+  it("shows the paragraphs of the the-rewrite post when navigated to directly.", () => {
     post.navigateTo("the-rewrite");
     post.getArticle().should("contain.post.paragraphs", "the-rewrite");
+  });
+
+  it("shows the title of the the-rewrite post when the link is clicked.", () => {
+    postList.openPost("the-rewrite");
+    post.getArticle().should("contain.post.title", "the-rewrite");
   });
 });
