@@ -2,12 +2,11 @@ import { h, FunctionComponent, JSX, createRef, render } from "preact";
 import { PostMetaData } from "@bickley-wallace/compost";
 import { post as e2eHooks } from "@bickley-wallace/e2e-hooks";
 import { useEffect } from "preact/hooks";
-import { useCombinePromises } from "../../recoilless/promise-status";
 import { useValue } from "../../recoilless/use-value";
 import { withPromise } from "../with-promise";
 import { asRoute } from "../as-route";
 import { Icon } from "../icon";
-import { currentPostHtml, currentPostMeta, currentPostSlug, postsManifest } from "../state";
+import { currentPostHtml, currentPostMeta, currentPostSlug } from "../state";
 
 import "./night-owl.css";
 
@@ -27,6 +26,7 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
     <div className={e2eHooks.article}>
       <div>
         <h1>{postMeta.title}</h1>
+        <h5>{postMeta.lastUpdateDate ?? postMeta.publishDate}</h5>
       </div>
       <article
         ref={articleRef}
