@@ -5,7 +5,7 @@ a {
 }
 
 article {
-  margin: 2rem;
+  margin: 2.4rem;
   font-size: 1.8rem;
 }
 
@@ -16,6 +16,7 @@ article h4,
 article h5,
 article h6 {
   display: flex;
+  position: relative;
   align-items: center;
 }
 
@@ -23,6 +24,8 @@ a.hash-link {
   border-bottom: none;
   display: block;
   height: 2.4rem;
+  position: absolute;
+  left: -2.4rem;
 }
 
 a.hash-link svg {
