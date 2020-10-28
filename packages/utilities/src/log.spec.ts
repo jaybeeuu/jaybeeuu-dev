@@ -2,11 +2,6 @@
 import "../../compost/test/custom-matchers";
 import * as log from "./log";
 
-interface Sample {
-  args: [string, ...unknown[]];
-  consoleCalledWith: string[];
-}
-
 describe("log", () => {
   beforeEach(() => {
     jest.spyOn(console, "log").mockImplementation(() => {});
@@ -23,86 +18,74 @@ describe("log", () => {
   });
 
   describe("error", () => {
-    const samples: Sample[] = [
+    it("passes arguments to console.log", () => {
+      const args = [1, "2", { id: 3 }];
+      log.error("message", ...args);
+
+      expect(console.error).toHaveBeenCalledWith("message", ...args);
+    });
+  });
+
+  describe("getErrorMessage", () => {
+    const samples: {
+      args: Parameters<typeof log.getErrorMessage>,
+      expectedOutput: string
+    }[] = [
       {
         args: [
-          "{message}",
           { message: "{error message}", stack: "{stack}" }
         ],
-        consoleCalledWith: [
-          "{message}",
-          [
-            "{",
-            "  \"message\": \"{error message}\",",
-            "  \"stack\": \"{stack}\"",
-            "}"
-          ].join("\n")
-        ]
+        expectedOutput: [
+          "{",
+          "  \"message\": \"{error message}\",",
+          "  \"stack\": \"{stack}\"",
+          "}"
+        ].join("\n")
       },
       {
         args: [
-          "{message}",
           (() => {
             const error = new Error("{error message}");
             error.stack = "{stack}";
             return error;
           })()
         ],
-        consoleCalledWith: [
-          "{message}",
-          "{error message}\n{stack}"
-        ]
+        expectedOutput: "{error message}\n{stack}"
       },
       {
         args: [
-          "{message}",
           (() => {
             const error = new Error("{error message}");
             error.stack = undefined;
             return error;
           })()
         ],
-        consoleCalledWith: [
-          "{message}",
-          "{error message}\nNo Stack"
-        ]
+        expectedOutput: "{error message}\nNo Stack"
       },
       {
         args: [
-          "{message}",
           ""
         ],
-        consoleCalledWith: [
-          "{message}",
-          "{empty string}"
-        ]
+        expectedOutput: "{empty string}"
       },
       {
         args: [
-          "{message}",
           null
         ],
-        consoleCalledWith: [
-          "{message}",
-          "null"
-        ]
+        expectedOutput: "null"
       },
       {
         args: [
-          "{message}",
           undefined
         ],
-        consoleCalledWith: [
-          "{message}",
-          "undefined"
-        ]
+        expectedOutput: "undefined"
       }
     ];
-    samples.forEach(({ args, consoleCalledWith }) => {
-      it(`should call console.error(${consoleCalledWith.join(", ")}) when passed args: ${JSON.stringify(args, null, 2)}`, () => {
-        log.error(...args);
+    samples.forEach(({ args, expectedOutput }) => {
+      it(`should return ${expectedOutput} when passed args: ${JSON.stringify(args, null, 2)}`, () => {
+        const result = log.getErrorMessage(...args);
 
-        expect(console.error).toHaveBeenCalledWith(...consoleCalledWith);
+        expect(result).toBe(expectedOutput);
       });
     });
   });
