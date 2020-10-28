@@ -15,7 +15,7 @@ export interface Slow {
 
 export interface Failed {
   status: "failed";
-  error: Error | Error[];
+  error: Error | { [value: string]: Error };
 }
 
 export interface Complete<Value> {
@@ -25,7 +25,7 @@ export interface Complete<Value> {
 
 const pending = (): Pending => ({ status: "pending" });
 const slow = (): Slow => ({ status: "slow" });
-const failed = (error: Error | Error[]): Failed => ({ status: "failed", error });
+const failed = (error: Error | { [value: string]: Error }): Failed => ({ status: "failed", error });
 
 function complete(): Complete<never>
 function complete<Value>(value: Value): Complete<Value>
@@ -112,7 +112,14 @@ export const useCombinePromises = <Values extends object>(values: Values): Promi
   );
 
   if (failedPromises.length > 0) {
-    return failed(failedPromises.flatMap(([, failedPromise]) => failedPromise.error));
+    const errors = Object.fromEntries(failedPromises.flatMap(([key, failedPromise]): [string, Error][] => {
+      if (failedPromise.error instanceof Error) {
+        return [[key, failedPromise.error]];
+      } else {
+        return Object.entries(failedPromise.error).map(([innerKey, error]) => [`${key}.${innerKey}`, error]);
+      }
+    }));
+    return failed(errors);
   }
 
   if (slowPromises.length > 0) {

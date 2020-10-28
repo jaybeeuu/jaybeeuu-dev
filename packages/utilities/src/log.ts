@@ -21,5 +21,5 @@ export const getErrorMessage = (err: any | null | undefined): string => {
 };
 
 export const error = (...errs: unknown[]): void => {
-  console.error(...errs.map(getErrorMessage));
+  console.error(...errs);
 };

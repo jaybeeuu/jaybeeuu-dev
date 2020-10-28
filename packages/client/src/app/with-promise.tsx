@@ -1,5 +1,6 @@
 import { log } from "@bickley-wallace/utilities";
 import { h, VNode, ComponentType, FunctionComponent } from "preact";
+import { useEffect } from "preact/hooks";
 import { PromiseState, useCombinePromises } from "../recoilless/promise-status";
 import { getDisplayName } from "../utils/component";
 import { LoadingSpinner } from "./loading-spinner";
@@ -24,8 +25,28 @@ export const withPromise = <ContentProps extends object>(
         return <Content {...promise.value}/>;
       }
       case "failed": {
-        log.error("Request failed", promise.error);
-        return <pre>{JSON.stringify(promise, null, 2)}</pre>;
+        useEffect(() => {
+          log.error("Request failed");
+          if (promise.error instanceof Error) {
+            log.error(promise.error);
+          } else {
+            Object.entries(promise.error).forEach(([source, error]) => {
+              log.error(`${source}:`, error);
+            });
+          }
+        }, [promise]);
+        return (
+          <div>
+            <h1>Whoops! Sorry about this, something&apos;s gone wrong...</h1>
+            {
+              promise.error instanceof Error ? <h4>{promise.error.message}</h4> : (
+                Object.entries(promise.error).map(([source, error]) => (
+                  <h4 key={source}>{source}: {error.message}</h4>
+                ))
+              )
+            }
+          </div>
+        );
       }
     }
   };
