@@ -1,7 +1,7 @@
 import { log } from "@bickley-wallace/utilities";
 import { h, VNode, ComponentType, FunctionComponent } from "preact";
 import { useEffect } from "preact/hooks";
-import { PromiseState, useCombinePromises } from "../recoilless/promise-status";
+import { PromiseState, combinePromises } from "../recoilless/promise-status";
 import { getDisplayName } from "../utils/component";
 import { LoadingSpinner } from "./loading-spinner";
 
@@ -15,7 +15,7 @@ export const withPromise = <ContentProps extends object>(
   const FetchCompleteComponent = (
     ownProps: MaybePromises<ContentProps>
   ): VNode<any> | null => {
-    const promise = useCombinePromises(ownProps);
+    const promise = combinePromises(ownProps);
     switch (promise.status)
     {
       case "pending":
