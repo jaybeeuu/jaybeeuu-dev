@@ -1,3 +1,9 @@
+:root {
+  --transition-simple: 100ms;
+  --transition-average: 200ms;
+  --transition-complex: 500ms;
+}
+
 a {
   color: var(--text-link);
   text-decoration: none;
@@ -16,7 +22,6 @@ article h4,
 article h5,
 article h6 {
   display: flex;
-  position: relative;
   align-items: center;
 }
 
@@ -24,16 +29,19 @@ a.hash-link {
   border-bottom: none;
   display: block;
   height: 2.4rem;
-  position: absolute;
-  left: -2.4rem;
 }
 
 a.hash-link svg {
-  transition: fill 0.2s ease-in-out;
+  transition: fill var(--transition-average) ease-in-out;
   fill: transparent;
 }
 
-a.hash-link:hover svg {
+article h1:hover a.hash-link svg,
+article h2:hover a.hash-link svg,
+article h3:hover a.hash-link svg,
+article h4:hover a.hash-link svg,
+article h5:hover a.hash-link svg,
+article h6:hover a.hash-link svg {
   fill: var(--icon-fill);
 }
 

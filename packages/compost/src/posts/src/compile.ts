@@ -37,8 +37,8 @@ class CustomRenderer extends marked.Renderer {
     return [
       "",
       `<h${level}>`,
-      `  <a class="hash-link" name="${headerSlug}" href="${href}"></a>`,
       `  ${text}`,
+      `  <a class="hash-link" name="${headerSlug}" href="${href}"></a>`,
       `</h${level}>`
     ].join("\n");
   }
