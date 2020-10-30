@@ -5,7 +5,9 @@ import {
   PrimitiveValueState,
   RemoveFromStore,
   ValueState,
-  Value
+  Value,
+  PrimitiveValue,
+  DerivedValue
 } from "./state";
 
 const createValue = <Val>(
@@ -20,6 +22,11 @@ const createValue = <Val>(
   return new PrimitiveValueState(value, removeFromStore);
 };
 
+export interface GetValue {
+  <Val>(value: DerivedValue<Val>): DerivedValueState<Val>;
+  <Val>(value: PrimitiveValue<Val>): PrimitiveValueState<Val>;
+}
+
 export class Store {
   private readonly values: { [name:string]: ValueState<any> } = {};
 
@@ -27,14 +34,19 @@ export class Store {
     delete this.values[value.name];
   };
 
-  public getValue = <Val>(value: Value<Val>): ValueState<Val> => {
+  private getDependency: GetDependency = <Val>(
+    value: Value<Val>
+  ): ValueState<Val> => {
     if(!(value.name in this.values)) {
       this.values[value.name] = createValue(
         value,
         () => this.removeValue(value),
-        this.getValue
+        this.getDependency
       );
     }
+
     return this.values[value.name] as ValueState<Val>;
   }
+
+  public getValue: GetValue = this.getDependency as GetValue;
 }
