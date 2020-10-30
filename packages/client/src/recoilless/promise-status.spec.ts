@@ -30,6 +30,15 @@ describe("monitorPromise", () => {
       value: "Apples"
     });
   });
+  it("once the response is returned the iterator terminates.", async () => {
+    const requestIterator = getIterator(Promise.resolve("Apples"));
+
+    await getNextValue(requestIterator);
+    await getNextValue(requestIterator);
+    await expect(
+      getNextValue(requestIterator)
+    ).rejects.toStrictEqual(new Error("Iterator is done."));
+  });
 
   it("returns a slow request status if the request takes longer than 500ms.", async () => {
     const requestIterator = getIterator(echoDelayed("Pears", 501));
@@ -108,8 +117,26 @@ describe("combinePromises", () => {
     },
     {
       description: "returns a failed if one of the promises has failed.",
-      values: { first: { status: "failed", error: new Error("Whoops") }, second: { status: "failed", error: new Error("Uh oh...") } },
+      values: {
+        first: { status: "failed", error: new Error("Whoops") },
+        second: { status: "failed", error: new Error("Uh oh...") }
+      },
       expected: { status: "failed", error: { first: new Error("Whoops"), second: new Error("Uh oh...") } }
+    },
+    {
+      description: "flattens errors in child promises.",
+      values: {
+        first: { status: "failed", error: new Error("Whoops") },
+        second: { status: "failed", error: { a: new Error("Uh oh..."), b: new Error("Really?") } }
+      },
+      expected: {
+        status: "failed",
+        error: {
+          first: new Error("Whoops"),
+          "second.a": new Error("Uh oh..."),
+          "second.b": new Error("Really?")
+        }
+      }
     }
   ];
   samples.forEach(({ description, values, expected }) => {

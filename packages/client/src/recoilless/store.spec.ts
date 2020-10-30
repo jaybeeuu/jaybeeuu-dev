@@ -65,6 +65,17 @@ describe("recoiless", () => {
       expect(secondListener).toHaveBeenCalledWith(newName);
     });
 
+    it("does not notify subscribed functions if the value is the same.", () => {
+      const store = new Store();
+      const state = store.getValue(firstName);
+      const listener = jest.fn();
+      state.subscribe(listener);
+
+      state.setValue(firstName.initialValue);
+
+      expect(listener).not.toHaveBeenCalled();
+    });
+
     it("returns a new instance if retrieved after all subscriptions are released.", () => {
       const store = new Store();
       const state = store.getValue(firstName);
