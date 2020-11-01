@@ -15,7 +15,7 @@ export type Value<Val> = PrimitiveValue<Val> | DerivedValue<Val>;
 
 export class ValueState<Val> {
   private readonly listeners = new Set<(value: Val) => void>();
-  private name: string;
+  public name: string;
   private value: Val;
   private removeFromStore: () => void;
 
