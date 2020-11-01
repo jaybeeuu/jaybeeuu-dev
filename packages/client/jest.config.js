@@ -5,7 +5,7 @@ module.exports = {
     "src/**/*.tsx",
     "!**/*.d.ts"
   ],
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   testMatch: [
     "**/*.spec.ts"
   ],
