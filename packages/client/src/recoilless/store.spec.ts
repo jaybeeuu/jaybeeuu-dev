@@ -18,12 +18,18 @@ const fullName: DerivedValue<string> = {
   }
 };
 
-describe("recoiless", () => {
+describe("recoiless store", () => {
   describe("primitive values", () => {
     it("allows the retrieval of a primitive value from the store.", () => {
       const store = new Store();
       const firstNameValueState = store.getValue(firstName);
       expect(firstNameValueState).toBeInstanceOf(PrimitiveValueState);
+    });
+
+    it("has the value in the store once it has been retrieved.", () => {
+      const store = new Store();
+      store.getValue(firstName);
+      expect(store.hasValue(firstName)).toBe(true);
     });
 
     it("sets the value on the instance returned to the initialValue.", () => {
@@ -76,6 +82,18 @@ describe("recoiless", () => {
       expect(listener).not.toHaveBeenCalled();
     });
 
+    it("removes the value from the store after all subscriptions are released.", () => {
+      const store = new Store();
+      const state = store.getValue(firstName);
+      const firstUnsubscribe = state.subscribe(() => {});
+      const secondUnsubscribe = state.subscribe(() => {});
+
+      firstUnsubscribe();
+      secondUnsubscribe();
+
+      expect(store.hasValue(firstName)).toBe(false);
+    });
+
     it("returns a new instance if retrieved after all subscriptions are released.", () => {
       const store = new Store();
       const state = store.getValue(firstName);
@@ -113,6 +131,12 @@ describe("recoiless", () => {
       expect(fullnameValueState).toBeInstanceOf(DerivedValueState);
     });
 
+    it("has the value in the store once it has been retrieved.", () => {
+      const store = new Store();
+      store.getValue(fullName);
+      expect(store.hasValue(fullName)).toBe(true);
+    });
+
     it("returns a consistent instance of a derived value.", () => {
       const store = new Store();
       const firstState = store.getValue(fullName);
@@ -124,6 +148,19 @@ describe("recoiless", () => {
       const store = new Store();
       const state = store.getValue(fullName);
       expect(state.current).toBe(
+        `${firstName.initialValue} ${surname.initialValue}`
+      );
+    });
+
+    it("can return a promise from he derive function.", async () => {
+      const store = new Store();
+      const state = store.getValue({
+        name: "asyncFullName",
+        derive: ({ get }: DerivationContext): Promise<string> => new Promise<string>((resolve) => {
+          setTimeout(() => resolve(`${get(firstName)} ${get(surname)}`), 0);
+        })
+      });
+      expect((await state.current)).toBe(
         `${firstName.initialValue} ${surname.initialValue}`
       );
     });
@@ -155,6 +192,18 @@ describe("recoiless", () => {
       expect(secondListener).toHaveBeenCalledWith(`Isaac ${surname.initialValue}`);
     });
 
+    it("removes the value from the store once all subscriptions are released.", () => {
+      const store = new Store();
+      const state = store.getValue(fullName);
+      const firstUnsubscribe = state.subscribe(() => {});
+      const secondUnsubscribe = state.subscribe(() => {});
+
+      firstUnsubscribe();
+      secondUnsubscribe();
+
+      expect(store.hasValue(fullName)).toBe(false);
+    });
+
     it("returns a new instance if retrieved after all subscriptions are released.", () => {
       const store = new Store();
       const state = store.getValue(fullName);
@@ -167,6 +216,18 @@ describe("recoiless", () => {
       const newState = store.getValue(fullName);
 
       expect(newState).not.toBe(state);
+    });
+
+    it("unsubscribes and removes other from te store values when unsubscribed.", () => {
+      const store = new Store();
+      const state = store.getValue(fullName);
+      const unsubscribe = state.subscribe(() => {});
+      store.getValue(firstName).setValue("Isaac");
+
+      unsubscribe();
+
+      expect(store.hasValue(firstName)).toBe(false);
+      expect(store.hasValue(surname)).toBe(false);
     });
 
     it("resets other values when unsubscribed.", () => {

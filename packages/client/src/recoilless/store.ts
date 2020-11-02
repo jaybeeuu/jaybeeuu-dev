@@ -49,4 +49,7 @@ export class Store {
   }
 
   public getValue: GetValue = this.getDependency as GetValue;
+  public hasValue<Val>(value: Value<Val>): boolean {
+    return value.name in this.values;
+  }
 }

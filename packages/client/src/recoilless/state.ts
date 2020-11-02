@@ -53,7 +53,7 @@ export class ValueState<Val> {
     };
   }
 
-  protected get subscriptionCount(): number {
+  public get subscriptionCount(): number {
     return this.listeners.size;
   }
 }

@@ -12,25 +12,12 @@ module.exports = {
     {
       files: [
         "test/**/*.ts",
-        "**/*.spec.ts"
+        "test/**/*.tsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx"
       ],
-      env: {
-        "jest/globals": true
-      },
       rules: {
-        "jest/no-hooks": "off",
-        "jest/prefer-expect-assertions": "off",
-        "jest/valid-describe": "off",
-        "jest/valid-title": ["error", { "ignoreTypeOfDescribeName": false }]
-      }
-    },
-    {
-      files: ["jest-setup.js"],
-      env: {
-        node: true
-      },
-      globals: {
-        global: "writable"
+        "react/display-name": "off"
       }
     }
   ]

@@ -4,15 +4,16 @@ import { useMemo } from "preact/hooks";
 import { Store } from "./store";
 
 export interface StoreProps {
+  store?: Store,
   children: ComponentChildren
 }
 
 export const StoreContext = createContext(new Store());
 
-export const StoreProvider = ({ children }: StoreProps): JSX.Element => {
-  const store = useMemo(() => new Store(), []);
+export const StoreProvider = ({ store, children }: StoreProps): JSX.Element => {
+  const defaultedStore = useMemo(() => store ?? new Store(), [store]);
   return (
-    <StoreContext.Provider value={store}>
+    <StoreContext.Provider value={defaultedStore  }>
       {children}
     </StoreContext.Provider>
   );

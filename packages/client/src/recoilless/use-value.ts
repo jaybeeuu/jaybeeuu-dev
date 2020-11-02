@@ -7,7 +7,7 @@ import { StoreContext } from "./store-provider";
 
 const useStore = (): Store => useContext(StoreContext);
 
-const useValueStateSubscription = <Val>(value: Value<Val>, valueState: ValueState<Val>): void => {
+const useValueStateSubscription = <Val>(valueState: ValueState<Val>): void => {
   const [, updateState] = useState({});
   useEffect(() => {
     const unsubscribe = valueState.subscribe(() => updateState({}));
@@ -20,7 +20,7 @@ const usePrimitiveValue = <Val>(
   value: PrimitiveValue<Val>
 ): [Val, (newValue: Val) => void] => {
   const valueState = useStore().getValue(value);
-  useValueStateSubscription(value, valueState);
+  useValueStateSubscription(valueState);
 
   return [valueState.current, valueState.setValue];
 };
@@ -29,7 +29,7 @@ const useDerivedValue = <Val>(
   value: DerivedValue<Val>
 ): Val | PromiseState<Val> => {
   const valueState = useStore().getValue(value);
-  useValueStateSubscription(value, valueState);
+  useValueStateSubscription(valueState);
   const current = valueState.current;
 
   if (current instanceof Promise) {
