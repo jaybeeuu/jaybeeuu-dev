@@ -95,5 +95,9 @@ describe("useValue", () => {
       expect(store.hasValue(firstStop)).toBe(false);
     });
   });
+
+  describe("derived - async", () => {
+    it.todo("Add unit tests for asynchronous values.");
+  });
 });
 
