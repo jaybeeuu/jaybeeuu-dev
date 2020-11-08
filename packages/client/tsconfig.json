@@ -8,7 +8,7 @@
       "ESNext"
     ],
     "esModuleInterop": true,
-    "types": ["jest", "node"]
+    "types": ["jest"]
   },
   "include": ["src", "test"]
 }
