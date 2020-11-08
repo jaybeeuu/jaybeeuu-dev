@@ -36,10 +36,7 @@
         "jest/globals": true
       },
       "rules": {
-        "react/": "off",
-        "jest/prefer-expect-assertions": "off",
-        "jest/valid-describe": "off",
-        "jest/valid-title": ["error", { "ignoreTypeOfDescribeName": false }]
+        "react/": "off"
       }
     },
   ]
