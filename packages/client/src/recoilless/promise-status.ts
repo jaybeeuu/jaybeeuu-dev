@@ -1,17 +1,15 @@
-import { echoDelayed, multiPartition } from "@bickley-wallace/utilities";
+import { echo, multiPartition } from "@bickley-wallace/utilities";
 import { asError } from "../utils/as-error";
 
-const promiseStatusesTuple = ["pending", "slow", "failed", "complete"] as const;
-export const PromiseStatuses = new Set<string>(promiseStatusesTuple);
-export type PromiseStatus = typeof promiseStatusesTuple[number];
+export const PromiseStatusTuple = ["pending", "slow", "failed", "complete"] as const;
+export const PromiseStatuses = PromiseStatusTuple as readonly string[];
+export type PromiseStatus = typeof PromiseStatuses[number];
 
-export interface Pending {
-  status: "pending";
-}
+const pendingStatus = { status: "pending" } as const;
+export type Pending  = typeof pendingStatus;
 
-export interface Slow {
-  status: "slow";
-}
+const slowStatus = { status: "slow" } as const;
+export type Slow = typeof slowStatus
 
 export interface Failed {
   status: "failed";
@@ -23,8 +21,8 @@ export interface Complete<Value> {
   value: Value;
 }
 
-const pending = (): Pending => ({ status: "pending" });
-const slow = (): Slow => ({ status: "slow" });
+const pending = () => pendingStatus;
+const slow = () => slowStatus;
 const failed = (error: Error | { [value: string]: Error }): Failed => ({ status: "failed", error });
 
 function complete(): Complete<never>
@@ -42,7 +40,7 @@ const isObjectWithProp = <Prop extends string>(candidate: unknown, prop: Prop): 
 const isAnyPromiseState = (candidate: unknown): candidate is PromiseState => {
   return isObjectWithProp(candidate, "status")
     && typeof candidate.status === "string"
-    && PromiseStatuses.has(candidate.status);
+    && PromiseStatuses.includes(candidate.status);
 };
 
 const valueOrError = async <Value>(promise: Promise<Value>): Promise<Complete<Value> | Failed> => {
@@ -57,17 +55,16 @@ const valueOrError = async <Value>(promise: Promise<Value>): Promise<Complete<Va
 export async function* monitorPromise<Value> (
   promise: Promise<Value>
 ): AsyncGenerator<PromiseState<Value>> {
-  const slowPromise = echoDelayed<PromiseState<Value>>(slow(), 500);
-  const timeout = echoDelayed<PromiseState<Value>>(failed(new Error("Request timed out.")), 5000);
+  const slowPromise = echo(slow(), 500);
+  const timeout = echo(failed(new Error("Request timed out.")), 5000);
 
-  yield pending();
   const value = valueOrError(promise);
 
   const nextResult = await Promise.race([value, timeout, slowPromise]);
 
   yield nextResult;
 
-  if (nextResult.status !== "slow") {
+  if (nextResult.status === "complete") {
     return;
   }
 

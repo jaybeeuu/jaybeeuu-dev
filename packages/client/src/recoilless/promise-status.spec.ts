@@ -1,6 +1,8 @@
 import { monitorPromise, PromiseState, combinePromises } from "./promise-status";
 import { asError } from "../utils/as-error";
-import { echoDelayed } from "@bickley-wallace/utilities";
+import { echo } from "@bickley-wallace/utilities";
+import { act } from "@testing-library/preact-hooks";
+import { advanceByTimeThenAwait } from "../test/async-helpers";
 
 jest.useFakeTimers();
 
@@ -22,18 +24,15 @@ describe("monitorPromise", () => {
     const requestIterator = getIterator(Promise.resolve("Apples"));
 
     const firstResult = await getNextValue(requestIterator);
-    expect(firstResult.status).toStrictEqual("pending");
-
-    const secondResult = await getNextValue(requestIterator);
-    expect(secondResult).toStrictEqual({
+    expect(firstResult).toStrictEqual({
       status: "complete",
       value: "Apples"
     });
   });
+
   it("once the response is returned the iterator terminates.", async () => {
     const requestIterator = getIterator(Promise.resolve("Apples"));
 
-    await getNextValue(requestIterator);
     await getNextValue(requestIterator);
     await expect(
       getNextValue(requestIterator)
@@ -41,22 +40,17 @@ describe("monitorPromise", () => {
   });
 
   it("returns a slow request status if the request takes longer than 500ms.", async () => {
-    const requestIterator = getIterator(echoDelayed("Pears", 501));
+    const requestIterator = getIterator(echo("Pears", 501));
 
-    const firstResult = await getNextValue(requestIterator);
-    expect(firstResult.status).toStrictEqual("pending");
+    const firstResult = await advanceByTimeThenAwait(500, () => getNextValue(requestIterator));
 
-    jest.advanceTimersByTime(500);
-
-    const secondResult = await getNextValue(requestIterator);
-    expect(secondResult).toStrictEqual({
+    expect(firstResult).toStrictEqual({
       status: "slow"
     });
 
-    jest.advanceTimersByTime(1);
+    const secondResult = await advanceByTimeThenAwait(100, () => getNextValue(requestIterator));
 
-    const thirdResult = await getNextValue(requestIterator);
-    expect(thirdResult).toStrictEqual({
+    expect(secondResult).toStrictEqual({
       status: "complete",
       value: "Pears"
     });
@@ -67,11 +61,8 @@ describe("monitorPromise", () => {
 
     const requestIterator = getIterator(Promise.reject(errorResponse));
 
-    const firstResult = await getNextValue(requestIterator);
-    expect(firstResult.status).toStrictEqual("pending");
-
-    const secondResult = await getNextValue(requestIterator);
-    expect(secondResult).toStrictEqual({
+    const result = await getNextValue(requestIterator);
+    expect(result).toStrictEqual({
       status: "failed",
       error: asError(errorResponse)
     });

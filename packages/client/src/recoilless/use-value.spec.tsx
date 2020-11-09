@@ -1,9 +1,15 @@
 import { ComponentType, h } from "preact";
-import { renderHook, act } from "@testing-library/preact-hooks";
+import { act, renderHook } from "@testing-library/preact-hooks";
 import { Store } from "./store";
 import { StoreProvider } from "./store-provider";
 import { useValue } from "./use-value";
 import { DerivedValue } from "./state";
+import { echo } from "@bickley-wallace/utilities";
+
+jest.useFakeTimers();
+beforeEach(() => {
+  jest.clearAllTimers();
+});
 
 const wrapper = (store?: Store): ComponentType => (
   { children }
@@ -97,7 +103,63 @@ describe("useValue", () => {
   });
 
   describe("derived - async", () => {
-    it.todo("Add unit tests for asynchronous values.");
+    it("immediately returns pending.", () => {
+      const { result } = renderHook(
+        () => useValue({ name: "holiday", derive: () => Promise.resolve("Whistler") }),
+        { wrapper: wrapper() }
+      );
+
+      expect(result.current).toStrictEqual({ status: "pending" });
+    });
+
+    it("returns the resolved value.", async () => {
+      const { result, waitForNextUpdate } = renderHook(
+        () => useValue({ name: "holiday", derive: () => Promise.resolve("Whistler") }),
+        { wrapper: wrapper() }
+      );
+      await waitForNextUpdate({ timeout: 100 }); // Complete
+      expect(result.current).toStrictEqual({ status: "complete", value: "Whistler" });
+    });
+
+    it("returns a slow status if the promise takes a while.", async () => {
+      const { result, waitForNextUpdate } = renderHook(
+        () => useValue({
+          name: "holiday",
+          derive: () => echo("Whistler", 501)
+        }),
+        { wrapper: wrapper() }
+      );
+      jest.advanceTimersToNextTimer();
+      await waitForNextUpdate({ timeout: 100 }); // Slow
+      expect(result.current).toStrictEqual({ status: "slow" });
+    });
+
+    it("resolves to the value after it was reported as slow.", async () => {
+      const { result, waitForNextUpdate } = renderHook(
+        () => useValue({
+          name: "holiday",
+          derive: () => echo("Whistler", 501)
+        }),
+        { wrapper: wrapper() }
+      );
+
+      jest.advanceTimersToNextTimer();
+      await waitForNextUpdate({ timeout: 100 }); // Slow
+
+      jest.advanceTimersToNextTimer();
+      await waitForNextUpdate({ timeout: 100 }); // COmplete
+
+      expect(result.current).toStrictEqual({ status: "complete", value: "Whistler" });
+    });
+
+    it("returns the error if the promise fails.", async () => {
+      const { result, waitForNextUpdate } = renderHook(
+        () => useValue({ name: "holiday", derive: () => Promise.reject(new Error("Whoops!")) }),
+        { wrapper: wrapper() }
+      );
+      await waitForNextUpdate({ timeout: 100 }); // Failed
+      expect(result.current).toStrictEqual({ status: "failed", error: new Error("Whoops!") });
+    });
   });
 });
 

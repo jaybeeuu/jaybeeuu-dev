@@ -19,7 +19,7 @@ export const useAsyncGenerator = <Value>(
   generator: AsyncGenerator<Value>,
   initialValue: Value
 ): Value => {
-  const [value, setValue]  = useState<Value>(initialValue);
+  const [value, setValue] = useState<Value>(initialValue);
 
   useAsyncEffect(async (signal) => {
     for await (const nextValue of generator) {
