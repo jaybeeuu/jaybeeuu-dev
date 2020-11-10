@@ -14,7 +14,7 @@
     "gen-certs": "gen-certs",
     "start": "webpack-dev-server",
     "start:debug": "node --inspect-brk node_modules/webpack-dev-server/bin/webpack-dev-server.js",
-    "lint": "eslint --ext .js,.ts --format codeframe .",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx --format codeframe .",
     "type-check": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --runInBand --watch --no-cache"
