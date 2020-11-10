@@ -71,6 +71,19 @@ describe("recoiless store", () => {
       expect(secondListener).toHaveBeenCalledWith(newName);
     });
 
+    it("any one function can only be subscribed once.", () => {
+      const store = new Store();
+      const state = store.getValue(fullName);
+      const listener = jest.fn();
+      state.subscribe(listener);
+      state.subscribe(listener);
+      const firstNameState = store.getValue(firstName);
+
+      firstNameState.setValue("Isaac");
+
+      expect(listener).toHaveBeenCalledTimes(1);
+    });
+
     it("does not notify subscribed functions if the value is the same.", () => {
       const store = new Store();
       const state = store.getValue(firstName);
@@ -190,6 +203,19 @@ describe("recoiless store", () => {
 
       expect(firstListener).toHaveBeenCalledWith(`Isaac ${surname.initialValue}`);
       expect(secondListener).toHaveBeenCalledWith(`Isaac ${surname.initialValue}`);
+    });
+
+    it("any one function can only be subscribed once.", () => {
+      const store = new Store();
+      const state = store.getValue(fullName);
+      const listener = jest.fn();
+      state.subscribe(listener);
+      state.subscribe(listener);
+      const firstNameState = store.getValue(firstName);
+
+      firstNameState.setValue("Isaac");
+
+      expect(listener).toHaveBeenCalledTimes(1);
     });
 
     it("removes the value from the store once all subscriptions are released.", () => {

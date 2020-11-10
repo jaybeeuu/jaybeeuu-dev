@@ -23,15 +23,11 @@ const useValueStateSubscription = <Val>(
   valueState: ValueState<Val>
 ): void => {
   const [, updateState] = useState({});
-  const listener = useCallback(() => {
-    updateState({});
-  }, [valueState]);
+  const listener = useCallback(() => { updateState({}); }, [valueState]);
 
   const unsubscribe = valueState.subscribe(listener);
 
-  useEffect(() => {
-    return () => { unsubscribe(); };
-  }, [listener]);
+  useEffect(() => () => { unsubscribe(); }, [listener]);
 };
 
 const usePrimitiveValue = <Val>(
