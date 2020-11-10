@@ -1,19 +1,37 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "preact/hooks";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from "preact/hooks";
 import { useAsyncGenerator } from "./async-hooks";
 import { monitorPromise, PromiseState } from "./promise-status";
-import { DerivedValue, isPrimitiveValue, PrimitiveValue, Value, ValueState } from "./state";
+import {
+  DerivedValue,
+  isPrimitiveValue,
+  PrimitiveValue,
+  Value,
+  ValueState
+} from "./state";
 import { Store } from "./store";
 import { StoreContext } from "./store-provider";
 
 const useStore = (): Store => useContext(StoreContext);
 
-const useValueStateSubscription = <Val>(valueState: ValueState<Val>): void => {
+const useValueStateSubscription = <Val>(
+  valueState: ValueState<Val>
+): void => {
   const [, updateState] = useState({});
-  useEffect(() => {
-    const unsubscribe = valueState.subscribe(() => updateState({}));
-
-    return () => unsubscribe();
+  const listener = useCallback(() => {
+    updateState({});
   }, [valueState]);
+
+  const unsubscribe = valueState.subscribe(listener);
+
+  useEffect(() => {
+    return () => { unsubscribe(); };
+  }, [listener]);
 };
 
 const usePrimitiveValue = <Val>(
@@ -40,12 +58,14 @@ const useDerivedValue = <Val>(
   return current;
 };
 
-export function useValue<Val>(value: DerivedValue<Promise<Val>>): PromiseState<Val>;
-export function useValue<Val>(value: DerivedValue<Val>): Val;
-export function useValue<Val>(value: PrimitiveValue<Val>): [Val, (newValue: Val) => void];
-export function useValue<Val>(
+export interface UseValue {
+  <Val>(value: DerivedValue<Promise<Val>>): PromiseState<Val>;
+  <Val>(value: DerivedValue<Val>): Val;
+  <Val>(value: PrimitiveValue<Val>): [Val, (newValue: Val) => void];
+}
+export const useValue: UseValue = <Val>(
   value: Value<Val>
-): Val | PromiseState<Val> | [Val, (newValue: Val) => void] {
+): Val | PromiseState<Val> | [Val, (newValue: Val) => void] => {
   return isPrimitiveValue(value)
     ? usePrimitiveValue(value)
     : useDerivedValue(value);
