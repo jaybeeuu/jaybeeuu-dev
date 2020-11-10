@@ -1,9 +1,13 @@
 import { echo, delay, clearableEcho } from "./delay";
 
-jest.useFakeTimers();
+const setupMockTimers = (): void => {
+  jest.useFakeTimers();
+  jest.clearAllTimers();
+};
 
 describe("delay", () => {
   it("returns a promise which resolves after the delay.", async () => {
+    setupMockTimers();
     const promise = delay(100);
     expect(promise).toBeInstanceOf(Promise);
 
@@ -16,7 +20,8 @@ describe("delay", () => {
 
 describe("echo", () => {
   it("returns a promise which resolves, after the delay, to the supplied value.", async () => {
-    const promise = echo('{result}', 100);
+    setupMockTimers();
+    const promise = echo("{result}", 100);
     expect(promise).toBeInstanceOf(Promise);
 
     jest.advanceTimersByTime(100);
@@ -26,7 +31,8 @@ describe("echo", () => {
   });
 
   it("returns the result of the supplied factory after the given time.", async () => {
-    const factory = jest.fn<string, []>().mockReturnValue('{result}')
+    setupMockTimers();
+    const factory = jest.fn<string, []>().mockReturnValue("{result}");
     const promise = echo(factory, 100);
 
     jest.advanceTimersByTime(99);
@@ -34,13 +40,14 @@ describe("echo", () => {
     jest.advanceTimersByTime(1);
 
     const result = await promise;
-    expect(result).toBe('{result}');
+    expect(result).toBe("{result}");
   });
 });
 
 describe("clearableEcho", () => {
   it("returns a promise which resolves, after the delay, to the supplied value.", async () => {
-    const { promise } = clearableEcho('{result}', 100);
+    setupMockTimers();
+    const { promise } = clearableEcho("{result}", 100);
     expect(promise).toBeInstanceOf(Promise);
 
     jest.advanceTimersByTime(100);
@@ -52,7 +59,8 @@ describe("clearableEcho", () => {
   it.todo("can i test the clear without mocking setTimeout?");
 
   it("returns the result of the supplied factory after the given time.", async () => {
-    const factory = jest.fn<string, []>().mockReturnValue('{result}')
+    setupMockTimers();
+    const factory = jest.fn<string, []>().mockReturnValue("{result}");
     const { promise } = clearableEcho(factory, 100);
 
     jest.advanceTimersByTime(99);
@@ -60,6 +68,6 @@ describe("clearableEcho", () => {
     jest.advanceTimersByTime(1);
 
     const result = await promise;
-    expect(result).toBe('{result}');
+    expect(result).toBe("{result}");
   });
 });

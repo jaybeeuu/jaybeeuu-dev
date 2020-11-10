@@ -21,8 +21,8 @@ export interface Complete<Value> {
   value: Value;
 }
 
-const pending = () => pendingStatus;
-const slow = () => slowStatus;
+const pending = (): Pending => pendingStatus;
+const slow = (): Slow => slowStatus;
 const failed = (error: Error | { [value: string]: Error }): Failed => ({ status: "failed", error });
 
 function complete(): Complete<never>

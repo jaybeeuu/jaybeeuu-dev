@@ -5,11 +5,7 @@ import { StoreProvider } from "./store-provider";
 import { useValue } from "./use-value";
 import { DerivedValue } from "./state";
 import { echo } from "@bickley-wallace/utilities";
-
-jest.useFakeTimers();
-beforeEach(() => {
-  jest.clearAllTimers();
-});
+import { setupMockTimers } from "../test/time";
 
 const wrapper = (store?: Store): ComponentType => (
   { children }
@@ -122,6 +118,7 @@ describe("useValue", () => {
     });
 
     it("returns a slow status if the promise takes a while.", async () => {
+      setupMockTimers();
       const { result, waitForNextUpdate } = renderHook(
         () => useValue({
           name: "holiday",
@@ -135,6 +132,7 @@ describe("useValue", () => {
     });
 
     it("resolves to the value after it was reported as slow.", async () => {
+      setupMockTimers();
       const { result, waitForNextUpdate } = renderHook(
         () => useValue({
           name: "holiday",

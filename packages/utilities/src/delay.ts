@@ -2,6 +2,8 @@ export const delay = (msDelay: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(() => resolve(), msDelay));
 };
 
+const isFactory = <Value>(value: ValueOrFactory<Value>): value is () => Value => typeof value === "function";
+
 export interface Echo {
   <Value>(value: Exclude<Value, Function>, timeout: number): Promise<Value>;
   <Value>(valueFactory: () => Value, timeout: number): Promise<Value>;
@@ -11,7 +13,7 @@ export const echo: Echo = async <Value>(
   msDelay: number
 ): Promise<Value> => {
   await delay(msDelay);
-  return typeof value === "function" ? value() : value;
+  return isFactory(value) ? value() : value;
 };
 
 export type ClearablePromise<Value> = { clear: () => void, promise: Promise<Value> }
@@ -29,8 +31,7 @@ export const clearableEcho: ClearableEcho = <Value>(
     clear: () => clearTimeout(timeout),
     promise: new Promise<Value>((resolve) => {
       timeout = setTimeout(() => {
-        const returnValue = typeof value === 'function' ? value() : value;
-
+        const returnValue = isFactory(value) ? value() : value;
         resolve(returnValue);
       }, msDelay);
     })

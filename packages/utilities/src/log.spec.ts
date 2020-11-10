@@ -2,12 +2,10 @@
 import "../../compost/test/custom-matchers";
 import * as log from "./log";
 
-describe("log", () => {
-  beforeEach(() => {
-    jest.spyOn(console, "log").mockImplementation(() => {});
-    jest.spyOn(console, "error").mockImplementation(() => {});
-  });
+jest.spyOn(console, "log").mockImplementation(() => {});
+jest.spyOn(console, "error").mockImplementation(() => {});
 
+describe("log", () => {
   describe("info", () => {
     it("passes arguments to console.log", () => {
       const args = [1, "2", { id: 3 }];

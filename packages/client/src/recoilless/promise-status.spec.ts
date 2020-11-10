@@ -1,10 +1,8 @@
-import { monitorPromise, PromiseState, combinePromises } from "./promise-status";
-import { asError } from "../utils/as-error";
 import { echo } from "@bickley-wallace/utilities";
-import { act } from "@testing-library/preact-hooks";
 import { advanceByTimeThenAwait } from "../test/async-helpers";
-
-jest.useFakeTimers();
+import { setupMockTimers } from "../test/time";
+import { asError } from "../utils/as-error";
+import { monitorPromise, PromiseState, combinePromises } from "./promise-status";
 
 const getIterator = <Value>(promise: Promise<Value>): AsyncIterator<PromiseState<Value>> => {
   const request = monitorPromise(promise);
@@ -40,6 +38,7 @@ describe("monitorPromise", () => {
   });
 
   it("returns a slow request status if the request takes longer than 500ms.", async () => {
+    setupMockTimers();
     const requestIterator = getIterator(echo("Pears", 501));
 
     const firstResult = await advanceByTimeThenAwait(500, () => getNextValue(requestIterator));

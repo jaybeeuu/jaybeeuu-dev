@@ -8,11 +8,11 @@ module.exports = {
   extends: [
     "plugin:jest/all"
   ],
-  rules: [
+  rules: {
     "jest/prefer-expect-assertions": "off",
     "jest/valid-describe": "off",
     "jest/valid-title": ["error", { "ignoreTypeOfDescribeName": false }]
-  ],
+  },
   overrides: [
     {
       files: [

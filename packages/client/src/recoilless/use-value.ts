@@ -65,4 +65,4 @@ export const useValue: UseValue = <Val>(
   return isPrimitiveValue(value)
     ? usePrimitiveValue(value)
     : useDerivedValue(value);
-}
+};
