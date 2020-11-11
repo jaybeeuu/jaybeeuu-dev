@@ -22,9 +22,8 @@ const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
         {Object.values(manifest).sort(compareDateString).map((meta) => (
           <li className={e2eHooks.id(meta.slug)} key={meta.slug}>
             <h3>
-              <Link href={`/posts/${meta.slug}`} className={e2eHooks.link}>{meta.title}</Link>
+              <Link href={`/posts/${meta.slug}`} className={e2eHooks.link}>{meta.title}</Link> - {new Date(meta.lastUpdateDate ?? meta.publishDate).toLocaleDateString()}
             </h3>
-            <h4>{meta.lastUpdateDate ?? meta.publishDate}</h4>
             <summary className={e2eHooks.abstract}>{meta.abstract}</summary>
           </li>
         ))}
