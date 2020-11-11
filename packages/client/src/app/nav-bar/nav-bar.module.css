@@ -4,3 +4,11 @@
   align-items: center;
   justify-content: center;
 }
+
+.element > * {
+  margin-right: 1rem;;
+}
+
+.element > :last-child {
+  margin-right: 0;
+}

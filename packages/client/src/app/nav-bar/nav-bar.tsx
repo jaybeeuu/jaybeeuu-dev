@@ -13,8 +13,8 @@ export interface NavBarProps {
 export const NavBar = ({ className }: NavBarProps): VNode<any> => {
   return (
     <div className={classNames(css.element, e2eHooks.block, className)}>
-      <ThemeToggle className={e2eHooks.switch} />
       <Link href={"/posts"} className={e2eHooks.postListLink}>Posts</Link>
+      <ThemeToggle className={e2eHooks.switch} />
     </div>
   );
 };
