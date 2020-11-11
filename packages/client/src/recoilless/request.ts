@@ -19,7 +19,7 @@ export const fetchJson = async <ResponseContent>(
   input: RequestInfo,
   init?: RequestInit
 ): Promise<ResponseContent> => {
-  return fetchRequest<ResponseContent>(async <ResponseContent>(response: Response): Promise<ResponseContent> => {
+  return fetchRequest(async (response: Response): Promise<ResponseContent> => {
     return await response.json() as ResponseContent;
   })(input, init);
 };
