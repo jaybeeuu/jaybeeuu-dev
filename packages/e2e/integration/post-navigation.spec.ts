@@ -53,4 +53,11 @@ context("Post navigation", (): void => {
     postList.openPost("the-rewrite");
     post.getArticle().should("contain.post.title", "the-rewrite");
   });
+
+  it("switches back to the post list when the link is clicked after opening a post.", () => {
+    post.navigateTo("the-rewrite");
+    navBar.getPostListLink().click();
+    cy.wait(getPostsAlias("manifest"));
+    postList.get().should("be.visible");
+  });
 });

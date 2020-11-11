@@ -13,7 +13,7 @@ export const StoreContext = createContext(new Store());
 export const StoreProvider = ({ store, children }: StoreProps): JSX.Element => {
   const defaultedStore = useMemo(() => store ?? new Store(), [store]);
   return (
-    <StoreContext.Provider value={defaultedStore  }>
+    <StoreContext.Provider value={defaultedStore}>
       {children}
     </StoreContext.Provider>
   );
