@@ -9,12 +9,12 @@ module.exports = {
     "eslint:recommended"
   ],
   rules: {
-    "eol-last": ["error"],
+    "eol-last": "error",
     "indent": ["error", 2, { SwitchCase: 1 }],
-    "no-console": ["error"],
-    "no-shadow": ["error"],
+    "no-console": "error",
+    "no-shadow": "error",
     "no-trailing-spaces": "error",
-    "no-unused-vars": ["off"],
+    "no-unused-vars": "off",
     "operator-linebreak": ["error", "before"],
     "quotes": ["error", "double"],
     "semi": ["error", "always"]
@@ -40,9 +40,11 @@ module.exports = {
         "indent": "off",
         "@typescript-eslint/indent": ["error", 2, { SwitchCase: 1 }],
         "@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: false }],
+        "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": ["error", { ignoreRestSiblings: true }],
         "@typescript-eslint/switch-exhaustiveness-check": "error",
-        "no-unused-vars": ["off"]
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": "error"
       }
     },
     {

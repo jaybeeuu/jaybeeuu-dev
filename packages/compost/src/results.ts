@@ -1,5 +1,5 @@
 export enum ResultState {
-  // eslint-disable-next-line no-shadow
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   success = "success",
   failure = "failure"
 }
