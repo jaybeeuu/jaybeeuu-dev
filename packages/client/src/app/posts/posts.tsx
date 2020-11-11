@@ -4,11 +4,11 @@ import { postList as e2eHooks } from "@bickley-wallace/e2e-hooks";
 import classNames from "classnames";
 import { Link } from "preact-router";
 import { useValue } from "../../recoilless/use-value";
+import { asRoute } from "../as-route";
 import { postsManifest } from "../state";
 import { withPromise as withPromise } from "../with-promise";
 
-import css from "../nav-bar/nav-bar.module.css";
-import { asRoute } from "../as-route";
+import css from "./posts.module.css";
 
 const compareDateString = (
   left: PostMetaData,

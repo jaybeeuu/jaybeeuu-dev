@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { h, FunctionComponent, JSX, createRef, render } from "preact";
 import { PostMetaData } from "@bickley-wallace/compost";
 import { post as e2eHooks } from "@bickley-wallace/e2e-hooks";
@@ -9,6 +10,8 @@ import { Icon } from "../icon";
 import { currentPostHtml, currentPostMeta, currentPostSlug } from "../state";
 
 import "./night-owl.css";
+
+import css from './post.module.css';
 
 const headingLinkSelector = "h1 a:empty, h2 a:empty, h3 a:empty, h4 a:empty, h5 a:empty, h6 a:empty";
 
@@ -23,7 +26,7 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
   }, [postHtml]);
 
   return (
-    <div className={e2eHooks.article}>
+    <div className={classNames(css.element, e2eHooks.article)}>
       <div>
         <h1>{postMeta.title}</h1>
         <h5>{postMeta.lastUpdateDate ?? postMeta.publishDate}</h5>

@@ -11,6 +11,7 @@ a {
 }
 
 article {
+  max-width: 80rem;
   margin: 2.4rem;
   font-size: 1.8rem;
 }
