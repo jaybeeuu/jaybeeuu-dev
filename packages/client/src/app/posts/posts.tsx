@@ -18,16 +18,17 @@ const compareDateString = (
 const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
   return (
     <div className={classNames(css.element, e2eHooks.block)}>
-      <ul>
-        {Object.values(manifest).sort(compareDateString).map((meta) => (
-          <li className={e2eHooks.id(meta.slug)} key={meta.slug}>
-            <h3>
-              <Link href={`/posts/${meta.slug}`} className={e2eHooks.link}>{meta.title}</Link> - {new Date(meta.lastUpdateDate ?? meta.publishDate).toLocaleDateString()}
-            </h3>
-            <summary className={e2eHooks.abstract}>{meta.abstract}</summary>
-          </li>
-        ))}
-      </ul>
+      {Object.values(manifest).sort(compareDateString).map((meta) => (
+        <div className={classNames(css.post, e2eHooks.id(meta.slug))} key={meta.slug}>
+          <div className={css.titleRow}>
+            <h2>
+              <Link href={`/posts/${meta.slug}`} className={e2eHooks.link}>{meta.title}</Link>
+            </h2>
+            <span className={css.date}>{new Date(meta.lastUpdateDate ?? meta.publishDate).toLocaleDateString()}</span>
+          </div>
+          <summary className={e2eHooks.abstract}>{meta.abstract}</summary>
+        </div>
+      ))}
     </div>
   );
 });
