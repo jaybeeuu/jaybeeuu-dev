@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import classNames from "classnames";
 import { h, FunctionComponent, JSX, createRef, render } from "preact";
 import { PostMetaData } from "@bickley-wallace/compost";
 import { post as e2eHooks } from "@bickley-wallace/e2e-hooks";
@@ -11,7 +11,7 @@ import { currentPostHtml, currentPostMeta, currentPostSlug } from "../state";
 
 import "./night-owl.css";
 
-import css from './post.module.css';
+import css from "./post.module.css";
 
 const headingLinkSelector = "h1 a:empty, h2 a:empty, h3 a:empty, h4 a:empty, h5 a:empty, h6 a:empty";
 
