@@ -1,10 +1,11 @@
 .dark {
-  --background-main: #45474b;
+  --background-document: #0d1014;;
+  --background-content: #0e1a2d;
   --background-code: #232529;
 
-  --text-main: #dddddd;
-  --text-code: #dddddd;
-  --text-link: #aaaaaa;
+  --text-main: #c1ccdd;
+  --text-code: #c1ccdd;
+  --text-link: #96a4b8;
 
   --spinner-main: #dddddd;
   --spinner-secondary:  rgba(255, 255, 255, .3);
@@ -16,7 +17,8 @@
 }
 
 .light {
-  --background-main: #dce0e7;
+  --background-document: #ffffff;
+  --background-content: #ffffff;
   --background-code: #45474b;
 
   --text-main: #343438;

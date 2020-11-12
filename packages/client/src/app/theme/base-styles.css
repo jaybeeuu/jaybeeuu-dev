@@ -2,6 +2,7 @@
   --transition-simple: 100ms;
   --transition-average: 200ms;
   --transition-complex: 500ms;
+  --content-width: 80rem;
 }
 
 a {
@@ -11,8 +12,8 @@ a {
 }
 
 article {
-  max-width: 80rem;
-  margin: 2.4rem;
+  max-width: var(--content-width);
+  padding: 2.4rem;
   font-size: 1.8rem;
 }
 

@@ -1,10 +1,14 @@
-.root {
+.component-root {
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
 
 .main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   overflow: auto;
   flex: 1 1 auto;
 }

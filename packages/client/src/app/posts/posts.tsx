@@ -17,7 +17,7 @@ const compareDateString = (
 
 const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
   return (
-    <div className={classNames(css.element, e2eHooks.block)}>
+    <div className={classNames(css.componentRoot, e2eHooks.block)}>
       {Object.values(manifest).sort(compareDateString).map((meta) => (
         <div className={classNames(css.post, e2eHooks.id(meta.slug))} key={meta.slug}>
           <div className={css.titleRow}>

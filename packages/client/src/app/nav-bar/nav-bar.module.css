@@ -1,14 +1,14 @@
-.element {
+.component-root {
   padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.element > * {
+.component-root > * {
   margin-right: 1rem;;
 }
 
-.element > :last-child {
+.component-root > :last-child {
   margin-right: 0;
 }

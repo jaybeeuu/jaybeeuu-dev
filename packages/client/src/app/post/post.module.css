@@ -1,10 +1,11 @@
-.element {
+.component-root {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.element article {
-  margin-top: 0;
+.component-root article {
+  background-color: var(--background-content);
+  padding-top: 0;
 }

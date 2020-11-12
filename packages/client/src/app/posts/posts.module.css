@@ -1,6 +1,8 @@
-.element {
+.component-root {
   margin: 0;
   padding: 2rem;
+  max-width: var(--content-width);
+  background-color: var(--background-content);
 }
 
 .post {
