@@ -1,12 +1,13 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "baseUrl": ".",
+    "declaration": false,
     "esModuleInterop": true,
     "lib": [
       "dom",
       "ESNext"
     ],
-    "declaration": false,
     "types": ["cypress"]
   },
   "exclude": ["node_modules"]

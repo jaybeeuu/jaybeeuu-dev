@@ -30,6 +30,7 @@
     "@bickley-wallace/posts": "workspace:*",
     "@bickley-wallace/scripts": "workspace:*",
     "@bickley-wallace/utilities": "workspace:*",
+    "@prefresh/babel-plugin": "^0.2.2",
     "@prefresh/webpack": "^2.2.0",
     "@testing-library/preact": "^2.0.0",
     "@testing-library/preact-hooks": "^1.1.0",
