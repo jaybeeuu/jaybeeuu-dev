@@ -1,6 +1,3 @@
-
-# We are introducing redux - should we rewrite the whole thing?
-
 My advice is always not to rewrite your application all in one go.
 
 If you do that every time you add or change a technology they your productivity will tank. We have something like 100,000 lines of code in our app and have just decided to start using TypeScript - imagine how long it would take if we tried to rewrite the whole thing in one go.
