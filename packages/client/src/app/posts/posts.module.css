@@ -3,14 +3,28 @@
   padding: 2rem;
   max-width: var(--content-width);
   background-color: var(--background-content);
+  transition: background-color var(--transition-theme);
+  margin: auto;
 }
 
 .post {
-  margin-top: 2rem;
+  display: block;
+  margin: 2rem 0;
+  padding: 1rem;
+  border: none;
+}
+
+.post:hover {
+  padding: 0.8rem;
+  border: 0.2rem dotted var(--text-link);
 }
 
 .post:first-child {
   margin-top: 0;
+}
+
+.post:last-child {
+  margin-bottom: 0;
 }
 
 .title-row {

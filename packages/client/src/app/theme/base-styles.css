@@ -1,20 +1,29 @@
 :root {
-  --transition-simple: 100ms;
-  --transition-average: 200ms;
-  --transition-complex: 500ms;
+  --transition-simple: 100ms ease-in-out;
+  --transition-average: 200ms ease-in-out;
+  --transition-complex: 500ms ease-in-out;
+  --transition-theme: 1s ease-in-out;
   --content-width: 80rem;
 }
 
 a {
   color: var(--text-link);
   text-decoration: none;
-  border-bottom: 1px dotted var(--text-link);
+  border-bottom: 0.2rem dotted var(--text-link);
+  transition: color var(--transition-theme);
 }
 
 article {
-  max-width: var(--content-width);
   padding: 2.4rem;
   font-size: 1.8rem;
+}
+
+article > :first-child {
+  margin-top: 0;
+}
+
+article > :last-child {
+  margin-bottom: 0;
 }
 
 article h1,
@@ -34,7 +43,6 @@ a.hash-link {
 }
 
 a.hash-link svg {
-  transition: fill var(--transition-average) ease-in-out;
   fill: transparent;
 }
 
@@ -50,6 +58,7 @@ article h6:hover a.hash-link svg {
 pre {
   padding: 1rem;
   color: var(--text-code);
+  transition: color var(--transition-theme);
   overflow: auto;
   counter-reset: code-line;
 }

@@ -1,11 +1,9 @@
 .component-root {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  max-width: var(--content-width);
+  margin: 0 auto;
 }
 
 .component-root article {
   background-color: var(--background-content);
-  padding-top: 0;
+  transition: background-color var(--transition-theme);
 }

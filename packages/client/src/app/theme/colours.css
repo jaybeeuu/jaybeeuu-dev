@@ -1,11 +1,11 @@
 .dark {
-  --background-document: #0d1014;;
+  --background-document: #0d1014;
   --background-content: #0e1a2d;
   --background-code: #232529;
 
-  --text-main: #c1ccdd;
-  --text-code: #c1ccdd;
-  --text-link: #96a4b8;
+  --text-main: #96a4b8;
+  --text-code: #96a4b8;
+  --text-link: #788aa3;
 
   --spinner-main: #dddddd;
   --spinner-secondary:  rgba(255, 255, 255, .3);

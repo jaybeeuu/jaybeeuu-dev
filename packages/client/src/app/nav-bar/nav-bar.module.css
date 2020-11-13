@@ -12,3 +12,14 @@
 .component-root > :last-child {
   margin-right: 0;
 }
+
+.link {
+  padding: 0 0.5rem;
+  border-bottom: none;
+}
+
+.link.active {
+  padding: 0 0.3rem;
+  border-left: 0.2rem dotted var(--text-link);
+  border-right: 0.2rem dotted var(--text-link);
+}
