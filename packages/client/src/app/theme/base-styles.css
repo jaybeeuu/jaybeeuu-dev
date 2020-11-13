@@ -10,7 +10,7 @@ a {
   color: var(--text-link);
   text-decoration: none;
   border-bottom: 0.2rem dotted var(--text-link);
-  transition: color var(--transition-theme);
+  transition: border-color var(--transition-theme), color var(--transition-theme);
 }
 
 article {
