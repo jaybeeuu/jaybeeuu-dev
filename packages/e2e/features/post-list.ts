@@ -9,17 +9,13 @@ export const get = (): Cypress.Chainable<JQuery<HTMLElement>> => {
 };
 
 const getPostLink = (slug: PostSlug): Cypress.Chainable<JQuery<HTMLElement>> => {
-  return cy.get(postListSelectors.id(slug)).find(postListSelectors.link);
-};
-
-const getPostAbstract = (slug: PostSlug): Cypress.Chainable<JQuery<HTMLElement>> => {
-  return cy.get(postListSelectors.id(slug)).find(postListSelectors.abstract);
+  return cy.get<HTMLElement>(postListSelectors.link(slug));
 };
 
 export const hasLinkToPost = (slug: PostSlug): void => {
   withPostMetaData(slug).then((postMetaData) => {
-    getPostLink(slug).should("have.text", postMetaData.title);
-    getPostAbstract(slug).should("contain.text", postMetaData.abstract);
+    getPostLink(slug).should("contain.text", postMetaData.title);
+    getPostLink(slug).should("contain.text", postMetaData.abstract);
   });
 };
 

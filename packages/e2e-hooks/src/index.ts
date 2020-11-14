@@ -18,9 +18,7 @@ export const navBar = {
 const postListHookBlock = makeHookBlock("post-list");
 export const postList = {
   block: postListHookBlock(),
-  id: (slug: string): string => postListHookBlock.modifier(slug),
-  link: postListHookBlock.element("link"),
-  abstract: postListHookBlock.element("abstract")
+  link: (slug: string): string => postListHookBlock.modifier(slug)
 };
 
 const themeHookBlock = makeHookBlock("theme");
