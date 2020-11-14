@@ -9,7 +9,8 @@ import { asRoute } from "../as-route";
 import { Icon } from "../icon";
 import { currentPostHtml, currentPostMeta, currentPostSlug } from "../state";
 
-import "./night-owl.css";
+import "./highlight-colours.css";
+import "./highlight.css";
 
 import css from "./post.module.css";
 
@@ -27,7 +28,7 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
 
   return (
     <div className={classNames(css.componentRoot, e2eHooks.article)}>
-      <div>
+      <div className={css.titleContainer}>
         <h1>{postMeta.title}</h1>
         <h4>{new Date(postMeta.lastUpdateDate ?? postMeta.publishDate).toLocaleDateString()}</h4>
       </div>

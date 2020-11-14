@@ -3,6 +3,10 @@
   margin: 0 auto;
 }
 
+.title-container {
+  margin: 0 2rem;
+}
+
 .component-root article {
   background-color: var(--background-content);
   transition: background-color var(--transition-theme);

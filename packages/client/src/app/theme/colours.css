@@ -17,9 +17,9 @@
 }
 
 .light {
-  --background-document: #ffffff;
+  --background-document: #eeeeee;
   --background-content: #ffffff;
-  --background-code: #45474b;
+  --background-code: #eeeeee;
 
   --text-main: #343438;
   --text-code: #dddddd;
