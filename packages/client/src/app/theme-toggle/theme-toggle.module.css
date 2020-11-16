@@ -9,7 +9,7 @@
 .track {
   border: 0.1em solid var(--toggle-secondary);
   background-color: var(--toggle-secondary);
-  transition: background-color var(--transition-theme);
+  transition: var(--transition-theme);
   border-radius: 0.1em;
   width: 1em;
   position: relative;
@@ -24,7 +24,7 @@
   position: absolute;
   left: -0.1em;
   top: -0.2em;
-  transition: background-color var(--transition-theme), border-color var(--transition-theme), left var(--transition-complex);
+  transition: var(--transition-theme), left var(--transition-average);
 }
 
 .right {

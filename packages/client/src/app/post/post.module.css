@@ -9,5 +9,5 @@
 
 .component-root article {
   background-color: var(--background-content);
-  transition: background-color var(--transition-theme);
+  transition: var(--transition-theme);
 }

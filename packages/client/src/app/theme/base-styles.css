@@ -2,15 +2,15 @@
   --transition-simple: 100ms ease-in-out;
   --transition-average: 200ms ease-in-out;
   --transition-complex: 500ms ease-in-out;
-  --transition-theme: 1s ease-in-out;
+  --transition-slow: 1s ease-in-out;
+  --transition-theme: border-color 1s ease-in-out, color 1s ease-in-out, fill 1s ease-in-out, background-color 1s ease-in-out;
   --content-width: 80rem;
 }
 
 a {
   color: var(--text-link);
   text-decoration: none;
-  border-bottom: 0.2rem dotted var(--text-link);
-  transition: border-color var(--transition-theme), color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 
 article {
@@ -54,11 +54,16 @@ article h5:hover a.hash-link svg,
 article h6:hover a.hash-link svg {
   fill: var(--icon-fill);
 }
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-heading);
+  transition: var(--transition-theme);
+  border-bottom: 0.2rem solid var(--border-heading);
+}
+
 
 pre {
   padding: 1rem;
-  color: var(--text-code);
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
   overflow: auto;
   counter-reset: code-line;
 }

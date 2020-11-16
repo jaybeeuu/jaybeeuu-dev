@@ -4,189 +4,189 @@
   padding: 0.5em;
   background: var(--hljs-background-colour);
   color: var(--hljs-colour);
-  transition: background-color var(--transition-theme), color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 
 /* General Purpose */
 .hljs-keyword {
   color: var(--hljs-keyword-colour, var(--hljs-colour));
   font-style: italic;
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-built_in {
   color: var(--hljs-built-in-colour, var(--hljs-colour));
   font-style: italic;
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-type {
   color: var(--hljs-type-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-literal {
   color: var(--hljs-literal-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-number {
   color: var(--hljs-number-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-regexp {
   color: var(--hljs-regexp-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-string {
   color: var(--hljs-string-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-subst {
   color: var(--hljs-subst-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-symbol {
   color: var(--hljs-symbol-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-class {
   color: var(--hljs-class-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-function {
   color: var(--hljs-function-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-title {
   color: var(--hljs-title-colour, var(--hljs-colour));
   font-style: italic;
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-params {
   color: var(--hljs-params-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 
 /* Meta */
 .hljs-comment {
   color: var(--hljs-comment-colour, var(--hljs-colour));
   font-style: italic;
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-doctag {
   color: var(--hljs-doctag-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-meta {
   color: var(--hljs-meta-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-meta-keyword {
   color: var(--hljs-meta-keyword-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-meta-string {
   color: var(--hljs-meta-string-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 
 /* Tags, attributes, config */
 .hljs-section {
   color: var(--hljs-section-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 
 .hljs-tag {
   color: var(--hljs-tag-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 
 .hljs-name {
   color: var(--hljs-name-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-builtin-name {
   color: var(--hljs-builtin-name-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-attr {
   color: var(--hljs-attr-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-attribute {
   color: var(--hljs-attribute-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-variable {
   color: var(--hljs-variable-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 
 /* Markup */
 .hljs-bullet {
   color: var(--hljs-bullet-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-code {
   color: var(--hljs-regexp-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-emphasis {
   color: var(--hljs-emphasis-colour, var(--hljs-colour));
   font-style: italic;
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-strong {
   color: var(--hljs-string-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
   font-weight: bold;
 }
 .hljs-formula {
   color: var(--hljs-formula-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-link {
   color: var(--hljs-link-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-quote {
   color: var(--hljs-quote-colour, var(--hljs-colour));
   font-style: italic;
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 
 /* CSS */
 .hljs-selector-tag {
   color: var(--hljs-slector-tag-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 
 .hljs-selector-id {
   color: var(--hljs-selector-id-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 
 .hljs-selector-class {
   color: var(--hljs-selector-class-colour, var(--hljs-colour));
   font-style: italic;
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 
 .hljs-selector-attr {
   color: var(--hljs-selector-attr-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-selector-pseudo {
   color: var(--hljs-selector-pseudo-colour, var(--hljs-colour));
   font-style: italic;
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 
 /* Templates */
 .hljs-template-tag {
   color: var(--hljs-template-tag-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 .hljs-template-variable {
   color: var(--hljs-template-variable-colour, var(--hljs-colour));
-  transition: color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 
 /* diff */
@@ -194,12 +194,12 @@
   color: var(--hljs-addition-colour, var(--hljs-colour));
   background-color: var(--hljs-addition-background-colour, var(--hljs-background-colour));
   font-style: italic;
-  transition: background-color var(--transition-theme), color var(--transition-theme);
+  transition: var(--transition-theme);
 }
 
 .hljs-deletion {
   color: var(--hljs-deletion-colour, var(--hljs-colour));
   background-color: var(--hljs-deletion-background-colour, var(--hljs-background-colour));
   font-style: italic;
-  transition: background-color var(--transition-theme), color var(--transition-theme);
+  transition: var(--transition-theme);
 }

@@ -3,7 +3,7 @@
   padding: 2rem;
   max-width: var(--content-width);
   background-color: var(--background-content);
-  transition: background-color var(--transition-theme);
+  transition: var(--transition-theme);
   margin: auto;
 }
 

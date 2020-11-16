@@ -3,9 +3,11 @@
   --background-content: #0e1a2d;
   --background-code: #232529;
 
-  --text-main: #96a4b8;
-  --text-code: #96a4b8;
-  --text-link: #788aa3;
+  --border-heading: #ff6768;
+
+  --text-main: #eeeeee;
+  --text-code: #eeeeee;
+  --text-link: #ff6768;
 
   --spinner-main: #dddddd;
   --spinner-secondary:  rgba(255, 255, 255, .3);
@@ -21,8 +23,9 @@
   --background-content: #ffffff;
   --background-code: #eeeeee;
 
+  --border-heading: #ff6768;
+
   --text-main: #343438;
-  --text-code: #dddddd;
   --text-link: #121216;
 
   --spinner-main: #343438;
