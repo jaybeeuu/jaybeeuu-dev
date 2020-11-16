@@ -40,10 +40,12 @@ a.hash-link {
   border-bottom: none;
   display: block;
   height: 2.4rem;
+  margin: 0 0.5rem;
 }
 
 a.hash-link svg {
   fill: transparent;
+  transition: fill var(--transition-average);
 }
 
 article h1:hover a.hash-link svg,
@@ -54,12 +56,21 @@ article h5:hover a.hash-link svg,
 article h6:hover a.hash-link svg {
   fill: var(--icon-fill);
 }
+
 h1, h2, h3, h4, h5, h6 {
   color: var(--text-heading);
   transition: var(--transition-theme);
   border-bottom: 0.2rem solid var(--border-heading);
 }
-
+h1 {
+  margin-top: 6rem;
+}
+h2 {
+  margin-top: 5rem;
+}
+h3 {
+  margin-top: 4rem;
+}
 
 pre {
   padding: 1rem;

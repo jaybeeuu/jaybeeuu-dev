@@ -1,6 +1,7 @@
 .component-root {
   margin: 0;
   padding: 2rem;
+  color: var(--text-main);
   max-width: var(--content-width);
   background-color: var(--background-content);
   transition: var(--transition-theme);
@@ -9,14 +10,15 @@
 
 .post {
   display: block;
-  margin: 2rem 0;
+  color: var(--text-main);
+  border: 0.2rem dotted transparent;
+  margin: 4rem 0;
   padding: 1rem;
-  border: none;
+  transition: var(--transition-theme), border-color var(--transition-average);
 }
 
 .post:hover {
-  padding: 0.8rem;
-  border: 0.2rem dotted var(--text-link);
+  border-color: var(--text-link);
 }
 
 .post:first-child {
