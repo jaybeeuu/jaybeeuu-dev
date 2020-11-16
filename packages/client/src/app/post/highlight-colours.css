@@ -1,45 +1,9 @@
-/* Atelier-Cave */
-.light {
-  --hljs-colour: #585260;
-  --hljs-background-colour: #eeeeee;
 
-  --hljs-addition-background-colour: #2a9292;
-  --hljs-addition-colour: #19171c;
-  --hljs-attribute-colour: #be4678;
-  --hljs-built-in-colour: #aa573c;
-  --hljs-builtin-colour: #aa573c;
-  --hljs-bullet-colour: #2a9292;
-  --hljs-comment-colour: #655f6d;
-  --hljs-deletion-background-colour: #be4678;
-  --hljs-deletion-colour: #19171c;
-  --hljs-keyword-colour: #955ae7;
-  --hljs-link-colour: #be4678;
-  --hljs-literal-colour: #aa573c;
-  --hljs-meta-colour: #aa573c;
-  --hljs-name-colour: #be4678;
-  --hljs-name-colour: #be4678;
-  --hljs-name-colour: #be4678;
-  --hljs-number-colour: #aa573c;
-  --hljs-params-colour: #aa573c;
-  --hljs-quote-colour: #655f6d;
-  --hljs-regexp-colour: #be4678;
-  --hljs-section-colour: #576ddb;
-  --hljs-selector-class-colour: #be4678;
-  --hljs-selector-id-colour: #be4678;
-  --hljs-selector-tag-colour: #955ae7;
-  --hljs-string-colour: #2a9292;
-  --hljs-symbol-colour: #2a9292;
-  --hljs-tag-colour: #be4678;
-  --hljs-template-variable-colour: #be4678;
-  --hljs-title-colour: #576ddb;
-  --hljs-type-colour: #aa573c;
-  --hljs-variable-colour: #be4678;
-}
 
 /* Night Owl */
 .dark {
   --hljs-colour: #d6deeb;
-  --hljs-background-colour: #00101d ;
+  --hljs-background-colour: #00101d;
 
   --hljs-addition-cplor: #addb67ff;
   --hljs-attr-colour: #7fdbca;
@@ -82,4 +46,42 @@
   --hljs-title-colour: #DCDCAA;
   --hljs-type-colour: #82aaff;
   --hljs-variable-colour: #addb67;
+}
+
+/* Atelier-Cave */
+.light {
+  --hljs-colour: #585260;
+  --hljs-background-colour: #eeeeee;
+
+  --hljs-addition-background-colour: #2a9292;
+  --hljs-addition-colour: #19171c;
+  --hljs-attribute-colour: #be4678;
+  --hljs-built-in-colour: #aa573c;
+  --hljs-builtin-colour: #aa573c;
+  --hljs-bullet-colour: #2a9292;
+  --hljs-comment-colour: #655f6d;
+  --hljs-deletion-background-colour: #be4678;
+  --hljs-deletion-colour: #19171c;
+  --hljs-keyword-colour: #955ae7;
+  --hljs-link-colour: #be4678;
+  --hljs-literal-colour: #aa573c;
+  --hljs-meta-colour: #aa573c;
+  --hljs-name-colour: #be4678;
+  --hljs-name-colour: #be4678;
+  --hljs-name-colour: #be4678;
+  --hljs-number-colour: #aa573c;
+  --hljs-params-colour: #aa573c;
+  --hljs-quote-colour: #655f6d;
+  --hljs-regexp-colour: #be4678;
+  --hljs-section-colour: #576ddb;
+  --hljs-selector-class-colour: #be4678;
+  --hljs-selector-id-colour: #be4678;
+  --hljs-selector-tag-colour: #955ae7;
+  --hljs-string-colour: #2a9292;
+  --hljs-symbol-colour: #2a9292;
+  --hljs-tag-colour: #be4678;
+  --hljs-template-variable-colour: #be4678;
+  --hljs-title-colour: #576ddb;
+  --hljs-type-colour: #aa573c;
+  --hljs-variable-colour: #be4678;
 }

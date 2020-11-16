@@ -14,12 +14,22 @@
 }
 
 .link {
+  colour: var(--colour-text-main);
+  transition: var(--transition-theme), border-color var(--transition-average);
   padding: 0 0.5rem;
   border-bottom: none;
+  border-left: 0.2rem dotted;
+  border-right: 0.2rem dotted;
+  border-color: transparent;
+}
+
+
+.link:hover, .link.active {
+  border-color: var(--colour-text-link);
 }
 
 .link.active {
   padding: 0 0.3rem;
-  border-left: 0.2rem dotted var(--text-link);
-  border-right: 0.2rem dotted var(--text-link);
+  border-left: 0.2rem dotted var(--colour-text-link);
+  border-right: 0.2rem dotted var(--colour-text-link);
 }

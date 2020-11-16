@@ -8,6 +8,6 @@
 }
 
 .component-root article {
-  background-color: var(--background-content);
+  background-color: var(--content-background-colour);
   transition: var(--transition-theme);
 }

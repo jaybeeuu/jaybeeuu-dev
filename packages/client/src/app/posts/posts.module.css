@@ -1,16 +1,16 @@
 .component-root {
   margin: 0;
   padding: 2rem;
-  color: var(--text-main);
+  color: var(--colour-text-main);
   max-width: var(--content-width);
-  background-color: var(--background-content);
+  background-color: var(--content-background-colour);
   transition: var(--transition-theme);
-  margin: auto;
+  margin: 3.6rem auto 0 auto;
 }
 
 .post {
   display: block;
-  color: var(--text-main);
+  color: var(--colour-text-main);
   border: 0.2rem dotted transparent;
   margin: 4rem 0;
   padding: 1rem;
@@ -18,7 +18,7 @@
 }
 
 .post:hover {
-  border-color: var(--text-link);
+  border-color: var(--colour-text-link);
 }
 
 .post:first-child {
