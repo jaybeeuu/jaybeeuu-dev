@@ -66,7 +66,7 @@ context("Post navigation", (): void => {
     post.navigateToAnchor("module-spotting", "commonjs");
     post.getAnchor("module-spotting", "commonjs").should("be.visible");
     main.getRoot().should("be.visible").and(($main) => {
-      expect($main.scrollTop()).to.be.approximately(3185, 100);
+      expect($main.scrollTop()).to.be.approximately(3185, 200);
     });
   });
 });
