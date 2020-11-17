@@ -24,8 +24,8 @@ article {
   font-size: 2rem;
 }
 
-article pre {
-  font-size: 1.8rem;
+article pre, article code {
+  font-size: 1.6rem;
 }
 
 article > :first-child {
@@ -84,9 +84,9 @@ h3 {
   margin-top: 4rem;
 }
 
-code {
+p code {
   color: var(--colour-text-code);
   background-color: var(--background-colour-text-code);
   transition: var(--transition-theme);
-  padding: 0.1rem 0.4rem;
+  padding: 0.1rem 0.3em;
 }
