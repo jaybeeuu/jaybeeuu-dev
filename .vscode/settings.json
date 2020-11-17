@@ -11,5 +11,9 @@
     "typescript",
     "typescriptreact"
   ],
-  "eslint.enable": true
+  "eslint.enable": true,
+  "cSpell.words": [
+    "Chainable",
+    "Chainer"
+  ]
 }
