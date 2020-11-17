@@ -25,3 +25,8 @@ const themeHookBlock = makeHookBlock("theme");
 export const theme = {
   root: themeHookBlock.element("root"),
 };
+
+const mainBlock = makeHookBlock("main");
+export const main = {
+  root: mainBlock.element("root"),
+};

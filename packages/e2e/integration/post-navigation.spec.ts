@@ -2,6 +2,7 @@ import { registerRoutes, getPostsAlias } from "../routes/posts";
 import * as navBar from "../features/nav-bar";
 import * as post from "../features/post";
 import * as postList from "../features/post-list";
+import * as main from "../features/main";
 
 context("Post navigation", (): void => {
   before(() => {
@@ -59,5 +60,13 @@ context("Post navigation", (): void => {
     navBar.getPostListLink().click();
     cy.wait(getPostsAlias("manifest"));
     postList.get().should("be.visible");
+  });
+
+  it("scrolls to an anchor when loading a page from scratch with a hash.", () => {
+    post.navigateToAnchor("module-spotting", "commonjs");
+    post.getAnchor("module-spotting", "commonjs").should("be.visible");
+    main.getRoot().should("be.visible").and(($main) => {
+      expect($main.scrollTop()).to.be.approximately(3185, 100);
+    });
   });
 });

@@ -24,6 +24,10 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
     links?.forEach((link) => {
       render(<Icon name="link"/>, link);
     });
+    if (window.location.hash) {
+      const hashLinkName = window.location.hash.replace("#", "");
+      document.querySelector(`.hash-link[name="${hashLinkName}"]`)?.scrollIntoView();
+    }
   }, [postHtml]);
 
   return (

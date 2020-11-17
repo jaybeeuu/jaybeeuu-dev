@@ -12,8 +12,12 @@ export type ShouldContainPostParagraphsParameters = ["contain.post.paragraphs", 
 export type ShouldContainPostTitleParameters = ["contain.post.title", PostSlug];
 
 export interface ArticleChainer extends Cypress.Chainer<JQuery<HTMLElement>> {
-  (...[chainer, slug]: ShouldContainPostParagraphsParameters): Cypress.Chainable<JQuery<HTMLElement>>;
-  (...[chainer, slug]: ShouldContainPostTitleParameters): Cypress.Chainable<JQuery<HTMLElement>>;
+  (
+    ...[chainer, slug]: ShouldContainPostTitleParameters
+  ): Cypress.Chainable<JQuery<HTMLElement>>;
+  (
+    ...[chainer, slug]: ShouldContainPostParagraphsParameters
+  ): Cypress.Chainable<JQuery<HTMLElement>>;
 }
 
 export type ArticleChainable = Cypress.Chainable<JQuery<HTMLElement>> & {
@@ -72,4 +76,12 @@ export const getArticle = (): ArticleChainable => {
 
 export const navigateTo = (slug: PostSlug): void => {
   cy.visit(`/posts/${slug}`);
+};
+
+export const navigateToAnchor = (slug: PostSlug, hash: string): void => {
+  cy.visit(`/posts/${slug}#${hash}`);
+};
+
+export const getAnchor = (slug: PostSlug, hash: string): Cypress.Chainable<JQuery<HTMLElement>> => {
+  return getArticle().find(`a[href="/posts/${slug}#${hash}"]`);
 };
