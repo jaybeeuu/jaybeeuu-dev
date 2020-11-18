@@ -30,6 +30,12 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
     }
   }, [postHtml]);
 
+  useEffect(() => {
+    const initialTitle = document.title;
+    document.title = `${initialTitle} - ${postMeta.title}`;
+    return () => initialTitle;
+  }, [postMeta]);
+
   return (
     <div className={classNames(css.componentRoot, e2eHooks.article)}>
       <div className={css.titleContainer}>

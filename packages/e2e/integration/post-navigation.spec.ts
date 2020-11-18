@@ -1,4 +1,4 @@
-import { registerRoutes, getPostsAlias } from "../routes/posts";
+import { registerRoutes, getPostsAlias, withPostMetaData } from "../routes/posts";
 import * as navBar from "../features/nav-bar";
 import * as post from "../features/post";
 import * as postList from "../features/post-list";
@@ -52,6 +52,13 @@ context("Post navigation", (): void => {
   it("shows the title of the the-rewrite post when the link is clicked.", () => {
     postList.openPost("the-rewrite");
     post.getArticle().should("contain.post.title", "the-rewrite");
+  });
+
+  it("Sets the page title to the title of the the-rewrite post when the link is clicked.", () => {
+    postList.openPost("the-rewrite");
+    withPostMetaData("the-rewrite").then((meta) => {
+      cy.title().should("contain", meta.title);
+    });
   });
 
   it("switches back to the post list when the link is clicked after opening a post.", () => {
