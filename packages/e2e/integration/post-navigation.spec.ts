@@ -65,8 +65,5 @@ context("Post navigation", (): void => {
   it("scrolls to an anchor when loading a page from scratch with a hash.", () => {
     post.navigateToAnchor("module-spotting", "commonjs");
     post.getAnchor("module-spotting", "commonjs").should("be.visible");
-    main.getRoot().should("be.visible").and(($main) => {
-      expect($main.scrollTop()).to.be.approximately(3185, 200);
-    });
   });
 });

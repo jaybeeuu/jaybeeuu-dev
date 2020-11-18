@@ -83,5 +83,5 @@ export const navigateToAnchor = (slug: PostSlug, hash: string): void => {
 };
 
 export const getAnchor = (slug: PostSlug, hash: string): Cypress.Chainable<JQuery<HTMLElement>> => {
-  return getArticle().find(`a[href="/posts/${slug}#${hash}"]`);
+  return cy.get(`.hash-link[href="/posts/${slug}#${hash}"]`);
 };
