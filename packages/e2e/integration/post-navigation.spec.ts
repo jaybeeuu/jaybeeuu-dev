@@ -2,7 +2,6 @@ import { registerRoutes, getPostsAlias } from "../routes/posts";
 import * as navBar from "../features/nav-bar";
 import * as post from "../features/post";
 import * as postList from "../features/post-list";
-import * as main from "../features/main";
 
 context("Post navigation", (): void => {
   before(() => {
