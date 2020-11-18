@@ -25,11 +25,10 @@
 
 
 .link:hover, .link.active {
-  border-color: var(--colour-text-link);
+  border-color: var(--colour-text);
 }
 
 .link.active {
-  padding: 0 0.3rem;
-  border-left: 0.2rem dotted var(--colour-text-link);
-  border-right: 0.2rem dotted var(--colour-text-link);
+  border-left: 0.2rem dotted var(--colour-text);
+  border-right: 0.2rem dotted var(--colour-text);
 }

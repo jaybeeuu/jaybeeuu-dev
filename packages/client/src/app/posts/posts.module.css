@@ -18,7 +18,7 @@
 }
 
 .post:hover {
-  border-color: var(--colour-text-link);
+  border-color: var(--colour-text);
 }
 
 .post:first-child {
