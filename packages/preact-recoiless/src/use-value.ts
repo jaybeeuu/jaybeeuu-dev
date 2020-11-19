@@ -5,16 +5,16 @@ import {
   useMemo,
   useState
 } from "preact/hooks";
-import { useAsyncGenerator } from "./async-hooks";
-import { monitorPromise, PromiseState } from "./promise-status";
 import {
   DerivedValue,
   isPrimitiveValue,
   PrimitiveValue,
+  Store,
   Value,
   ValueState
-} from "./state";
-import { Store } from "./store";
+} from "@bickley-wallace/recoiless";
+import { useAsyncGenerator } from "./async-hooks";
+import { monitorPromise, PromiseState } from "./promise-status";
 import { StoreContext } from "./store-provider";
 
 const useStore = (): Store => useContext(StoreContext);

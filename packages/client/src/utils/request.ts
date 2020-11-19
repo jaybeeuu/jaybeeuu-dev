@@ -1,4 +1,4 @@
-import { asError } from "../utils/as-error";
+import { asError } from "@bickley-wallace/utilities";
 
 const fetchRequest = <ResponseContent>(parseResponse: (response: Response) => Promise<ResponseContent>) => async (
   input: RequestInfo,

@@ -1,11 +1,16 @@
 module.exports = {
   clearMocks: true,
-  testEnvironment: "node",
-  collectCoverageFrom : [
-    "src/**",
-    "!src/bin/**"
+  collectCoverageFrom: [
+    "src/**/*",
+    "!**/*.d.ts"
   ],
   preset: "ts-jest",
+  globals: {
+    "ts-jest": {
+      packageJson: "package.json",
+    },
+  },
+  testEnvironment: "node",
   testMatch: [
     "**/*.spec.ts"
   ],
@@ -14,7 +19,6 @@ module.exports = {
     "/lib/"
   ],
   watchPathIgnorePatterns: [
-    "<rootDir>/fs",
     "<rootDir>/lib"
   ]
 };

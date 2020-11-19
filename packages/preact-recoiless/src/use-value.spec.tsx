@@ -1,9 +1,8 @@
 import { ComponentType, h } from "preact";
+import { DerivedValue, Store } from "@bickley-wallace/recoiless";
 import { act, renderHook } from "@testing-library/preact-hooks";
-import { Store } from "./store";
 import { StoreProvider } from "./store-provider";
 import { useValue } from "./use-value";
-import { DerivedValue } from "./state";
 import { echo } from "@bickley-wallace/utilities";
 import { setupMockTimers } from "../test/time";
 

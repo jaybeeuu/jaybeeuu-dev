@@ -1,9 +1,11 @@
 packages:
   - 'packages/client'
   - 'packages/compost'
-  - 'packages/e2e'
   - 'packages/e2e-hooks'
+  - 'packages/e2e'
   - 'packages/eslint-config'
   - 'packages/posts'
+  - 'packages/preact-recoiless'
+  - 'packages/recoiless'
   - 'packages/scripts'
   - 'packages/utilities'

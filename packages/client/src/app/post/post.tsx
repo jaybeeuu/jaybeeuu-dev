@@ -1,9 +1,9 @@
-import classNames from "classnames";
 import { h, FunctionComponent, JSX, createRef, render } from "preact";
+import { useEffect } from "preact/hooks";
 import { PostMetaData } from "@bickley-wallace/compost";
 import { post as e2eHooks } from "@bickley-wallace/e2e-hooks";
-import { useEffect } from "preact/hooks";
-import { useValue } from "../../recoilless/use-value";
+import { useValue } from "@bickley-wallace/preact-recoiless";
+import classNames from "classnames";
 import { withPromise } from "../with-promise";
 import { asRoute } from "../as-route";
 import { Icon } from "../icon";

@@ -1,18 +1,21 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
+    "allowJs": true,
     "declaration": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,
+    "target": "ESNext",
     "types": []
   },
   "exclude": [
     "dist",
+    "lib",
     "node_modules"
   ]
 }

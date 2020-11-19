@@ -1,7 +1,7 @@
 import { h, ComponentChildren, JSX } from "preact";
-import classNames from "classnames";
 import { theme as e2eHooks } from "@bickley-wallace/e2e-hooks";
-import { useValue } from "../../recoilless/use-value";
+import { useValue } from "@bickley-wallace/preact-recoiless";
+import classNames from "classnames";
 import { theme } from "../state";
 
 import "./base-styles.css";

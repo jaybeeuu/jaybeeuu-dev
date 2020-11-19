@@ -1,7 +1,6 @@
-import { echo } from "@bickley-wallace/utilities";
+import { asError, echo } from "@bickley-wallace/utilities";
 import { advanceByTimeThenAwait } from "../test/async-helpers";
 import { setupMockTimers } from "../test/time";
-import { asError } from "../utils/as-error";
 import { monitorPromise, PromiseState, combinePromises } from "./promise-status";
 
 const getIterator = <Value>(promise: Promise<Value>): AsyncIterator<PromiseState<Value>> => {

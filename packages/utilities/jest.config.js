@@ -6,11 +6,6 @@ module.exports = {
     "!src/bin/**"
   ],
   preset: "ts-jest",
-  globals: {
-    "ts-jest": {
-      packageJson: "package.json",
-    },
-  },
   testMatch: [
     "**/*.spec.ts"
   ],

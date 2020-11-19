@@ -2,13 +2,10 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "esModuleInterop": true,
-    "module": "commonjs",
     "outDir": "./lib",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "sourceMap": true,
-    "target": "ES2018",
     "types": ["jest"]
   },
-  "include": ["src"],
-  "exclude": ["lib"]
+  "include": ["src/**/*", "test/**/*"],
+  "exclude": ["lib/**/*"]
 }

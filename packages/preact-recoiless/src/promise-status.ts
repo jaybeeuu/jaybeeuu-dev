@@ -1,5 +1,4 @@
-import { echo, multiPartition } from "@bickley-wallace/utilities";
-import { asError } from "../utils/as-error";
+import { asError, echo, multiPartition } from "@bickley-wallace/utilities";
 
 export const PromiseStatusTuple = ["pending", "slow", "failed", "complete"] as const;
 export const PromiseStatuses = PromiseStatusTuple as readonly string[];

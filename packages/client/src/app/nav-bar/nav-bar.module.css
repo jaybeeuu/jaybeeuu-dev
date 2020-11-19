@@ -14,7 +14,7 @@
 }
 
 .link {
-  colour: var(--colour-text-main);
+  color: var(--colour-text-main);
   transition: var(--transition-theme), border-color var(--transition-average);
   padding: 0 0.5rem;
   border-bottom: none;

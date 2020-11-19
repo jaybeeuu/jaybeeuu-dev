@@ -1,7 +1,7 @@
 import { log } from "@bickley-wallace/utilities";
 import { h, VNode, ComponentType, FunctionComponent } from "preact";
 import { useEffect } from "preact/hooks";
-import { PromiseState, combinePromises } from "../recoilless/promise-status";
+import { PromiseState, combinePromises } from "@bickley-wallace/preact-recoiless";
 import { getDisplayName } from "../utils/component";
 import { LoadingSpinner } from "./loading-spinner";
 
