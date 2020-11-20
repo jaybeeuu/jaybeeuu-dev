@@ -1,3 +1,13 @@
+const path = require("path");
+
+const makeTranformIgnorePatterns = () => {
+  const patternSeperator = path.sep === "\\" ? "\\\\" : "/";
+
+  return [
+    ["node_modules", "(?!(@bickley-wallace))"].join(patternSeperator)
+  ];
+};
+
 module.exports = {
   clearMocks: true,
   collectCoverageFrom: [
@@ -8,7 +18,7 @@ module.exports = {
   transform: {
     "\\.[jt]sx?$": "ts-jest"
   },
-  transformIgnorePatterns: [],
+  transformIgnorePatterns: makeTranformIgnorePatterns(),
   testEnvironment: "node",
   testMatch: [
     "**/*.spec.ts",

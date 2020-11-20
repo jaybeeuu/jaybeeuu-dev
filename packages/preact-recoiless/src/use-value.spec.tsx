@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { ComponentType, h } from "preact";
 import { DerivedValue, Store } from "@bickley-wallace/recoiless";
 import { act, renderHook } from "@testing-library/preact-hooks";
