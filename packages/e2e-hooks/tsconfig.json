@@ -6,6 +6,10 @@
     "declaration": true,
     "outDir": "./lib"
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["lib"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "lib"
+  ]
 }

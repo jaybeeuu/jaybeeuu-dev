@@ -9,6 +9,11 @@
     "target": "ES2018",
     "types": ["jest"]
   },
-  "include": ["src"],
-  "exclude": ["lib"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "lib",
+    "node_modules"
+  ]
 }

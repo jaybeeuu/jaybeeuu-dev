@@ -5,15 +5,13 @@
     "module": "CommonJS",
     "declaration": true,
     "outDir": "./lib",
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "esModuleInterop": true
   },
   "include": [
-    "src/**/*.ts",
+    "src"
   ],
   "exclude": [
-    "node_modues"
+    "node_modules"
   ]
 }

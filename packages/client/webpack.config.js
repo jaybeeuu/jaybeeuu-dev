@@ -50,7 +50,7 @@ module.exports = {
         oneOf: [
           {
             test: /\.(ts|tsx|js|jsx)$/,
-          include: [paths.src, /@bickley-wallace\/.*/],
+            include: [paths.src, /@bickley-wallace\/.*/],
             use: "babel-loader"
           },
           {

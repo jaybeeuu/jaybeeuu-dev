@@ -6,6 +6,12 @@
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "types": ["jest"]
   },
-  "include": ["src/**/*", "test/**/*"],
-  "exclude": ["lib/**/*"]
+  "include": [
+    "src",
+    "test"
+  ],
+  "exclude": [
+    "lib",
+    "node_modules"
+  ]
 }

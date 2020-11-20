@@ -1,15 +1,15 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "ES6",
     "baseUrl": ".",
     "declaration": false,
     "esModuleInterop": true,
-    "lib": [
-      "dom",
-      "ESNext"
-    ],
-    "types": ["cypress"]
+    "lib": ["dom", "ESNext"],
+    "target": "ES6",
+    "types": ["cypress"],
+    "skipLibCheck": true
   },
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
