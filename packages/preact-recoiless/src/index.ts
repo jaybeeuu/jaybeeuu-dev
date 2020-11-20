@@ -16,7 +16,7 @@ export {
   StoreContext,
   StoreProps,
   StoreProvider
-} from './store-provider'
+} from "./store-provider";
 export {
   UseValue,
   useValue
