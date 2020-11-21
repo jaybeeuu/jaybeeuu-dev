@@ -1,15 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "esModuleInterop": true,
-    "declaration": true,
+    "outDir": "lib",
     "jsx": "react",
     "jsxFactory": "h",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "outDir": "lib",
-    "sourceMap": true,
-    "target": "ES2018",
     "types": ["jest"]
   },
   "include": [

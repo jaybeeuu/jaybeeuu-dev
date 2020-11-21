@@ -2,12 +2,9 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "declaration": false,
-    "esModuleInterop": true,
-    "lib": ["dom", "ESNext"],
-    "target": "ES6",
     "types": ["cypress"],
-    "skipLibCheck": true
   },
   "exclude": [
     "node_modules"
