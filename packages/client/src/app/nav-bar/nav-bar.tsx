@@ -17,7 +17,9 @@ export const NavBar = ({ className }: NavBarProps): VNode<any> => {
         activeClassName={css.active}
         className={classNames(css.link, e2eHooks.postListLink)}
         href={"/posts"}
-      >Posts</Link>
+      >
+        Blog
+      </Link>
       <ThemeToggle className={e2eHooks.switch} />
     </div>
   );

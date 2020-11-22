@@ -17,12 +17,11 @@
   color: var(--colour-text-main);
   transition: var(--transition-theme), border-color var(--transition-average);
   padding: 0 0.5rem;
-  border-bottom: none;
+  border: none;
   border-left: 0.2rem dotted;
   border-right: 0.2rem dotted;
   border-color: transparent;
 }
-
 
 .link:hover, .link.active {
   color: var(--colour-text-main);

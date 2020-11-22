@@ -17,7 +17,7 @@ const compareDateString = (
 ): number => Date.parse(left.publishDate) - Date.parse(right.publishDate);
 
 const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
-  usePageInfo({title: "Blog posts", description: "Index of my blog posts" });
+  usePageInfo({ title: "Blog posts", description: "Index of my blog posts" });
   return (
     <div className={classNames(css.componentRoot, e2eHooks.block)}>
       {Object.values(manifest).sort(compareDateString).map((meta) => (
