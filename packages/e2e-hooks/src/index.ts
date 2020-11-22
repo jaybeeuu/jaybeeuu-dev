@@ -11,6 +11,7 @@ export const post = {
 const navBarHookBlock = makeHookBlock("nav-bar");
 export const navBar = {
   block: navBarHookBlock(),
+  homeLink: navBarHookBlock.element("home-link"),
   postListLink: navBarHookBlock.element("post-list-link"),
   switch: navBarHookBlock.element("switch")
 };

@@ -15,6 +15,13 @@ export const NavBar = ({ className }: NavBarProps): VNode<any> => {
     <div className={classNames(css.componentRoot, e2eHooks.block, className)}>
       <Link
         activeClassName={css.active}
+        className={classNames(css.link, e2eHooks.homeLink)}
+        href={"/"}
+      >
+        Home
+      </Link>
+      <Link
+        activeClassName={css.active}
         className={classNames(css.link, e2eHooks.postListLink)}
         href={"/posts"}
       >
