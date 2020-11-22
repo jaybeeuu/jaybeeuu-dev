@@ -9,9 +9,13 @@
 
 a {
   color: var(--colour-text-main);
-  border-bottom: solid 0.2rem var(--colour-text);
+  border-bottom: solid 0.2rem var(--colour-link-border);
   text-decoration: none;
-  transition: var(--transition-theme);
+  transition: var(--transition-theme), color var(--transition-average);
+}
+
+a:hover {
+  color: var(--colour-link-hover);
 }
 
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
