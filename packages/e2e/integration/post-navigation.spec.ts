@@ -49,8 +49,8 @@ context("Post navigation", (): void => {
     post.getArticle().should("contain.post.paragraphs", "the-rewrite");
   });
 
-  it("shows the title of the the-rewrite post when the link is clicked.", () => {
-    postList.openPost("the-rewrite");
+  it("shows the title of the the-rewrite post when navigated to directly.", () => {
+    post.navigateTo("the-rewrite");
     post.getArticle().should("contain.post.title", "the-rewrite");
   });
 

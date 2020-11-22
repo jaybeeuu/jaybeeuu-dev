@@ -13,12 +13,13 @@ import "./highlight-colours.css";
 import "./highlight.css";
 
 import css from "./post.module.css";
+import { usePageInfo } from "../use-page-info";
 
 const headingLinkSelector = "h1 a:empty, h2 a:empty, h3 a:empty, h4 a:empty, h5 a:empty, h6 a:empty";
 
 const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, postMeta: PostMetaData }): JSX.Element => {
   const articleRef = createRef<HTMLElement>();
-
+  usePageInfo({ title: postMeta.title, description: postMeta.abstract });
   useEffect(() => {
     const links = articleRef.current?.querySelectorAll(headingLinkSelector);
     links?.forEach((link) => {
@@ -29,12 +30,6 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
       document.querySelector(`.hash-link[name="${hashLinkName}"]`)?.scrollIntoView();
     }
   }, [postHtml]);
-
-  useEffect(() => {
-    const initialTitle = document.title;
-    document.title = `${initialTitle} - ${postMeta.title}`;
-    return () => initialTitle;
-  }, [postMeta]);
 
   return (
     <div className={classNames(css.componentRoot, e2eHooks.article)}>

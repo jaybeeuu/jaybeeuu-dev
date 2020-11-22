@@ -8,6 +8,11 @@ export const get = (): Cypress.Chainable<JQuery<HTMLElement>> => {
   return cy.get(postListSelectors.block);
 };
 
+export const openList = (): void => {
+  getPostListLink().click();
+  get().should("be.visible");
+};
+
 const getPostLink = (slug: PostSlug): Cypress.Chainable<JQuery<HTMLElement>> => {
   return cy.get<HTMLElement>(postListSelectors.link(slug));
 };
@@ -20,7 +25,7 @@ export const hasLinkToPost = (slug: PostSlug): void => {
 };
 
 export const openPost = (slug: PostSlug): void => {
-  getPostListLink().click();
+  openList();
   getPostLink(slug).click();
   cy.wait(getPostsAlias(slug));
 };

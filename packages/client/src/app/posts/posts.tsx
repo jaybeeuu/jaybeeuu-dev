@@ -9,6 +9,7 @@ import { postsManifest } from "../state";
 import { withPromise as withPromise } from "../with-promise";
 
 import css from "./posts.module.css";
+import { usePageInfo } from "../use-page-info";
 
 const compareDateString = (
   left: PostMetaData,
@@ -16,6 +17,7 @@ const compareDateString = (
 ): number => Date.parse(left.publishDate) - Date.parse(right.publishDate);
 
 const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
+  usePageInfo({title: "Blog posts", description: "Index of my blog posts" });
   return (
     <div className={classNames(css.componentRoot, e2eHooks.block)}>
       {Object.values(manifest).sort(compareDateString).map((meta) => (

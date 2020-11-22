@@ -18,7 +18,8 @@
 }
 
 .post:hover {
-  border-color: var(--colour-text);
+  color: var(--colour-text-main);
+  border-color: var(--colour-link-border);
 }
 
 .post:first-child {
