@@ -9,7 +9,6 @@ const certs = resolveApp("certs");
 
 module.exports = {
   dist: resolveApp("dist"),
-  bundle: "bundle.js",
   public: resolveApp("public"),
   indexHtml: resolveApp("public/index.html"),
   srcIndex: resolveApp("src/index.tsx"),

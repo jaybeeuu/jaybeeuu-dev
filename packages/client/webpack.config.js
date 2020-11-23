@@ -38,7 +38,7 @@ module.exports = {
   output: {
     pathinfo: true,
     path: paths.dist,
-    filename: paths.bundle,
+    filename: "main.[hash].js",
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
@@ -101,7 +101,7 @@ module.exports = {
       new CssMinimizerPlugin(),
       new TerserPlugin({
         parallel: isProduction ? 2 : true
-      }),
+      })
     ]
   },
   plugins: [
@@ -124,7 +124,11 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new PreactRefreshPlugin(),
     isProduction ? new BundleAnalyzerPlugin({
-      analyzerMode: "static"
+      analyzerMode: "static",
+      generateStatsFile: true,
+      statsFilename: "bundle-stats.json",
+      statsOptions: {
+      }
     }) : null,
     isProduction ? new MiniCssExtractPlugin() : null
   ].filter(Boolean)
