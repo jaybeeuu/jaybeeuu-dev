@@ -10,9 +10,9 @@ export interface NavBarProps {
 export const TitleBar = ({ className }: NavBarProps): VNode<any> => {
   return (
     <div className={classNames(css.componentRoot, className)}>
-      <div className={css.title}>
+      <h1 className={css.title}>
         Josh Bickley-Wallace
-      </div>
+      </h1>
     </div>
   );
 };

@@ -1,8 +1,11 @@
 .component-root {
+  margin: 1rem 0;
   padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: left;
+  border-bottom: 0.2rem solid var(--border-code-heading);
+  transition: var(--transition-theme);
 }
 
 .component-root > * {
@@ -15,4 +18,6 @@
 
 .title {
   font-size: 5rem;
+  margin: 0;
+  border: none;
 }
