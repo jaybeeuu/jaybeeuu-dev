@@ -18,17 +18,15 @@ export const getPostsAlias = (route: PostSlug | "manifest"): string => `@get-pos
 
 const registerPostRoute = (slug: PostSlug): void => {
   withPostMetaData(slug).then((postMetaData) => {
-    cy.route(
+    cy.intercept(
       `/posts/${postMetaData.fileName}`,
-      `fixture:posts/${postMetaData.fileName}`
+      { fixture: `posts/${postMetaData.fileName}` }
     ).as(`get-posts-${postMetaData.slug}`);
   });
 };
 
 export const registerRoutes = (): void => {
-  cy.server();
-
-  cy.route("/posts/manifest.json", "fixture:posts/manifest.json").as("get-posts-manifest");
+  cy.intercept("/posts/manifest.json", { fixture: "posts/manifest.json" }).as("get-posts-manifest");
   registerPostRoute("memoising-selectors");
   registerPostRoute("module-spotting");
   registerPostRoute("the-rewrite");
