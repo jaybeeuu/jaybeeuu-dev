@@ -1,0 +1,18 @@
+.component-root {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.component-root > * {
+  margin-right: 1rem;
+}
+
+.component-root > :last-child {
+  margin-right: 0;
+}
+
+.title {
+  font-size: 5rem;
+}
