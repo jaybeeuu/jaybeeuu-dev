@@ -54,7 +54,7 @@ module.exports = {
             use: "babel-loader"
           },
           {
-            test: /\.css$/,
+            test: /\.module\.css$/,
             use: [
               isProduction ? MiniCssExtractPlugin.loader : "style-loader",
               {
@@ -67,10 +67,21 @@ module.exports = {
                 loader: "css-loader",
                 options: {
                   modules: {
-                    auto: /.module.css$/,
                     localIdentName: isProduction ? "bw-[hash:base64:5]" : "[name]__[local]--[hash:base64:5]",
                     exportLocalsConvention: "camelCaseOnly"
                   },
+                  sourceMap: true
+                }
+              }
+            ]
+          },
+          {
+            test: /\.css$/,
+            use: [
+              isProduction ? MiniCssExtractPlugin.loader : "style-loader",
+              {
+                loader: "css-loader",
+                options: {
                   sourceMap: true
                 }
               }
@@ -110,6 +121,10 @@ module.exports = {
         {
           from: "node_modules/@bickley-wallace/posts/lib/*",
           to: "posts/[name].[ext]"
+        },
+        {
+          from: "public/images/*",
+          to: "images /[name].[ext]"
         }
       ]
     }),
