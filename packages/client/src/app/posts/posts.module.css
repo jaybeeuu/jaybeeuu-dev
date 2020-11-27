@@ -1,6 +1,6 @@
 .component-root {
   margin: 0;
-  padding: 2rem;
+  padding: var(--content-padding);
   color: var(--colour-text-main);
   max-width: var(--content-width);
   background-color: var(--content-background-colour);

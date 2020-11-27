@@ -22,6 +22,10 @@
   background-image: url("./images/fagus.jpg");
 }
 
+.galaxy {
+  background-image: url("./images/galaxy.jpg");
+}
+
 .great-northern-highway {
   background-image: url("./images/great-northern-highway.jpg");
 }
@@ -44,6 +48,10 @@
 
 .lions-gate-bridge {
   background-image: url("./images/lions-gate-bridge.jpg");
+}
+
+.moon {
+  background-image: url("./images/moon.jpg");
 }
 
 .nullarbor {

@@ -7,12 +7,14 @@ interface CssExports {
   'crabappleDrive': string;
   'englishBayPark': string;
   'fagus': string;
+  'galaxy': string;
   'greatNorthernHighway': string;
   'greenLake': string;
   'harmonyRidge': string;
   'jerseyCream': string;
   'kew': string;
   'lionsGateBridge': string;
+  'moon': string;
   'nullarbor': string;
   'rainbowPark': string;
   'royalExhibitionHall': string;

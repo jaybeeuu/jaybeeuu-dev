@@ -19,10 +19,10 @@ const compareDateString = (
 
 const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
   usePageInfo({ title: "Blog posts", description: "Index of my blog posts" });
-  const posts = Object.values(manifest);
+
   return (
     <div className={classNames(css.componentRoot, e2eHooks.block)}>
-      {[...posts, ...posts, ...posts].sort(compareDateString).map((meta) => (
+      {Object.values(manifest).sort(compareDateString).map((meta) => (
         <Link
           href={`/posts/${meta.slug}`}
           className={classNames(css.post, e2eHooks.link(meta.slug))}

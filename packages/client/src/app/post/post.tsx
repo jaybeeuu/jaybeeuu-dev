@@ -49,7 +49,8 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
 export type PostProps = { path: string, slug: string };
 
 const Post: FunctionComponent<PostProps> = ({ slug }) => {
-  useBackgrounds(null);
+  useBackgrounds({ dark: "moon", light: "blackTusk" });
+
   const [selectedSlug, setSlug] = useValue(currentPostSlug);
   useEffect(() => {
     setSlug(slug);
