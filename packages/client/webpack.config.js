@@ -89,6 +89,18 @@ module.exports = {
             ]
           },
           {
+            test: [/\.sprite.svg$/],
+            use: [
+              {
+                loader: "url-loader",
+                options: {
+                  limit: 5000,
+                  name: "static/[name].[hash:8].[ext]",
+                },
+              }
+            ]
+          },
+          {
             test: [/\.(bmp|gif|jpe?g|png|svg)$/],
             use: [
               {
