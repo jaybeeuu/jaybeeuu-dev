@@ -10,6 +10,7 @@ import { withPromise as withPromise } from "../with-promise";
 
 import css from "./posts.module.css";
 import { usePageInfo } from "../use-page-info";
+import { useBackgrounds as useBackgrounds } from "../use-background";
 
 const compareDateString = (
   left: PostMetaData,
@@ -18,9 +19,10 @@ const compareDateString = (
 
 const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
   usePageInfo({ title: "Blog posts", description: "Index of my blog posts" });
+  const posts = Object.values(manifest);
   return (
     <div className={classNames(css.componentRoot, e2eHooks.block)}>
-      {Object.values(manifest).sort(compareDateString).map((meta) => (
+      {[...posts, ...posts, ...posts].sort(compareDateString).map((meta) => (
         <Link
           href={`/posts/${meta.slug}`}
           className={classNames(css.post, e2eHooks.link(meta.slug))}
@@ -42,7 +44,6 @@ PostList.displayName = "PostList";
 
 export const PostsRoute = asRoute((): VNode<any> => {
   const manifest = useValue(postsManifest);
-  return (
-    <PostList manifest={manifest} />
-  );
+  useBackgrounds({ dark: "greatNorthernHighway", light: "kew" });
+  return <PostList manifest={manifest} />;
 });

@@ -14,6 +14,7 @@ import "./highlight.css";
 
 import css from "./post.module.css";
 import { usePageInfo } from "../use-page-info";
+import { useBackgrounds } from "../use-background";
 
 const headingLinkSelector = "h1 a:empty, h2 a:empty, h3 a:empty, h4 a:empty, h5 a:empty, h6 a:empty";
 
@@ -48,6 +49,7 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
 export type PostProps = { path: string, slug: string };
 
 const Post: FunctionComponent<PostProps> = ({ slug }) => {
+  useBackgrounds(null);
   const [selectedSlug, setSlug] = useValue(currentPostSlug);
   useEffect(() => {
     setSlug(slug);

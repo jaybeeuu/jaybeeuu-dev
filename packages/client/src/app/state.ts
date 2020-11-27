@@ -62,12 +62,9 @@ export type Image
   | "sydney"
   | "tree";
 
-export type BackgroundImage = { light: Image, dark: Image };
+export type BackgroundImages = { light: Image, dark: Image };
 
-export const backgroundImage: PrimitiveValue<BackgroundImage> = {
+export const backgroundImages: PrimitiveValue<BackgroundImages | null> = {
   name: "backgroundImage",
-  initialValue: {
-    light: "blackTusk",
-    dark: "bath"
-  }
+  initialValue: null
 };

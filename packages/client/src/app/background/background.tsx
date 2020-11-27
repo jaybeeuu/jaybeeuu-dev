@@ -1,32 +1,36 @@
-import { h, ComponentChildren, JSX } from "preact";
+import { h, ComponentChildren, JSX, Fragment } from "preact";
 import { useValue } from "@bickley-wallace/preact-recoiless";
 import classNames from "classnames";
-import { backgroundImage, theme } from "../state";
+import { backgroundImages, theme } from "../state";
 
 import css from "./background.module.css";
-import backgroundImages from "./background-images.module.css";
+import backgrounds from "./background-images.module.css";
 
 export interface BackgroundProps {
   children: ComponentChildren;
-  className: string;
+  className?: string;
 }
 
 export const Background = ({ children, className }: BackgroundProps): JSX.Element => {
   const [currentTheme] = useValue(theme);
-  const [background] = useValue(backgroundImage);
+  const [images] = useValue(backgroundImages);
 
   return (
     <div className={classNames(className, css.componentRoot)}>
-      <div className={classNames(
-        css.backgroundImage,
-        backgroundImages[background.light],
-        { [css.show]: currentTheme === "light" }
-      )}/>
-      <div className={classNames(
-        css.backgroundImage,
-        backgroundImages[background.dark],
-        { [css.show]: currentTheme === "dark" }
-      )}/>
+      {images ? (
+        <Fragment>
+          <div className={classNames(
+            css.backgroundImage,
+            backgrounds[images.light],
+            { [css.show]: currentTheme === "light" }
+          )}/>
+          <div className={classNames(
+            css.backgroundImage,
+            backgrounds[images.dark],
+            { [css.show]: currentTheme === "dark" }
+          )}/>
+        </Fragment>
+      ) : null}
       <div className={css.content}>
         {children}
       </div>
