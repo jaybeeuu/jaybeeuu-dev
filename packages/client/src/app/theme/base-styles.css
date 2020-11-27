@@ -5,8 +5,10 @@
   --transition-slow: 1s ease-in-out;
   --transition-theme: border-color 1s ease-in-out, color 1s ease-in-out, fill 1s ease-in-out, background-color 1s ease-in-out;
 
-  --content-margin: 3.6rem auto 3.6rem auto;
-  --content-padding: 2.4rem;
+  --content-margin-width: 3.6rem;
+  --content-margin: var(--content-margin-width) auto var(--content-margin-width) auto;
+  --content-padding-width: 2.4rem;
+  --content-padding: var(--content-padding-width);
   --content-width: 80rem;
 }
 

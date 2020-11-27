@@ -1,0 +1,11 @@
+.component-root {
+  padding: var(--content-padding);
+  margin: var(--content-margin);
+  margin-right: var(--content-margin-width);
+  width: 40rem;
+  background-color: var(--content-background-colour);
+}
+
+.component-root p {
+  margin: 0;
+}
