@@ -40,3 +40,34 @@ export const theme: PrimitiveValue<Theme> = {
   name: "theme",
   initialValue: "dark"
 };
+
+export type Image
+  = "bath"
+  | "blackTusk"
+  | "christmasTrail"
+  | "crabappleDrive"
+  | "englishBayPark"
+  | "fagus"
+  | "greatNorthernHighway"
+  | "greenLake"
+  | "harmonyRidge"
+  | "jerseyCream"
+  | "kew"
+  | "lionsGateBridge"
+  | "nullarbor"
+  | "rainbowPark"
+  | "royalExhibitionHall"
+  | "ship"
+  | "sydneyHarbourBridge"
+  | "sydney"
+  | "tree";
+
+export type BackgroundImage = { light: Image, dark: Image };
+
+export const backgroundImage: PrimitiveValue<BackgroundImage> = {
+  name: "backgroundImage",
+  initialValue: {
+    light: "blackTusk",
+    dark: "bath"
+  }
+};

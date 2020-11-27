@@ -38,6 +38,7 @@ module.exports = {
   output: {
     pathinfo: true,
     path: paths.dist,
+    publicPath: "",
     filename: "main.[hash].js",
   },
   resolve: {
@@ -88,12 +89,23 @@ module.exports = {
             ]
           },
           {
-            test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.svg$/],
-            loader: "url-loader",
-            options: {
-              limit: 5000,
-              name: "static/[name].[hash:8].[ext]",
-            }
+            test: [/\.(bmp|gif|jpe?g|png|svg)$/],
+            use: [
+              {
+                loader: "url-loader",
+                options: {
+                  limit: 5000,
+                  name: "static/[name].[hash:8].[ext]",
+                },
+              },
+              {
+                loader: "image-webpack-loader",
+                options: {
+                  enforce: "pre",
+                  bypassOnDebug: true
+                }
+              }
+            ]
           },
           {
             exclude: [/\.(ts|tsx|js|jsx)$/, /\.css$/, /\.html$/, /\.json$/],
@@ -121,10 +133,6 @@ module.exports = {
         {
           from: "node_modules/@bickley-wallace/posts/lib/*",
           to: "posts/[name].[ext]"
-        },
-        {
-          from: "public/images/*",
-          to: "images /[name].[ext]"
         }
       ]
     }),
