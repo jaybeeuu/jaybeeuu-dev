@@ -9,7 +9,7 @@ const Home = (): VNode<any> => {
   return (
     <div className={css.componentRoot}>
       <p>
-        Hi, I am Josh Bickley-Wallace. I'm a software engineer.
+        Hi, I am Josh Bickley-Wallace. I&apos;m a software engineer.
       </p>
     </div>
   );
