@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'componentRoot': string;
-  'titleContainer': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

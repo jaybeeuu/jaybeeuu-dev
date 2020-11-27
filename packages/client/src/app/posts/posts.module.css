@@ -5,7 +5,7 @@
   max-width: var(--content-width);
   background-color: var(--content-background-colour);
   transition: var(--transition-theme);
-  margin: 3.6rem auto 3.6rem auto;
+  margin: var(--content-margin);
 }
 
 .post {

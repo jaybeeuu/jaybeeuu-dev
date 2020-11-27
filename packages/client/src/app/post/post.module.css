@@ -1,10 +1,6 @@
 .component-root {
   max-width: var(--content-width);
-  margin: 0 auto;
-}
-
-.title-container {
-  margin: 0 2rem;
+  margin: var(--content-margin);
 }
 
 .component-root article {
