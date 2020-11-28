@@ -1,4 +1,4 @@
-import { hasPropertyOfType } from "@bickley-wallace/utilities";
+import { hasStringProperty } from "@bickley-wallace/utilities";
 import path from "path";
 import { PostMetaData } from "./types";
 import { FileInfo, canAccess, readTextFile } from "../../files";
@@ -16,8 +16,8 @@ const isPostMetaFile = (candidate: unknown): candidate is PostMetaFileData => {
     return false;
   }
 
-  return hasPropertyOfType(candidate, "abstract", "string")
-    && hasPropertyOfType(candidate,  "title", "string");
+  return hasStringProperty(candidate, "abstract")
+    && hasStringProperty(candidate,  "title");
 };
 
 export const getMetaFileContent = async (markdownFileInfo: FileInfo): Promise<Result<PostMetaFileData>> => {
