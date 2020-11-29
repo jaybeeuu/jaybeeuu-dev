@@ -4,6 +4,8 @@ interface CssExports {
   'active': string;
   'componentRoot': string;
   'link': string;
+  'menuButton': string;
+  'optionsList': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

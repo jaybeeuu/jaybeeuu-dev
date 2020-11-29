@@ -5,17 +5,17 @@ import iconSprite from "./icons.sprite.svg";
 import css from "./icon.module.css";
 
 export type IconName
-  = "moon"
-  | "sun"
-  | "link";
+  = "link"
+  | "menu"
+  | "moon"
+  | "sun";
 
-export interface IconProps {
+export interface IconProps extends JSX.HTMLAttributes<SVGSVGElement> {
   name: IconName;
-  className?: string
 }
 
-export const Icon = ({ name, className }: IconProps): JSX.Element => (
-  <svg className={classNames(css.element, className)}>
+export const Icon = ({ name, ...props }: IconProps): JSX.Element => (
+  <svg {...props} className={classNames(css.componentRoot, props.className)}>
     <use xlinkHref={`${iconSprite}#${name}`} />
   </svg>
 );

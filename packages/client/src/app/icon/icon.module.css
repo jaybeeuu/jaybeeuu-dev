@@ -1,5 +1,5 @@
-.element {
-  fill: var(--icon-fill);
+.component-root {
+  fill: var(--fill-icon);
   width: 2.4rem;
   height: 2.4rem;
   transition: var(--transition-theme);

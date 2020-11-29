@@ -16,7 +16,7 @@
 .link {
   color: var(--colour-text-main);
   transition: var(--transition-theme), border-color var(--transition-average);
-  padding: 0 0.5rem;
+  padding: 0 1rem;
   border: none;
   border-left: 0.2rem dotted;
   border-right: 0.2rem dotted;
@@ -30,4 +30,16 @@
 
 .link.active {
   border-color: var(--colour-link-border);
+}
+
+.menu-button {
+  display: none;
+}
+
+.options-list {
+  display: flex;
+}
+
+.options-list > * {
+  margin-left: 1rem;
 }

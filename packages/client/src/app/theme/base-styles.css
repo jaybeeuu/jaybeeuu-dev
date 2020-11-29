@@ -74,7 +74,7 @@ article h3:hover a.hash-link svg,
 article h4:hover a.hash-link svg,
 article h5:hover a.hash-link svg,
 article h6:hover a.hash-link svg {
-  fill: var(--icon-fill);
+  fill: var(--fill-icon);
 }
 
 h1, h2, h3, h4, h5, h6 {

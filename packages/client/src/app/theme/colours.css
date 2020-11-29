@@ -16,7 +16,8 @@
   --toggle-main: #dddddd;
   --toggle-secondary:  rgba(255, 255, 255, .3);
 
-  --icon-fill: #dddddd;
+  --fill-icon: #dddddd;
+  --border-colour-button: #dddddd;
 }
 
 .light {
@@ -37,5 +38,6 @@
   --toggle-main: #343438;
   --toggle-secondary:  rgba(100, 100, 100, .4);
 
-  --icon-fill: #343438;
+  --fill-icon: #343438;
+  --border-colour-button: #343438;
 }
