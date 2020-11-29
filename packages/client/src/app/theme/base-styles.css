@@ -3,7 +3,8 @@
   --transition-average: 200ms ease-in-out;
   --transition-complex: 500ms ease-in-out;
   --transition-slow: 1s ease-in-out;
-  --transition-theme: border-color 1s ease-in-out, color 1s ease-in-out, fill 1s ease-in-out, background-color 1s ease-in-out;
+  --transition-theme-timing: var(--transition-average);
+  --transition-theme: border-color var(--transition-slow), color var(--transition-theme-timing), fill var(--transition-theme-timing), background-color var(--transition-theme-timing);
 
   --content-margin-width: 3.6rem;
   --content-margin: var(--content-margin-width) auto var(--content-margin-width) auto;

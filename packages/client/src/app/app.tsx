@@ -6,7 +6,6 @@ import { Background } from "./background";
 import { PostRoute } from "./post";
 import { PostsRoute } from "./posts";
 import { TitleBar } from "./title-bar";
-import { NavBar } from "./nav-bar";
 import { Theme } from "./theme";
 import { HomeRoute } from "./home";
 
@@ -22,6 +21,5 @@ export const App: FunctionComponent = () => (
         <PostRoute path={"posts/:slug"}/>
       </Router>
     </Background>
-    <NavBar className={css.static} />
   </Theme>
 );
