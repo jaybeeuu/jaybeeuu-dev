@@ -1,16 +1,7 @@
 .component-root {
-  padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.component-root > * {
-  margin-right: 1rem;;
-}
-
-.component-root > :last-child {
-  margin-right: 0;
 }
 
 .link {
@@ -38,6 +29,10 @@
 
 .options-list > * {
   margin-left: 1rem;
+}
+
+.options-list > :first-child {
+  margin-left: 0;
 }
 
 .menu-button {
