@@ -45,6 +45,17 @@
   margin-right: 0;
 }
 
+.title {
+  flex: 1 1 auto;
+}
+
 .date {
   font-size: 1.5rem;
+}
+
+/* for-phone-only */
+@media only screen and (max-width: 599px) {
+  .title-row {
+    display: block
+  }
 }

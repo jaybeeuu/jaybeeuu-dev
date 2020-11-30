@@ -7,3 +7,10 @@
   background-color: var(--background-colour-content);
   transition: var(--transition-theme);
 }
+
+/* for-phone-only */
+@media only screen and (max-width: 599px) {
+  .title, .date {
+    padding: 0 var(--content-padding);
+  }
+}

@@ -29,7 +29,7 @@ const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
           key={meta.slug}
         >
           <div className={css.titleRow}>
-            <h2>
+            <h2 className={css.title}>
               {meta.title}
             </h2>
             <span className={css.date}>{new Date(meta.lastUpdateDate ?? meta.publishDate).toLocaleDateString()}</span>

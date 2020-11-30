@@ -1,4 +1,4 @@
-import { h, VNode } from "preact";
+import { Fragment, h, VNode } from "preact";
 import { useState } from "preact/hooks";
 import { navBar as e2eHooks } from "@bickley-wallace/e2e-hooks";
 import classNames from "classnames";
@@ -16,8 +16,14 @@ export const NavBar = ({ className }: NavBarProps): VNode<any> => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className={classNames(css.componentRoot, e2eHooks.block, className)}>
-      <Icon name={"menu"} className={css.menuButton} onClick={() => setIsOpen(!isOpen)}/>
+    <div
+      className={classNames(css.componentRoot, e2eHooks.block, className)}
+    >
+      <Icon
+        className={css.menuButton}
+        name={"menu"}
+        onClick={() => setIsOpen(!isOpen)}
+      />
       <div className={classNames(css.optionsList, { [css.open]: isOpen })}>
         <Link
           activeClassName={css.active}
@@ -25,7 +31,7 @@ export const NavBar = ({ className }: NavBarProps): VNode<any> => {
           onClick={() => setIsOpen(false)}
           href={"/"}
         >
-          Home
+            Home
         </Link>
         <Link
           activeClassName={css.active}
@@ -33,7 +39,7 @@ export const NavBar = ({ className }: NavBarProps): VNode<any> => {
           onClick={() => setIsOpen(false)}
           href={"/posts"}
         >
-          Blog
+            Blog
         </Link>
         <ThemeToggle className={e2eHooks.switch} />
       </div>

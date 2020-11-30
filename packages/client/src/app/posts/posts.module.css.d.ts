@@ -4,6 +4,7 @@ interface CssExports {
   'componentRoot': string;
   'date': string;
   'post': string;
+  'title': string;
   'titleRow': string;
 }
 export const cssExports: CssExports;

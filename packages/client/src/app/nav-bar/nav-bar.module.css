@@ -42,7 +42,13 @@
 
 .menu-button {
   display: none;
+  margin: 0;
+  padding: 2rem;
   cursor: pointer;
+}
+
+.options-list > .menu-button {
+  margin: none;
 }
 
 .dismiss-box {
@@ -57,10 +63,12 @@
 
 /* for-phone-only */
 @media only screen and (max-width: 599px) {
+  .component-root {
+    padding: 0;
+  }
+
   .menu-button {
     display: block;
-    padding: 1rem;
-    border: var(--border-button);
   }
 
   .options-list {
