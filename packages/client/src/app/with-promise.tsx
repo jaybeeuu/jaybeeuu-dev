@@ -37,11 +37,11 @@ export const withPromise = <ContentProps extends object>(
         }, [promise]);
         return (
           <div>
-            <h1>Whoops! Sorry about this, something&apos;s gone wrong...</h1>
+            <h2>Whoops! Sorry about this, something&apos;s gone wrong...</h2>
             {
               promise.error instanceof Error ? <h4>{promise.error.message}</h4> : (
                 Object.entries(promise.error).map(([source, error]) => (
-                  <h4 key={source}>{source}: {error.message}</h4>
+                  <p key={source}>{source}: {error.message}</p>
                 ))
               )
             }
