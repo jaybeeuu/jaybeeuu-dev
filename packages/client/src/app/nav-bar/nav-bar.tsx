@@ -18,13 +18,11 @@ export const NavBar = ({ className }: NavBarProps): VNode<any> => {
   return (
     <div className={classNames(css.componentRoot, e2eHooks.block, className)}>
       <Icon name={"menu"} className={css.menuButton} onClick={() => setIsOpen(!isOpen)}/>
-      <div className={classNames(
-        css.optionsList,
-        { [css.open]: isOpen }
-      )}>
+      <div className={classNames(css.optionsList, { [css.open]: isOpen })}>
         <Link
           activeClassName={css.active}
           className={classNames(css.link, e2eHooks.homeLink)}
+          onClick={() => setIsOpen(false)}
           href={"/"}
         >
           Home
@@ -32,6 +30,7 @@ export const NavBar = ({ className }: NavBarProps): VNode<any> => {
         <Link
           activeClassName={css.active}
           className={classNames(css.link, e2eHooks.postListLink)}
+          onClick={() => setIsOpen(false)}
           href={"/posts"}
         >
           Blog
