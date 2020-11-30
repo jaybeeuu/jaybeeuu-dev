@@ -5,7 +5,6 @@ interface CssExports {
   'date': string;
   'post': string;
   'title': string;
-  'titleRow': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

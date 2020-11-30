@@ -8,8 +8,8 @@
 
   --content-margin-width: 3.6rem;
   --content-margin: var(--content-margin-width) auto var(--content-margin-width) auto;
-  --content-padding-width: 2.4rem;
-  --content-padding: var(--content-padding-width);
+  --padding-content-width: 2.4rem;
+  --padding-content: var(--padding-content-width);
   --content-width: 80rem;
 
   --z-index-content: 10;
@@ -32,7 +32,7 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 }
 
 article {
-  padding: var(--content-padding);
+  padding: var(--padding-content);
   font-size: 2rem;
 }
 
@@ -62,12 +62,21 @@ a.hash-link {
   border-bottom: none;
   display: block;
   height: 2.4rem;
+  padding: 1rem;
   margin: 0 0.5rem;
 }
 
 a.hash-link svg {
   fill: transparent;
   transition: var(--transition-theme), fill var(--transition-average);
+}
+
+
+/* for-phone-only */
+@media only screen and (max-width: 599px) {
+  a.hash-link svg {
+    fill: var(--fill-icon);
+  }
 }
 
 article h1:hover a.hash-link svg,

@@ -5,12 +5,12 @@ import { useValue } from "@bickley-wallace/preact-recoiless";
 import classNames from "classnames";
 import { Link } from "preact-router";
 import { asRoute } from "../as-route";
+import { useBackgrounds as useBackgrounds } from "../use-background";
+import { usePageInfo } from "../use-page-info";
 import { postsManifest } from "../state";
 import { withPromise as withPromise } from "../with-promise";
 
 import css from "./posts.module.css";
-import { usePageInfo } from "../use-page-info";
-import { useBackgrounds as useBackgrounds } from "../use-background";
 
 const compareDateString = (
   left: PostMetaData,
@@ -28,12 +28,12 @@ const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
           className={classNames(css.post, e2eHooks.link(meta.slug))}
           key={meta.slug}
         >
-          <div className={css.titleRow}>
-            <h2 className={css.title}>
-              {meta.title}
-            </h2>
-            <span className={css.date}>{new Date(meta.lastUpdateDate ?? meta.publishDate).toLocaleDateString()}</span>
-          </div>
+          <h2 className={css.title}>
+            {meta.title}
+          </h2>
+          <p className={css.date}>
+            {new Date(meta.lastUpdateDate ?? meta.publishDate).toLocaleDateString()}
+          </p>
           <summary>{meta.abstract}</summary>
         </Link>
       ))}

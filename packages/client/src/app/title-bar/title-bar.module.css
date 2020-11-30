@@ -3,7 +3,7 @@
 
   position: relative;
   margin: 0;
-  padding: var(--content-padding);
+  padding: var(--padding-content);
   display: flex;
   align-items: center;
   justify-content: left;
@@ -37,7 +37,7 @@ h1.title a {
 /* for-tablet-landscape-down */
 @media only screen and (max-width: 900px) {
   .component-root {
-    padding: 1rem;
+    padding: 1rem var(--padding-content);
   }
 
   .title {

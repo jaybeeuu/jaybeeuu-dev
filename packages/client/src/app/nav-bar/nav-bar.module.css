@@ -39,6 +39,7 @@
   display: none;
   margin: 0;
   padding: 2rem;
+  padding-right: 0;
   cursor: pointer;
 }
 
@@ -89,5 +90,14 @@
   .options-list > * {
     padding: 1rem 2rem;
     margin: 1rem 2rem;
+  }
+
+  .options-list > :first-child {
+    margin-top: 2rem;
+    margin-left: 2rem;
+  }
+
+  .options-list > :last-child {
+    margin-bottom: 2rem;;
   }
 }

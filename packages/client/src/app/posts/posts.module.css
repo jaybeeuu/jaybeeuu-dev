@@ -1,6 +1,6 @@
 .component-root {
   margin: 0;
-  padding: var(--content-padding);
+  padding: var(--padding-content);
   color: var(--colour-text-main);
   max-width: var(--content-width);
   background-color: var(--background-colour-content);
@@ -30,32 +30,10 @@
   margin-bottom: 0;
 }
 
-.title-row {
-  display: flex;
-  align-items: center;
-  margin: 0 0 1rem 0;
-}
-
-.title-row > * {
-  margin: 0;
-  margin-right: 1rem;;
-}
-
-.title-row > :last-child {
-  margin-right: 0;
-}
-
 .title {
-  flex: 1 1 auto;
+  margin: 0;
 }
 
 .date {
   font-size: 1.5rem;
-}
-
-/* for-phone-only */
-@media only screen and (max-width: 599px) {
-  .title-row {
-    display: block
-  }
 }
