@@ -22,6 +22,7 @@ h1.title a {
   color: var(--colour-text);
 }
 
+/* for-phone-only */
 @media only screen and (max-width: 599px) {
   .component-root {
     padding: 0 0 0 2rem;
@@ -33,7 +34,7 @@ h1.title a {
   }
 }
 
-/* for-tablet-landscape-up */
+/* for-tablet-landscape-down */
 @media only screen and (max-width: 900px) {
   .component-root {
     padding: 1rem;

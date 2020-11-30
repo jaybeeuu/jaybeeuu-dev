@@ -10,7 +10,8 @@
   margin: 0;
 }
 
-@media only screen and (max-width: 600px) {
+/* for-phone-only */
+@media only screen and (max-width: 599px) {
   .component-root {
     margin-right: 0;
   }
