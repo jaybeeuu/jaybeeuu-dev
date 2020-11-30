@@ -10,12 +10,17 @@ export type IconName
   | "moon"
   | "sun";
 
-export interface IconProps extends JSX.HTMLAttributes<SVGSVGElement> {
+export interface IconProps {
+  className?: string;
   name: IconName;
+  onClick?: JSX.MouseEventHandler<SVGElement>;
 }
 
-export const Icon = ({ name, ...props }: IconProps): JSX.Element => (
-  <svg {...props} className={classNames(css.componentRoot, props.className)}>
+export const Icon = ({ className, name, onClick }: IconProps): JSX.Element => (
+  <svg
+    className={classNames(css.componentRoot, className)}
+    onClick={onClick}
+  >
     <use xlinkHref={`${iconSprite}#${name}`} />
   </svg>
 );
