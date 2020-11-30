@@ -1,10 +1,13 @@
 .component-root {
+  --title-bar-border: 0.2rem;
+
+  position: relative;
   margin: 0;
   padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: left;
-  border-bottom: 0.2rem solid var(--border-code-heading);
+  border-bottom: var(--title-bar-border) solid var(--border-code-heading);
   transition: var(--transition-theme);
 }
 
@@ -22,16 +25,7 @@
   flex: 1 1 auto;
 }
 
-/* for-phone-only */
-@media only screen and (max-width: 599px) {
-  .title {
-    font-size: 2rem;
-    line-height: 2rem;
-  }
-}
-
-/* for-tablet-portrait-up */
-@media only screen and (min-width: 600px) {
+@media only screen and (max-width: 600px) {
   .title {
     font-size: 2.5rem;
     line-height: 2.5rem;

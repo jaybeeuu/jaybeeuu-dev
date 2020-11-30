@@ -3,7 +3,7 @@
   padding: var(--content-padding);
   color: var(--colour-text-main);
   max-width: var(--content-width);
-  background-color: var(--content-background-colour);
+  background-color: var(--background-colour-content);
   transition: var(--transition-theme);
   margin: var(--content-margin);
 }

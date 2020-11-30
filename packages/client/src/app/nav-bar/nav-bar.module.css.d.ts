@@ -3,8 +3,10 @@
 interface CssExports {
   'active': string;
   'componentRoot': string;
+  'dismissBox': string;
   'link': string;
   'menuButton': string;
+  'open': string;
   'optionsList': string;
 }
 export const cssExports: CssExports;

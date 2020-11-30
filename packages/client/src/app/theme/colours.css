@@ -1,6 +1,6 @@
 .dark {
-  --document-background-colour: #0d1014;
-  --content-background-colour: #0e1a2d;
+  --background-colour-document: #0d1014;
+  --background-colour-content: #0e1a2d;
 
   --border-code-heading: #ff6768;
 
@@ -21,8 +21,8 @@
 }
 
 .light {
-  --document-background-colour: #eeeeee;
-  --content-background-colour: #ffffff;
+  --background-colour-document: #eeeeee;
+  --background-colour-content: #ffffff;
 
   --border-code-heading: #ff6768;
 

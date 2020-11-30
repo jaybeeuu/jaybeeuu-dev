@@ -2,10 +2,16 @@
   padding: var(--content-padding);
   margin: var(--content-margin);
   margin-right: var(--content-margin-width);
-  width: 40rem;
-  background-color: var(--content-background-colour);
+  max-width: 40rem;
+  background-color: var(--background-colour-content);
 }
 
 .component-root p {
   margin: 0;
+}
+
+@media only screen and (max-width: 600px) {
+  .component-root {
+    margin-right: 0;
+  }
 }

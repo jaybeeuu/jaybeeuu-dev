@@ -6,7 +6,7 @@
   height: 100%;
   width: 100%;
   overflow: auto;
-  z-index: 10;
+  z-index: var(--z-index-content);
   position: relative;
 }
 

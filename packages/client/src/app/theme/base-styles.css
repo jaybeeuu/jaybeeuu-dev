@@ -11,6 +11,8 @@
   --content-padding-width: 2.4rem;
   --content-padding: var(--content-padding-width);
   --content-width: 80rem;
+
+  --z-index-content: 10;
 }
 
 a {

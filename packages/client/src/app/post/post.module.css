@@ -4,6 +4,6 @@
 }
 
 .component-root article {
-  background-color: var(--content-background-colour);
+  background-color: var(--background-colour-content);
   transition: var(--transition-theme);
 }
