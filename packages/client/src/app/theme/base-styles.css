@@ -6,11 +6,11 @@
   --transition-theme-timing: var(--transition-complex);
   --transition-theme: border-color var(--transition-slow), color var(--transition-theme-timing), fill var(--transition-theme-timing), background-color var(--transition-theme-timing);
 
-  --content-margin-width: 3.6rem;
-  --content-margin: var(--content-margin-width) auto var(--content-margin-width) auto;
+  --margin-content-width: 3.6rem;
+  --margin-content: var(--margin-content-width) auto var(--margin-content-width) auto;
   --padding-content-width: 2.4rem;
   --padding-content: var(--padding-content-width);
-  --content-width: 80rem;
+  --width-content: 80rem;
 
   --z-index-content: 10;
 }

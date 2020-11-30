@@ -1,6 +1,6 @@
 .component-root {
-  max-width: var(--content-width);
-  margin: var(--content-margin);
+  max-width: var(--width-content);
+  margin: var(--margin-content);
 }
 
 .component-root article {

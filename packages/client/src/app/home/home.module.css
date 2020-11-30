@@ -1,7 +1,7 @@
 .component-root {
   padding: var(--padding-content);
-  margin: var(--content-margin);
-  margin-right: var(--content-margin-width);
+  margin: var(--margin-content);
+  margin-right: var(--margin-content-width);
   max-width: 40rem;
   background-color: var(--background-colour-content);
 }
