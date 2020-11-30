@@ -9,7 +9,7 @@ import { ThemeToggle } from "../theme-toggle";
 import css from "./nav-bar.module.css";
 
 export interface NavBarProps {
-  className: string;
+  className?: string;
 }
 
 export const NavBar = ({ className }: NavBarProps): VNode<any> => {

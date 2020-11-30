@@ -14,7 +14,7 @@ export const TitleBar = ({ className }: NavBarProps): VNode<any> => {
       <h1 className={css.title}>
         Josh Bickley-Wallace
       </h1>
-      <NavBar className={css.static} />
+      <NavBar />
     </div>
   );
 };
