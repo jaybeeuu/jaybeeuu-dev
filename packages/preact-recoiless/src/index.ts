@@ -2,16 +2,11 @@ export {
   useAsyncGenerator
 } from "./async-hooks";
 export {
-  combinePromises,
-  Complete,
-  Failed,
-  monitorPromise,
-  Pending,
-  PromiseState,
-  PromiseStatus,
-  PromiseStatuses,
-  Slow
-} from "./promise-status";
+  FailedProps,
+  MaybePromises,
+  withPromise,
+  WithPromiseComponents
+} from "./with-promise";
 export {
   StoreContext,
   StoreProps,
