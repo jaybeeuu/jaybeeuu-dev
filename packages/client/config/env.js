@@ -3,10 +3,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const envVars = {
-  "CLIENT_HOST_NAME": "localhost",
+  "CLIENT_HOST_NAME": "0.0.0.0",
   "CLIENT_PORT": "3443",
-  "API_HOST_NAME": "localhost",
-  "API_PORT": "3444",
   "NODE_ENV": "devlopment"
 };
 
