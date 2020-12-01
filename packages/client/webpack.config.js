@@ -120,7 +120,7 @@ module.exports = {
             ]
           },
           {
-            exclude: [/\.(ts|tsx|js|jsx)$/, /\.css$/, /\.html$/, /\.json$/],
+            exclude: [/\.(ts|tsx|js|jsx)$/, /\.css$/, /\.html$/, /\.json$/, /\.(bmp|gif|jpe?g|png|svg)$/],
             loader: "file-loader",
             options: {
               name: "static/[name].[hash:8].[ext]",
@@ -159,11 +159,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new PreactRefreshPlugin(),
     isProduction ? new BundleAnalyzerPlugin({
-      analyzerMode: "static",
-      generateStatsFile: true,
-      statsFilename: "bundle-stats.json",
-      statsOptions: {
-      }
+      analyzerMode: "static"
     }) : null,
     isProduction ? new MiniCssExtractPlugin() : null
   ].filter(Boolean)
