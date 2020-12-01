@@ -1,4 +1,4 @@
-import { FailedProps } from "@bickley-wallace/preact-recoiless";
+import { FailedProps } from "@bickley-wallace/preact-recoilless";
 import { log } from "@bickley-wallace/utilities";
 import { h, VNode } from "preact";
 import { useEffect } from "preact/hooks";

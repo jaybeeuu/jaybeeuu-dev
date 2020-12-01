@@ -1,5 +1,5 @@
 {
-  "name": "@bickley-wallace/preact-recoiless",
+  "name": "@bickley-wallace/preact-recoilless",
   "version": "0.0.0",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jayseeare)",
   "license": "MIT",
@@ -26,13 +26,13 @@
     "tslib": "^2.0.3"
   },
   "peerDependencies": {
-    "@bickley-wallace/recoiless": "workspace:*",
+    "@bickley-wallace/recoilless": "workspace:*",
     "@bickley-wallace/utilities": "workspace:*",
     "preact": "^10.5.5"
   },
   "devDependencies": {
     "@bickley-wallace/eslint-config": "workspace:*",
-    "@bickley-wallace/recoiless": "workspace:*",
+    "@bickley-wallace/recoilless": "workspace:*",
     "@bickley-wallace/utilities": "workspace:*",
     "@testing-library/preact": "^2.0.0",
     "@testing-library/preact-hooks": "^1.1.0",

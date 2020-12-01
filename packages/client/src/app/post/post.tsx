@@ -2,7 +2,7 @@ import { h, FunctionComponent, JSX, createRef, render } from "preact";
 import { useEffect } from "preact/hooks";
 import { PostMetaData } from "@bickley-wallace/compost";
 import { post as e2eHooks } from "@bickley-wallace/e2e-hooks";
-import { useValue } from "@bickley-wallace/preact-recoiless";
+import { useValue } from "@bickley-wallace/preact-recoilless";
 import classNames from "classnames";
 import { withPromise } from "../with-promise";
 import { asRoute } from "../as-route";

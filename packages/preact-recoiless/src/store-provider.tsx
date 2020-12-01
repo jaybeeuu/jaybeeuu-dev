@@ -1,7 +1,7 @@
 
 import { h, createContext, ComponentChildren, JSX } from "preact";
 import { useMemo } from "preact/hooks";
-import { Store } from "@bickley-wallace/recoiless";
+import { Store } from "@bickley-wallace/recoilless";
 
 export interface StoreProps {
   store?: Store,

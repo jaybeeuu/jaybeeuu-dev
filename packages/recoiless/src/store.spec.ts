@@ -18,7 +18,7 @@ const fullName: DerivedValue<string> = {
   }
 };
 
-describe("recoiless store", () => {
+describe("recoilless store", () => {
   describe("primitive values", () => {
     it("allows the retrieval of a primitive value from the store.", () => {
       const store = new Store();

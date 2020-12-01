@@ -14,8 +14,8 @@ importers:
       '@bickley-wallace/e2e-hooks': 'link:../e2e-hooks'
       '@bickley-wallace/eslint-config': 'link:../eslint-config'
       '@bickley-wallace/posts': 'link:../posts'
-      '@bickley-wallace/preact-recoiless': 'link:../preact-recoiless'
-      '@bickley-wallace/recoiless': 'link:../recoiless'
+      '@bickley-wallace/preact-recoilless': 'link:../preact-recoilless'
+      '@bickley-wallace/recoilless': 'link:../recoilless'
       '@bickley-wallace/scripts': 'link:../scripts'
       '@bickley-wallace/utilities': 'link:../utilities'
       '@prefresh/babel-plugin': 0.2.2
@@ -70,8 +70,8 @@ importers:
       '@bickley-wallace/e2e-hooks': 'workspace:*'
       '@bickley-wallace/eslint-config': 'workspace:*'
       '@bickley-wallace/posts': 'workspace:*'
-      '@bickley-wallace/preact-recoiless': 'workspace:*'
-      '@bickley-wallace/recoiless': 'workspace:*'
+      '@bickley-wallace/preact-recoilless': 'workspace:*'
+      '@bickley-wallace/recoilless': 'workspace:*'
       '@bickley-wallace/scripts': 'workspace:*'
       '@bickley-wallace/utilities': 'workspace:*'
       '@prefresh/babel-plugin': ^0.2.2
@@ -242,12 +242,12 @@ importers:
       '@bickley-wallace/compost': 'link:../compost'
     specifiers:
       '@bickley-wallace/compost': 'workspace:*'
-  packages/preact-recoiless:
+  packages/preact-recoilless:
     dependencies:
       tslib: 2.0.3
     devDependencies:
       '@bickley-wallace/eslint-config': 'link:../eslint-config'
-      '@bickley-wallace/recoiless': 'link:../recoiless'
+      '@bickley-wallace/recoilless': 'link:../recoilless'
       '@bickley-wallace/utilities': 'link:../utilities'
       '@testing-library/preact': 2.0.0_preact@10.5.5
       '@testing-library/preact-hooks': 1.1.0_41c9bfbf99ad51ab34dbbe0806be4136
@@ -262,7 +262,7 @@ importers:
       typescript: 4.0.5
     specifiers:
       '@bickley-wallace/eslint-config': 'workspace:*'
-      '@bickley-wallace/recoiless': 'workspace:*'
+      '@bickley-wallace/recoilless': 'workspace:*'
       '@bickley-wallace/utilities': 'workspace:*'
       '@testing-library/preact': ^2.0.0
       '@testing-library/preact-hooks': ^1.1.0
@@ -276,7 +276,7 @@ importers:
       ts-jest: ^26.4.4
       tslib: ^2.0.3
       typescript: ^4.0.5
-  packages/recoiless:
+  packages/recoilless:
     dependencies:
       tslib: 2.0.3
     devDependencies:

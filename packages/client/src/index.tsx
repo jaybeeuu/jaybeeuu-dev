@@ -1,6 +1,6 @@
 import { h, render } from "preact";
 import { App } from "./app/app";
-import { StoreProvider } from "@bickley-wallace/preact-recoiless";
+import { StoreProvider } from "@bickley-wallace/preact-recoilless";
 
 const appSelector = "#app";
 const app = document.querySelector(appSelector);

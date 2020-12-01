@@ -1,7 +1,7 @@
 import { h, VNode } from "preact";
 import { PostManifest, PostMetaData } from "@bickley-wallace/compost";
 import { postList as e2eHooks } from "@bickley-wallace/e2e-hooks";
-import { useValue } from "@bickley-wallace/preact-recoiless";
+import { useValue } from "@bickley-wallace/preact-recoilless";
 import classNames from "classnames";
 import { Link } from "preact-router";
 import { asRoute } from "../as-route";

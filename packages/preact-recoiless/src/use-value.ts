@@ -12,7 +12,7 @@ import {
   Store,
   Value,
   ValueState
-} from "@bickley-wallace/recoiless";
+} from "@bickley-wallace/recoilless";
 import { useAsyncGenerator } from "./async-hooks";
 import { monitorPromise, PromiseState } from "./promise-status";
 import { StoreContext } from "./store-provider";

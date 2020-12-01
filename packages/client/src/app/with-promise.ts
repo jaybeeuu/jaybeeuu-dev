@@ -1,5 +1,5 @@
 import { ComponentType, FunctionComponent } from "preact";
-import { withPromise as baseWithPromise, MaybePromises } from "@bickley-wallace/preact-recoiless";
+import { withPromise as baseWithPromise, MaybePromises } from "@bickley-wallace/preact-recoilless";
 import { FailedPromise } from "./failed-promise";
 import { LoadingSpinner } from "./loading-spinner";
 

@@ -1,6 +1,6 @@
 
 import { h, JSX } from "preact";
-import { useValue } from "@bickley-wallace/preact-recoiless";
+import { useValue } from "@bickley-wallace/preact-recoilless";
 import classNames from "classnames";
 import { Icon } from "../icon";
 import { theme, Theme } from "../state";

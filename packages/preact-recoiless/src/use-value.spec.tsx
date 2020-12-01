@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { ComponentType, h } from "preact";
-import { DerivedValue, Store } from "@bickley-wallace/recoiless";
+import { DerivedValue, Store } from "@bickley-wallace/recoilless";
 import { act, renderHook } from "@testing-library/preact-hooks";
 import { StoreProvider } from "./store-provider";
 import { useValue } from "./use-value";
