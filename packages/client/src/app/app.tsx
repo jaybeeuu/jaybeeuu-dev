@@ -13,8 +13,8 @@ import css from "./app.module.css";
 
 export const App: FunctionComponent = () => (
   <Theme className={css.componentRoot}>
-    <TitleBar className={css.static} />
     <Background className={classNames(css.main, e2eHooks.root)}>
+      <TitleBar className={css.static} />
       <Router>
         <HomeRoute path={"/"}/>
         <PostsRoute path={"posts"}/>

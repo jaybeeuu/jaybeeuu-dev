@@ -3,6 +3,7 @@
 interface CssExports {
   'componentRoot': string;
   'title': string;
+  'titleWrapper': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

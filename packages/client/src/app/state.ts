@@ -70,3 +70,21 @@ export const backgroundImages: PrimitiveValue<BackgroundImages | null> = {
   name: "backgroundImage",
   initialValue: null
 };
+
+export interface ScrollPosition {
+  x: number;
+  y: number;
+  previous: {
+    x: number;
+    y: number;
+  }
+}
+
+export const mainContentScroll: PrimitiveValue<ScrollPosition> = {
+  name: "mainContentScroll",
+  initialValue: {
+    x: 0,
+    y: 0,
+    previous: { x: 0, y: 0 }
+  }
+};
