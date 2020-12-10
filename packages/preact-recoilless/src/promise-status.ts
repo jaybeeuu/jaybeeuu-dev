@@ -33,7 +33,7 @@ function complete<Value>(value?: Value): Complete<Value> {
 export type PromiseState<Response = unknown> = Pending | Slow | Failed | Complete<Response>;
 
 const isObjectWithProp = <Prop extends string>(candidate: unknown, prop: Prop): candidate is { [key in Prop]: unknown } => {
-  return candidate && typeof candidate === "object" && prop in candidate;
+  return typeof candidate === "object" && candidate !== null && prop in candidate;
 };
 
 const isAnyPromiseState = (candidate: unknown): candidate is PromiseState => {

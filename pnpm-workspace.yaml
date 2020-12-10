@@ -1,5 +1,6 @@
 packages:
   - 'packages/client'
+  - 'packages/client-server'
   - 'packages/compost'
   - 'packages/e2e-hooks'
   - 'packages/e2e'
