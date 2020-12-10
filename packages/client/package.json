@@ -13,6 +13,7 @@
     "build:debug": "cross-env NODE_ENV=devlopment webpack",
     "gen-certs": "gen-certs",
     "start": "webpack serve",
+    "start-prod": "cross-env NODE_ENV=production webpack serve",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx --format codeframe .",
     "type-check": "tsc --noEmit",
     "test": "jest",

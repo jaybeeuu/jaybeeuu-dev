@@ -17,7 +17,7 @@ module.exports = {
   mode: isProduction ? "production" : "development",
   devtool: isProduction ? "source-map" : "source-map",
   watch: !isProduction,
-  devServer: !isProduction ? {
+  devServer: {
     compress: true,
     historyApiFallback: true,
     host: env.CLIENT_HOST_NAME,
@@ -31,7 +31,7 @@ module.exports = {
     quiet: true,
     watchContentBase: true,
     clientLogLevel: "info"
-  } : undefined,
+  },
   entry: [
     paths.srcIndex,
   ],
