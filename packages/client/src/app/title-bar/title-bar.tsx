@@ -6,39 +6,19 @@ import { Link } from "preact-router";
 import { NavBar } from "../nav-bar";
 
 import css from "./title-bar.module.css";
-import { mainContentScroll, ScrollPosition } from "../state";
+import { mainContentScroll } from "../state";
+import { useScrollWithStyle } from "../../use-scroll-with-style";
 
 export interface NavBarProps {
   className: string;
 }
-const useScrollWithTop = (elementHeight: number, scroll: ScrollPosition): number => {
-  const offset = useRef(0);
 
-  const scrolledBy = scroll.y - scroll.previous.y;
-  const goingDown = scrolledBy > 0;
-  const newOffset = goingDown
-    ? Math.min(elementHeight + 500, offset.current + scrolledBy)
-    : Math.max(0, offset.current + scrolledBy);
-
-  offset.current = newOffset;
-
-  return scroll.y - newOffset;
-};
-
-const useScrollWithStyle = (elementHeight: number | undefined, scroll: ScrollPosition): string => {
-  if (!elementHeight) {
-    return "";
-  }
-
-  const top = useScrollWithTop(elementHeight, scroll);
-
-  return `top: ${top}px;`;
-};
 
 export const TitleBar = ({ className }: NavBarProps): VNode<any> => {
   const titleRef = useRef<HTMLDivElement>();
   const [scroll] = useValue(mainContentScroll);
   const style = useScrollWithStyle(titleRef.current?.offsetHeight, scroll);
+
   return (
     <div className={classNames(css.componentRoot, className)}>
       <div className={css.titleWrapper} ref={titleRef} style={style}>

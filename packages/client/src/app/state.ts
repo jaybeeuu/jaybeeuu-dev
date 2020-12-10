@@ -1,6 +1,7 @@
 import { PostManifest, PostMetaData } from "@bickley-wallace/compost";
 import { fetchJson, fetchText } from "../utils/request";
 import { DerivedValue, PrimitiveValue } from "@bickley-wallace/recoilless";
+import { ScrollPosition } from "../use-scroll-with-style";
 
 export const postsManifest: DerivedValue<Promise<PostManifest>> = {
   name: "postManifest",
@@ -70,15 +71,6 @@ export const backgroundImages: PrimitiveValue<BackgroundImages | null> = {
   name: "backgroundImage",
   initialValue: null
 };
-
-export interface ScrollPosition {
-  x: number;
-  y: number;
-  previous: {
-    x: number;
-    y: number;
-  }
-}
 
 export const mainContentScroll: PrimitiveValue<ScrollPosition> = {
   name: "mainContentScroll",
