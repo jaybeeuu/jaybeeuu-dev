@@ -11,20 +11,28 @@ import { mainContentScroll, ScrollPosition } from "../state";
 export interface NavBarProps {
   className: string;
 }
+const useScrollWithTop = (elementHeight: number, scroll: ScrollPosition): number => {
+  const offset = useRef(0);
+
+  const scrolledBy = scroll.y - scroll.previous.y;
+  const goingDown = scrolledBy > 0;
+  const newOffset = goingDown
+    ? Math.min(elementHeight + 500, offset.current + scrolledBy)
+    : Math.max(0, offset.current + scrolledBy);
+
+  offset.current = newOffset;
+
+  return scroll.y - newOffset;
+};
 
 const useScrollWithStyle = (elementHeight: number | undefined, scroll: ScrollPosition): string => {
   if (!elementHeight) {
     return "";
   }
-  const offset = useRef(0);
-  const scrolledBy = scroll.y - scroll.previous.y;
-  const goingDown = scrolledBy > 0;
-  if (goingDown) {
-    offset.current = Math.min(elementHeight, offset.current + scrolledBy);
-  } else {
-    offset.current = Math.max(0, offset.current + scrolledBy);
-  }
-  return `top: ${scroll.y - offset.current}px;`;
+
+  const top = useScrollWithTop(elementHeight, scroll);
+
+  return `top: ${top}px;`;
 };
 
 export const TitleBar = ({ className }: NavBarProps): VNode<any> => {
