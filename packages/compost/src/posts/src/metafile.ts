@@ -5,7 +5,7 @@ import { FileInfo, canAccess, readTextFile } from "../../files";
 import { Result, failure, success } from "../../results";
 import { MARKDOWN_FILE_EXTENSION } from "./constants";
 
-export type PostMetaFileData = Pick<PostMetaData, "abstract" | "title">;
+export type PostMetaFileData = Pick<PostMetaData, "abstract" | "title" | "publish">;
 
 const isPostMetaFile = (candidate: unknown): candidate is PostMetaFileData => {
   if (typeof candidate !== "object") {

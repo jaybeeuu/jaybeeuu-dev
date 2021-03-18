@@ -32,6 +32,7 @@ const compilePosts = async (options?: Partial<UpdateOptions>): Promise<void> => 
     sourceDir,
     watch: false,
     additionalWatchPaths: "",
+    includeUnpublished: false,
     ...options
   });
 };
@@ -45,7 +46,8 @@ describe("compile", () => {
     const slug = "first-post";
     const meta = {
       title: "This is the first post",
-      abstract: "This is the very first post."
+      abstract: "This is the very first post.",
+      publish: true
     };
     await writeTextFiles(
       sourceDir,
@@ -88,7 +90,8 @@ describe("compile", () => {
         path: "./first-post.json",
         content: JSON.stringify({
           title: "This is the first post",
-          abstract: "This is the very first post."
+          abstract: "This is the very first post.",
+          publish: true
         }, null, 2)
       }]
     );
@@ -100,6 +103,56 @@ describe("compile", () => {
     const post = await getPost(manifest[slug].href);
 
     expect(post).toContain(postContent);
+  });
+
+  it("ignores unpublished articles.", async () => {
+    await deleteDirectories(sourceDir, outputDir);
+
+    const slug = "unfinished-post";
+    await writeTextFiles(
+      sourceDir,
+      [{
+        path: `./${slug}.md`,
+        content: "# This a work inn progress.\n\nSome COntent."
+      }, {
+        path: `./${slug}.json`,
+        content: JSON.stringify({
+          title: "This an unfinished post",
+          abstract: "Still a work in progress.",
+          publish: false
+        }, null, 2)
+      }]
+    );
+
+    await compilePosts();
+
+    const manifest = await getPostManifest();
+    expect(manifest[slug]).not.toBeDefined();
+  });
+
+  it("ignores unpublished articles unless told to include them with the option.", async () => {
+    await deleteDirectories(sourceDir, outputDir);
+
+    const slug = "unfinished-post";
+    await writeTextFiles(
+      sourceDir,
+      [{
+        path: `./${slug}.md`,
+        content: "# This a work inn progress.\n\nSome content."
+      }, {
+        path: `./${slug}.json`,
+        content: JSON.stringify({
+          title: "This an unfinished post",
+          abstract: "Still a work in progress.",
+          publish: false
+        }, null, 2)
+      }]
+    );
+
+    await compilePosts({ includeUnpublished: true });
+
+    const manifest = await getPostManifest();
+    expect(manifest[slug]).toBeDefined();
   });
 
   it("recurses the all the directories.", async () => {
@@ -119,7 +172,8 @@ describe("compile", () => {
         path: `./sub-directory/${slug}.json`,
         content: JSON.stringify({
           title: "This is the first post",
-          abstract: "This is the very first post."
+          abstract: "This is the very first post.",
+          publish: true
         }, null, 2)
       }]
     );
@@ -141,7 +195,7 @@ describe("compile", () => {
         content: contentLines.join("\n")
       }, {
         path: `./${slug}.json`,
-        content: JSON.stringify({ title: "{title}", abstract: "abstract" }, null, 2)
+        content: JSON.stringify({ title: "{title}", abstract: "abstract", publish: true }, null, 2),
       }]
     );
   };

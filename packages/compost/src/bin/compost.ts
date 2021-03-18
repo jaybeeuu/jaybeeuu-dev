@@ -12,7 +12,8 @@ const options = getOpts(process.argv, {
     manifestFileName: "m",
     outputDir: "o",
     sourceDir: "s",
-    watch: "w"
+    watch: "w",
+    includeUnpublished: "u"
   },
   default: {
     additionalWatchPaths: "",
@@ -20,7 +21,8 @@ const options = getOpts(process.argv, {
     manifestFileName: "manifest.json",
     outputDir: "./lib",
     sourceDir: "./src",
-    watch: false
+    watch: false,
+    includeUnpublished: false
   }
 }) as unknown as UpdateOptions;
 
@@ -47,7 +49,7 @@ const run = async (): Promise<Result<void>> => {
 
 const watch = (): void => {
   log.info("Starting compost in watch mode...");
-  const debounced = debounce(async () => {
+  const debouncedRun = debounce(async () => {
     await run();
     log.info("Waiting for changes...");
   }, 250);
@@ -55,7 +57,7 @@ const watch = (): void => {
     options.sourceDir,
     ...options.additionalWatchPaths.split(",").map((path) => path.trim())
   ].filter(Boolean);
-  chokidar.watch(watchPaths).on("all", debounced);
+  chokidar.watch(watchPaths).on("all", debouncedRun);
 };
 
 if (options.watch) {

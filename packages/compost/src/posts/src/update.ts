@@ -49,12 +49,16 @@ export const update = async (
     if (metaFileContentResult.state === ResultState.failure) {
       return metaFileContentResult;
     }
+    const metaData = metaFileContentResult.value;
+    if (!metaData.publish && !options.includeUnpublished){
+      continue;
+    }
 
     const originalRecord = oldManifest[slug];
     const hasBeenUpdated = originalRecord && originalRecord.fileName !== compiledFileName;
 
     newManifest[slug] = {
-      ...metaFileContentResult.value,
+      ...metaData,
       publishDate: originalRecord?.publishDate || new Date().toUTCString(),
       lastUpdateDate: hasBeenUpdated ? new Date().toUTCString() : null,
       slug,

@@ -6,6 +6,7 @@ export interface PostMetaData {
   publishDate: string;
   slug: string;
   title: string;
+  publish: boolean;
 }
 
 export interface PostManifest {
@@ -23,4 +24,5 @@ export interface UpdateOptions {
   outputDir: string;
   sourceDir: string;
   watch: boolean;
+  includeUnpublished: boolean;
 }
