@@ -13,10 +13,12 @@
     "lib"
   ],
   "scripts": {
-    "start": "compost --watch --hrefRoot=posts",
+    "start": "compost --watch --hrefRoot=posts --includeunPublished",
+    "lint": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
     "build": "compost --hrefRoot=posts"
   },
   "devDependencies": {
-    "@bickley-wallace/compost": "workspace:*"
+    "@bickley-wallace/compost": "workspace:*",
+    "markdownlint-cli2": "^0.0.14"
   }
 }

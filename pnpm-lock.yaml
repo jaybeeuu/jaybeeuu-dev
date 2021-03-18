@@ -10,14 +10,14 @@ importers:
       '@babel/plugin-transform-react-jsx': 7.12.5_@babel+core@7.12.3
       '@babel/preset-env': 7.12.1_@babel+core@7.12.3
       '@babel/preset-typescript': 7.12.1_@babel+core@7.12.3
-      '@bickley-wallace/compost': 'link:../compost'
-      '@bickley-wallace/e2e-hooks': 'link:../e2e-hooks'
-      '@bickley-wallace/eslint-config': 'link:../eslint-config'
-      '@bickley-wallace/posts': 'link:../posts'
-      '@bickley-wallace/preact-recoilless': 'link:../preact-recoilless'
-      '@bickley-wallace/recoilless': 'link:../recoilless'
-      '@bickley-wallace/scripts': 'link:../scripts'
-      '@bickley-wallace/utilities': 'link:../utilities'
+      '@bickley-wallace/compost': link:../compost
+      '@bickley-wallace/e2e-hooks': link:../e2e-hooks
+      '@bickley-wallace/eslint-config': link:../eslint-config
+      '@bickley-wallace/posts': link:../posts
+      '@bickley-wallace/preact-recoilless': link:../preact-recoilless
+      '@bickley-wallace/recoilless': link:../recoilless
+      '@bickley-wallace/scripts': link:../scripts
+      '@bickley-wallace/utilities': link:../utilities
       '@prefresh/babel-plugin': 0.2.2
       '@prefresh/webpack': 2.2.0_d030168492f2100d9135fa5667e03a0e
       '@types/classnames': 2.2.11
@@ -66,14 +66,14 @@ importers:
       '@babel/plugin-transform-react-jsx': ^7.12.5
       '@babel/preset-env': ^7.12.1
       '@babel/preset-typescript': ^7.12.1
-      '@bickley-wallace/compost': 'workspace:*'
-      '@bickley-wallace/e2e-hooks': 'workspace:*'
-      '@bickley-wallace/eslint-config': 'workspace:*'
-      '@bickley-wallace/posts': 'workspace:*'
-      '@bickley-wallace/preact-recoilless': 'workspace:*'
-      '@bickley-wallace/recoilless': 'workspace:*'
-      '@bickley-wallace/scripts': 'workspace:*'
-      '@bickley-wallace/utilities': 'workspace:*'
+      '@bickley-wallace/compost': workspace:*
+      '@bickley-wallace/e2e-hooks': workspace:*
+      '@bickley-wallace/eslint-config': workspace:*
+      '@bickley-wallace/posts': workspace:*
+      '@bickley-wallace/preact-recoilless': workspace:*
+      '@bickley-wallace/recoilless': workspace:*
+      '@bickley-wallace/scripts': workspace:*
+      '@bickley-wallace/utilities': workspace:*
       '@prefresh/babel-plugin': ^0.2.2
       '@prefresh/webpack': ^2.2.0
       '@types/classnames': ^2.2.11
@@ -119,14 +119,14 @@ importers:
       webpack-dev-server: ^3.11.0
   packages/client-server:
     dependencies:
-      '@bickley-wallace/client': 'link:../client'
+      '@bickley-wallace/client': link:../client
       '@types/express': 4.17.9
       express: 4.17.1
       node-ts: 5.1.1
       nodemon: 2.0.6
       typescript: 4.1.2
     specifiers:
-      '@bickley-wallace/client': 'workspace:^0.0.0'
+      '@bickley-wallace/client': workspace:^0.0.0
       '@types/express': ^4.17.9
       express: ^4.17.1
       node-ts: ^5.1.1
@@ -143,8 +143,8 @@ importers:
       sanitize-html: 2.1.2
       tslib: 2.0.3
     devDependencies:
-      '@bickley-wallace/eslint-config': 'link:../eslint-config'
-      '@bickley-wallace/utilities': 'link:../utilities'
+      '@bickley-wallace/eslint-config': link:../eslint-config
+      '@bickley-wallace/utilities': link:../utilities
       '@types/jest': 26.0.15
       '@types/marked': 1.1.0
       '@types/node': 14.14.7
@@ -160,8 +160,8 @@ importers:
       ts-jest: 26.4.4_jest@26.6.3+typescript@4.1.2
       typescript: 4.1.2
     specifiers:
-      '@bickley-wallace/eslint-config': 'workspace:*'
-      '@bickley-wallace/utilities': 'workspace:*'
+      '@bickley-wallace/eslint-config': workspace:*
+      '@bickley-wallace/utilities': workspace:*
       '@types/jest': ^26.0.15
       '@types/marked': ^1.1.0
       '@types/node': 14.14.7
@@ -188,9 +188,9 @@ importers:
     dependencies:
       '@babel/core': 7.12.3
       '@babel/preset-env': 7.12.1_@babel+core@7.12.3
-      '@bickley-wallace/compost': 'link:../compost'
-      '@bickley-wallace/e2e-hooks': 'link:../e2e-hooks'
-      '@bickley-wallace/eslint-config': 'link:../eslint-config'
+      '@bickley-wallace/compost': link:../compost
+      '@bickley-wallace/e2e-hooks': link:../e2e-hooks
+      '@bickley-wallace/eslint-config': link:../eslint-config
       '@cypress/webpack-preprocessor': 5.4.11_87e0df7c85fb62640398d5e437544304
       '@types/node': 14.14.7
       '@typescript-eslint/eslint-plugin': 4.7.0_bc57d1bf3aae3583c8ccaa047f21f909
@@ -208,9 +208,9 @@ importers:
     specifiers:
       '@babel/core': ^7.12.3
       '@babel/preset-env': ^7.12.1
-      '@bickley-wallace/compost': 'workspace:*'
-      '@bickley-wallace/e2e-hooks': 'workspace:*'
-      '@bickley-wallace/eslint-config': 'workspace:*'
+      '@bickley-wallace/compost': workspace:*
+      '@bickley-wallace/e2e-hooks': workspace:*
+      '@bickley-wallace/eslint-config': workspace:*
       '@cypress/webpack-preprocessor': ^5.4.11
       '@types/node': 14.14.7
       '@typescript-eslint/eslint-plugin': ^4.7.0
@@ -226,13 +226,13 @@ importers:
       webpack: ^4.18.1
   packages/e2e-hooks:
     devDependencies:
-      '@bickley-wallace/eslint-config': 'link:../eslint-config'
+      '@bickley-wallace/eslint-config': link:../eslint-config
       '@typescript-eslint/eslint-plugin': 4.7.0_bc57d1bf3aae3583c8ccaa047f21f909
       '@typescript-eslint/parser': 4.7.0_eslint@7.13.0+typescript@4.1.2
       eslint: 7.13.0
       typescript: 4.1.2
     specifiers:
-      '@bickley-wallace/eslint-config': 'workspace:*'
+      '@bickley-wallace/eslint-config': workspace:*
       '@typescript-eslint/eslint-plugin': ^4.7.0
       '@typescript-eslint/parser': ^4.7.0
       eslint: ^7.13.0
@@ -253,17 +253,20 @@ importers:
       eslint-plugin-react: ^7.21.5
       typescript: ^4.1.2
   packages/posts:
+    dependencies:
+      markdownlint-cli2: 0.0.14
     devDependencies:
-      '@bickley-wallace/compost': 'link:../compost'
+      '@bickley-wallace/compost': link:../compost
     specifiers:
-      '@bickley-wallace/compost': 'workspace:*'
+      '@bickley-wallace/compost': workspace:*
+      markdownlint-cli2: ^0.0.14
   packages/preact-recoilless:
     dependencies:
       tslib: 2.0.3
     devDependencies:
-      '@bickley-wallace/eslint-config': 'link:../eslint-config'
-      '@bickley-wallace/recoilless': 'link:../recoilless'
-      '@bickley-wallace/utilities': 'link:../utilities'
+      '@bickley-wallace/eslint-config': link:../eslint-config
+      '@bickley-wallace/recoilless': link:../recoilless
+      '@bickley-wallace/utilities': link:../utilities
       '@testing-library/preact': 2.0.0_preact@10.5.5
       '@testing-library/preact-hooks': 1.1.0_41c9bfbf99ad51ab34dbbe0806be4136
       '@types/jest': 26.0.15
@@ -276,9 +279,9 @@ importers:
       ts-jest: 26.4.4_jest@26.6.3+typescript@4.1.2
       typescript: 4.1.2
     specifiers:
-      '@bickley-wallace/eslint-config': 'workspace:*'
-      '@bickley-wallace/recoilless': 'workspace:*'
-      '@bickley-wallace/utilities': 'workspace:*'
+      '@bickley-wallace/eslint-config': workspace:*
+      '@bickley-wallace/recoilless': workspace:*
+      '@bickley-wallace/utilities': workspace:*
       '@testing-library/preact': ^2.0.0
       '@testing-library/preact-hooks': ^1.1.0
       '@types/jest': ^26.0.15
@@ -295,7 +298,7 @@ importers:
     dependencies:
       tslib: 2.0.3
     devDependencies:
-      '@bickley-wallace/eslint-config': 'link:../eslint-config'
+      '@bickley-wallace/eslint-config': link:../eslint-config
       '@types/jest': 26.0.15
       '@typescript-eslint/eslint-plugin': 4.7.0_bc57d1bf3aae3583c8ccaa047f21f909
       '@typescript-eslint/parser': 4.7.0_eslint@7.13.0+typescript@4.1.2
@@ -305,7 +308,7 @@ importers:
       ts-jest: 26.4.4_jest@26.6.3+typescript@4.1.2
       typescript: 4.1.2
     specifiers:
-      '@bickley-wallace/eslint-config': 'workspace:*'
+      '@bickley-wallace/eslint-config': workspace:*
       '@types/jest': ^26.0.15
       '@typescript-eslint/eslint-plugin': ^4.7.0
       '@typescript-eslint/parser': ^4.7.0
@@ -320,14 +323,14 @@ importers:
       devcert: 1.1.3
       getopts: 2.2.5
     devDependencies:
-      '@bickley-wallace/eslint-config': 'link:../eslint-config'
+      '@bickley-wallace/eslint-config': link:../eslint-config
       '@types/node': 14.14.7
       '@typescript-eslint/eslint-plugin': 4.7.0_bc57d1bf3aae3583c8ccaa047f21f909
       '@typescript-eslint/parser': 4.7.0_eslint@7.13.0+typescript@4.1.2
       eslint: 7.13.0
       typescript: 4.1.2
     specifiers:
-      '@bickley-wallace/eslint-config': 'workspace:*'
+      '@bickley-wallace/eslint-config': workspace:*
       '@types/node': 14.14.7
       '@typescript-eslint/eslint-plugin': ^4.7.0
       '@typescript-eslint/parser': ^4.7.0
@@ -339,7 +342,7 @@ importers:
     dependencies:
       tslib: 2.0.3
     devDependencies:
-      '@bickley-wallace/eslint-config': 'link:../eslint-config'
+      '@bickley-wallace/eslint-config': link:../eslint-config
       '@types/jest': 26.0.15
       '@typescript-eslint/eslint-plugin': 4.7.0_bc57d1bf3aae3583c8ccaa047f21f909
       '@typescript-eslint/parser': 4.7.0_eslint@7.13.0+typescript@4.1.2
@@ -349,7 +352,7 @@ importers:
       ts-jest: 26.4.4_jest@26.6.3+typescript@4.1.2
       typescript: 4.1.2
     specifiers:
-      '@bickley-wallace/eslint-config': 'workspace:*'
+      '@bickley-wallace/eslint-config': workspace:*
       '@types/jest': ^26.0.15
       '@typescript-eslint/eslint-plugin': ^4.7.0
       '@typescript-eslint/parser': ^4.7.0
@@ -1630,11 +1633,26 @@ packages:
       node: '>= 8'
     resolution:
       integrity: sha512-eGmwYQn3gxo4r7jdQnkrrN6bY478C3P+a/y72IJukF8LjB6ZHeB3c+Ehacj3sYeSmUXGlnA67/PmbM9CVwL7Dw==
+  /@nodelib/fs.scandir/2.1.4:
+    dependencies:
+      '@nodelib/fs.stat': 2.0.4
+      run-parallel: 1.2.0
+    dev: false
+    engines:
+      node: '>= 8'
+    resolution:
+      integrity: sha512-33g3pMJk3bg5nXbL/+CY6I2eJDzZAni49PfJnL5fghPTggPvBd/pFNSgJsdAgWptuFu7qq/ERvOYFlhvsLTCKA==
   /@nodelib/fs.stat/2.0.3:
     engines:
       node: '>= 8'
     resolution:
       integrity: sha512-bQBFruR2TAwoevBEd/NWMoAAtNGzTRgdrqnYCc7dhzfoNvqPzLyqlEQnzZ3kVnNrSp25iyxE00/3h2fqGAGArA==
+  /@nodelib/fs.stat/2.0.4:
+    dev: false
+    engines:
+      node: '>= 8'
+    resolution:
+      integrity: sha512-IYlHJA0clt2+Vg7bccq+TzRdJvv19c2INqBSsoOLp1je7xjtr7J26+WXR72MCdvU9q1qTzIWDfhMf+DRvQJK4Q==
   /@nodelib/fs.walk/1.2.4:
     dependencies:
       '@nodelib/fs.scandir': 2.1.3
@@ -1643,6 +1661,15 @@ packages:
       node: '>= 8'
     resolution:
       integrity: sha512-1V9XOY4rDW0rehzbrcqAmHnz8e7SKvX27gh8Gt2WgB0+pdzdiLV83p72kZPU+jvMbS1qU5mauP2iOvO8rhmurQ==
+  /@nodelib/fs.walk/1.2.6:
+    dependencies:
+      '@nodelib/fs.scandir': 2.1.4
+      fastq: 1.11.0
+    dev: false
+    engines:
+      node: '>= 8'
+    resolution:
+      integrity: sha512-8Broas6vTtW4GIXTAHDoE32hnN2M5ykgCpWGbuXHQ15vEMqr23pB76e/GZcYsZCHALv50ktd24qhEyKr6wBtow==
   /@npmcli/move-file/1.0.1:
     dependencies:
       mkdirp: 1.0.4
@@ -2616,6 +2643,10 @@ packages:
       sprintf-js: 1.0.3
     resolution:
       integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==
+  /argparse/2.0.1:
+    dev: false
+    resolution:
+      integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==
   /aria-query/4.2.2:
     dependencies:
       '@babel/runtime': 7.12.5
@@ -5528,12 +5559,31 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-kr/Oo6PX51265qeuCYsyGypiO5uJFgBS0jksyG7FUeCyQzNwYnzrNIMR1NXfkZXsMYXYLRAHgISHBz8gQcxKHQ==
+  /fast-glob/3.2.5:
+    dependencies:
+      '@nodelib/fs.stat': 2.0.4
+      '@nodelib/fs.walk': 1.2.6
+      glob-parent: 5.1.2
+      merge2: 1.4.1
+      micromatch: 4.0.2
+      picomatch: 2.2.2
+    dev: false
+    engines:
+      node: '>=8'
+    resolution:
+      integrity: sha512-2DtFcgT68wiTTiwZ2hNdJfcHNke9XOfnwmBRWXhmeKM8rF0TGwmC/Qto3S7RoZKp5cilZbxzO5iTNTQsJ+EeDg==
   /fast-json-stable-stringify/2.1.0:
     resolution:
       integrity: sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==
   /fast-levenshtein/2.0.6:
     resolution:
       integrity: sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
+  /fastq/1.11.0:
+    dependencies:
+      reusify: 1.0.4
+    dev: false
+    resolution:
+      integrity: sha512-7Eczs8gIPDrVzT+EksYBcupqMyxSHXXrHOLRRxU2/DicV8789MRBRR8+Hc2uWzUupOs4YS4JzBmBxjjCVBxD/g==
   /fastq/1.9.0:
     dependencies:
       reusify: 1.0.4
@@ -6041,6 +6091,14 @@ packages:
       node: '>= 6'
     resolution:
       integrity: sha512-FnI+VGOpnlGHWZxthPGR+QhR78fuiK0sNLkHQv+bL9fQi57lNNdquIbna/WrfROrolq8GK5Ek6BiMwqL/voRYQ==
+  /glob-parent/5.1.2:
+    dependencies:
+      is-glob: 4.0.1
+    dev: false
+    engines:
+      node: '>= 6'
+    resolution:
+      integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==
   /glob-to-regexp/0.4.1:
     dev: true
     resolution:
@@ -6101,6 +6159,19 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-iH9RmgwCmUJHi2z5o2l3eTtGBtXek1OYlHrbcxOYugyHLmAsZrPj43OtHThd62Buh/Vv6VyCBD2bdyWcGNQqoQ==
+  /globby/11.0.2:
+    dependencies:
+      array-union: 2.1.0
+      dir-glob: 3.0.1
+      fast-glob: 3.2.5
+      ignore: 5.1.8
+      merge2: 1.4.1
+      slash: 3.0.0
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-2ZThXDvvV8fYFRVIxnrMQBipZQDr7MxKAmQK1vujaj9/7eF0efG7BPUKJ7jP7G5SLF37xKDXvO4S/KKLj/Z0og==
   /globby/6.1.0:
     dependencies:
       array-union: 1.0.2
@@ -8157,6 +8228,12 @@ packages:
     dev: true
     resolution:
       integrity: sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
+  /linkify-it/3.0.2:
+    dependencies:
+      uc.micro: 1.0.6
+    dev: false
+    resolution:
+      integrity: sha512-gDBO4aHNZS6coiZCKVhSNh43F9ioIL4JwRjLZPkoLIY4yZFwg264Y5lu2x6rb1Js42Gh6Yqm2f6L2AJcnkzinQ==
   /listr-silent-renderer/1.1.1:
     dev: true
     engines:
@@ -8469,6 +8546,52 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-7Nyo8TFE5mDxtb1B8S80edmN+48=
+  /markdown-it/12.0.4:
+    dependencies:
+      argparse: 2.0.1
+      entities: 2.1.0
+      linkify-it: 3.0.2
+      mdurl: 1.0.1
+      uc.micro: 1.0.6
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-34RwOXZT8kyuOJy25oJNJoulO8L0bTHYWXcdZBYZqFnjIy3NgjeoM3FmPXIOFQ26/lSHYMr8oc62B6adxXcb3Q==
+  /markdownlint-cli2-formatter-default/0.0.2_markdownlint-cli2@0.0.14:
+    dependencies:
+      markdownlint-cli2: 0.0.14
+    dev: false
+    peerDependencies:
+      markdownlint-cli2: '>=0.0.4'
+    resolution:
+      integrity: sha512-jIz1X3SIC8sX4NDFqQFUXL+JEtfnDoN4i+xocEu+etcxGX455pHb6sx86f/yVk4mKJ2o7aNe2ydSx9an22BfBg==
+  /markdownlint-cli2/0.0.14:
+    dependencies:
+      globby: 11.0.2
+      markdownlint: 0.23.1
+      markdownlint-cli2-formatter-default: 0.0.2_markdownlint-cli2@0.0.14
+      markdownlint-rule-helpers: 0.14.0
+      micromatch: 4.0.2
+      strip-json-comments: 3.1.1
+      yaml: 1.10.2
+    dev: false
+    engines:
+      node: '>=10.17.0'
+    hasBin: true
+    resolution:
+      integrity: sha512-h3aXjve9y7pVXJMpka6msP4aGIJamju0Gv7L9knRz3nAdhhaW1aOiRvnLGgqu7BZyp1y7agjWnx8ojh7iLCCeg==
+  /markdownlint-rule-helpers/0.14.0:
+    dev: false
+    resolution:
+      integrity: sha512-vRTPqSU4JK8vVXmjICHSBhwXUvbfh/VJo+j7hvxqe15tLJyomv3FLgFdFgb8kpj0Fe8SsJa/TZUAXv7/sN+N7A==
+  /markdownlint/0.23.1:
+    dependencies:
+      markdown-it: 12.0.4
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-iOEwhDfNmq2IJlaA8mzEkHYUi/Hwoa6Ss+HO5jkwUR6wQ4quFr0WzSx+Z9rsWZKUaPbyirIdL1zGmJRkWawr4Q==
   /marked/1.2.3:
     dev: false
     engines:
@@ -8490,6 +8613,10 @@ packages:
   /mdn-data/2.0.4:
     resolution:
       integrity: sha512-iV3XNKw06j5Q7mi6h+9vbx23Tv7JkjEVgKHW4pimwyDGWm0OIQntJJ+u1C6mg6mK1EaTv42XQ7w76yuzH7M2cA==
+  /mdurl/1.0.1:
+    dev: false
+    resolution:
+      integrity: sha1-/oWy7HWlkDfyrf7BAP1sYBdhFS4=
   /media-typer/0.3.0:
     engines:
       node: '>= 0.6'
@@ -10260,6 +10387,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==
+  /queue-microtask/1.2.2:
+    dev: false
+    resolution:
+      integrity: sha512-dB15eXv3p2jDlbOiNLyMabYg1/sXvppd8DP2J3EOCQ0AkuSXCW2tP7mnVouVLJKgUMY6yP0kcQDVpLCN13h4Xg==
   /ramda/0.26.1:
     dev: true
     resolution:
@@ -10554,7 +10685,7 @@ packages:
       request-promise-core: 1.1.4_request@2.88.2
       stealthy-require: 1.1.1
       tough-cookie: 2.5.0
-    deprecated: 'request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142'
+    deprecated: request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142
     dev: true
     engines:
       node: '>=0.12.0'
@@ -10584,7 +10715,7 @@ packages:
       tough-cookie: 2.5.0
       tunnel-agent: 0.6.0
       uuid: 3.4.0
-    deprecated: 'request has been deprecated, see https://github.com/request/request/issues/3142'
+    deprecated: request has been deprecated, see https://github.com/request/request/issues/3142
     dev: true
     engines:
       node: '>= 6'
@@ -10638,7 +10769,7 @@ packages:
     resolution:
       integrity: sha512-qYg9KP24dD5qka9J47d0aVky0N+b4fTU89LN9iDnjB5waksiC49rvMB0PrUJQGoTmH50XPiqOvAjDfaijGxYZw==
   /resolve-url/0.2.1:
-    deprecated: 'https://github.com/lydell/resolve-url#deprecated'
+    deprecated: https://github.com/lydell/resolve-url#deprecated
     resolution:
       integrity: sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
   /resolve/1.19.0:
@@ -10741,6 +10872,12 @@ packages:
   /run-parallel/1.1.10:
     resolution:
       integrity: sha512-zb/1OuZ6flOlH6tQyMPUrE3x3Ulxjlo9WIVXR4yVYi4H9UXQaeIsPbLn2R3O3vQCnDKkAl2qHiuocKKX4Tz/Sw==
+  /run-parallel/1.2.0:
+    dependencies:
+      queue-microtask: 1.2.2
+    dev: false
+    resolution:
+      integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==
   /run-queue/1.0.3:
     dependencies:
       aproba: 1.2.0
@@ -12072,6 +12209,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-dvdQgNDNJo+8B2uBQoqdb11eUCE1JQXhvjC/CZtgvZseVd5TYMXnq0+vuUemXbd/Se29cTaUuPX3YIc2xgbvIg==
+  /uc.micro/1.0.6:
+    dev: false
+    resolution:
+      integrity: sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==
   /unbzip2-stream/1.4.3:
     dependencies:
       buffer: 5.7.1
@@ -12210,7 +12351,7 @@ packages:
     resolution:
       integrity: sha512-B0yRTzYdUCCn9n+F4+Gh4yIDtMQcaJsmYBDsTSG8g/OejKBodLQ2IHfN3bM7jUsRXndopT7OIXWdYqc1fjmV6g==
   /urix/0.1.0:
-    deprecated: 'Please see https://github.com/lydell/urix#deprecated'
+    deprecated: Please see https://github.com/lydell/urix#deprecated
     resolution:
       integrity: sha1-2pN/emLiH+wf0Y1Js1wpNQZ6bHI=
   /url-loader/4.1.1_file-loader@6.2.0+webpack@5.4.0:
@@ -12866,6 +13007,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
+  /yaml/1.10.2:
+    dev: false
+    engines:
+      node: '>= 6'
+    resolution:
+      integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
   /yargs-parser/13.1.2:
     dependencies:
       camelcase: 5.3.1
