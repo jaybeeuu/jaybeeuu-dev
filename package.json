@@ -25,7 +25,7 @@
     "bootstrap": "pnpm install -r",
     "build": "pnpm run -r --stream build --filter {packages}",
     "build-changes": "pnpm run -r --stream build --filter {packages}[HEAD]",
-    "clean": "npx rimraf ./node_modules ./packages/*/node_modules & git clean -fdx",
+    "clean": "npx rimraf ./node_modules ./packages/*/node_modules & git clean -fdX",
     "e2e": "cd packages/e2e && npm run e2e",
     "e2e-ci": "pnpm run start --filter @bickley-wallace/client & npx wait-on --timeout=60000 https://localhost:3443/ && pnpm run e2e run",
     "gen-certs": "pnpm run --no-bail --no-sort -r gen-certs --filter {packages}",
