@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "@bickley-wallace/eslint-config/base",
+    "plugin:cypress/recommended"
+  ],
+  "plugins": ["cypress"],
+  "env": {
+    "browser": true,
+    "cypress/globals": true
+  },
+  "rules": {
+    "cypress/no-assigning-return-values": "error",
+    "cypress/no-unnecessary-waiting": "error",
+    "cypress/assertion-before-screenshot": "error",
+    "cypress/no-force": "error",
+    "cypress/no-async-tests": "error"
+  },
+  "overrides": [
+    {
+      "files": ["plugins/**/*"],
+      "env": {
+        "browser": false,
+        "node": true
+      }
+    }
+  ]
+}

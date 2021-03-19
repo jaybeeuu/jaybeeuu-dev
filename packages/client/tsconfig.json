@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    "jsx": "react",
+    "jsxFactory": "h",
+    "types": ["jest"]
+  },
+  "include": [
+    "src",
+    "test"
+  ]
+}

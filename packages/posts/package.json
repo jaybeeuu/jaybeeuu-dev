@@ -1,0 +1,24 @@
+{
+  "name": "@bickley-wallace/posts",
+  "version": "0.0.0",
+  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jayseeare)",
+  "license": "MIT",
+  "description": "My blog",
+  "keywords": [
+    "Bickley-Wallace",
+    "Josh",
+    "Posts"
+  ],
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "start": "compost --watch --hrefRoot=posts --includeunPublished",
+    "lint": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
+    "build": "compost --hrefRoot=posts"
+  },
+  "devDependencies": {
+    "@bickley-wallace/compost": "workspace:*",
+    "markdownlint-cli2": "^0.0.14"
+  }
+}

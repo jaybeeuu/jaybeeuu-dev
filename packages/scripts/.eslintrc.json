@@ -1,0 +1,20 @@
+
+{
+  "extends": [
+    "@bickley-wallace/eslint-config/base"
+  ],
+  "env": {
+    "node": true
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.ts",
+        "*.tsx"
+      ],
+      "rules": {
+        "no-console": ["off"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "@bickley-wallace/eslint-config/base",
+    "@bickley-wallace/eslint-config/jest",
+    "plugin:react/recommended"
+  ],
+  "env": {
+    "browser": true
+  },
+  "plugins": [
+    "react"
+  ],
+  "settings": {
+    "react": {
+      "pragma": "h",
+      "version": "detect"
+    },
+    "import/resolver": {
+      "webpack": {
+        "config": "./webpack.config.js"
+      }
+    }
+  },
+  "rules": {
+    "react/prop-types": "off"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    "declaration": false,
+    "types": ["cypress"],
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

@@ -1,0 +1,26 @@
+.component-root {
+  position: relative;
+}
+
+.content {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  z-index: var(--z-index-content);
+  position: relative;
+}
+
+.background-image {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: cover;
+  opacity: 0;
+  transition: var(--transition-theme), opacity var(--transition-theme-timing);
+}
+
+.background-image.show {
+  opacity: 1;
+}

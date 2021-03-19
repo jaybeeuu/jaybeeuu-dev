@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "@bickley-wallace/eslint-config/jest",
+    "@bickley-wallace/eslint-config/base"
+  ],
+  "env": {
+    "node": true
+  }
+}

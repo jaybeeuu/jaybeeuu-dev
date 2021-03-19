@@ -1,0 +1,105 @@
+version: 2.1
+
+src-dir: &src-dir ~/src
+
+base: &base
+  docker:
+    - image: circleci/node:14.15.0
+      auth:
+        username: $DOCKERHUB_USERNAME
+        password: $DOCKERHUB_PASSWORD
+
+  working_directory: *src-dir
+
+jobs:
+  checkout-install-build:
+    <<: *base
+
+    steps:
+      - checkout:
+          path: *src-dir
+
+      - run: sudo npm i -g pnpm@^5.11.1
+      - run: npm run bootstrap
+      - run: npm run build
+      - run: npm run gen-certs
+      - store_artifacts:
+          path: ./packages/client/dist
+          destination: client-dist
+      - persist_to_workspace:
+          root: *src-dir
+          paths:
+            - ./*
+
+  lint:
+    <<: *base
+
+    steps:
+      - attach_workspace:
+          at: *src-dir
+      - run: sudo npm i -g pnpm@^5.11.1
+      - run: npm run lint
+
+
+  type-check:
+    <<: *base
+
+    steps:
+      - attach_workspace:
+          at: *src-dir
+      - run: sudo npm i -g pnpm@^5.11.1
+      - run: npm run type-check
+
+  test:
+    <<: *base
+
+    steps:
+      - attach_workspace:
+          at: *src-dir
+      - run: sudo npm i -g pnpm@^5.11.1
+      - run: npm run test
+
+  e2e:
+    <<: *base
+    docker:
+      - image: cypress/base:14.15.0
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
+
+    working_directory: *src-dir
+
+    steps:
+      - attach_workspace:
+          at: *src-dir
+      # Persisting the Cypress binaries in the workspace adds a lot of time to the jobs attaching.
+      # So allow it to be lost after the install step and install it again here.
+      - run: npm i -g pnpm@^5.11.1 wait-on
+      - run: npm run e2e -- install
+      - run: npm run e2e-ci
+      - store_artifacts:
+          path: ./packages/e2e/.screenshots
+          destination: e2e-screenshots
+      - store_artifacts:
+          path: ./packages/e2e/.videos
+          destination: e2e-videos
+
+workflows:
+  version: 2
+
+  install-build-test:
+    jobs:
+      - checkout-install-build
+
+      - lint:
+          requires:
+            - checkout-install-build
+      - type-check:
+          requires:
+            - checkout-install-build
+      - test:
+          requires:
+            - checkout-install-build
+      - e2e:
+          requires:
+            - checkout-install-build

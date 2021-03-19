@@ -1,0 +1,16 @@
+.component-root {
+  max-width: var(--width-content);
+  margin: var(--margin-content);
+}
+
+.component-root article {
+  background-color: var(--background-colour-content);
+  transition: var(--transition-theme);
+}
+
+/* for-phone-only */
+@media only screen and (max-width: 599px) {
+  .title, .date {
+    padding: 0 var(--padding-content);
+  }
+}

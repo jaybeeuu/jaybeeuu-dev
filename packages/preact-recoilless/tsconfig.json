@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "jsx": "react",
+    "jsxFactory": "h",
+    "types": ["jest"]
+  },
+  "include": [
+    "src",
+    "test"
+  ],
+  "exclude": [
+    "lib",
+    "node_modules"
+  ]
+}

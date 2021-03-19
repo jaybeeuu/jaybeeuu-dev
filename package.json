@@ -1,22 +1,39 @@
 {
-  "name": "joshwallace.uk",
-  "version": "1.0.0",
-  "description": "My personal site",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
+  "name": "bickleywallace-site",
+  "version": "0.0.0",
+  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jayseeare)",
+  "license": "MIT",
+  "description": "My site.",
+  "keywords": [
+    "Bickley-Wallace",
+    "Josh",
+    "Site"
+  ],
+  "engines": {
+    "node": "^14.15.1",
+    "pnpm": "^5.13.4"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jayseeare/bickleywallace-site.git"
   },
-  "author": "Josh Bickley-Wallace <joshbickkleywallace@outlook.com>",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/jayseeare/bickleywallace-site/issues"
   },
   "homepage": "https://github.com/jayseeare/bickleywallace-site#readme",
-  "dependencies": {
-    "express": "^4.17.1"
+  "scripts": {
+    "bootstrap": "pnpm install -r",
+    "build": "pnpm run -r --stream build --filter {packages}",
+    "build-changes": "pnpm run -r --stream build --filter {packages}[HEAD]",
+    "clean": "npx rimraf ./node_modules ./packages/*/node_modules & git clean -fdX",
+    "e2e": "cd packages/e2e && npm run e2e",
+    "e2e-ci": "pnpm run start --filter @bickley-wallace/client & npx wait-on --timeout=60000 https://localhost:3443/ && pnpm run e2e run",
+    "gen-certs": "pnpm run --no-bail --no-sort -r gen-certs --filter {packages}",
+    "lint": "pnpm run --no-bail --no-sort -r lint --filter {packages}",
+    "nvm": "nvm use 14.15.0",
+    "start": "pnpm run -r start --no-sort --workspace-concurrency=Infinity --filter @bickley-wallace/client...",
+    "test": "pnpm run --no-bail --no-sort -r test --filter {packages}",
+    "test:watch": "pnpm run -r test:watch --filter ",
+    "type-check": "pnpm run --no-bail --no-sort -r type-check --filter {packages}"
   }
 }
