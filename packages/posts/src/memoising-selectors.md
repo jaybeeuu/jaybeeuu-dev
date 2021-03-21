@@ -9,12 +9,12 @@ to worry about it.
 But it also helps to understand what you are trying to do:
 
 Memoising selectors is aimed at letting react know it doesn't have to rerender the component. Remember that Every time
-*any* part of the redux store changes all of your conneted components will get a notification and will try to rerender.
-If you let it it can be quite costly. SO it si a good idea to avoid it if possible.
+*any* part of the Redux store changes all of your connected components will get a notification and will try to rerender.
+If you let it it can be quite costly. SO it is a good idea to avoid it if possible.
 
 The easiest way to tell a component not to rerender when it's props (e.g. because of a store update) or state change do
-this is to use ([PureComponents](https://lucybain.com/blog/2018/react-js-pure-component/)) or
-[Pure](https://logrocket.com/blog/pure-functional-components/). This is so simple i would argue it doesn't count as
+this is to use ([PureComponent](https://lucybain.com/blog/2018/react-js-pure-component/)) or
+[Pure](https://logrocket.com/blog/pure-functional-components/). This is so simple I would argue it doesn't count as
 premature optimisation and could be your default. These components look at the new Props and State and compare them to
 the last lot the only rerender if there is a difference. But the comparison they do is a simple instance comparison -
 partly because it is super quick. So:
@@ -46,7 +46,7 @@ const e = 1;
 console.log(d === e); // Will print true.
 ```
 
-This fits really well with redux because one of the basic principles of the store is that the data in there is
+This fits really well with Redux because one of the basic principles of the store is that the data in there is
 immutable. i.e. if you want to change a part of the state (at any level) then you create a new instance of the state,
 rather than mutate the existing object. e.g.
 
@@ -85,7 +85,7 @@ if (newA !== oldA) {
 }
 ```
 
-So redux takes care of most of that, but if you are calculating something based off the redux store in your selector e.g.
+So Redux takes care of most of that, but if you are calculating something based off the Redux store in your selector e.g.
 
 ```js
 const getEnabledUsers = (state) => state.users.filer(
@@ -94,7 +94,7 @@ const getEnabledUsers = (state) => state.users.filer(
 ```
 
 `getEnabledUsers` will return a new array instance every single time it runs. And if you use it in `mapStateToProps`
-it will run every time you change *anything* (not just users) in the store, and inturn your react component will
+it will run every time you change *anything* (not just users) in the store, and in turn your react component will
 rerender every time. And if your whole app does that then that is bad.
 
 Memoisation to the rescue.
@@ -121,5 +121,5 @@ Now react will only rerender if the users array has actually updated.
 
 But it is a bit complicated and a hassle to write that memoisation, and it has a nonzero memory footprint. So don't do
 it if you don't need to and when you do then it's best to use  a library like
-[reselect](https://github.com/reduxjs/reselect) and [rereselect](https://github.com/toomuchdesign/re-reselect) to avoid
+[reselect](https://github.com/reduxjs/reselect) and [re-reselect](https://github.com/toomuchdesign/re-reselect) to avoid
 the boiler plate and keep you code expressive.

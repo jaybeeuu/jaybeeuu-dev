@@ -31,6 +31,7 @@
     "gen-certs": "pnpm run --no-bail --no-sort -r gen-certs --filter {packages}",
     "lint": "pnpm run --no-bail --no-sort -r lint --filter {packages}",
     "nvm": "nvm use 14.15.0",
+    "spellcheck": "pnpm run --no-bail --no-sort -r spellcheck --filter {packages}",
     "start": "pnpm run -r start --no-sort --workspace-concurrency=Infinity --filter @bickley-wallace/client...",
     "test": "pnpm run --no-bail --no-sort -r test --filter {packages}",
     "test:watch": "pnpm run -r test:watch --filter ",
