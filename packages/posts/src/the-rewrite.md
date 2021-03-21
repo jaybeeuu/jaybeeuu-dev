@@ -28,7 +28,7 @@ money and people are infinite you could probably set to and just bosh it out. ho
 your PO will still want features developed. So the grand rewrite is impossible. Instead aim for the more pragmatic approach:
 
 1. Be A Good Scout - leave things tidier than you found it. So anything you touch during your stories should move to
-redux if it's relevant and doesn't take too long to do. If it would slow you down too much then make a story.
+Redux if it's relevant and doesn't take too long to do. If it would slow you down too much then make a story.
 (This applies to everything in your coding life, from unit tests, to refactoring to documentation.
 You should aim to increase value every time you touch a codebase. and a well maintained, tidy, codebase has more
 value than the other kind.)

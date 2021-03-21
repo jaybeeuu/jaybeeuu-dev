@@ -1,6 +1,6 @@
 As JS applications grow managing them in a single file becomes unwieldy. We all know the benefits of breaking things
-down into small easliy understood cohertent components which can be editted with confidence. In the old days JS had no
-builtin way of doing this.
+down into small easily understood coherent components which can be edited with confidence. In the old days JS had no
+built in way of doing this.
 
 The best attempt in the browser was to "import" modules using a series of script tags from you html. This encouraged
 large JS files, whose dependencies often weren't clear. If the dependencies changed there was no automatic way to go
@@ -9,9 +9,9 @@ grow and grow and often be imported on every page. dead code was hard to identif
 
 Because there was no definition of a module there was also no definition of how a file should export public code. The
 global scope was the only real choice and soon became a dumping ground. Of course this quickly led to name collisions
-and javascript being what it is - `dynamic` that perfectly OK from the point of view of the interpreter. Even Libraries
+and JavaScript being what it is - `dynamic` that perfectly OK from the point of view of the interpreter. Even Libraries
 like `jQuery` and `Underscore` whose exports and aliases were well known ran into others using their names. Techniques
-were used like namespacing to try and avoid collisions, but inevitably someone would overwrite someone elses behaviour,
+were used like namespacing to try and avoid collisions, but inevitably someone would overwrite someone else's behaviour,
 bugs ate up whole applications, tempers flared and words were said which could never be taken back.
 
 Something had to give. A few competing standards grew each with their own quirks and benefits. But the good news is
@@ -36,7 +36,7 @@ such as an item of furniture or a building.
 
 The first definition is more relevant to JavaScript. A module is a unit of code which provides some cohesive reusable
 functionality. It might export a class or a group of functions. But whatever it contains should be closely related. In
-a similar fashion to classes in OO languages (like Java or C#) modules in javascript allow us to build up complex
+a similar fashion to classes in OO languages (like Java or C#) modules in JavaScript allow us to build up complex
 applications from smaller simpler components.
 
 A module in JS allows the author to import the dependencies of the code they define - i.e. the modules on which the
@@ -82,18 +82,18 @@ define(["movement/prowl", "noises/miaow"],
 
 The key here is the `define` function on line 1. `RequireJS` wraps the module code and supplies a couple of variables
 to use to define your exports and dependencies. `define` tells `RequireJS` you are going to define a module. The first
-arguemnt is an array of the dependencies. These are either relative paths to the modules or an alias ike `jQuery` which
+argument is an array of the dependencies. These are either relative paths to the modules or an alias like `jQuery` which
 is defined in requires config. The second argument is the function to run to perform the module definition.
 It's arguments are the dependencies and that is how require gets them into your code.
 
 At the end of the definition function `return Cat;` defines the export of the module (the `Cat` class).
 
-The syntax is complex, setting it up is finicky and it's not a popular way of doing modules anymore so let's not dwell
-on it. But it is a bit like a penny-farthing - no one likes to use it anymore, but every now and again you see one in
+The syntax is complex, setting it up is finicky and it's not a popular way of doing modules any more so let's not dwell
+on it. But it is a bit like a penny-farthing - no one likes to use it any more, but every now and again you see one in
 the street it's fun to point at it and wonder about how anyone came up with such an invention...
 
 Having said that a time when you might see something like this is if you are debugging some code which has been bundled
-by webpack, without source maps, and it has been configured to have an `AMD` style output so it does show up every now
+by Webpack, without source maps, and it has been configured to have an `AMD` style output so it does show up every now
 and again.
 
 ### [CommonJS](https://en.wikipedia.org/wiki/CommonJS)
@@ -138,7 +138,7 @@ console.log(`The area of a circle of radius 4 is ${circle.area(4)}`);
 On the first line you can see the `require` function being used to import the `circle` module. After it has been
 executed the `circle` const will contain a reference to the object that was on `module.exports` once the circle code had
 been executed. In this case `area` and `circumference`. Note that the argument to `require` is a relative path from the
-current module (`index`) to the required module (`circle`) in this example they must be nxt to eachother in the same
+current module (`index`) to the required module (`circle`) in this example they must be next to each other in the same
 directory to work (`.` in a relative path refers to the current directory, `..` navigates up the tree etc.).
 
 Another common way to define an export is to write directly to the `module.exports` property. Thus defining the
@@ -194,9 +194,9 @@ module.exports.d = function() {
 exports.e = 'An important message.';
 ```
 
-In this case any module importing `missingModule` will only ba able to use `c` and `d` because `a`, `b` `e` were defined
+In this case any module importing `missingModule` will only be able to use `c` and `d` because `a`, `b` `e` were defined
 on an object which will have been tied up by the garbage collector... For this reason you should be cautious about
-mixing `module.exports` and `exports` and in general only use one or the other.You might also see this:
+mixing `module.exports` and `exports` and in general only use one or the other. You might also see this:
 `module.exports = exports = ...` which allows `exports` to be used _after_ `module.exports` has been set. Still
 anything written to it before will be lost.
 
@@ -217,10 +217,10 @@ running `npm run examples` will run `node-examples/index.js` in node, and you ca
 ### [UMD](https://github.com/umdjs/umd)
 
 UMD (Unified Module Definitions) aims to join both - library authors needed to wrap their code up as modules which
-worked in as many environments as possible and so UMD was born. At it's core is a series of templates in a github
+worked in as many environments as possible and so UMD was born. At it's core is a series of templates in a GitHub
 [repo](https://github.com/umdjs/umd). They work fine - but getting your head around what they do can be tricky.
 
-Here's an exmaple:
+Here's an example:
 
 ```js
 // commonjsStrictGlobal.js
@@ -274,7 +274,7 @@ Because of [differences](https://hackernoon.com/node-js-tc-39-and-modules-a1118a
 modules it has taken longer for modules to be supported there, but it is now on it's
 [way](https://nodejs.org/api/esm.html).
 
-If you have tp support older browsers or want to use ES6 modules in node today then you can do that too. Tools like
+If you have to support older browsers or want to use ES6 modules in node today then you can do that too. Tools like
 `webpack` with `babel` or `babel-node` will let you do just that. These tools replace some reference sand keywords and
 wrap your code in a function that convert the statements to `CommonJS` or `AMD` style modules.
 
@@ -307,7 +307,7 @@ console.log(
 ```
 
 I import more than one named export by using a comma - this should look familiar from object spread syntax. I don't
-have to import everything if i don't want to - this module only uses `circumference` and `diameter` so those are the
+have to import everything if I don't want to - this module only uses `circumference` and `diameter` so those are the
 only exports I reference. If  you do want everything you can do that too with a `* as`:
 
 ```js
@@ -322,7 +322,7 @@ console.log(
 ```
 
 If I want to use a different name (perhaps to avoid a collision with another module) for the export in the dependent
-module then i can do that too - but the syntax diverges from the object spread syntax:
+module then I can do that too - but the syntax diverges from the object spread syntax:
 
 ```js
 import { area as circleArea } from './circle.js';

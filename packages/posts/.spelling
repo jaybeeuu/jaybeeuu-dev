@@ -1,0 +1,33 @@
+# markdown-spellcheck spelling configuration file
+# Format - lines beginning # are comments
+# global dictionary is at the start, file overrides afterwards
+# one word per line, to define a file override use ' - filename'
+# where filename is relative to this configuration file
+async
+caniuse
+CommonJS
+config
+const
+dedupes
+devtools
+gotchas
+JavaScript
+namespacing
+Node.js
+Redux
+Require.js
+spec
+Webpack
+memoised
+rerender
+memoising
+PureComponent
+memoisation
+nonzero
+ - src/premature-optimisation.md
+v14.15.1
+Hrn
+0.2s
+ - src/module-spotting.md
+mɒdju
+Spacelab

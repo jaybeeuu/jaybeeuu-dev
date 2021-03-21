@@ -3,7 +3,7 @@ unexpected place or some other dubious shortcut, and then brazenly defend it as 
 Did it make a noticeable difference?
 
 All performance optimisations come with a cost. It might be increased complexity or memory usage, slower writes or less
-maintainable code but the cost is there and it's usually tangible. "So what?" i hear you ask -
+maintainable code but the cost is there and it's usually tangible. "So what?" I hear you ask -
 "if it's faster it's faster!" Fine, but did you check? Was the difference perceivable to the end user? The cost of the
 optimisation is only worthwhile if it actually improves the system enough and you will often be surprised *where* the
 time is spent in your code, intuition is often wrong.
@@ -51,7 +51,7 @@ for(let i = 0; i < numberOfIterations; i++) {
 console.timeEnd("Array");
 ```
 
-Ok what am I up to?
+OK what am I up to?
 
 * `getRandomString` is generating a `lengthOfString` character string of the 79 characters between `0` and `~`,
 * We make an [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) of length
@@ -99,7 +99,7 @@ structure and faster code. What's not to love?
 Of course, it doesn't take much fiddling with the constants at the top of that sample to make the `Set` far out
 perform the array. But even then...  how much faster is it? Hundreds of ms when you iterate millions of times? Is it
 worth it? How realistic is that test? And is that really the least performant bit of your codebase? Would you be better
-spending the time & complexity budget elsewhere and for a much bigger payoff?
+spending the time & complexity budget elsewhere and for a much bigger pay off?
 
 All of this is not to say that you should never optimise for performance. I once figured out that a bit of code I wrote
 was going to take ~8 days to complete. (I didn't actually wait that long; I'm too lazy. I timed a little bit of the

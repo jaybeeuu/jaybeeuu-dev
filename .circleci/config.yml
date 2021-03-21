@@ -40,6 +40,14 @@ jobs:
       - run: sudo npm i -g pnpm@^5.11.1
       - run: npm run lint
 
+  spellcheck:
+    <<: *base
+
+    steps:
+      - attach_workspace:
+          at: *src-dir
+      - run: sudo npm i -g pnpm@^5.11.1
+      - run: npm run spellcheck
 
   type-check:
     <<: *base
@@ -92,6 +100,9 @@ workflows:
       - checkout-install-build
 
       - lint:
+          requires:
+            - checkout-install-build
+      - spellcheck:
           requires:
             - checkout-install-build
       - type-check:
