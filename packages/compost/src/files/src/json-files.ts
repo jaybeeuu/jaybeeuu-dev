@@ -1,6 +1,7 @@
 import { readTextFile, writeTextFile } from "./text-files";
 import { canAccess } from "./can-access";
-import { Result, failure, success, errorMessage } from "../../results";
+import { getErrorMessage } from "@bickley-wallace/utilities";
+import { Result, failure, success } from "../../results";
 
 export type ReadJsonFileFailureReason = "no access" | "parse error" | "validation failed";
 
@@ -22,7 +23,7 @@ export const readJsonFile = async <T>(
   try {
     parsedFileContent = JSON.parse(fileContent);
   } catch (err) {
-    return failure("parse error", `Failed to parse: ${errorMessage(err)}.`);
+    return failure("parse error", `Failed to parse: ${getErrorMessage(err)}.`);
   }
 
   return isValid(parsedFileContent)

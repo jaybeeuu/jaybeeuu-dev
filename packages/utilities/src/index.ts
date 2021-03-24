@@ -10,6 +10,8 @@ export {
   or,
   TypePredicate
 } from "./type-guards";
+
+export { getErrorMessage } from "./log";
 export * as log from "./log";
 export { delay, echo, clearableEcho } from "./delay";
 export { joinUrlPath } from "./join-url-path";

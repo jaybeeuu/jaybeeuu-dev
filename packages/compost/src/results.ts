@@ -1,4 +1,3 @@
-import { hasStringProperty } from "@bickley-wallace/utilities";
 export interface Success<Value> {
   success: true;
   value: Value;
@@ -36,10 +35,3 @@ export const repackError = <Value, FailureReason extends string>(
     ? result
     : failure(newFailureReasons, `${failureMessagePrefix}\n${result.reason}: ${result.message}`);
 };
-
-export const errorMessage = (err: unknown): string => {
-  return typeof err === "object" && err !== null && hasStringProperty(err, "message")
-    ? err.message
-    : JSON.stringify(err);
-};
-
