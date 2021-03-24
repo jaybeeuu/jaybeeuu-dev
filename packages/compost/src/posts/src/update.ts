@@ -1,58 +1,68 @@
 import { joinUrlPath } from"@bickley-wallace/utilities";
 import path from "path";
 import {
-  readJsonFile,
   recurseDirectory,
   writeJsonFile,
   writeTextFile,
   deleteDirectories
 } from "../../files";
-import { Result, success, ResultState } from "../../results";
+import { Result, success } from "../../results";
 import { compilePost } from "./compile";
-import { MARKDOWN_FILE_EXTENSION } from "./constants";
-import { getMetaFileContent } from "./metafile";
-import { validateSlug, getPostFileName } from "./file-paths";
+import { getMetaFileContent, GetMetaFileContentFailure } from "./metafile";
+import {
+  getCompiledPostFileName,
+  getPostMarkdownFilePath,
+  validateSlug,
+  ValidateSlugFailureReason
+} from "./file-paths";
 import { UpdateOptions, PostManifest } from "./types";
+import { getManifest, GetManifestFailure } from "./manifest";
+
+export type UpdateFailureReason
+ = ValidateSlugFailureReason
+ | GetManifestFailure
+ | GetMetaFileContentFailure;
 
 export const update = async (
   options: UpdateOptions
-): Promise<Result<PostManifest>> => {
-  const oldManifest = await readJsonFile<PostManifest>(
-    path.join(options.outputDir, options.manifestFileName),
-    {}
-  );
+): Promise<Result<PostManifest, UpdateFailureReason>> => {
+  const oldManifestReadResult = await getManifest(path.join(options.outputDir, options.manifestFileName));
+  if (!oldManifestReadResult.success) {
+    return oldManifestReadResult;
+  }
 
+  const oldManifest = oldManifestReadResult.value;
   const newManifest: PostManifest = {};
   const resolvedOutputDir = path.resolve(options.outputDir);
   const resolvedSourceDir = path.resolve(options.sourceDir);
 
   await deleteDirectories(resolvedOutputDir);
 
-  for await (const markdownFileInfo of recurseDirectory(
+  for await (const metadataFileInfo of recurseDirectory(
     resolvedSourceDir,
-    { include: [MARKDOWN_FILE_EXTENSION] })
+    { include: [/.post.json$/] })
   ) {
-    const slug = markdownFileInfo.fileName.split(".")[0];
+    const slug = metadataFileInfo.fileName.split(".")[0];
     const slugValidation = validateSlug(slug);
 
-    if (slugValidation.state === ResultState.failure) {
+    if (!slugValidation.success) {
       return slugValidation;
     }
-
-    const compiledPost = await compilePost(markdownFileInfo.filePath, { postSlug: slug, hrefRoot: options.hrefRoot });
-    const compiledFileName = getPostFileName(slug, compiledPost);
-    const compiledFilePath = path.join(resolvedOutputDir, compiledFileName);
-    await writeTextFile(compiledFilePath, compiledPost);
-    const href = joinUrlPath(options.hrefRoot, compiledFileName);
-
-    const metaFileContentResult = await getMetaFileContent(markdownFileInfo);
-    if (metaFileContentResult.state === ResultState.failure) {
+    const metaFileContentResult = await getMetaFileContent(metadataFileInfo);
+    if (!metaFileContentResult.success) {
       return metaFileContentResult;
     }
     const metaData = metaFileContentResult.value;
     if (!metaData.publish && !options.includeUnpublished){
       continue;
     }
+
+    const postMarkdownFilePath = getPostMarkdownFilePath(metadataFileInfo.absolutePath, slug);
+    const compiledPost = await compilePost(postMarkdownFilePath, { postSlug: slug, hrefRoot: options.hrefRoot });
+    const compiledFileName = getCompiledPostFileName(slug, compiledPost);
+    const compiledFilePath = path.join(resolvedOutputDir, compiledFileName);
+    await writeTextFile(compiledFilePath, compiledPost);
+    const href = joinUrlPath(options.hrefRoot, compiledFileName);
 
     const originalRecord = oldManifest[slug];
     const hasBeenUpdated = originalRecord && originalRecord.fileName !== compiledFileName;

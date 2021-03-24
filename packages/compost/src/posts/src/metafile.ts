@@ -1,41 +1,25 @@
-import { hasStringProperty } from "@bickley-wallace/utilities";
-import path from "path";
+import { is, isObject } from "@bickley-wallace/utilities";
 import { PostMetaData } from "./types";
-import { FileInfo, canAccess, readTextFile } from "../../files";
-import { Result, failure, success } from "../../results";
-import { MARKDOWN_FILE_EXTENSION } from "./constants";
+import { FileInfo, readJsonFile } from "../../files";
+import { Result, repackError } from "../../results";
 
 export type PostMetaFileData = Pick<PostMetaData, "abstract" | "title" | "publish">;
 
-const isPostMetaFile = (candidate: unknown): candidate is PostMetaFileData => {
-  if (typeof candidate !== "object") {
-    return false;
-  }
+const isPostMetaFile = isObject<PostMetaFileData>({
+  abstract: is("string"),
+  publish: is("boolean"),
+  title: is("string")
+});
 
-  if (candidate === null) {
-    return false;
-  }
+export type GetMetaFileContentFailure = "read metadata failed";
 
-  return hasStringProperty(candidate, "abstract")
-    && hasStringProperty(candidate,  "title");
-};
-
-export const getMetaFileContent = async (markdownFileInfo: FileInfo): Promise<Result<PostMetaFileData>> => {
-  const metaFileName = markdownFileInfo.fileName.replace(MARKDOWN_FILE_EXTENSION, ".json");
-  const metaFilePath = path.join(markdownFileInfo.absolutePath, metaFileName);
-
-  if (! await canAccess(metaFilePath)) {
-    return failure(`Metafile ${metaFileName} for the post ${markdownFileInfo.fileName} was missing.`);
-  }
-
-  const metaFileContent = await readTextFile(metaFilePath);
-  const metadata: unknown = JSON.parse(metaFileContent);
-
-  if (isPostMetaFile(metadata)) {
-    return success(metadata);
-  } else {
-    return failure(
-      `Metadata for ${markdownFileInfo.fileName} in ${metaFileName} does not contain the expected keys: abstract and title.`
-    );
-  }
+export const getMetaFileContent = async (
+  metaFileInfo: FileInfo
+): Promise<Result<PostMetaFileData, "read metadata failed">> => {
+  const { relativeFilePath, filePath } = metaFileInfo;
+  return repackError(
+    await readJsonFile(filePath, isPostMetaFile),
+    "read metadata failed",
+    `Reading metadata file ${relativeFilePath} failed.`
+  );
 };

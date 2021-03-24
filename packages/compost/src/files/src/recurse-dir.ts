@@ -3,21 +3,30 @@ import path from "path";
 
 export interface FileInfo {
   /**
-   * THe absolute
+   * The path relative to the drive root, without the file name and extension.
    */
   absolutePath: string;
+
   /**
    * The file name and extension, without the directory.
    */
   fileName: string;
+
   /**
    * The full absolute path and name of the file.
    */
   filePath: string;
+
   /**
-   * The relative path to the file from the working directory.
+   * The path and file name relative to the working directory.
+   */
+  relativeFilePath: string;
+
+  /**
+   * The path to the file relative to the working directory.
    */
   relativePath: string;
+
   /**
    * Node file stats.
    */
@@ -60,8 +69,9 @@ const innerRecurseDir = async function* (
     const fileInfo: FileInfo = {
       absolutePath,
       fileName,
-      relativePath,
       filePath,
+      relativeFilePath: path.join(relativePath, fileName),
+      relativePath,
       stats
     };
 

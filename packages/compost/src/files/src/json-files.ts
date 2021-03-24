@@ -1,10 +1,33 @@
 import { readTextFile, writeTextFile } from "./text-files";
-import { canAccess } from "..";
+import { canAccess } from "./can-access";
+import { Result, failure, success, errorMessage } from "../../results";
 
-export const readJsonFile = async <T>(filePath: string, deflt: T): Promise<T> => {
-  return await canAccess(filePath)
-    ? JSON.parse(await readTextFile(filePath)) as T
-    : deflt;
+export type ReadJsonFileFailureReason = "no access" | "parse error" | "validation failed";
+
+export const readJsonFile = async <T>(
+  filePath: string,
+  isValid: (fileContent: unknown) => fileContent is T,
+  defaultValue?: Exclude<T, undefined>
+): Promise<Result<T, ReadJsonFileFailureReason>> => {
+  const haveAccess = await canAccess(filePath);
+
+  if (!haveAccess) {
+    return defaultValue === undefined
+      ? failure("no access", "Could not access file.")
+      : success(defaultValue);
+  }
+  const fileContent = await readTextFile(filePath);
+  let parsedFileContent: unknown;
+
+  try {
+    parsedFileContent = JSON.parse(fileContent);
+  } catch (err) {
+    return failure("parse error", `Failed to parse: ${errorMessage(err)}.`);
+  }
+
+  return isValid(parsedFileContent)
+    ? success(parsedFileContent)
+    : failure("validation failed");
 };
 
 export const writeJsonFile = async (filePath: string, data: unknown): Promise<void> => {
