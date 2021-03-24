@@ -3,11 +3,13 @@ import { advanceTo } from "jest-date-mock";
 import { writeTextFiles, readTextFile, deleteDirectories } from "../../src/files";
 import { PostManifest, UpdateOptions } from "../../src/posts/src/types";
 import { update } from "../../src/posts";
+import { Result } from "../../src/results";
+import { UpdateFailureReason } from "packages/compost/src/posts/src/update";
 
 const jestWorkerId = +(process.env.JEST_WORKER_ID || 0);
 const sourceDir = path.resolve(`./fs/test/${jestWorkerId.toString()}/src`);
 const outputDir = path.resolve(`./fs/test/${jestWorkerId.toString()}/out`);
-const manifestFileName = "mainfest.json";
+const manifestFileName = "mainfest.post.json";
 
 const getOutputFile = async (filePath: string): Promise<string> => {
   const resolvedManifestFilePath = path.resolve(outputDir, filePath);
@@ -24,8 +26,8 @@ const getPost = (href: string): Promise<string> => {
   return getOutputFile(`.${href}`);
 };
 
-const compilePosts = async (options?: Partial<UpdateOptions>): Promise<void> => {
-  await update({
+const compilePosts = async (options?: Partial<UpdateOptions>): Promise<Result<PostManifest, UpdateFailureReason>> => {
+  return update({
     hrefRoot: "posts",
     manifestFileName,
     outputDir: path.join(outputDir, "posts"),
@@ -55,7 +57,7 @@ describe("compile", () => {
         path: `./${slug}.md`,
         content: "# This is the first post\n\nIt has some content."
       }, {
-        path: `./${slug}.json`,
+        path: `./${slug}.post.json`,
         content: JSON.stringify(meta, null, 2)
       }]
     );
@@ -87,7 +89,7 @@ describe("compile", () => {
         path: `./${slug}.md`,
         content: `# This is the first post\n\n${postContent}.`
       }, {
-        path: "./first-post.json",
+        path: "./first-post.post.json",
         content: JSON.stringify({
           title: "This is the first post",
           abstract: "This is the very first post.",
@@ -115,12 +117,30 @@ describe("compile", () => {
         path: `./${slug}.md`,
         content: "# This a work inn progress.\n\nSome COntent."
       }, {
-        path: `./${slug}.json`,
+        path: `./${slug}.post.json`,
         content: JSON.stringify({
           title: "This an unfinished post",
           abstract: "Still a work in progress.",
           publish: false
         }, null, 2)
+      }]
+    );
+
+    await compilePosts();
+
+    const manifest = await getPostManifest();
+    expect(manifest[slug]).not.toBeDefined();
+  });
+
+  it("ignores markdown files with no .post.json.", async () => {
+    await deleteDirectories(sourceDir, outputDir);
+
+    const slug = "not-a-post";
+    await writeTextFiles(
+      sourceDir,
+      [{
+        path: `./${slug}.md`,
+        content: "# This is not a post.\n\nSome Content."
       }]
     );
 
@@ -140,7 +160,7 @@ describe("compile", () => {
         path: `./${slug}.md`,
         content: "# This a work inn progress.\n\nSome content."
       }, {
-        path: `./${slug}.json`,
+        path: `./${slug}.post.json`,
         content: JSON.stringify({
           title: "This an unfinished post",
           abstract: "Still a work in progress.",
@@ -169,7 +189,7 @@ describe("compile", () => {
           postContent
         ].join("\n")
       }, {
-        path: `./sub-directory/${slug}.json`,
+        path: `./sub-directory/${slug}.post.json`,
         content: JSON.stringify({
           title: "This is the first post",
           abstract: "This is the very first post.",
@@ -194,7 +214,7 @@ describe("compile", () => {
         path: `./${slug}.md`,
         content: contentLines.join("\n")
       }, {
-        path: `./${slug}.json`,
+        path: `./${slug}.post.json`,
         content: JSON.stringify({ title: "{title}", abstract: "abstract", publish: true }, null, 2),
       }]
     );

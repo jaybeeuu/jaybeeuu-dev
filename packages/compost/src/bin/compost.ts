@@ -3,7 +3,8 @@ import chokidar from "chokidar";
 import getOpts from "getopts";
 import { update } from "../posts";
 import { UpdateOptions } from "../posts/src/types";
-import { ResultState, Result, success, failure } from "../results";
+import { UpdateFailureReason } from "../posts/src/update";
+import { Result, success, failure } from "../results";
 
 const options = getOpts(process.argv, {
   alias: {
@@ -26,11 +27,11 @@ const options = getOpts(process.argv, {
   }
 }) as unknown as UpdateOptions;
 
-const run = async (): Promise<Result<void>> => {
+const run = async (): Promise<Result<never, "error" | UpdateFailureReason>> => {
   try {
     log.info("Composting...");
     const result = await update(options);
-    if (result.state === ResultState.success) {
+    if (result.success) {
       log.info(`Complete:\n\n${
         Object.entries(result.value).map(([slug, postMeta]) => {
           return `    ${slug}: ${postMeta.fileName}`;
@@ -43,7 +44,7 @@ const run = async (): Promise<Result<void>> => {
     }
   } catch (err) {
     log.error("Failed to compost", err);
-    return failure(log.getErrorMessage(err));
+    return failure( "error", log.getErrorMessage(err));
   }
 };
 
@@ -66,7 +67,7 @@ if (options.watch) {
   void (async () => {
     const result = await run();
     process.exit(
-      result.state === ResultState.success ? 0 : 1
+      result.success ? 0 : 1
     );
   })();
 }
