@@ -7,5 +7,6 @@ export const get = (): Cypress.Chainable<JQuery<HTMLElement>> => {
 };
 
 export const getPostListLink = (): Cypress.Chainable<JQuery<HTMLElement>> => cy.get(navBarSelectors.postListLink);
+export const getHomeLink = (): Cypress.Chainable<JQuery<HTMLElement>> => cy.get(navBarSelectors.homeLink);
 
 export const getThemeSwitch = (): Cypress.Chainable<JQuery<HTMLElement>> => cy.get(navBarSelectors.switch);

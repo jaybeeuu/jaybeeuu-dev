@@ -19,31 +19,33 @@ const compareDateString = (
 
 const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
   usePageInfo({ title: "Blog posts", description: "Index of my blog posts" });
-
+  const manifestValues = Object.values(manifest);
   return (
     <div className={classNames(css.componentRoot, e2eHooks.block)}>
-      {Object.values(manifest).sort(compareDateString).map((meta) => (
-        <Link
-          href={`/posts/${meta.slug}`}
-          className={classNames(css.post, e2eHooks.link(meta.slug))}
-          key={meta.slug}
-        >
-          <h2 className={css.title}>
-            {meta.title}
-          </h2>
-          <p className={css.date}>
-            {new Date(meta.lastUpdateDate ?? meta.publishDate).toLocaleDateString()}
-          </p>
-          <summary>{meta.abstract}</summary>
-        </Link>
-      ))}
+      {manifestValues.length === 0
+        ? "Nothing to see? Write some posts..."
+        : manifestValues.sort(compareDateString).map((meta) => (
+          <Link
+            href={`/posts/${meta.slug}`}
+            className={classNames(css.post, e2eHooks.link(meta.slug))}
+            key={meta.slug}
+          >
+            <h2 className={css.title}>
+              {meta.title}
+            </h2>
+            <p className={css.date}>
+              {new Date(meta.lastUpdateDate ?? meta.publishDate).toLocaleDateString()}
+            </p>
+            <summary>{meta.abstract}</summary>
+          </Link>
+        ))}
     </div>
   );
 });
 PostList.displayName = "PostList";
 
 export const PostsRoute = asRoute((): VNode<any> => {
-  const manifest = useValue(postsManifest);
   useBackgrounds({ dark: "greatNorthernHighway", light: "kew" });
+  const manifest = useValue(postsManifest);
   return <PostList manifest={manifest} />;
 });

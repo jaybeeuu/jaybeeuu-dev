@@ -1,7 +1,26 @@
-import { registerRoutes, getPostsAlias, withPostMetaData } from "../routes/posts";
+import {
+  getPostsAlias,
+  registerEmptyRoutes,
+  registerRoutes,
+  withPostMetaData
+} from "../routes/posts";
 import * as navBar from "../features/nav-bar";
 import * as post from "../features/post";
 import * as postList from "../features/post-list";
+
+context("Empty Post List", () => {
+  before(() => {
+    cy.visit("/");
+  });
+
+  it("displays a message when there's no posts", () => {
+    registerEmptyRoutes();
+    postList.openList();
+    cy.wait(getPostsAlias("manifest"));
+    postList.get().should("contain.text", "Nothing to see? Write some posts...");
+  });
+});
+
 
 context("Post navigation", (): void => {
   before(() => {
@@ -13,7 +32,8 @@ context("Post navigation", (): void => {
   });
 
   it("the post list link in the nav bar opens a list of the posts.", () => {
-    navBar.getPostListLink().click();
+    navBar.getHomeLink().click();
+    postList.openList();
     cy.wait(getPostsAlias("manifest"));
     postList.get().should("be.visible");
   });

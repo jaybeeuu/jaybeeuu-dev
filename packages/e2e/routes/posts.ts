@@ -31,3 +31,7 @@ export const registerRoutes = (): void => {
   registerPostRoute("module-spotting");
   registerPostRoute("the-rewrite");
 };
+
+export const registerEmptyRoutes = (): void => {
+  cy.intercept("/posts/manifest.json", { body: {} }).as("get-posts-manifest");
+};
