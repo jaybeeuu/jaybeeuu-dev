@@ -14,11 +14,11 @@
     "index.js"
   ],
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.7.0",
-    "@typescript-eslint/parser": "^4.7.0",
-    "eslint": "^7.13.0",
-    "eslint-plugin-jest": "^24.1.0",
-    "eslint-plugin-react": "^7.21.5",
-    "typescript": "^4.1.2"
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.22.0",
+    "eslint-plugin-jest": "^24.3.2",
+    "eslint-plugin-react": "^7.23.1",
+    "typescript": "^4.2.3"
   }
 }

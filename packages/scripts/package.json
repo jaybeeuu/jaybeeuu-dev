@@ -22,14 +22,14 @@
   },
   "devDependencies": {
     "@bickley-wallace/eslint-config": "workspace:*",
-    "@types/node": "14.14.7",
-    "@typescript-eslint/eslint-plugin": "^4.7.0",
-    "@typescript-eslint/parser": "^4.7.0",
-    "eslint": "^7.13.0",
-    "typescript": "^4.1.2"
+    "@types/node": "14.14.35",
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.22.0",
+    "typescript": "^4.2.3"
   },
   "dependencies": {
     "devcert": "^1.1.3",
-    "getopts": "^2.2.5"
+    "getopts": "^2.3.0"
   }
 }

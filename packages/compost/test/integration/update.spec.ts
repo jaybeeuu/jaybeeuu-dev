@@ -246,7 +246,10 @@ describe("compile", () => {
     ]);
 
     expect(post).toContain(
-      "<pre class=\"hljs\"><code><span class=\"hljs-built_in\">console</span>.log(<span class=\"hljs-string\">\"Here's a message\"</span>)</code></pre>"
+      [
+        "<pre class=\"hljs\"><code><span class=\"hljs-built_in\">console</span>.log(<span class=\"hljs-string\">\"Here's a message\"</span>)",
+        "</code></pre>"
+      ].join("\n")
     );
   });
 
