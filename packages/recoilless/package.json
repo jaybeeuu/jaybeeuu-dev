@@ -23,17 +23,17 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "tslib": "^2.0.3"
+    "tslib": "^2.1.0"
   },
   "devDependencies": {
     "@bickley-wallace/eslint-config": "workspace:*",
-    "@types/jest": "^26.0.15",
-    "@typescript-eslint/eslint-plugin": "^4.7.0",
-    "@typescript-eslint/parser": "^4.7.0",
-    "eslint": "^7.13.0",
-    "eslint-plugin-jest": "^24.1.0",
+    "@types/jest": "^26.0.21",
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.22.0",
+    "eslint-plugin-jest": "^24.3.2",
     "jest": "^26.6.3",
-    "ts-jest": "^26.4.4",
-    "typescript": "^4.1.2"
+    "ts-jest": "^26.5.4",
+    "typescript": "^4.2.3"
   }
 }

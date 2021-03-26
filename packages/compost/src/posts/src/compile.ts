@@ -46,8 +46,8 @@ class CustomRenderer extends marked.Renderer {
 
 const markedOptions = {
   highlight: (code: string, language: string): string => {
-    const validLanguage = highlight.getLanguage(language) ? language : "plaintext";
-    const highlighted = highlight.highlight(validLanguage, code).value;
+    const validLanguage = highlight.getLanguage(language) ? language : "text";
+    const highlighted = highlight.highlight(code, { language: validLanguage }).value;
     return highlighted;
   },
   gfm: true,

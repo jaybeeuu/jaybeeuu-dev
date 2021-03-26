@@ -13,10 +13,12 @@ const { env, stringifiedEnv } = require("./config/env");
 const paths = require("./config/paths");
 const isProduction = env.NODE_ENV === "production";
 
+/**
+ * @type import("webpack").Configuration
+ */
 module.exports = {
   mode: isProduction ? "production" : "development",
   devtool: isProduction ? "source-map" : "source-map",
-  watch: !isProduction,
   devServer: isProduction ? undefined : {
     compress: true,
     historyApiFallback: true,
@@ -28,9 +30,8 @@ module.exports = {
     },
     overlay: true,
     port: env.CLIENT_PORT,
-    quiet: true,
     watchContentBase: true,
-    clientLogLevel: "info"
+    stats: "normal"
   },
   entry: [
     paths.srcIndex,
@@ -38,8 +39,8 @@ module.exports = {
   output: {
     pathinfo: true,
     path: paths.dist,
-    publicPath: "",
-    filename: "main.[hash].js",
+    publicPath: "/",
+    filename: "main.[contenthash].js",
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
@@ -144,7 +145,7 @@ module.exports = {
       patterns: [
         {
           from: "node_modules/@bickley-wallace/posts/lib/*",
-          to: "posts/[name].[ext]"
+          to: "posts/[name][ext]"
         }
       ]
     }),
@@ -155,7 +156,7 @@ module.exports = {
     }),
     new webpack.DefinePlugin(stringifiedEnv),
     new CaseSensitivePathsPlugin(),
-    new CleanWebpackPlugin(),
+    isProduction ? new CleanWebpackPlugin() : null,
     new webpack.HotModuleReplacementPlugin(),
     new PreactRefreshPlugin(),
     isProduction ? new BundleAnalyzerPlugin({
