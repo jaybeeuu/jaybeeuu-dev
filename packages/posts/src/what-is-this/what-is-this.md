@@ -581,17 +581,18 @@ Arrow functions solve a lot of the problems with this.
 [section about their rules for `this`](#in-an-arrow-function-this-gets-its-value-from-the-enclosing-scope)
 so if you took my advice and skipped to the end then now is a good time to go back and have a look.
 I won't subject you to it all again.)
-If you use them instead of defining functions with the `funciton` keyword then you sidestep pretty much the whole issue.
+If you use them instead of defining functions with the `function` keyword then you sidestep pretty much the whole issue.
 
 ### Wrap functions you pass as callbacks in arrow functions
 
 There are other reasons to do this.
 Jake Archibald wrote a great blog post entitled ["Don't use functions as callbacks unless they're designed for it"](https://jakearchibald.com/2021/function-callback-risks/).
 I highly recommend giving it a read.
-But here's one he didn't mention. If you pass a `function` as a callback then it's `this` could change.
+But here's one he didn't mention.
+If you pass a `function` as a callback then you might change it's `this`.
 Especially if you can't see the definition of that function then you don't know what the author was expecting.
-Did they use an arrow or a function?
+Did they use an arrow or a `function`?
 Does it use `this`?
 If it doesn't now will it in the future?
-If the person who adds a usage of `this` check all the places that funcion is used to make sure it's not passed unsafely?
-It's defensive but you save yourself a lot of headaches but wrapping things in arrow functions. When you pass them as callbacks.
+Will the person who adds a usage of `this` check all the places that function is used to make sure it's not passed unsafely?
+It's defensive but you save yourself a lot of headaches by wrapping things in arrow functions as you pass them.
