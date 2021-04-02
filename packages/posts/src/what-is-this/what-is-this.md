@@ -1,5 +1,9 @@
 # What is this?
 
+`this` is one of the most derided and maligned concepts of JavaScript.
+And rightfully so.
+It is complex and.
+
 ## The rules of `this`
 
 The good news is that JavaScript doesn't make up what `this` refers to each time you use it.
