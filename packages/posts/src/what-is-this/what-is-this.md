@@ -2,7 +2,17 @@
 
 `this` is one of the most derided and maligned concepts of JavaScript.
 And rightfully so.
-It is complex and.
+It is complex and confusing.
+When I was learning JavaScript I was coming from the well ordered world of C#.
+`this` seemed like a poltergeist in the code.
+There have been improvements in the intervening years
+so you can weave through the bear traps with out
+Even now working in professional teams I see confusion
+and occsional bugs caused by a mishandled `this`.
+
+I thought it would be worthwhile refreshing my memory and
+exploring some of the rules that govern `this`,
+and some of my strategies to avoid the pitfalls.
 
 ## The rules of `this`
 
