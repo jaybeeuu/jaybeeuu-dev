@@ -1,18 +1,17 @@
 # What is this?
 
-`this` is one of the most derided and maligned concepts of JavaScript.
-And rightfully so.
+`this` is one of the most derided and maligned concepts of JavaScript, and rightfully so.
 It is complex and confusing.
 When I was learning JavaScript I was coming from the well ordered world of C#.
 `this` seemed like a poltergeist in the code.
 There have been improvements in the intervening years
-so you can weave through the bear traps with out
-Even now working in professional teams I see confusion
+so you can weave through the beartraps
+but even now working in professional teams I see regular confusion
 and occsional bugs caused by a mishandled `this`.
 
 I thought it would be worthwhile refreshing my memory and
 exploring some of the rules that govern `this`,
-and some of my strategies to avoid the pitfalls.
+and some strategies to avoid the pitfalls.
 
 ## The rules of `this`
 
@@ -21,8 +20,8 @@ The good news is that JavaScript doesn't make up what `this` refers to each time
 If you follow a little way through the bread crumb trail you find that `this` is resolved from the
 [Environment Record that currently supplies the binding of the keyword this](https://262.ecma-international.org/#sec-getthisenvironment).
 That's a bit of a dead end but at least we get the idea that `this` is dynamic.
-Each time you use `this` the value is looked up based on how the code is called.
-There are a set of rules that define what that context is and in order to decode `this` we just need to learn the rules.
+Each time you use `this` the value is looked up.
+There are a set of rules that define what the context is and in order to decode `this` we just need to learn the rules.
 So what are they?
 
 I'm going to present a slightly augmented version of a list you find on [w3schools](https://www.w3schools.com/js/js_this.asp).
