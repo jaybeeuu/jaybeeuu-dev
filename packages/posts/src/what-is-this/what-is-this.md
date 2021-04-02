@@ -147,7 +147,7 @@ OK let's move on.
 
 This rule introduces a slightly mysterious term. "Method".
 The distinction between a method and a function, I think, is slightly subtle.
-So i'm going to tak a moment to explain.
+So I'm going to tak a moment to explain.
 
 A method is a "property" whose value is a function.
 A property is a variable stored on an object or class instance.
@@ -202,7 +202,7 @@ To use `other` you have to use `.` to get hold of it so it's a method.
 
 Now we've got an idea of what a method is let's get back to the rule.
 Inside a method `this` is the "owner".
-The "owner is simply whatever is on the left hand side of that `.` you used to access the methog.
+The "owner is simply whatever is on the left hand side of that `.` you used to access the method.
 It's most obvious what that means in a class. For example:
 
 ```js
@@ -264,7 +264,7 @@ Just by using a reference to the function we can change the value of `this`.
 
 Even worse by assigning a method to a variable or passing it as an `argument` to a function the method *becomes*
 a function  once more.
-i.e. the methodness or functionness is a prooperty of **where** the thing is stored, not what is is or where it was written.
+i.e. the methodness or functionness is a prooperty of *where the thing is stored*, not what is is or where it was written.
 This has consequences...
 
 ```js
@@ -289,8 +289,6 @@ console.log(
 ```
 
 No thanks.
-Can you think of any times you've had to pass a function as a callback?
-Just a few.
 We clearly didn't get `strawberry` on `this` so what was it?
 Turns out to be `window`.
 We get an `unndefined` smoothie because `window` has no `type` property.
@@ -308,8 +306,18 @@ The reference in the `placeOrder` function is not a method. Remember the second 
 [In a function `this` refers to the global object.](#in-a-function-this-refers-to-the-global-object)
 In this example I haven't used strict (I was lazy and unprofessional).
 If I had then the value of `this` would have been [`undefined`](#in-a-function-in-strict-mode-this-is-undefined).
+
+Can you think of any times you've had to pass a function as a callback?
+Just a few.
 Ever get an error from a function using `this` that you've passed as a callback?
 This little injustice is why.
+Until we had `async/await` JavaScript's
+entire async model was based on passing callbacks.
+Even now, array functions and event handlers, passing functions is bread and butter to a JS dev.
+JavaScrpt is a functional language,
+and certainly treating it as such is one of the best way to write JavaScript.
+Sorry Mr Eich, JavaScript is fantastic in many ways.
+But IMHO, in a language with functions as first class citizens a mutant `this` is not good design.
 
 Are you sure you don't just want to skip to the [end](#surviving-this)? These rules are complicated and they only get worse.
 
