@@ -9,35 +9,33 @@ so you can weave through the beartraps
 but even now working in professional teams I see regular confusion
 and occsional bugs caused by a mishandled `this`.
 
-I thought it would be worthwhile refreshing my memory and
+I thought it would be worthwhile refreshing my memory by
 exploring some of the rules that govern `this`,
 and some strategies to avoid the pitfalls.
 
 ## The rules of `this`
 
 The good news is that JavaScript doesn't make up what `this` refers to each time you use it.
-[Here](https://262.ecma-international.org/#sec-this-keyword) is the definition of `this` in the ecma spec.
-If you follow a little way through the bread crumb trail you find that `this` is resolved from the
-[Environment Record that currently supplies the binding of the keyword this](https://262.ecma-international.org/#sec-getthisenvironment).
-That's a bit of a dead end but at least we get the idea that `this` is dynamic.
-Each time you use `this` the value is looked up.
-There are a set of rules that define what the context is and in order to decode `this` we just need to learn the rules.
+There are a set of rules. and in order to decode `this` we just need to learn the rules.
 So what are they?
 
-I'm going to present a slightly augmented version of a list you find on [w3schools](https://www.w3schools.com/js/js_this.asp).
+I had look through the ecma spec to find a definitive list.
+But it gets a little involved and only gives part of the story given the w3c api we use in the browser.
+Perhaps its the subject of another post another time.
+Instead I'm going to present a slightly augmented version of a list you find on [w3schools](https://www.w3schools.com/js/js_this.asp).
 
 > * Alone, `this` refers to the global object.
 > * In a method, `this` refers to the owner object.
 > * In a function, `this` refers to the global object.
 > * In a function, in strict mode, `this` is `undefined`.
 > * Methods like [`call`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call), and [`apply`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply) can refer `this` to any object.
-> * In a bound function `this` is first the argument of [`bind`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).
+> * In a "bound" function `this` is the value of the first the argument of [`bind`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).
 > * In an event, `this` refers to the element that received the event.
 > * In an arrow function `this` gets it's value from the enclosing scope.
 
-If that seems like a lot of rules, I agree.
+If that looks like a lot of rules, I agree.
 I also suspect this isn't all of them - one person I spoke to had heard there are 26 different values `this` can take.
-That sounds like a lot, but I think I can believe it.
+It seems like exaggeration, but I can believe it.
 
 If you, like me, never want to memorise a list of rules as long as this then skip to [Surviving `this`](#surviving-this).
 I'll talk about some strategies I use to make sure `this` isn't a problem I have to think about
