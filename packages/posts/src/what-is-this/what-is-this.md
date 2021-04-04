@@ -327,7 +327,9 @@ Are you sure you don't just want to skip to the [end](#surviving-this)? These ru
 
 This seems enigmatic, but actually this rule is one of the most deterministic.
 [`call`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call)
-and [`apply`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply) are methods, on any function,
+and
+[`apply`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)
+are methods, on any function,
 that you can use to invoke the function.
 They allow you to pass in arguments and, crucially, allow yo to define what the function will treat as `this` during execution.
 
@@ -427,7 +429,8 @@ or
 you can pass a value of this on one of the arguments.
 
 There are so many variations here that I'm not going to try and list them all.
-THe moral of this story is if your using something that takes a call back then have a look and see if it `calls` or `apply`'s the function.
+THe moral of this story is, if your using something that takes a call back then have a look
+and see if it `calls` or `apply`'s the function.
 If it's not your code then consult the documentation.
 
 Don't worry we're nearly there...
@@ -438,7 +441,8 @@ This is the last rule and it's the easiest.
 It's the one that means `this` doesn't change from it's value at declaration.
 
 In ES6 we got a new way to defined a function - the
-["Arrow Function Expression"](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions).
+["Arrow Function Expression"](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
+.
 
 Rather than using the keyword `function` you define an arrow function with `=>` for example:
 
