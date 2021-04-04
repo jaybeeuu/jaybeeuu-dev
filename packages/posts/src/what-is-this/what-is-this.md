@@ -34,7 +34,7 @@ Instead I'm going to present a slightly augmented version of a list you find on 
 [`apply`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)
 can refer `this` to any object.
 > * In a "bound" function `this` is the value of the first the argument of [`bind`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).
-> * In an event, `this` refers to the element that received the event.
+> * In a callback or event handler; consult the docs.
 > * In an arrow function `this` gets it's value from the enclosing scope.
 
 If that looks like a lot of rules, I agree.
@@ -411,43 +411,24 @@ It's not [my favourite](#surviving-this), but it's a tool in the box.
 
 What's next...
 
-## In an event, `this` refers to the element that received the event
+## In a callback or event handler; consult the docs
 
-The Element here refers to DOM Elements. e.g. `<div />` or `<button />`. If you add an event listener to an event,
-like `click` or `mouseover`,
-then when that event gets triggered the listener will be passed the element on `this`.
+If you are passing a function or method to anything then you are best to consult the documentation.
+Sometimes the target will make a change to `this` or allow you to define `this` in some way.
 
-Example time, this time we need a bit of HTML too:
+An example is in
+[DOM event handlers](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Event_handlers#event_handlers_parameters_this_binding_and_the_return_value)
+When you define an even handler you will be passed the element which triggered the event as this.
 
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-</head>
-<body>
-  <button id="eventful-button">Click me.</button>
-  <script>
-    const button = document.getElementById("eventful-button");
+In an other example the `Array.prototype` functions, like
+[`map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map)
+or
+[reduce](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce),
+you can pass a value of this on one of the arguments.
 
-    function eventHandler() {
-      console.log("eventHandler", button === this);
-    }
-
-    button.addEventListener("click", eventHandler);
-  </script>
-</body>
-</html>
-```
-
-Let's skip over the `head` - that's just to stop your browser complaining about character encoding.
-In the `<body>` we add a `<button>` (`eventful-button`) to the page, then declare a `<script>`.
-In the script we grab a reference to the `<button>`,
-make a function (`eventHandler`)
-and hook the function into the `click` event listener on the `<button>`.
-
-If you click the button you will see "eventHandler true" in the console.
-`this` inside `eventHandler` has been bound to the `<button>` element.
+There are so many variations here that I'm not going to try and list them all.
+THe moral of this story is if your using something that takes a call back then have a look and see if it `calls` or `apply`'s the function.
+If it's not your code then consult the documentation.
 
 Don't worry we're nearly there...
 
@@ -538,32 +519,6 @@ The parent scope when the function was declared was the class, in the class `thi
 `this` is also `apple` when the function is passed as a callback.
 Arrow functions are safe to pass around.
 
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-</head>
-<body>
-  <button id="eventful-button">Click me.</button>
-  <script>
-    const button = document.getElementById("eventful-button");
-
-    const eventHandler = () => {
-      console.log("eventHandler", window === this);
-    }
-
-    button.addEventListener("click", eventHandler);
-  </script>
-</body>
-</html>
-```
-
-Remember this one? There's some changes this time.
-`eventHandler` is now an arrow function and I'm printing the result of `window === this` this time.
-(Spoiler alert: It prints `true`.)
-Arrow functions are also safe to use as event handlers.
-
 When you use `this` in an arrow function **it doesn't matter how it gets used**. It will always have the same value.
 And you **know** what that value will be when you write it.
 
@@ -582,20 +537,16 @@ That's it.
 
 OK, I'm being a bit flippant here but in general you should avoid using `this`.
 If you are inside a class then it might make sense, but I think that is the *only* time it really make sense.
-But if you are in an event handler or designing a function then use the arguments to get at the target around.
-Not `this`.
-For example in the element event handlers (like `"click"` in my
-[example](#in-an-event-this-refers-to-the-element-that-received-the-event)
-the first argument is an
-[`event`](https://developer.mozilla.org/en-US/docs/Web/API/Event)
-which has a
-[`target`](https://developer.mozilla.org/en-US/docs/Web/API/Event/target)
-property.
-Guess what that has in it...
-
 In general arguments are a much better place for passing values into functions.
 They have names, they are easier to see & reason about.
+
 So avoid using `this` where you can.
+
+If this is part of the API (for example in
+[DOM element eventHandlers](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Event_handlers#event_handlers_parameters_this_binding_and_the_return_value)),
+then look for other options. For example in event handlers the argument will be an event object
+and the triggering node then [`event.target`](https://developer.mozilla.org/en-US/docs/Web/API/Event/target).
+If you are designing an API which will take a callback - don't design it around `this`.
 
 ### Use arrow functions
 
@@ -607,6 +558,40 @@ I won't subject you to it all again.)
 If you use them instead of defining functions with the `function` keyword then you sidestep pretty much the whole issue.
 
 ### Wrap functions you pass as callbacks in arrow functions
+
+What what am i getting at here? Consider this:
+
+```js 10
+const strawberry = {
+  type: "Strawberry",
+  makeSmoothie() {
+    return `${this.type} Smoothie`;
+  }
+};
+
+const placeOrder(makeOrder) {
+  return makeOrder();
+};
+
+console.log(
+  placeOrder(
+    strawberry.makeSmoothie
+  )
+);
+```
+
+See how `makeSmoothie` is passed in as is?
+We know that will cause a [problem](#in-a-method-this-refers-to-the-owner-object) by now right?
+So don't.
+Instead wrap it in an arrow function like this:
+
+```js
+console.log(
+  placeOrder(
+    () => strawberry.makeSmoothie()
+  )
+);
+```
 
 There are other reasons to do this.
 Jake Archibald wrote a great blog post entitled ["Don't use functions as callbacks unless they're designed for it"](https://jakearchibald.com/2021/function-callback-risks/).
