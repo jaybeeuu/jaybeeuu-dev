@@ -5,9 +5,9 @@ It is complex and confusing.
 When I was learning JavaScript I was coming from the well ordered world of C#.
 `this` seemed like a poltergeist in the code.
 There have been improvements in the intervening years
-so you can weave through the beartraps
+so you can weave through the bear traps
 but even now working in professional teams I see regular confusion
-and occsional bugs caused by a mishandled `this`.
+and occasional bugs caused by a mishandled `this`.
 
 I thought it would be worthwhile refreshing my memory by
 exploring some of the rules that govern `this`,
@@ -19,8 +19,8 @@ The good news is that JavaScript doesn't make up what `this` refers to each time
 There are a set of rules. and in order to decode `this` we just need to learn the rules.
 So what are they?
 
-I had look through the ecma spec to find a definitive list.
-But it gets a little involved and only gives part of the story given the w3c api we use in the browser.
+I had look through the ECMA spec to find a definitive list.
+But it gets a little involved and only gives part of the story given the W3C API we use in the browser.
 Perhaps its the subject of another post another time.
 Instead I'm going to present a slightly augmented version of a list you find on [w3schools](https://www.w3schools.com/js/js_this.asp).
 
@@ -28,7 +28,11 @@ Instead I'm going to present a slightly augmented version of a list you find on 
 > * In a method, `this` refers to the owner object.
 > * In a function, `this` refers to the global object.
 > * In a function, in strict mode, `this` is `undefined`.
-> * Methods like [`call`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call), and [`apply`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply) can refer `this` to any object.
+> * Methods like
+[`call`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call)
+ and
+[`apply`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)
+can refer `this` to any object.
 > * In a "bound" function `this` is the value of the first the argument of [`bind`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).
 > * In an event, `this` refers to the element that received the event.
 > * In an arrow function `this` gets it's value from the enclosing scope.
@@ -46,7 +50,7 @@ Otherwise let's have a look through the rules and see what they mean.
 
 This is the simplest rule.
 In the top level of your code, before you get into any functions or classes,
-it is either `window` in the browser or `globalThis` in nodejs.
+it is either `window` in the browser or `globalThis` in Node.js.
 
 We can demonstrate that like this:
 
@@ -54,13 +58,13 @@ We can demonstrate that like this:
 console.log(this === window); // prints true
 ```
 
-or in nodejs:
+or in Node.js:
 
 ```js
 console.log(this === globalThis); // prints true
 ```
 
-Nothing ticksie about that. Let's move on.
+Nothing tricksie about that. Let's move on.
 
 ## In a function, `this` refers to the global object
 
@@ -77,7 +81,7 @@ In a functions `this` refers to the global object.
 The global object is `window` or `globalThis` just like the value of `this` when it's on it's own in the [first rule](#alone-this-refers-to-the-global-object).
 
 Lets see some examples.
-(From now on I'm going to ignore nodejs in my examples.
+(From now on I'm going to ignore Node.js in my examples.
 But if you wan to run them there then substitute `window` for `globalThis` - the rules are the same.)
 
 ```js
@@ -145,7 +149,7 @@ OK let's move on.
 
 This rule introduces a slightly mysterious term. "Method".
 The distinction between a method and a function, I think, is slightly subtle.
-So I'm going to tak a moment to explain.
+So I'm going to take a moment to explain.
 
 A method is a "property" whose value is a function.
 A property is a variable stored on an object or class instance.
@@ -158,7 +162,7 @@ const thing = {
 ```
 
 Here `other` is a property on `thing`.
-If instead of giving it a value `3` i gave it the value of a `function`.
+If instead of giving it a value `3` I gave it the value of a `function`.
 Then it would be a method. For example:
 
 ```js
@@ -257,12 +261,12 @@ console.log(
 ); // Prints "Carrot Smoothie"
 ```
 
-Thats not so bad, maybe a little weird though.
+That's not so bad, maybe a little weird though.
 Just by using a reference to the function we can change the value of `this`.
 
 Even worse by assigning a method to a variable or passing it as an `argument` to a function the method *becomes*
 a function  once more.
-i.e. the methodness or functionness is a prooperty of *where the thing is stored*, not what is is or where it was written.
+i.e. the methodness or functionness is a property of *where the thing is stored*, not what is is or where it was written.
 This has consequences...
 
 ```js
@@ -312,7 +316,7 @@ This little injustice is why.
 Until we had `async/await` JavaScript's
 entire async model was based on passing callbacks.
 Even now, array functions and event handlers, passing functions is bread and butter to a JS dev.
-JavaScrpt is a functional language,
+JavaScript is a functional language,
 and certainly treating it as such is one of the best way to write JavaScript.
 Sorry Mr Eich, JavaScript is fantastic in many ways.
 But IMHO, in a language with functions as first class citizens a mutant `this` is not good design.
@@ -341,7 +345,7 @@ tellusWhatYouLike.call(
 // logs "Samiam likes Green eggs and ham"
 ```
 
-So without using `call`, `this.name` in tellUsWhatYouLike would have been `window.name`
+So without using `call`, `this.name` in `tellUsWhatYouLike` would have been `window.name`
 (we're not in strict mode - I'm too lazy to type it).
 Which is `undefined`.
 With `call`, however, the first argument we pass `call` is given to the function to use as `this` for this call.
@@ -356,7 +360,7 @@ tellusWhatYouLike.apply(
 ); // logs "Maria likes Raindrops on roses and whiskers on kittens​"
 ```
 
-The difference is that `apply` takes an array of arguments after the `this` arg.
+The difference is that `apply` takes an array of arguments after the `this` argument.
 (Before we had `...` this was the only way to dynamically pass up a list of arguments to a function.)
 
 Both of these functions are one time things though.
@@ -403,7 +407,7 @@ Effectively, copying the function and baking in a value for `this`.
 Now when `placeOrder` calls it's `makeOrder` callback, `mmakeSmothie`, has a value for `this` and we all get what we want.
 
 This is one of the strategies we can use for dealing with `this`.
-It's not [my favorite](#surviving-this), but it's a tool in the box.
+It's not [my favourite](#surviving-this), but it's a tool in the box.
 
 What's next...
 
@@ -576,7 +580,7 @@ That's it.
 
 ### Don't use `this`
 
-Ok, i'm being a bit flippant here but in general you should avoid using `this`.
+OK, I'm being a bit flippant here but in general you should avoid using `this`.
 If you are inside a class then it might make sense, but I think that is the *only* time it really make sense.
 But if you are in an event handler or designing a function then use the arguments to get at the target around.
 Not `this`.

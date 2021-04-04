@@ -24,6 +24,18 @@ memoising
 PureComponent
 memoisation
 nonzero
+w3schools
+tricksie
+bundlers
+Eich
+JS
+ES6
+OO
+UMD
+GC
+ECMA
+W3C
+Node.js.
  - src/premature-optimisation.md
 v14.15.1
 Hrn
@@ -31,3 +43,7 @@ Hrn
  - src/module-spotting.md
 mɒdju
 Spacelab
+ - src/what-is-this/what-is-this.md
+methodness
+functionness
+eventHandler
