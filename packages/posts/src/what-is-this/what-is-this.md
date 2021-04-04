@@ -547,7 +547,7 @@ They have names, they are easier to see & reason about.
 So avoid using `this` where you can.
 
 If this is part of the API (for example in
-[DOM element eventHandlers](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Event_handlers#event_handlers_parameters_this_binding_and_the_return_value)),
+[DOM element event handlers](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Event_handlers#event_handlers_parameters_this_binding_and_the_return_value)),
 then look for other options. For example in event handlers the argument will be an event object
 and the triggering node then [`event.target`](https://developer.mozilla.org/en-US/docs/Web/API/Event/target).
 If you are designing an API which will take a callback - don't design it around `this`.
@@ -563,7 +563,7 @@ If you use them instead of defining functions with the `function` keyword then y
 
 ### Wrap functions you pass as callbacks in arrow functions
 
-What what am i getting at here? Consider this:
+What what am I getting at here? Consider this:
 
 ```js 10
 const strawberry = {
