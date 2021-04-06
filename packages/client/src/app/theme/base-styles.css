@@ -10,6 +10,7 @@
   --margin-content: var(--margin-content-width) auto var(--margin-content-width) auto;
   --padding-content-width: 2.4rem;
   --padding-content: var(--padding-content-width);
+  --border-radius-content: 0.5rem;
   --width-content: 80rem;
 
   --z-index-content: 10;
@@ -33,11 +34,8 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 
 article {
   padding: var(--padding-content);
+  border-radius: var(--border-radius-content);
   font-size: 2rem;
-}
-
-article pre, article code {
-  font-size: 1.6rem;
 }
 
 article > :first-child {
@@ -61,7 +59,7 @@ article h6 {
 a.hash-link {
   border-bottom: none;
   display: block;
-  height: 2.4rem;
+  line-height: 2.4rem;
   padding: 1rem;
   margin: 0 0.5rem;
 }
@@ -70,7 +68,6 @@ a.hash-link svg {
   fill: transparent;
   transition: var(--transition-theme), fill var(--transition-average);
 }
-
 
 /* for-phone-only */
 @media only screen and (max-width: 599px) {
@@ -106,9 +103,40 @@ h3 {
   margin-top: 4rem;
 }
 
+code {
+  font-family: consolas, monospace, monospace;
+}
+
+article code {
+  font-size: 1.7rem;
+}
+
+article pre {
+  border-radius: 0.5rem;
+  padding: 0.1rem 0.3rem;
+}
+
+article h1 code,
+article h2 code,
+article h3 code,
+article h4 code,
+article h5 code,
+article h6 code {
+  font-size: 0.9em;
+  margin-left: 0.3em;
+  margin-right: 0.3em;
+}
+
+article h1 code,
+article h2 code,
+article h3 code,
+article h4 code,
+article h5 code,
+article h6 code,
 p code {
   color: var(--colour-text-code);
   background-color: var(--background-colour-text-code);
   transition: var(--transition-theme);
-  padding: 0.1rem 0.3em;
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.3rem;
 }
