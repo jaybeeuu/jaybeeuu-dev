@@ -549,7 +549,9 @@ So avoid using `this` where you can.
 If this is part of the API (for example in
 [DOM element event handlers](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Event_handlers#event_handlers_parameters_this_binding_and_the_return_value)),
 then look for other options. For example in event handlers the argument will be an event object
-and the triggering node then [`event.target`](https://developer.mozilla.org/en-US/docs/Web/API/Event/target).
+and the triggering node then
+[`event.target`](https://developer.mozilla.org/en-US/docs/Web/API/Event/target)
+.
 If you are designing an API which will take a callback - don't design it around `this`.
 
 ### Use arrow functions
@@ -585,7 +587,9 @@ console.log(
 ```
 
 See how `makeSmoothie` is passed in as is?
-We know that will cause a [problem](#in-a-method-this-refers-to-the-owner-object) by now right?
+We know that will cause a
+[problem](#in-a-method-this-refers-to-the-owner-object)
+by now right?
 So don't.
 Instead wrap it in an arrow function like this:
 
@@ -598,7 +602,9 @@ console.log(
 ```
 
 There are other reasons to do this.
-Jake Archibald wrote a great blog post entitled ["Don't use functions as callbacks unless they're designed for it"](https://jakearchibald.com/2021/function-callback-risks/).
+Jake Archibald wrote a great blog post entitled
+["Don't use functions as callbacks unless they're designed for it"](https://jakearchibald.com/2021/function-callback-risks/)
+.
 I highly recommend giving it a read.
 But here's one he didn't mention.
 If you pass a `function` as a callback then you might change it's `this`.
