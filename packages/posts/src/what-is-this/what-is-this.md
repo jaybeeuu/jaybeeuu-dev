@@ -1,5 +1,3 @@
-# What is this?
-
 `this` is one of the most derided and maligned concepts of JavaScript, and rightfully so.
 It is complex and confusing.
 When I was learning JavaScript I was coming from the well ordered world of C#.
@@ -82,7 +80,7 @@ The global object is `window` or `globalThis` just like the value of `this` when
 
 Lets see some examples.
 (From now on I'm going to ignore Node.js in my examples.
-But if you wan to run them there then substitute `window` for `globalThis` - the rules are the same.)
+But if you want to run them there then substitute `window` for `globalThis`; the rules are the same.)
 
 ```js
 function spaghetti() {
