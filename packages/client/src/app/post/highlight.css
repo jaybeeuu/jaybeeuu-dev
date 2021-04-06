@@ -10,12 +10,12 @@
 /* General Purpose */
 .hljs-keyword {
   color: var(--hljs-keyword-colour, var(--hljs-colour));
-  font-style: italic;
+  /* font-style: italic; */
   transition: var(--transition-theme);
 }
 .hljs-built_in {
   color: var(--hljs-built-in-colour, var(--hljs-colour));
-  font-style: italic;
+  /* font-style: italic; */
   transition: var(--transition-theme);
 }
 .hljs-type {
@@ -56,7 +56,7 @@
 }
 .hljs-title {
   color: var(--hljs-title-colour, var(--hljs-colour));
-  font-style: italic;
+  /* font-style: italic; */
   transition: var(--transition-theme);
 }
 .hljs-params {
@@ -67,7 +67,7 @@
 /* Meta */
 .hljs-comment {
   color: var(--hljs-comment-colour, var(--hljs-colour));
-  font-style: italic;
+  /* font-style: italic; */
   transition: var(--transition-theme);
 }
 .hljs-doctag {
@@ -130,7 +130,7 @@
 }
 .hljs-emphasis {
   color: var(--hljs-emphasis-colour, var(--hljs-colour));
-  font-style: italic;
+  /* font-style: italic; */
   transition: var(--transition-theme);
 }
 .hljs-strong {
@@ -148,7 +148,7 @@
 }
 .hljs-quote {
   color: var(--hljs-quote-colour, var(--hljs-colour));
-  font-style: italic;
+  /* font-style: italic; */
   transition: var(--transition-theme);
 }
 
@@ -165,7 +165,7 @@
 
 .hljs-selector-class {
   color: var(--hljs-selector-class-colour, var(--hljs-colour));
-  font-style: italic;
+  /* font-style: italic; */
   transition: var(--transition-theme);
 }
 
@@ -175,7 +175,7 @@
 }
 .hljs-selector-pseudo {
   color: var(--hljs-selector-pseudo-colour, var(--hljs-colour));
-  font-style: italic;
+  /* font-style: italic; */
   transition: var(--transition-theme);
 }
 
@@ -193,13 +193,13 @@
 .hljs-addition {
   color: var(--hljs-addition-colour, var(--hljs-colour));
   background-color: var(--hljs-addition-background-colour, var(--hljs-background-colour));
-  font-style: italic;
+  /* font-style: italic; */
   transition: var(--transition-theme);
 }
 
 .hljs-deletion {
   color: var(--hljs-deletion-colour, var(--hljs-colour));
   background-color: var(--hljs-deletion-background-colour, var(--hljs-background-colour));
-  font-style: italic;
+  /* font-style: italic; */
   transition: var(--transition-theme);
 }

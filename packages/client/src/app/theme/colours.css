@@ -7,8 +7,12 @@
   --colour-text-main: #eeeeee;
   --colour-link-border: #ff6768;
   --colour-link-hover: #ff6768;
-  --background-colour-text-code: #00101d;
-  --colour-text-code: #d6deeb;
+
+  --background-colour-text-code: #eeeeee;
+  --colour-text-code: #343438;
+
+  --background-colour-text-code: #eeeeee;
+  --colour-text-code: #343438;
 
   --spinner-main: #dddddd;
   --spinner-secondary:  rgba(255, 255, 255, .3);
@@ -29,6 +33,7 @@
   --colour-text-main: #343438;
   --colour-link-border: #ff6768;
   --colour-link-hover: #ff6768;
+
   --background-colour-text-code: #eeeeee;
   --colour-text-code: #343438;
 
