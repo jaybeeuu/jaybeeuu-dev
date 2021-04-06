@@ -1,5 +1,6 @@
 .component-root {
   padding: var(--padding-content);
+  border-radius: var(--border-radius-content);
   margin: var(--margin-content);
   margin-right: var(--margin-content-width);
   max-width: 40rem;

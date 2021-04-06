@@ -10,6 +10,7 @@
   --margin-content: var(--margin-content-width) auto var(--margin-content-width) auto;
   --padding-content-width: 2.4rem;
   --padding-content: var(--padding-content-width);
+  --border-radius-content: 0.5rem;
   --width-content: 80rem;
 
   --z-index-content: 10;
@@ -33,8 +34,8 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 
 article {
   padding: var(--padding-content);
+  border-radius: var(--border-radius-content);
   font-size: 2rem;
-  border-radius: 0.5rem;
 }
 
 article > :first-child {
