@@ -1,6 +1,6 @@
 
 import { makeClassSelectors, post } from "@bickley-wallace/e2e-hooks";
-import { PostSlug, withPostMetaData } from "../routes/posts";
+import { getPostsAlias, PostSlug, withPostMetaData } from "../routes/posts";
 
 const mainPanelSelectors = makeClassSelectors(post);
 
@@ -53,11 +53,13 @@ const isChainer = <ChainerArgs extends [string, ...any[]]>(
 
 export const getArticle = (): ArticleChainable => {
   // eslint-disable-next-line cypress/no-assigning-return-values
-  const article = cy.get(mainPanelSelectors.article).as("article");
+  const article = cy.get(mainPanelSelectors.article);
+  const originalShould = article.should;
 
-  const articleShould: ArticleChainer = (
-    ...args: [any, ...any[]]
-  ): Cypress.Chainable<JQuery<HTMLElement>> => {
+  function articleShould (
+    this: Cypress.Chainable<JQuery<HTMLElement>>,
+    ...args: any[]
+  ): Cypress.Chainable<JQuery<HTMLElement>> {
     if (isChainer<ShouldContainPostParagraphsParameters>("contain.post.paragraphs", args)) {
       shouldContainPostParagraphs(...args);
       return article;
@@ -66,9 +68,11 @@ export const getArticle = (): ArticleChainable => {
       shouldContainPostTitle(...args);
       return article;
     }
-    cy.get(mainPanelSelectors.article).should(...args);
+
+    originalShould.apply(this, args as any);
+
     return article;
-  };
+  }
 
   article.should = articleShould;
   return article;
@@ -76,6 +80,7 @@ export const getArticle = (): ArticleChainable => {
 
 export const navigateTo = (slug: PostSlug): void => {
   cy.visit(`/posts/${slug}`);
+  cy.wait(getPostsAlias(slug));
 };
 
 export const navigateToAnchor = (slug: PostSlug, hash: string): void => {
@@ -83,5 +88,9 @@ export const navigateToAnchor = (slug: PostSlug, hash: string): void => {
 };
 
 export const getAnchor = (slug: PostSlug, hash: string): Cypress.Chainable<JQuery<HTMLElement>> => {
-  return cy.get(`.hash-link[href="/posts/${slug}#${hash}"]`);
+  return getArticle().find(`.hash-link[href="/posts/${slug}#${hash}"]`);
+};
+
+export const getInlineLink = (text: string): Cypress.Chainable<JQuery<HTMLElement>> => {
+  return getArticle().find(`p a:contains("${text}")`);
 };

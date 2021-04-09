@@ -84,12 +84,18 @@ context("Post navigation", (): void => {
   it("switches back to the post list when the link is clicked after opening a post.", () => {
     post.navigateTo("the-rewrite");
     navBar.getPostListLink().click();
-    cy.wait(getPostsAlias("manifest"));
     postList.get().should("be.visible");
   });
 
   it("scrolls to an anchor when loading a page from scratch with a hash.", () => {
+    postList.openPost("module-spotting");
     post.navigateToAnchor("module-spotting", "commonjs");
+    post.getAnchor("module-spotting", "commonjs").should("be.visible");
+  });
+
+  it("scrolls to an anchor when clicking an inline link with a hash.", () => {
+    postList.openPost("module-spotting");
+    post.getInlineLink("CommonJS").click();
     post.getAnchor("module-spotting", "commonjs").should("be.visible");
   });
 });
