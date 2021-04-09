@@ -103,4 +103,10 @@ context("Post navigation", (): void => {
     post.getInlineLink("AMD").click();
     post.getAnchorDestination("amd").should("be.visible");
   });
+
+  it("scrolls to an anchor when clicking an inline link with a hash.", () => {
+    postList.openPost("module-spotting");
+    post.getInlineLink("CommonJS").click();
+    post.getAnchor("module-spotting", "commonjs").should("be.visible");
+  });
 });
