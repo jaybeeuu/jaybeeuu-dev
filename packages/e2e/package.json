@@ -10,8 +10,8 @@
     "E2E"
   ],
   "scripts": {
-    "e2e": "cypress",
     "build": "compost --sourceDir=./fixtures/src/posts --outputDir=./fixtures/posts --hrefRoot=posts",
+    "e2e": "cypress",
     "lint": "eslint --ext .js,.ts --format codeframe .",
     "type-check": "tsc --noEmit --pretty"
   },
