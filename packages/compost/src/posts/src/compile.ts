@@ -11,6 +11,7 @@ interface RenderContext {
 
 class CustomRenderer extends marked.Renderer {
   private renderContext: RenderContext;
+
   constructor(renderContext: RenderContext, markedOptions?: MarkedOptions) {
     super(markedOptions);
     this.renderContext = renderContext;
@@ -21,7 +22,6 @@ class CustomRenderer extends marked.Renderer {
     const adjusted = rendered.replace(/<pre>/, "<pre class=\"hljs\">");
     return adjusted;
   }
-
 
   heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6, raw: string, slugger: Slugger): string {
     const escapedText = text.toLowerCase()
