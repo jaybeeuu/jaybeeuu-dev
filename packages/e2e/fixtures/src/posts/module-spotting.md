@@ -184,7 +184,7 @@ So in that first top level indentation (line 2-14) you can see this thing doing 
 
 Once if knows what the module system is it injects the `exports` object and the dependencies into the actual module definition function (lines 15-22, the second top level indentation).
 
-Again this isn't a module definition type that you are likely to come across regularly, unless you look at the source code of some older libraries, so don't worry too much. If `AMD` is a penny-farthing then I suppose `UMD` is a reasonably priced car with a penny-farthing bolted on one side and a horse tied to the other. Let's move on.
+Again this isn't a module definition type that you are likely to come across regularly, unless you look at the source code of some older libraries, so don't worry too much. If [`AMD`](#amd) is a penny-farthing then I suppose `UMD` is a reasonably priced car with a penny-farthing bolted on one side and a horse tied to the other. Let's move on.
 
 ### [ES6 (Harmony)](http://exploringjs.com/es6/ch_modules.html)
 
