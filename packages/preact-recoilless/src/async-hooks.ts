@@ -1,19 +1,4 @@
-import { useRef, useState, useEffect, Inputs } from "preact/hooks";
-
-const useAsyncEffect = (
-  effect: ({ cancelled }: { cancelled: boolean }) => Promise<void>,
-  dependencies: Inputs
-): void => {
-  const signal = useRef({ cancelled: false });
-  useEffect(() => {
-    signal.current.cancelled = false;
-    void effect(signal.current);
-
-    return () => {
-      signal.current.cancelled = true;
-    };
-  }, dependencies);
-};
+import { useState, useEffect } from "preact/hooks";
 
 export const useAsyncGenerator = <Value>(
   generator: AsyncGenerator<Value>,
@@ -21,13 +6,12 @@ export const useAsyncGenerator = <Value>(
 ): Value => {
   const [value, setValue] = useState<Value>(initialValue);
 
-  useAsyncEffect(async (signal) => {
-    for await (const nextValue of generator) {
-      if (signal.cancelled) {
-        break;
+  useEffect(() => {
+    void (async () => {
+      for await (const nextValue of generator) {
+        setValue(nextValue);
       }
-      setValue(nextValue);
-    }
+    })();
   }, [generator]);
 
   return value;
