@@ -21,7 +21,6 @@ context("Empty Post List", () => {
   });
 });
 
-
 context("Post navigation", (): void => {
   before(() => {
     cy.visit("/");

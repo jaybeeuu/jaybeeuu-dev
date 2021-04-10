@@ -345,7 +345,6 @@ describe("compile", () => {
     ].join("\n"));
   });
 
-
   it("compiles an inline hash link to link properly within the document.", async () => {
     const hrefRoot = "posts";
     const slug = "{slug}";

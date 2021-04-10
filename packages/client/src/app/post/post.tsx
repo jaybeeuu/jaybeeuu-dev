@@ -19,7 +19,6 @@ import { useBackgrounds } from "../use-background";
 
 const headingLinkSelector = "h1 a:empty, h2 a:empty, h3 a:empty, h4 a:empty, h5 a:empty, h6 a:empty";
 
-
 const useHashLinks = (postHtml: string, articleRef: RefObject<HTMLElement>): void => {
   useEffect(() => {
     const currentArticle = articleRef.current;

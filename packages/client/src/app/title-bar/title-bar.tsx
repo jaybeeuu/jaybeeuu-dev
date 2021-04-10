@@ -13,7 +13,6 @@ export interface NavBarProps {
   className: string;
 }
 
-
 export const TitleBar = ({ className }: NavBarProps): VNode<any> => {
   const titleRef = useRef<HTMLDivElement>();
   const [scroll] = useValue(mainContentScroll);
