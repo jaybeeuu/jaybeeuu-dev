@@ -2,13 +2,13 @@
 
 ## What are we trying to solve?
 
-As JS applications grow managing them in a single file becomes unwieldy. We all know the benefits of breaking things down into small easliy understood cohertent components which can be editted with confidence. In the old days JS had no builtin way of doing this.
+As JS applications grow managing them in a single file becomes unwieldy. We all know the benefits of breaking things down into small easily understood coherent components which can be edited with confidence. In the old days JS had no builtin way of doing this.
 
 The best attempt in the browser was to "import" modules using a series of script tags from you html. This encouraged large JS files, whose dependencies often weren't clear. If the dependencies changed there was no automatic way to go and update all of the places they were used, and the order of imports was sacrosanct. Utility files in projects would grow and grow and often be imported on every page. dead code was hard to identify and eliminate.
 
 Because there was no definition of a module there was also no definition of how a file should export public code. The global scope was the only real choice and soon became a dumping ground. Of course this quickly led to name collisions and javascript being what it is - `dynamic` that perfectly OK from the point of view of the interpreter. Even Libraries like `jQuery` and `Underscore` whose exports and aliases were well known ran into others using their names. Techniques were used like namespacing to try and avoid collisions, but inevitably someone would overwrite someone elses behaviour, bugs ate up whole applications, tempers flared and words were said which could never be taken back.
 
-Something had to give. A few competing standards grew each with their own quirks and benefits. But the good news is that you don't need to know all of them. The two you will come in most contact with are CommonJS and ES6 Modules - and even then mostly only ES6 modules. The others are included below only because you may some across them so it's worth at least recognising the names and the syntax.
+Something had to give. A few competing standards grew each with their own quirks and benefits. But the good news is that you don't need to know all of them. The two you will come in most contact with are [CommonJS](#commonjs) and ES6 Modules - and even then mostly only ES6 modules. The others are included below only because you may some across them so it's worth at least recognising the names and the syntax.
 
 ## So what actually is a module anyway?
 

@@ -2,7 +2,6 @@ type Is<PossibleValues, Target extends PossibleValues> = (
   candidate: PossibleValues
 ) => candidate is Target;
 
-
 export function multiPartition<Values, T1 extends Values, T2 extends Values>(
   array: Values[],
   isT1: Is<Values, T1>,

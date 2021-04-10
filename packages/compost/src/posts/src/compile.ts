@@ -1,4 +1,3 @@
-import { joinUrlPath } from"@bickley-wallace/utilities";
 import highlight from "highlight.js";
 import marked, { MarkedOptions, Slugger }  from "marked";
 import sanitizeHtml, { IOptions } from "sanitize-html";
@@ -11,6 +10,7 @@ interface RenderContext {
 
 class CustomRenderer extends marked.Renderer {
   private renderContext: RenderContext;
+
   constructor(renderContext: RenderContext, markedOptions?: MarkedOptions) {
     super(markedOptions);
     this.renderContext = renderContext;
@@ -29,14 +29,11 @@ class CustomRenderer extends marked.Renderer {
       .replace(/[ ]/g, "-");
 
     const headerSlug = slugger.slug(escapedText);
-    const href = `${joinUrlPath(
-      this.renderContext.hrefRoot,
-      this.renderContext.postSlug,
-    )}#${headerSlug}`;
+    const href = `#${headerSlug}`;
 
     return [
       "",
-      `<h${level}>`,
+      `<h${level} id="${headerSlug}">`,
       `  ${text}`,
       `  <a class="hash-link" name="${headerSlug}" href="${href}"></a>`,
       `</h${level}>`
@@ -63,6 +60,12 @@ const sanitizeOptions: IOptions = {
   allowedTags: [ ...sanitizeHtml.defaults.allowedTags, "h1", "h2", "span" ],
   allowedAttributes: {
     ...sanitizeHtml.defaults.allowedAttributes,
+    h1: ["id"],
+    h2: ["id"],
+    h3: ["id"],
+    h4: ["id"],
+    h5: ["id"],
+    h6: ["id"],
     span: ["class"],
     pre: ["class"],
     a: ["class", ...sanitizeHtml.defaults.allowedAttributes.a],

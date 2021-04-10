@@ -12,6 +12,7 @@ module.exports = {
     "eol-last": "error",
     "indent": ["error", 2, { SwitchCase: 1 }],
     "no-console": "error",
+    "no-multiple-empty-lines": ["error", { "max": 1 }],
     "no-shadow": "error",
     "no-trailing-spaces": "error",
     "no-unused-vars": "off",
