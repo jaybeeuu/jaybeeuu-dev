@@ -107,6 +107,6 @@ context("Post navigation", (): void => {
   it("scrolls to an anchor when clicking an inline link with a hash.", () => {
     postList.openPost("module-spotting");
     post.getInlineLink("CommonJS").click();
-    post.getAnchor("module-spotting", "commonjs").should("be.visible");
+    post.getAnchorDestination("commonjs").should("be.visible");
   });
 });
