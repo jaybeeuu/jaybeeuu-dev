@@ -22,7 +22,6 @@ class CustomRenderer extends marked.Renderer {
     return adjusted;
   }
 
-
   heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6, raw: string, slugger: Slugger): string {
     const escapedText = text.toLowerCase()
       .replace(/<.*?>/g, "")
