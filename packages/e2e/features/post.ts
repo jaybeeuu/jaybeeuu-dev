@@ -91,6 +91,10 @@ export const getAnchor = (slug: PostSlug, hash: string): Cypress.Chainable<JQuer
   return getArticle().find(`.hash-link[href="/posts/${slug}#${hash}"]`);
 };
 
+export const getAnchorDestination = (hash: string): Cypress.Chainable<JQuery<HTMLElement>> => {
+  return getArticle().find(`#${hash}`);
+};
+
 export const getInlineLink = (text: string): Cypress.Chainable<JQuery<HTMLElement>> => {
   return getArticle().find(`p a:contains("${text}")`);
 };
