@@ -1,4 +1,3 @@
-import { joinUrlPath } from"@bickley-wallace/utilities";
 import highlight from "highlight.js";
 import marked, { MarkedOptions, Slugger }  from "marked";
 import sanitizeHtml, { IOptions } from "sanitize-html";
