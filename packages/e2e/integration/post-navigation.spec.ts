@@ -97,4 +97,10 @@ context("Post navigation", (): void => {
     post.getInlineLink("CommonJS").click();
     post.getAnchorDestination("commonjs").should("be.visible");
   });
+
+  it("scrolls to an anchor when clicking an inline link with a hash, which leads to a header further up the page.", () => {
+    postList.openPost("module-spotting");
+    post.getInlineLink("AMD").click();
+    post.getAnchorDestination("amd").should("be.visible");
+  });
 });

@@ -5,17 +5,17 @@ import { PostMetaData } from "@bickley-wallace/compost";
 import { assertIsString } from "@bickley-wallace/utilities";
 import { post as e2eHooks } from "@bickley-wallace/e2e-hooks";
 import { useValue } from "@bickley-wallace/preact-recoilless";
-import { withPromise } from "../with-promise";
 import { asRoute } from "../as-route";
 import { Icon } from "../icon";
 import { currentPostHtml, currentPostMeta, currentPostSlug } from "../state";
+import { useBackgrounds } from "../use-background";
+import { usePageInfo } from "../use-page-info";
+import { withPromise } from "../with-promise";
 
 import "./highlight-colours.css";
 import "./highlight.css";
 
 import css from "./post.module.css";
-import { usePageInfo } from "../use-page-info";
-import { useBackgrounds } from "../use-background";
 
 const headingLinkSelector = "h1 a:empty, h2 a:empty, h3 a:empty, h4 a:empty, h5 a:empty, h6 a:empty";
 
