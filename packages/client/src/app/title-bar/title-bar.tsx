@@ -7,7 +7,7 @@ import { NavBar } from "../nav-bar";
 
 import css from "./title-bar.module.css";
 import { mainContentScroll } from "../state";
-import { useScrollWithStyle } from "../../use-scroll-with-style";
+import { useScrollWithStyle } from "./use-scroll-with-style";
 
 export interface NavBarProps {
   className: string;
