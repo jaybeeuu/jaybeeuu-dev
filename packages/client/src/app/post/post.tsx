@@ -1,5 +1,5 @@
 import { h, FunctionComponent, JSX, createRef, render, RefObject } from "preact";
-import { useEffect } from "preact/hooks";
+import { useEffect, useLayoutEffect } from "preact/hooks";
 import classNames from "classnames";
 import { PostMetaData } from "@bickley-wallace/compost";
 import { assertIsString } from "@bickley-wallace/utilities";
@@ -20,7 +20,7 @@ import css from "./post.module.css";
 const headingLinkSelector = "h1 a:empty, h2 a:empty, h3 a:empty, h4 a:empty, h5 a:empty, h6 a:empty";
 
 const useHashLinks = (postHtml: string, articleRef: RefObject<HTMLElement>): void => {
-  useEffect(() => {
+  useLayoutEffect(() => {
     const currentArticle = articleRef.current;
     if (!currentArticle) {
       return;
@@ -45,13 +45,15 @@ const useHashLinks = (postHtml: string, articleRef: RefObject<HTMLElement>): voi
 const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, postMeta: PostMetaData }): JSX.Element => {
   const articleRef = createRef<HTMLElement>();
   usePageInfo({ title: postMeta.title, description: postMeta.abstract });
-  useEffect(() => {
+  useLayoutEffect(() => {
     const links = articleRef.current?.querySelectorAll(headingLinkSelector);
+
     links?.forEach((link) => {
       render(<Icon name="link"/>, link);
     });
+
     if (window.location.hash) {
-      document.querySelector(window.location.hash)?.scrollIntoView({ behavior: "smooth" });
+      document.querySelector(window.location.hash)?.scrollIntoView();
     }
   }, [postHtml]);
 

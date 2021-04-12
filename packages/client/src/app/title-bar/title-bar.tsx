@@ -20,7 +20,11 @@ export const TitleBar = ({ className }: NavBarProps): VNode<any> => {
 
   return (
     <div className={classNames(css.componentRoot, className)}>
-      <div className={css.titleWrapper} ref={titleRef} style={style}>
+      <div
+        className={css.titleWrapper}
+        ref={titleRef}
+        style={style}
+      >
         <h1 className={css.title}>
           <Link href="/">Josh Bickley-Wallace</Link>
         </h1>

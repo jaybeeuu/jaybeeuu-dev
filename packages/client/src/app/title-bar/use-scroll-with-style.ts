@@ -1,15 +1,10 @@
 import { useRef } from "preact/hooks";
+import { ScrollPosition } from "../state";
 
-export interface ScrollPosition {
-  x: number;
-  y: number;
-  previous: {
-    x: number;
-    y: number;
-  }
-}
-
-const useScrollWithTop = (elementHeight: number, scroll: ScrollPosition): number => {
+const useScrollWithTop = (
+  elementHeight: number,
+  scroll: ScrollPosition
+): number => {
   const offset = useRef(0);
 
   const scrolledBy = scroll.y - scroll.previous.y;
