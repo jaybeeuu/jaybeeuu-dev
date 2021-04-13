@@ -33,11 +33,13 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
       ) : null}
       <div
         className={css.content}
-        onScroll={(event) => setScroll({
-          x: event.currentTarget?.scrollLeft,
-          y: event.currentTarget?.scrollTop,
-          previous: { x: lastScroll.x, y: lastScroll.y }
-        })}
+        onScroll={(event) => {
+          setScroll({
+            x: event.currentTarget?.scrollLeft,
+            y: event.currentTarget?.scrollTop,
+            previous: { x: lastScroll.x, y: lastScroll.y }
+          });
+        }}
       >
         {children}
       </div>
