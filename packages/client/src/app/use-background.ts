@@ -6,5 +6,5 @@ export const useBackgrounds = (images: BackgroundImages): void => {
   const [, setImages] = useValue(backgroundImages);
   useEffect(() => {
     setImages(images);
-  });
+  }, []);
 };
