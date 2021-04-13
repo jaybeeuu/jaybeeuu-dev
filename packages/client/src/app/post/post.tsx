@@ -17,8 +17,6 @@ import "./highlight.css";
 
 import css from "./post.module.css";
 
-const headingLinkSelector = "h1 a:empty, h2 a:empty, h3 a:empty, h4 a:empty, h5 a:empty, h6 a:empty";
-
 const useHashLinks = (postHtml: string, articleRef: RefObject<HTMLElement>): void => {
   useLayoutEffect(() => {
     const currentArticle = articleRef.current;
@@ -46,7 +44,7 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
   const articleRef = createRef<HTMLElement>();
   usePageInfo({ title: postMeta.title, description: postMeta.abstract });
   useLayoutEffect(() => {
-    const links = articleRef.current?.querySelectorAll(headingLinkSelector);
+    const links = articleRef.current?.querySelectorAll(".hash-link");
 
     links?.forEach((link) => {
       render(<Icon name="link"/>, link);
