@@ -19,17 +19,15 @@ export const TitleBar = ({ className }: NavBarProps): VNode<any> => {
   const style = useScrollWithStyle(titleRef.current?.offsetHeight, scroll);
 
   return (
-    <div className={classNames(css.componentRoot, className)}>
-      <div
-        className={css.titleWrapper}
-        ref={titleRef}
-        style={style}
-      >
-        <h1 className={css.title}>
-          <Link href="/">Josh Bickley-Wallace</Link>
-        </h1>
-        <NavBar />
-      </div>
+    <div
+      className={classNames(css.componentRoot, className)}
+      style={style}
+      ref={titleRef}
+    >
+      <h1 className={css.title}>
+        <Link href="/">Josh Bickley-Wallace</Link>
+      </h1>
+      <NavBar />
     </div>
   );
 };

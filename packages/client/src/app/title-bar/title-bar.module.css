@@ -1,17 +1,6 @@
 .component-root {
   position: relative;
-  display: flex;
-  flex-wrap: wrap-reverse;
-}
-
-.title-wrapper {
   --title-bar-border: 0.2rem;
-
-  flex: 1 1 auto;
-
-  position: relative;
-  /* position: fixed;
-  top: 0; */
 
   width: 100%;
   box-sizing: border-box;
@@ -19,6 +8,7 @@
   margin: 0;
   padding: 2rem;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: left;
 

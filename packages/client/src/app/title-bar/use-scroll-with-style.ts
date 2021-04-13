@@ -1,7 +1,7 @@
 import { useRef } from "preact/hooks";
 import { ScrollPosition } from "../state";
 
-const useScrollWithTop = (
+const useScrollOffset = (
   elementHeight: number,
   scroll: ScrollPosition
 ): number => {
@@ -15,7 +15,7 @@ const useScrollWithTop = (
 
   offset.current = newOffset;
 
-  return scroll.y - newOffset;
+  return newOffset;
 };
 
 export const useScrollWithStyle = (elementHeight: number | undefined, scroll: ScrollPosition): string => {
@@ -23,7 +23,11 @@ export const useScrollWithStyle = (elementHeight: number | undefined, scroll: Sc
     return "";
   }
 
-  const top = useScrollWithTop(elementHeight, scroll);
+  const offset = useScrollOffset(elementHeight, scroll);
 
-  return `top: ${top}px;`;
+  return offset > 0
+    ? `top: ${scroll.y - offset}px;`
+    :   "position: -webkit-sticky;\n"
+      + "position: sticky;\n"
+      + "top: 0;";
 };
