@@ -1,15 +1,10 @@
 import { useRef } from "preact/hooks";
+import { ScrollPosition } from "../state";
 
-export interface ScrollPosition {
-  x: number;
-  y: number;
-  previous: {
-    x: number;
-    y: number;
-  }
-}
-
-const useScrollWithTop = (elementHeight: number, scroll: ScrollPosition): number => {
+const useScrollOffset = (
+  elementHeight: number,
+  scroll: ScrollPosition
+): number => {
   const offset = useRef(0);
 
   const scrolledBy = scroll.y - scroll.previous.y;
@@ -20,7 +15,7 @@ const useScrollWithTop = (elementHeight: number, scroll: ScrollPosition): number
 
   offset.current = newOffset;
 
-  return scroll.y - newOffset;
+  return newOffset;
 };
 
 export const useScrollWithStyle = (elementHeight: number | undefined, scroll: ScrollPosition): string => {
@@ -28,7 +23,11 @@ export const useScrollWithStyle = (elementHeight: number | undefined, scroll: Sc
     return "";
   }
 
-  const top = useScrollWithTop(elementHeight, scroll);
+  const offset = useScrollOffset(elementHeight, scroll);
 
-  return `top: ${top}px;`;
+  return offset > 0
+    ? `top: ${scroll.y - offset}px;`
+    :   "position: -webkit-sticky;\n"
+      + "position: sticky;\n"
+      + "top: 0;";
 };
