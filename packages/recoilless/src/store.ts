@@ -8,7 +8,7 @@ import {
   Value,
   PrimitiveValue,
   DerivedValue
-} from "./state";
+} from "./state/index";
 
 const createValue = <Val>(
   value: Value<Val>,
