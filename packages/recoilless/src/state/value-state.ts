@@ -18,10 +18,6 @@ export class ValueState<Val> {
   }
 
   protected setValue(newValue: Val): void {
-    if (this.value === newValue) {
-      return;
-    }
-
     this.value = newValue;
     this.listeners.forEach((subscription) => subscription(this.value));
   }

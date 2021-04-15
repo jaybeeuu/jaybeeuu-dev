@@ -72,7 +72,7 @@ describe("recoilless store", () => {
       expect(listener).toHaveBeenCalledTimes(1);
     });
 
-    it("does not notify subscribed functions if the value is the same.", () => {
+    it("notifies subscribed functions if the value is the same.", () => {
       const store = new Store();
       const state = store.getValue(firstName);
       const listener = jest.fn();
@@ -80,7 +80,7 @@ describe("recoilless store", () => {
 
       state.setValue(firstName.initialValue);
 
-      expect(listener).not.toHaveBeenCalled();
+      expect(listener).toHaveBeenCalledWith(firstName.initialValue);
     });
 
     it("removes the value from the store after all subscriptions are released.", () => {
