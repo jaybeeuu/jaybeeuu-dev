@@ -1,29 +1,29 @@
 import { DerivationContext, DerivedValue, DerivedValueState, PrimitiveValue } from "./state/index";
 import { Store } from "./store";
 
-const firstName: PrimitiveValue<string> = {
-  name: "firstName",
-  initialValue: "Edmund"
-};
-
-const surname: PrimitiveValue<string> = {
-  name: "surname",
-  initialValue: "Bickley-Wallace"
-};
-
-const fullName: DerivedValue<string> = {
-  name: "fullName",
-  derive: ({ get }: DerivationContext): string => {
-    return `${get(firstName)} ${get(surname)}`;
-  }
-};
-
 describe("recoilless store", () => {
   describe("derived values", () => {
+    const firstName: PrimitiveValue<string> = {
+      name: "firstName",
+      initialValue: "Edmund"
+    };
+
+    const surname: PrimitiveValue<string> = {
+      name: "surname",
+      initialValue: "Bickley-Wallace"
+    };
+
+    const fullName: DerivedValue<string> = {
+      name: "fullName",
+      derive: ({ get }: DerivationContext<string>): string => {
+        return `${get(firstName)} ${get(surname)}`;
+      }
+    };
+
     it("allows the retrieval of a derived value from the store.", () => {
       const store = new Store();
-      const fullnameValueState = store.getValue(fullName);
-      expect(fullnameValueState).toBeInstanceOf(DerivedValueState);
+      const fullNameValueState = store.getValue(fullName);
+      expect(fullNameValueState).toBeInstanceOf(DerivedValueState);
     });
 
     it("has the value in the store once it has been retrieved.", () => {
@@ -51,7 +51,7 @@ describe("recoilless store", () => {
       const store = new Store();
       const state = store.getValue({
         name: "asyncFullName",
-        derive: ({ get }: DerivationContext): Promise<string> => new Promise<string>((resolve) => {
+        derive: ({ get }: DerivationContext<Promise<string>>): Promise<string> => new Promise<string>((resolve) => {
           setTimeout(() => resolve(`${get(firstName)} ${get(surname)}`), 0);
         })
       });
@@ -69,6 +69,20 @@ describe("recoilless store", () => {
 
       expect(state.current).toBe(
         `Isaac ${surname.initialValue}`
+      );
+    });
+
+    it("updates the current value when more than one dependency is updated.", () => {
+      const store = new Store();
+      const state = store.getValue(fullName);
+      const firstNameState = store.getValue(firstName);
+      firstNameState.setValue("Isaac");
+
+      const secondNameState = store.getValue(surname);
+      secondNameState.setValue("Wallace-Bickley");
+
+      expect(state.current).toBe(
+        "Isaac Wallace-Bickley"
       );
     });
 
@@ -151,6 +165,45 @@ describe("recoilless store", () => {
       expect(newState.current).toBe(
         `${firstName.initialValue} ${surname.initialValue}`
       );
+    });
+  });
+
+  describe("stateful Derived Value", () => {
+    const counterChange: PrimitiveValue<-1 | 0 | 1> = {
+      name: "changeEvent",
+      initialValue: 0
+    };
+
+    const counter: DerivedValue<number> = {
+      name: "runningTotal",
+      derive: ({ get, previousValue = 0 }: DerivationContext<number>): number => {
+        const change = get(counterChange);
+        const newValue = previousValue + change;
+        previousValue = newValue;
+        return newValue;
+      }
+    };
+
+    it("has the correct initial value on the state retrieved.", () => {
+      const store = new Store();
+      const counterValueState = store.getValue(counter);
+      expect(counterValueState.current).toBe(0);
+    });
+
+    it("passes the previous value which you can use to derive values.", () => {
+      const store = new Store();
+      const counterValueState = store.getValue(counter);
+
+      const change = store.getValue(counterChange);
+
+      change.setValue(1);
+      expect(counterValueState.current).toBe(1);
+
+      change.setValue(0);
+      expect(counterValueState.current).toBe(1);
+
+      change.setValue(1);
+      expect(counterValueState.current).toBe(2);
     });
   });
 });

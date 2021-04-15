@@ -6,11 +6,12 @@ export interface DerivedValue<Val> {
   derive: Derive<Val>;
 }
 
-export type DerivationContext = {
-  get: <Val>(dependency: Value<Val>) => Val;
+export type DerivationContext<Val> = {
+  get: <DependencyValue>(dependency: Value<DependencyValue>) => DependencyValue;
+  previousValue: Val | undefined;
 }
 
-export type Derive<Val> = (context: DerivationContext) => Val;
+export type Derive<Val> = (context: DerivationContext<Val>) => Val;
 export type GetDependency = <Val>(value: Value<Val>) => ValueState<Val>;
 
 export class DerivedValueState<Val> extends ValueState<Val> {
@@ -31,8 +32,10 @@ export class DerivedValueState<Val> extends ValueState<Val> {
   }
 
   private deriveAgain(): void {
-    const get = this.getDependencyValue.bind(this);
-    this.setValue(this.derive({ get }));
+    this.setValue(this.derive({
+      get: (...args) => this.getDependencyValue(...args),
+      previousValue: this.current
+    }));
   }
 
   private getDependencyValue<Dependency>(dependency: Value<Dependency>): Dependency {
@@ -40,7 +43,11 @@ export class DerivedValueState<Val> extends ValueState<Val> {
 
     if(!this.registeredDependencies.has(dependencyState)) {
       this.registeredDependencies.add(dependencyState);
-      this.unsubscribes.push(dependencyState.subscribe(() => this.deriveAgain()));
+      this.unsubscribes.push(
+        dependencyState.subscribe(
+          () => this.deriveAgain()
+        )
+      );
     }
 
     return dependencyState.current;
