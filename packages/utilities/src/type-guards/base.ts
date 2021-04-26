@@ -39,6 +39,13 @@ export const hasBooleanProperty = <Obj extends {}, Property extends PropertyKey>
   return hasPropertyOfType<Obj, Property, string>(obj, property, "boolean");
 };
 
+export const hasFunctionProperty = <Obj extends {}, Property extends PropertyKey>(
+  obj: Obj,
+  property: Property
+): obj is Obj & { [Key in Property]: string } => {
+  return hasPropertyOfType<Obj, Property, string>(obj, property, "function");
+};
+
 export const isObject = <Obj extends {}>(
   properties: { [key in keyof Obj]: TypePredicate<Obj[key]> }
 ): TypePredicate<Obj> => (
