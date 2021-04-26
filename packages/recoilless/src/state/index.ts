@@ -10,7 +10,7 @@ export {
 export {
   isPrimitiveValue,
   PrimitiveValue,
-  PrimitiveValueState,
+  PrimitiveValueState
 } from "./primitive-value";
 
 export {
@@ -20,5 +20,7 @@ export {
 } from "./value-state";
 
 export {
-  Value
+  assertIsSettableValueState,
+  Value,
+  SettableValue
 } from "./value";

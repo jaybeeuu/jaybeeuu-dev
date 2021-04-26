@@ -14,7 +14,7 @@ export class PrimitiveValueState<Val> extends ValueState<Val> {
     super(name, initialValue, removeFromStore);
   }
 
-  public setValue = (newValue: Val): void => {
+  public setValue: (newValue: Val) => void = (newValue) => {
     super.setValue(newValue);
   }
 }
