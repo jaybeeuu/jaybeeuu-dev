@@ -13,7 +13,7 @@ describe("recoilless store", () => {
       valueToDouble: number
     ): void => {
       const value = get(storedValue);
-      const newValue = 2 * value.current + valueToDouble;
+      const newValue = 2 * value + valueToDouble;
       set(storedValue, newValue);
     };
 

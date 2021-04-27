@@ -32,7 +32,7 @@ export interface GetValue {
 export type SetValue = <Val>(value: SettableValue<Val>, newValue: Val) => void;
 
 export interface ActionContext {
-  get: GetValue;
+  get: <Val>(value: Value<Val>) => Val;
   set: SetValue;
 }
 
@@ -67,7 +67,7 @@ export class Store {
     return (...args: Args) => {
       action(
         {
-          get: this.getValue,
+          get: <Val>(value: Value<Val>): Val => this.getDependency(value).current,
           set: (value, entry) => {
             const valueState = this.getDependency(value);
             assertIsSettableValueState(valueState);

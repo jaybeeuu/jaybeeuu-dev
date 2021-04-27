@@ -1,6 +1,5 @@
 import {
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState
@@ -9,15 +8,12 @@ import {
   DerivedValue,
   isPrimitiveValue,
   PrimitiveValue,
-  Store,
   Value,
   ValueState
 } from "@bickley-wallace/recoilless";
 import { useAsyncGenerator } from "./async-hooks";
 import { monitorPromise, PromiseState } from "./promise-status";
-import { StoreContext } from "./store-provider";
-
-const useStore = (): Store => useContext(StoreContext);
+import { useStore } from "./store-provider";
 
 const useValueStateSubscription = <Val>(
   valueState: ValueState<Val>
