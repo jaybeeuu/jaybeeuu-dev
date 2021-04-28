@@ -180,7 +180,7 @@ importers:
       '@typescript-eslint/parser': ^4.19.0
       babel-loader: ^8.2.2
       core-js: 3.9.1
-      cypress: 7.1.0
+      cypress: 7.2.0
       eslint: ^7.22.0
       eslint-plugin-cypress: ^2.11.2
       ts-loader: ^8.0.18
@@ -198,7 +198,7 @@ importers:
       '@typescript-eslint/parser': 4.19.0_eslint@7.22.0+typescript@4.2.3
       babel-loader: 8.2.2_c68979f8893c692eeb1a0b70960ae2d4
       core-js: 3.9.1
-      cypress: 7.1.0
+      cypress: 7.2.0
       eslint: 7.22.0
       eslint-plugin-cypress: 2.11.2_eslint@7.22.0
       ts-loader: 8.0.18_typescript@4.2.3+webpack@4.46.0
@@ -4241,8 +4241,8 @@ packages:
     resolution: {integrity: sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=}
     dev: false
 
-  /cypress/7.1.0:
-    resolution: {integrity: sha512-AptQP9fVtN/FfOv8rJ9hTGJE2XQFc8saLHT38r/EeyWhzp0q/+P/DYRTDtjGZHeLTCNznAUrT4lal8jm+ouS7Q==}
+  /cypress/7.2.0:
+    resolution: {integrity: sha512-lHHGay+YsffDn4M0bkkwezylBVHUpwwhtqte4LNPrFRCHy77X38+1PUe3neFb3glVTM+rbILtTN6FhO2djcOuQ==}
     engines: {node: '>=12.0.0'}
     hasBin: true
     requiresBuild: true
