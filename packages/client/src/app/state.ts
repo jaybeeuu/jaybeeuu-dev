@@ -1,5 +1,4 @@
 import { PostManifest, PostMetaData } from "@bickley-wallace/compost";
-import { debounce } from "@bickley-wallace/utilities";
 import { fetchJson, fetchText } from "../utils/request";
 import {
   DerivationContext,
@@ -113,7 +112,7 @@ export const titleBarStyle = {
   }
 };
 
-export const onMainContentScroll = debounce((
+export const onMainContentScroll = (
   { get, set }: ActionContext,
   scroll: ScrollPosition
 ): void => {
@@ -132,7 +131,7 @@ export const onMainContentScroll = debounce((
 
   set(mainContentScroll, scroll);
   set(titleBarOffset, newOffset);
-}, { delay: 25, leading: true });
+};
 
 export const hideTitleBar = (
   { get, set }: ActionContext,
