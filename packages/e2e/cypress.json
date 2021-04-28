@@ -6,7 +6,7 @@
   "integrationFolder": "integration",
   "pluginsFile": "plugins/index.js",
   "screenshotsFolder": ".screenshots",
-  "videosFolder": ".videos",
   "supportFile": false,
-  "video": true
+  "video": true,
+  "videosFolder": ".videos"
 }
