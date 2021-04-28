@@ -8,11 +8,13 @@ export {
   WithPromiseComponents
 } from "./with-promise";
 export {
-  StoreContext,
   StoreProps,
   StoreProvider
 } from "./store-provider";
 export {
+  useAction
+} from "./use-action";
+export {
   UseValue,
   useValue
-} from "./use-action";
+} from "./use-value";
