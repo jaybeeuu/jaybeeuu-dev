@@ -10,7 +10,7 @@
     "Site"
   ],
   "engines": {
-    "node": ">=14.16.1",
+    "node": ">=14.16.0",
     "pnpm": ">=6.2.3"
   },
   "repository": {

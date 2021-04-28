@@ -132,7 +132,7 @@ export const onMainContentScroll = debounce((
 
   set(mainContentScroll, scroll);
   set(titleBarOffset, newOffset);
-}, { delay: 50, leading: true });
+}, { delay: 25, leading: true });
 
 export const hideTitleBar = (
   { get, set }: ActionContext,
