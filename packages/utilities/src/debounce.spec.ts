@@ -91,4 +91,71 @@ describe("debounce", () => {
 
     expect(actor).toHaveBeenCalledTimes(2);
   });
+
+  describe("leading: true", () => {
+    it("executes immediately.", () => {
+      const actor = jest.fn();
+      debounce(
+        actor,
+        { delay: 500, leading: true }
+      )();
+      expect(actor).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not execute again if called within the delay.", () => {
+      const actor = jest.fn();
+      const delay = 500;
+      const debounced = debounce(
+        actor,
+        { delay, leading: true }
+      );
+
+      debounced();
+      jest.advanceTimersByTime(delay - 1);
+      debounced();
+      expect(actor).toHaveBeenCalledTimes(1);
+    });
+
+    it("executes again after the delay if called within the delay.", () => {
+      const actor = jest.fn();
+      const delay = 500;
+      const debounced = debounce(
+        actor,
+        { delay, leading: true }
+      );
+
+      debounced();
+      jest.advanceTimersByTime(delay - 1);
+      debounced();
+      jest.advanceTimersByTime(1);
+      expect(actor).toHaveBeenCalledTimes(2);
+    });
+
+    it("doesn't execute again after the delay if not called within the delay.", () => {
+      const actor = jest.fn();
+      const delay = 500;
+      const debounced = debounce(
+        actor,
+        { delay, leading: true }
+      );
+
+      debounced();
+      jest.advanceTimersByTime(delay);
+      expect(actor).toHaveBeenCalledTimes(1);
+    });
+
+    it("execute immediately again if not called within the delay.", () => {
+      const actor = jest.fn();
+      const delay = 500;
+      const debounced = debounce(
+        actor,
+        { delay, leading: true }
+      );
+
+      debounced();
+      jest.advanceTimersByTime(delay);
+      debounced();
+      expect(actor).toHaveBeenCalledTimes(2);
+    });
+  });
 });

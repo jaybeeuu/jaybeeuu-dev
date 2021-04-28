@@ -23,7 +23,8 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "tslib": "^2.1.0"
+    "tslib": "^2.1.0",
+    "@bickley-wallace/utilities": "workspace:*"
   },
   "devDependencies": {
     "@bickley-wallace/eslint-config": "workspace:*",

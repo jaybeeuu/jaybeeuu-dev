@@ -1,10 +1,11 @@
 export {
   hasBooleanProperty,
+  hasFunctionProperty,
   hasOwnProperty,
   hasStringProperty,
+  is,
   isObject,
   isRecord,
-  is,
   or,
   TypePredicate
 } from "./base";

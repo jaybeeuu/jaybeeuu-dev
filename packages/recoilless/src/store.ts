@@ -1,14 +1,16 @@
 import {
+  assertIsSettableValueState,
+  DerivedValue,
   DerivedValueState,
   GetDependency,
   isDerivedValue,
+  PrimitiveValue,
   PrimitiveValueState,
   RemoveFromStore,
-  ValueState,
+  SettableValue,
   Value,
-  PrimitiveValue,
-  DerivedValue
-} from "./state";
+  ValueState
+} from "./state/index";
 
 const createValue = <Val>(
   value: Value<Val>,
@@ -26,6 +28,15 @@ export interface GetValue {
   <Val>(value: DerivedValue<Val>): DerivedValueState<Val>;
   <Val>(value: PrimitiveValue<Val>): PrimitiveValueState<Val>;
 }
+
+export type SetValue = <Val>(value: SettableValue<Val>, newValue: Val) => void;
+
+export interface ActionContext {
+  get: <Val>(value: Value<Val>) => Val;
+  set: SetValue;
+}
+
+export type Action<Args extends unknown[]> = (context: ActionContext, ...args: Args) => void
 
 export class Store {
   private readonly values: { [name:string]: ValueState<any> } = {};
@@ -49,6 +60,25 @@ export class Store {
   }
 
   public getValue: GetValue = this.getDependency as GetValue;
+
+  public getActor<Args extends unknown[]>(
+    action: Action<Args>
+  ): (...args: Args) => void {
+    return (...args: Args) => {
+      action(
+        {
+          get: <Val>(value: Value<Val>): Val => this.getDependency(value).current,
+          set: (value, entry) => {
+            const valueState = this.getDependency(value);
+            assertIsSettableValueState(valueState);
+            valueState.setValue(entry);
+          }
+        },
+        ...args
+      );
+    };
+  }
+
   public hasValue<Val>(value: Value<Val>): boolean {
     return value.name in this.values;
   }

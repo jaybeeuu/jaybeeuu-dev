@@ -1,20 +1,9 @@
-export {
-  DerivationContext,
-  Derive,
-  DerivedValue,
-  DerivedValueState,
-  GetDependency,
-  isDerivedValue,
-  isPrimitiveValue,
-  PrimitiveValue,
-  PrimitiveValueState,
-  RemoveFromStore,
-  Unsubscribe,
-  Value,
-  ValueState
-} from "./state";
+export * from "./state/index";
 
 export {
   GetValue,
+  Action,
+  ActionContext,
+  SetValue,
   Store,
 } from "./store";
