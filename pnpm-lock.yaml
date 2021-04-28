@@ -291,9 +291,11 @@ importers:
       eslint-plugin-jest: ^24.3.2
       jest: ^26.6.3
       ts-jest: ^26.5.4
+      tslib: ^2.1.0
       typescript: ^4.2.3
     dependencies:
       '@bickley-wallace/utilities': link:../utilities
+      tslib: 2.1.0
     devDependencies:
       '@bickley-wallace/eslint-config': link:../eslint-config
       '@types/jest': 26.0.21
