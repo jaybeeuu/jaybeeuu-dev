@@ -4,10 +4,10 @@ import classNames from "classnames";
 import { PostMetaData } from "@bickley-wallace/compost";
 import { assertIsString } from "@bickley-wallace/utilities";
 import { post as e2eHooks } from "@bickley-wallace/e2e-hooks";
-import { useValue } from "@bickley-wallace/preact-recoilless";
+import { useAction, useValue } from "@bickley-wallace/preact-recoilless";
 import { asRoute } from "../as-route";
 import { Icon } from "../icon";
-import { currentPostHtml, currentPostMeta, currentPostSlug } from "../state";
+import { currentPostHtml, currentPostMeta, currentPostSlug, hideTitleBar as hideTitleBarAction } from "../state";
 import { useBackgrounds } from "../use-background";
 import { usePageInfo } from "../use-page-info";
 import { withPromise } from "../with-promise";
@@ -18,6 +18,7 @@ import "./highlight.css";
 import css from "./post.module.css";
 
 const useHashLinks = (postHtml: string, articleRef: RefObject<HTMLElement>): void => {
+  const hideTitleBar = useAction(hideTitleBarAction);
   useLayoutEffect(() => {
     const currentArticle = articleRef.current;
     if (!currentArticle) {
@@ -33,6 +34,7 @@ const useHashLinks = (postHtml: string, articleRef: RefObject<HTMLElement>): voi
           window.location.hash = href;
           const destinationElement = currentArticle.querySelector(href);
           destinationElement?.scrollIntoView({ behavior: "smooth" });
+          requestAnimationFrame(() => hideTitleBar());
           e.stopPropagation();
           e.preventDefault();
         });

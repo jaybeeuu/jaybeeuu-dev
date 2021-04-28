@@ -1,6 +1,11 @@
 import { PostManifest, PostMetaData } from "@bickley-wallace/compost";
 import { fetchJson, fetchText } from "../utils/request";
-import { DerivedValue, PrimitiveValue } from "@bickley-wallace/recoilless";
+import {
+  DerivationContext,
+  DerivedValue,
+  PrimitiveValue,
+  ActionContext
+} from "@bickley-wallace/recoilless";
 
 export const postsManifest: DerivedValue<Promise<PostManifest>> = {
   name: "postManifest",
@@ -41,8 +46,8 @@ export const theme: PrimitiveValue<Theme> = {
   initialValue: "dark"
 };
 
-export type Image
-  = "bath"
+export type Image =
+  | "bath"
   | "blackTusk"
   | "christmasTrail"
   | "crabappleDrive"
@@ -71,20 +76,66 @@ export const backgroundImages: PrimitiveValue<BackgroundImages | null> = {
   initialValue: null
 };
 
+export const titleBarHeight: PrimitiveValue<number> = {
+  name: "titleBarHeight",
+  initialValue: 0
+};
+
+const titleBarOffset: PrimitiveValue<number> = {
+  name: "titleBarOffset",
+  initialValue: 0
+};
+
 export interface ScrollPosition {
   x: number;
   y: number;
-  previous: {
-    x: number;
-    y: number;
-  }
 }
 
-export const mainContentScroll: PrimitiveValue<ScrollPosition> = {
+const mainContentScroll: PrimitiveValue<ScrollPosition> = {
   name: "mainContentScroll",
   initialValue: {
     x: 0,
-    y: 0,
-    previous: { x: 0, y: 0 }
+    y: 0
   }
+};
+
+export const titleBarStyle = {
+  name: "titleBarStyle",
+  derive: ({ get }: DerivationContext<string>): string => {
+    const offset  = get(titleBarOffset);
+    const scroll  = get(mainContentScroll);
+    return offset > 0
+      ? `top: ${ Math.max(scroll.y - offset, 0)}px;`
+      :   "position: -webkit-sticky;\n"
+        + "position: sticky;\n"
+        + "top: 0;";
+  }
+};
+
+export const onMainContentScroll = (
+  { get, set }: ActionContext,
+  scroll: ScrollPosition
+): void => {
+  const previousScroll = get(mainContentScroll);
+  const elementHeight = get(titleBarHeight);
+  const previousOffset = get(titleBarOffset);
+
+  const scrolledBy = scroll.y - previousScroll.y;
+  const goingDown = scrolledBy > 0;
+  const newOffset = goingDown
+    ? Math.min(
+      elementHeight + 500,
+      previousOffset + scrolledBy
+    )
+    : Math.max(0, previousOffset + scrolledBy);
+
+  set(mainContentScroll, scroll);
+  set(titleBarOffset, newOffset);
+};
+
+export const hideTitleBar = (
+  { get, set }: ActionContext,
+): void => {
+  const elementHeight = get(titleBarHeight);
+  set(titleBarOffset, elementHeight + 500);
 };

@@ -1,22 +1,33 @@
 import { useValue } from "@bickley-wallace/preact-recoilless";
 import classNames from "classnames";
 import { h, VNode } from "preact";
-import { useRef } from "preact/hooks";
+import { Ref, useLayoutEffect, useRef } from "preact/hooks";
 import { Link } from "preact-router";
 import { NavBar } from "../nav-bar";
+import { titleBarHeight, titleBarStyle } from "../state";
 
 import css from "./title-bar.module.css";
-import { mainContentScroll } from "../state";
-import { useScrollWithStyle } from "./use-scroll-with-style";
 
 export interface NavBarProps {
   className: string;
 }
 
-export const TitleBar = ({ className }: NavBarProps): VNode<any> => {
+export const useTitleBarRef = (): Ref<HTMLDivElement> => {
+  const [, setTitleBaeHeight] = useValue(titleBarHeight);
   const titleRef = useRef<HTMLDivElement>();
-  const [scroll] = useValue(mainContentScroll);
-  const style = useScrollWithStyle(titleRef.current?.offsetHeight, scroll);
+
+  useLayoutEffect(() => {
+    setTitleBaeHeight(
+      titleRef.current?.offsetHeight ?? 0
+    );
+  }, []);
+
+  return titleRef;
+};
+
+export const TitleBar = ({ className }: NavBarProps): VNode<any> => {
+  const titleRef = useTitleBarRef();
+  const style = useValue(titleBarStyle);
 
   return (
     <div
