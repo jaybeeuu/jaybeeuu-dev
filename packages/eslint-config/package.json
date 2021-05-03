@@ -13,12 +13,23 @@
     "*.js",
     "index.js"
   ],
-  "dependencies": {
+  "scripts": {
+    "lint": "eslint --ext .js,.ts --format codeframe -c ./base.js ."
+  },
+  "devDdependencies": {
     "@typescript-eslint/eslint-plugin": "^4.19.0",
-    "@typescript-eslint/parser": "^4.19.0",
     "eslint": "^7.22.0",
     "eslint-plugin-jest": "^24.3.2",
-    "eslint-plugin-react": "^7.23.1",
+    "eslint-plugin-react": "^7.23.1"
+  },
+  "dependencies": {
+    "@typescript-eslint/parser": "^4.19.0",
     "typescript": "^4.2.3"
+  },
+  "peerDdependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "eslint": "^7.22.0",
+    "eslint-plugin-jest": "^24.3.2",
+    "eslint-plugin-react": "^7.23.1"
   }
 }
