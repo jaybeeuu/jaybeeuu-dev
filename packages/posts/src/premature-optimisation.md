@@ -63,10 +63,10 @@ OK what am I up to?
 * `getRandomString` is generating a `lengthOfString` character string of the 79 characters between `0` and `~`,
 
 * Next we have two timed for loops; bracketed by the `console.time()` and `console.timeEnd()` calls.
-  * The first, between `console.time("Array");` and `console.timeEnd("Array");`,
+  * The first, between `console.time("Array")` and `console.timeEnd("Array")`,
     * uses `getRandomString` to generate an array of length `numberOfStrings`
     * Tries to discover if another random string is in that array `numberOfAccesses` times.
-  * The second, between `console.time("Set");` and `console.timeEnd("Set");`,
+  * The second, between `console.time("Set")` and `console.timeEnd("Set")`,
     * Uses `getRandomString` to generate an array of length `numberOfStrings`.
     * Then, because we want to efficiently see if strings are in the array,
       writes the thing into a

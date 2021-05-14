@@ -114,13 +114,7 @@ article h6 code {
   font-size: 0.9em;
 }
 
-article h1 code,
-article h2 code,
-article h3 code,
-article h4 code,
-article h5 code,
-article h6 code,
-p code {
+article :not(pre) code {
   color: var(--colour-text-code);
   background-color: var(--background-colour-text-code);
   transition: var(--transition-theme);
