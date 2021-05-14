@@ -90,14 +90,14 @@ You might get lucky and be the first element or unlucky
 (we will overwhelmingly be unlucky since the random string is unlikely to be in the array)
 and have to iterate the whole array.
 
-So to speed things up and make our site, API, cli tool, what have you perform better we could use a
+So to speed things up and make your site, API, CLI tool, what have you perform better we could use a
 [`Set`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
 .
 It's similar to an array in that you can iterate though the members in insertion order,
 but you are guaranteed uniqueness;
 no two members will have the same value.
 
-You can test that by doing this in the node repl or browser console...
+You can test that by doing this in the Node.js REPL or browser console...
 
 ```js
 console.log(new Set(["a", "b", "a"]).size);
@@ -114,7 +114,7 @@ According to the
 Sets "must be implemented using either hash tables or other mechanisms that, on average,
 provide access times that are sublinear on the number of elements in the collection".
 
-Ok I don't want to go into too much detail here.
+OK I don't want to go into too much detail here.
 Suffice it to say that a [hash table](https://en.wikipedia.org/wiki/Hash_table) is a bit like and object,
 but instead of using a string as a key you use a number derived from the value it's self.
 THe up shot is that instead of being `O(n)` (linear) to access they are `O(1)`.
@@ -124,7 +124,7 @@ the same amount of time.
 
 OK So... going back to the code... if you run it which version will be quicker; the `Set` or the array?
 
-On my machine this is the result (I'm using node v14.15.1, but i tried it in Firefox and Chrome too):
+On my machine this is the result (I'm using Node.js v14.15.1, but I tried it in Firefox and Chrome too):
 
 ```txt
 Array: 14.028s
@@ -156,7 +156,7 @@ structure and faster code. What's not to love?
 
 Of course, it doesn't take much fiddling with the constants at the top of that sample to make the `Set` far out
 perform the array. But even then...  how much faster is it?
-In your application how many times will the thing run in your applicatin?
+In your application how many times will the thing run in your application?
 Is it worth it?
 Worse - is that really the least performant bit of your codebase?
 Would you be better spending the dev time & complexity budget elsewhere and for a much bigger pay off?
@@ -173,7 +173,7 @@ the thing went from a waste of electricity to something worthwhile.
 
 But there was a cost - complexity.
 I had to get my head around a less familiar data structure
-(it wwent from plain old arrays treated to a linked list).
+(it went from plain old arrays treated to a linked list).
 That data structure needed to be mutated in place (better for memory & less GC),
 so there were weird mutation bugs I had to track down.
 The rest of the project treated most data structures as immutable so that was a deviation.
