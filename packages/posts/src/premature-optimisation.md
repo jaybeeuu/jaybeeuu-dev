@@ -90,7 +90,7 @@ You might get lucky and be the first element or unlucky
 (we will overwhelmingly be unlucky since the random string is unlikely to be in the array)
 and have to iterate the whole array.
 
-So to speed things up and make your site, API, CLI tool, what have you perform better we could use a
+So to speed things up and make our site, API, CLI tool, what have you perform better we could use a
 [`Set`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
 .
 It's similar to an array in that you can iterate though the members in insertion order,
