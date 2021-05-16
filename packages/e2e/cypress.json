@@ -4,7 +4,7 @@
   "experimentalFetchPolyfill": true,
   "fixturesFolder": "fixtures",
   "integrationFolder": "integration",
-  "pluginsFile": "plugins/index.js",
+  "pluginsFile": false,
   "screenshotsFolder": ".screenshots",
   "supportFile": false,
   "video": true,
