@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json --pretty",
-    "start": "tsc --project ./tsconfig.build.json --pretty --watch",
+    "start": "tsc --project ./tsconfig.build.json --pretty --watch --incremental",
     "lint": "eslint --ext .js,.ts --format codeframe .",
     "type-check": "tsc --noEmit --pretty",
     "test": "jest",
