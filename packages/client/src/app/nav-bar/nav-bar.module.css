@@ -5,7 +5,7 @@
 }
 
 .link {
-  color: transparent;
+  color: var(--colour-text-main);
   transition: var(--transition-theme), border-color var(--transition-average);
   padding: 0 1rem;
   border: none;
