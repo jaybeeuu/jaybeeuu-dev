@@ -1,12 +1,19 @@
+import { assertIsNotNullish } from "@bickley-wallace/utilities";
+
 export interface Success<Value> {
   success: true;
   value: Value;
 }
 
-export interface Failure<Reason extends string> {
+export type FailureName<Reason extends string> = `Failure(${Reason})`;
+export interface FailureError<Reason extends string> extends Error {
+  name: FailureName<Reason>;
+}
+
+export interface Failure<Reason extends string> extends FailureError<Reason> {
   success: false;
   reason: Reason;
-  message: string;
+  name: FailureName<Reason>;
 }
 
 export type Result<Value, FailureReason extends string> = Success<Value> | Failure<FailureReason>;
@@ -20,18 +27,60 @@ export function success<Value>(value?: Value): Success<Value> {
   return { success: true, value: value as Value };
 }
 
-export const failure = <Reason extends string>(reason: Reason, message?: string): Failure<Reason> => ({
-  success: false,
-  reason,
-  message: message ?? reason
-});
+const getError = <Reason extends string>(reason: Reason, messageOrError: string | Error | undefined, framesSincePublic: number): FailureError<Reason> => {
+  if (messageOrError instanceof Error) {
 
-export const repackError = <Value, FailureReason extends string>(
+    return {
+      ...messageOrError,
+      name: `Failure(${reason})` as FailureName<Reason>
+    };
+  }
+
+  const error = new Error();
+  const stack = error.stack;
+  assertIsNotNullish(stack);
+  const publicStack = stack.slice(1 + framesSincePublic);
+
+  return {
+    ...error,
+    stack: publicStack,
+    name: `Failure(${reason})` as FailureName<Reason>,
+    message: messageOrError ?? ""
+  };
+};
+
+const failure = <Reason extends string>(reason: Reason, messageOrError?: string | Error, framesSincePublic: number = 1): Failure<Reason> => {
+  const error = getError(reason, messageOrError, framesSincePublic);
+
+  return {
+    success: false,
+    reason,
+    ...error
+  };
+};
+
+const repackError = <Value, FailureReason extends string>(
   result: Result<Value, string>,
   newFailureReasons: FailureReason,
-  failureMessagePrefix: string
+  failureMessagePrefix: string,
+  framesSincePublic: number = 1
 ): Result<Value, FailureReason> => {
   return result.success
     ? result
-    : failure(newFailureReasons, `${failureMessagePrefix}\n${result.reason}: ${result.message}`);
+    : failure(
+      newFailureReasons,
+      `${failureMessagePrefix}\n${result.reason}: ${result.message}`,
+      framesSincePublic + 1
+    );
+};
+
+const exportedFailure: <Reason extends string>(reason: Reason, messageOrError?: string | Error) => Failure<Reason> = failure;
+const exportedRepackError: <Value, FailureReason extends string>(
+  result: Result<Value, string>,
+  newFailureReasons: FailureReason,
+  failureMessagePrefix: string
+) => Result<Value, FailureReason> = repackError;
+export {
+  exportedFailure as failure,
+  exportedRepackError as repackError
 };

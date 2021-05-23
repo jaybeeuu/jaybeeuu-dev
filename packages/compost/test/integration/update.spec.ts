@@ -33,7 +33,7 @@ const compilePosts = async (options?: Partial<UpdateOptions>): Promise<Result<Po
     outputDir: path.join(outputDir, "posts"),
     sourceDir,
     watch: false,
-    additionalWatchPaths: "",
+    additionalWatchPaths: [],
     includeUnpublished: false,
     ...options
   });

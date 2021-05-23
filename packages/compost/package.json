@@ -28,12 +28,12 @@
   "dependencies": {
     "chalk": "^4.1.1",
     "chokidar": "^3.5.1",
-    "getopts": "^2.3.0",
     "highlight.js": "^10.7.2",
     "marked": "^2.0.3",
     "rmfr": "^2.0.0",
     "sanitize-html": "^2.3.3",
-    "tslib": "^2.2.0"
+    "tslib": "^2.2.0",
+    "yargs": "^17.0.1"
   },
   "devDependencies": {
     "@bickley-wallace/eslint-config": "workspace:*",
