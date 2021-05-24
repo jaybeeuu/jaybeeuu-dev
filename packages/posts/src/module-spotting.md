@@ -1,59 +1,96 @@
-As JS applications grow managing them in a single file becomes unwieldy. We all know the benefits of breaking things
-down into small easily understood coherent components which can be edited with confidence. In the old days JS had no
-built in way of doing this.
+We all know the benefits of breaking things down into small easily understood coherent components,
+which can be edited with confidence.
+In the old days JS had no built in way of doing this (it was after all only intended to make the monkey dance)
+but as the web took hold and pages became more and more dynamic it become obvious that this needed to change.
 
-The best attempt in the browser was to "import" modules using a series of script tags from you html. This encouraged
-large JS files, whose dependencies often weren't clear. If the dependencies changed there was no automatic way to go
-and update all of the places they were used, and the order of imports was sacrosanct. Utility files in projects would
-grow and grow and often be imported on every page. dead code was hard to identify and eliminate.
+One way that it could be achieved pretty early on was "importing" modules using a series of `<script>` tags from your html.
+This was pretty crude.
+JavaScript files grew pretty large since breaking them down was hard work.
+So it was done at the "library" level.
+Dependencies often weren't clear & there was no automatic way to go and update all of the places they were used,
+and the order of imports was sacrosanct.
+Utility files in projects would grow and grow and often be imported on every page.
+Dead code was hard to identify and eliminate.
 
-Because there was no definition of a module there was also no definition of how a file should export public code. The
-global scope was the only real choice and soon became a dumping ground. Of course this quickly led to name collisions
-and JavaScript being what it is - `dynamic` that perfectly OK from the point of view of the interpreter. Even Libraries
-like `jQuery` and `Underscore` whose exports and aliases were well known ran into others using their names. Techniques
-were used like namespacing to try and avoid collisions, but inevitably someone would overwrite someone else's behaviour,
-bugs ate up whole applications, tempers flared and words were said which could never be taken back.
+Because there was no definition of a module there was also no definition of how a file should export public code.
+The global scope was the only real choice and soon became a busy place.
+That resulted in name collisions and, JavaScript being what it is,
+that was perfectly OK from the point of view of the interpreter.
+Even Libraries like `jQuery` and `Underscore` whose exports and aliases were well known ran into others using their names.
+Techniques were used like namespacing to try and avoid collisions,
+but inevitably someone would overwrite someone else's behaviour,
+bugs ate up whole applications.
 
-Something had to give. A few competing standards grew each with their own quirks and benefits. But the good news is
-that you don't need to know all of them. The two you will come in most contact with are CommonJS and ES6 Modules - and
-even then mostly only ES6 modules. The others are included below only because you may some across them so it's worth at
-least recognising the names and the syntax.
+Something had to give.
+The great thing about JavaScript has always been it's rich ecosystem and community,
+and it really pulled together over this problem to create a few competing standards in userland.
+Each had it's own quirks and benefits and in this article we'll have a look at a few.
 
-## So what actually is a module anyway?
+Before we get into it though I should point out that this is mostly interesting from an historical point of view,
+you don't need to know all of them.
+The main systems you will come in contact with are now `CommonJS` and `ES6 Modules`.
 
-The Google definition is:
+## What is a module anyway?
 
-> module
-> /ˈmɒdjuːl/
->
-> noun
->
-> 1. each of a set of standardized parts or independent units that can be used to construct a more complex structure,
-such as an item of furniture or a building.
->    - "ships are now built in modules rather than built in a whole from the base up"
-> 2. a detachable self-contained unit of a spacecraft.
->    - "Spacelab, an extra module for the shuttle, will quadruple the experimental facilities on board"
+A module is a file containing JavaScript code.
+They allow us to build up complex applications from smaller simpler components.
 
-The first definition is more relevant to JavaScript. A module is a unit of code which provides some cohesive reusable
-functionality. It might export a class or a group of functions. But whatever it contains should be closely related. In
-a similar fashion to classes in OO languages (like Java or C#) modules in JavaScript allow us to build up complex
-applications from smaller simpler components.
+A modules might export a class or a group of constants or functions,
+but whatever export should be closely related.
+This is similar to classes in OO languages (like Java or C#).
 
-A module in JS allows the author to import the dependencies of the code they define - i.e. the modules on which the
-module's code relies. (It's turtles the whole way down.) It must then allow the execution of some JavaScript which
-defines the exports of the module i.e. what should be available to the outside world. Usually a group of functions or a
-class but the exports could just as easily be a configuration object some HTML or CSS. Along the way modules allow code
-to be defined only for internal use - think `private` in OO languages. If it isn't exported other modules have no
-knowledge of it. This gives us the [encapsulation](https://en.wikipedia.org/wiki/Encapsulation_(computer_programming))
-that JS otherwise lacks.
+OK, but we had files, so what was the problem?
+The bit we were missing was a "module system".
+
+## Right... module system>
+
+Reductively, a module system is the definition of how code gets into and out of a module,
+It will also define the context of declarations which are made within the module.
+
+Let's tackle that last bit.
+By context I mean "what can things access" for example if you have 2 modules (in an imaginary module system):
+
+```js
+// a.js
+const thing = "a thing";
+
+// b.js
+const thing = "another thing";
+```
+
+In both modules there is a constant called `thing`.
+So how do they interact?
+Will the two declarations overwrite each other?
+or be completely independent?
+Does it matter if `a.js` imports (uses) `b.js`?
+
+A module system will define all of that so that developers know what they are getting into.
+It must also define how code gets shared between the modules.
+How do you define what a module exposes to consumers?
+How does a module define it's explicit dependencies and get handles on the functionality it requires from them?
+(Imports and exports.)
+
+Finally what order does the code in the modules get executed.
+Does each module get executed as it is imported or is there a static analysis step?
+What happens when more than one module depend on the same module?
+DO they get their own instance or do they get the same copy?
+
+Hopefully you can see that they are pretty important, and that there's a lot to consider.
+And JavaScript didn't have a standard.
+Each module system was built for a specific purpose, with different constraints,
+and had it's own answer to each of those questions.
 
 ## Styles of Module you might see in the wild
 
 ### [AMD](https://en.wikipedia.org/wiki/Asynchronous_module_definition)
 
-Asynchronous Module Definitions. Most notably implemented by [Require.js](https://requirejs.org/). One of the key
-features of this standard is to allow modules to be loaded in a lazy manner - i.e. as late as possible. The goal being
-to increase page load times by not loading anything until it is required.
+*A*synchronous *M*odule *D*efinitions.
+Most notably implemented by [Require.js](https://requirejs.org/).
+This is one of the early standards.
+It was designed to run in the browser with a custom runtime downloading smaller modules, in parallel, as they were required.
+The aim here was to improve load times by parallelising the downloads
+and delaying download of the whole app until it was really needed.
+There is also an "optimizer" which allowed the modules to be bundled and minified for production.
 
 Here's what an AMD module looks like:
 
@@ -80,33 +117,40 @@ define(["movement/prowl", "noises/miaow"],
 );
 ```
 
-The key here is the `define` function on line 1. `RequireJS` wraps the module code and supplies a couple of variables
-to use to define your exports and dependencies. `define` tells `RequireJS` you are going to define a module. The first
-argument is an array of the dependencies. These are either relative paths to the modules or an alias like `jQuery` which
-is defined in requires config. The second argument is the function to run to perform the module definition.
+The key here is the `define` function on line 1.
+The runtime uses wraps the module code and supplies a couple of variables to use to define your exports and dependencies.
+`define` tells the `AMD` runtime you are going to define a module.
+The first argument is an array of the dependencies.
+These are either relative paths to the modules or an alias like `jQuery` which is defined in config.
+The second argument is the function to run to perform the module definition.
 It's arguments are the dependencies and that is how require gets them into your code.
 
-At the end of the definition function `return Cat;` defines the export of the module (the `Cat` class).
+At the end of the definition function `return Cat;` defines the export of the module (in this case the `Cat` class).
 
-The syntax is complex, setting it up is finicky and it's not a popular way of doing modules any more so let's not dwell
-on it. But it is a bit like a penny-farthing - no one likes to use it any more, but every now and again you see one in
-the street it's fun to point at it and wonder about how anyone came up with such an invention...
+In order to fulfil the dependencies and be able to make our `Cat` class,
+when it executes the `define` function downloads the dependencies in parallel
+then executes the `define` functions in those modules.
+And so on until the whole graph has been discovered and executed.
 
-Having said that a time when you might see something like this is if you are debugging some code which has been bundled
-by Webpack, without source maps, and it has been configured to have an `AMD` style output so it does show up every now
-and again.
+Because all the module code is executed within a function it is well isolated from the rest of the JavaScript environment.
+
+IMHO the syntax is pretty complex, setting up the runtime and aliases is finicky.
+These days it's not a popular option, but it worked OK in it's hay day.
+There are still times when you might see something like this is if you are debugging code which has been bundled
+by bundlers like Webpack, Parcel etc without source maps.
+They can often be configured to have an `AMD` style output so that code may look something like this.
 
 ### [CommonJS](https://en.wikipedia.org/wiki/CommonJS)
 
-Because this is the module system implemented by [Node.js](https://nodejs.org/en/) it is more likely you will come
-across it. It's also worth pointing out that code transpiled and bundled by `webpack` is converted into modules with
-a `CommonJS` flavour so you can come across it in the browser too. It is definitely worth getting into some detail
-about this one.
+Because this is the module system implemented, until recently, by [Node.js](https://nodejs.org/en/),
+it is much more likely you will come across it.
+It is definitely worth getting into some detail about this one.
 
-The way this works is that when node executes the JS in a module it wraps the code in a function. The function supplies
-a couple of special arguments which the module can use. More details can be found
-[here](https://nodejs.org/docs/latest/api/modules.html#modules_the_module_wrapper). But the important ones for the
-sake of this discussion are `exports`, `module` and `require`.
+The way this works is that when node executes the JS in a module it wraps the code in a function.
+The function makes sure that the module is executing in it's own context, and internals don't bleed into the global scope.
+It also supplies a couple of special variables which the module can use.
+More details can be found [here](https://nodejs.org/docs/latest/api/modules.html#modules_the_module_wrapper),
+but the important ones for the sake of this discussion are `exports`, `module` and `require`.
 
 Here's an example ripped almost exactly from the [node docs](https://nodejs.org/docs/latest/api/modules.html)...
 
@@ -119,9 +163,9 @@ exports.area = (r) => PI * r ** 2;
 exports.circumference = (r) => 2 * PI * r;
 ```
 
-Here are two functions which are exported as named exports on the `exports` object. This makes them accessible to the
-outside world. The `exports` object though is just a shortcut to the `module.exports` object so you can do the same
-thing like this:
+Here two functions, `area` and `circumference`, are exported as named exports on the `exports` object.
+This makes them accessible to the outside world.
+The `exports` object though is just a shortcut to the `module.exports` object so you can do the same thing like this:
 
 ```js
 module.exports.circumference = (r) => 2 * PI * r;
@@ -135,14 +179,17 @@ const circle = require('./circle.js');
 console.log(`The area of a circle of radius 4 is ${circle.area(4)}`);
 ```
 
-On the first line you can see the `require` function being used to import the `circle` module. After it has been
-executed the `circle` const will contain a reference to the object that was on `module.exports` once the circle code had
-been executed. In this case `area` and `circumference`. Note that the argument to `require` is a relative path from the
-current module (`index`) to the required module (`circle`) in this example they must be next to each other in the same
-directory to work (`.` in a relative path refers to the current directory, `..` navigates up the tree etc.).
+On the first line you can see the `require` function being used to import the `circle` module.
+After it has been executed the `circle` variable will contain a reference to the object that was on
+`module.exports` once the circle code had been executed.
+In this case `area` and `circumference`.
+Note that the argument to `require` is a relative path from the current module (`index`)
+to the required module (`circle`) in this example they must be next to each other in the same
+directory to work
+(`.` in a relative path refers to the current directory, `..` navigates up the tree etc.).
 
-Another common way to define an export is to write directly to the `module.exports` property. Thus defining the
-"default export".
+Another common way to define an export is to write directly to the `module.exports` property.
+Thus defining the "default export".
 
 ```js
 // square.js
@@ -157,8 +204,8 @@ module.exports = class Square {
 };
 ```
 
-The square class is written straight onto the `module.exports` property and so becomes the only export which this module
- defines. So when it is required it can be accessed directly:
+The square class is written straight onto `module.exports` and so becomes the only export which this module defines.
+So when it is required it can be accessed directly:
 
 ```js
 // index.js
@@ -167,10 +214,10 @@ const square = new Square(2);
 console.log(`The area of a square with width 2 is ${square.area()}`);
 ```
 
-A thing to note here is that the `exports` argument is a short cut to the `module.exports` property, but it is the
-`module.exports` object which actually gets passed to the dependents. Therefore if you overwrite it anything which is
-written to `exports` will be ignored and only things written to `module.exports` after it has been overwritten will be
-available...
+A thing to note here is that the `exports` argument is a short cut to the `module.exports` property,
+but it is the `module.exports` object which actually gets passed to the dependents.
+Therefore if you overwrite it anything which is written to `exports` will be ignored and only things written to
+`module.exports` after it has been overwritten will be available...
 
 ```js
 // missingModule.js
@@ -195,29 +242,34 @@ exports.e = 'An important message.';
 ```
 
 In this case any module importing `missingModule` will only be able to use `c` and `d` because `a`, `b` `e` were defined
-on an object which will have been tied up by the garbage collector... For this reason you should be cautious about
-mixing `module.exports` and `exports` and in general only use one or the other. You might also see this:
-`module.exports = exports = ...` which allows `exports` to be used _after_ `module.exports` has been set. Still
-anything written to it before will be lost.
+on an object which will have been tied up by the garbage collector...
+For this reason you should be cautious about mixing `module.exports` and `exports`
+and in general only use one or the other.
+You might also see this: `module.exports = exports = ...` which allows `exports` to be used _after_
+`module.exports` has been set.
+Still anything written to it before will be lost.
 
-On the whole though `CommonJS` is a reasonably good module system it's syntax is terse and there aren't many gotchas.
-It has a clean syntax and the `require` statements which pull in code can go anywhere in the file which can lend
-readability. On the down side the `require` statements can go anywhere so the dependencies of a file are not
-necessarily obvious. We haven't talked about cyclic dependencies (module A depends on B depends on A) but `CommonJS`
+ANother thing to bear in mind is that the `require` statements can go anywhere so the dependencies
+of a file are not necessarily obvious.
+Dependencies an even be optional, since they are executed at runtime.
+So `const module = someBoolean ? require('./a') : require('./b');` is perfectly valid.
+This means there is no way for the dependencies to be statically analysed.
+
+On the whole `CommonJS` is a reasonably good module system and there aren't many gotchas.
+Whereas `AMD` forces you to call the `define` function,
+`CommonJS` hides that from us so it's syntax is terse.
+The `require` statements which pull in code can go anywhere in the file which can lend readability.
+We haven't talked about cyclic dependencies (module A depends on B depends on A) but `CommonJS`
 [handles](https://nodejs.org/docs/latest/api/modules.html#cycles) them reasonably robustly.
-
-#### Running the CommonJS Examples
-
-If you want to play around with this style of module a bit then you can find some of the examples above in the
-`node-examples` directory in the root of this project.
-
-running `npm run examples` will run `node-examples/index.js` in node, and you can start it with a debugger with
-`npm run examples:debug`.
 
 ### [UMD](https://github.com/umdjs/umd)
 
-UMD (Unified Module Definitions) aims to join both - library authors needed to wrap their code up as modules which
-worked in as many environments as possible and so UMD was born. At it's core is a series of templates in a GitHub
+`AMD` and `CommonJS` are similar in their execution pattern, but have incompatible API's.
+Library authors soon needed to wrap their code up as modules which worked in as many environments as possible though
+and so *U*nified *M*odule *D*efinitions was born.
+The goal here is to write 1 module which can be imported by, for example, `AMD` and `CommonJS` modules.
+
+At it's core is a series of templates in a GitHub
 [repo](https://github.com/umdjs/umd). They work fine - but getting your head around what they do can be tricky.
 
 Here's an example:
@@ -254,29 +306,29 @@ Here's an example:
 ));
 ```
 
-So in that first top level indentation (line 2-14) you can see this thing doing some testing to effectively see what
-is going on in it's environment. First it tests to see if it's AMD with `typeof define === 'function'`, then `CommonJS`
-(`if (typeof exports === 'object')`) and finally it falls back to assuming it's dependencies must be defined in the
+So in that first top level indentation (line 2-14) you can see this thing looking to see where it's landed.
+First it tests to see if it's in an `AMD` environment with `typeof define === 'function'`, then for `CommonJS`
+(`if (typeof exports === 'object')`) and finally the module falls back to assuming it's dependencies are defined in the
 global scope.
 
-Once if knows what the module system is it injects the `exports` object and the dependencies into the actual module
-definition function (lines 15-22, the second top level indentation).
+Once it knows what the module system it's in, it injects the `exports` object and the dependencies into the module
+factory function (lines 15-22, the second top level indentation).
 
 Again this isn't a module definition type that you are likely to come across regularly, unless you look at the source
-code of some older libraries, so don't worry too much. If `AMD` is a penny-farthing then I suppose `UMD` is a reasonably
-priced car with a penny-farthing bolted on one side and a horse tied to the other. Let's move on.
+code of some older libraries, so don't worry too much. If `AMD` is a penny-farthing then I suppose `UMD` is a horse
+with a penny-farthing bolted on one side and a reasonably price car tied to the other. Let's move on.
 
-### [ES6 (Harmony)](http://exploringjs.com/es6/ch_modules.html)
+### [ES6](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
 
 This is the one to pay most attention to. This is the officially sanctioned module standard as per the ES6
-specification. It has taken a while but many browsers now [support](https://caniuse.com/#search=modules) the spec.
-Because of [differences](https://hackernoon.com/node-js-tc-39-and-modules-a1118aecf95e) between node's CommonJS and ES6
-modules it has taken longer for modules to be supported there, but it is now on it's
-[way](https://nodejs.org/api/esm.html).
-
-If you have to support older browsers or want to use ES6 modules in node today then you can do that too. Tools like
-`webpack` with `babel` or `babel-node` will let you do just that. These tools replace some reference sand keywords and
-wrap your code in a function that convert the statements to `CommonJS` or `AMD` style modules.
+specification. It has taken a while but most browsers now
+[support](https://caniuse.com/#search=modules)
+it natively.
+Because of
+[differences](https://hackernoon.com/node-js-tc-39-and-modules-a1118aecf95e)
+between node's `CommonJS` and `ES6`
+modules it has taken longer for modules to be supported there, but it landed in LTS in
+[v14](https://nodejs.org/docs/latest-v14.x/api/esm.html#esm_modules_ecmascript_modules).
 
 Lets get down to brass tacks...
 
@@ -291,8 +343,9 @@ export const circumference = (r) => 2 * PI * r;
 export const diameter = (r) => 2 * r;
 ```
 
-In this adaptation of the circle example you can see 3 things being exported. The `area`, `circumference` and `diameter`
-functions are *named exports* from this module to access them you must use curly braces in your `import` statement.
+In this adaptation of the circle example you can see 3 things being exported.
+The `area`, `circumference` and `diameter` functions are *named exports* from this module to access them
+you must use curly braces in your `import` statement.
 Like this:
 
 ```js
@@ -301,14 +354,18 @@ import { circumference, diameter } from './circle.js'
 console.log(
   `The circumference of a circle of radius 4 is ${circumference(4)}`
 );
+
 console.log(
   `The circumference of a circle of radius 2 is ${diameter(2)}`
 );
 ```
 
-I import more than one named export by using a comma - this should look familiar from object spread syntax. I don't
-have to import everything if I don't want to - this module only uses `circumference` and `diameter` so those are the
-only exports I reference. If  you do want everything you can do that too with a `* as`:
+I import more than one named export by using a comma.
+This should look familiar from object destructuring.
+
+I don't have to import everything if I don't want to.
+In the case of this module we only need `circumference` and `diameter` so those are the only exports I reference.
+If you do want everything you can do that too with a `* as`:
 
 ```js
 import * as circle from './circle.js'
@@ -336,8 +393,11 @@ console.log(
 );
 ```
 
-We can define a default export for the module. Which is often used when the module exports a `class` or a single
-object. the `square` module below does that:
+OK that's importing. Let's export some things:
+
+We can define a *default export* for the module.
+This is often used when the module exports a `class` or a single object,
+The `square` module below does that:
 
 ```js
 // square.js
@@ -354,8 +414,9 @@ class Square {
 export default Square;
 ```
 
-Here the `default` keyword has been used as well as `export`. Not much more to say about that really. Importing the
-default is simple too - just omit the curly braces and you get the default:.
+Here the `default` keyword has been used as well as `export`.
+Not much more to say about that really.
+Importing the default is simple too - just omit the curly braces and you get the default:.
 
 ```js
 import Square from './circle.js'
@@ -364,8 +425,7 @@ const square = new Square(2);
 console.log(`The area of a square with width 2 is ${square.area()}`);
 ```
 
-In the case of the default you can call the import whatever you like so if you need to us `as` if you want to call
-it something different in the dependent module.
+When you import a default export you can call the variable whatever you like there's no need use `as`.
 
 The final case is one where you have both named and default exports. Like in the slightly contrived triangle
 module below...
@@ -396,19 +456,26 @@ console.log(
 ```
 
 Again you don't have to import everything so if you only want either default or named exports then that is fine.
-Also the name exports will behave themselves if you want to use `as` or `* as` with or without the default export
+Also the named exports will behave themselves if you want to use `as` or `* as` with or without the default export
 as you would expect.
 
 Once you get started with ES6 imports they are pretty clear. The syntax is reasonably simple and they are flexible
-enough to allow you to do what ever you need with them. If you dig into the
-[details](http://exploringjs.com/es6/ch_modules.html#sec_cyclic-dependencies) a little then they also handle cyclic
-dependencies better than `CommonJS` too. There is also support for async loading of modules out of the box, in a
-similar manner to `AMD`. We're getting the best of both here!
+enough to allow you to do what ever you need with them.
+If you dig into the
+[details](http://exploringjs.com/es6/ch_modules.html#sec_cyclic-dependencies)
+a little then they turn our to handle cyclic dependencies better than `CommonJS` too.
+There is also support for async loading of modules out of the box, in a similar manner to `AMD`.
+We're getting the best of both here!
 
-#### Running the ES6 Examples
+One thing to bear in mind is that `ESM` are subjected to static analysis by the runtime.
+So, in contrast to `CommonJS`, you can only define imports and exports at the top level.
+On the other hand this opens up some really interesting features like
+[tree shaking](https://webpack.js.org/guides/tree-shaking/)
+otherwise not possible.
 
-If you want to play around with this style of module a bit then you can find some of the examples above in the
-`public/browser-examples` directory in the root of this project. These are served up by express so run `npm run start`
-and open `http://localhost:3000` in a modern browser (see the caniuse link above for details of supported versions).
-It will open this readme and if you look in devtools you will be able to see the modules being loaded
-(checkout the network tab) and executed (see the console and sources tabs) natively in your browser...
+## Conclusion
+
+HOpefully you found that interesting. I'll admit it's mostly interesting from an historical standpoint.
+For day to day coding `CommonJS` and increasingly `ES Modules` are really all you need.
+But I find it fascinating to see the aspects of those historical module systems exhibiting themselves in the modern
+solution we have in the language not.
