@@ -39,6 +39,11 @@ UMD
 W3C
 w3schools
 Webpack
+userland
+reductively
+LTS
+destructuring
+v14
  - src/premature-optimisation.md
 v14.15.1
 Hrn
@@ -46,6 +51,9 @@ Hrn
  - src/module-spotting.md
 mɒdju
 Spacelab
+odule
+efinitions
+nified
  - src/what-is-this/what-is-this.md
 methodness
 functionness
