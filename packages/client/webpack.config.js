@@ -11,7 +11,9 @@ const webpack = require("webpack");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const { env, stringifiedEnv } = require("./config/env");
 const paths = require("./config/paths");
+
 const isProduction = env.NODE_ENV === "production";
+const isWatching = process.argv.includes("serve");
 
 /**
  * @type import("webpack").Configuration
@@ -19,7 +21,7 @@ const isProduction = env.NODE_ENV === "production";
 module.exports = {
   mode: isProduction ? "production" : "development",
   devtool: isProduction ? "source-map" : "source-map",
-  devServer: isProduction ? undefined : {
+  devServer: isWatching ? {
     compress: true,
     historyApiFallback: true,
     host: env.CLIENT_HOST_NAME,
@@ -32,7 +34,7 @@ module.exports = {
     port: env.CLIENT_PORT,
     watchContentBase: true,
     stats: "normal"
-  },
+  } : undefined,
   entry: [
     paths.srcIndex,
   ],
@@ -159,9 +161,11 @@ module.exports = {
     isProduction ? new CleanWebpackPlugin() : null,
     new webpack.HotModuleReplacementPlugin(),
     new PreactRefreshPlugin(),
-    isProduction ? new BundleAnalyzerPlugin({
+    isProduction && !isWatching ? new BundleAnalyzerPlugin({
       analyzerMode: "static"
     }) : null,
-    isProduction ? new MiniCssExtractPlugin() : null
+    isProduction ? new MiniCssExtractPlugin({
+      filename: "[name].[contenthash].css"
+    }) : null
   ].filter(Boolean)
 };
