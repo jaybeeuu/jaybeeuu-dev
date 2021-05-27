@@ -159,8 +159,8 @@ module.exports = {
     new webpack.DefinePlugin(stringifiedEnv),
     new CaseSensitivePathsPlugin(),
     isProduction ? new CleanWebpackPlugin() : null,
-    new webpack.HotModuleReplacementPlugin(),
-    new PreactRefreshPlugin(),
+    !isProduction ? new webpack.HotModuleReplacementPlugin() : null,
+    !isProduction ? new PreactRefreshPlugin() : null,
     isProduction && !isWatching ? new BundleAnalyzerPlugin({
       analyzerMode: "static"
     }) : null,
