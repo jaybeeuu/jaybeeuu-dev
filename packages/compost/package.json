@@ -29,9 +29,9 @@
     "chalk": "^4.1.1",
     "chokidar": "^3.5.1",
     "highlight.js": "^10.7.2",
-    "marked": "^2.0.3",
+    "marked": "^2.0.6",
     "rmfr": "^2.0.0",
-    "sanitize-html": "^2.3.3",
+    "sanitize-html": "^2.4.0",
     "tslib": "^2.2.0",
     "yargs": "^17.0.1"
   },
@@ -39,17 +39,17 @@
     "@bickley-wallace/eslint-config": "workspace:*",
     "@bickley-wallace/utilities": "workspace:*",
     "@types/jest": "^26.0.23",
-    "@types/marked": "^2.0.2",
-    "@types/node": "15.3.0",
+    "@types/marked": "^2.0.3",
+    "@types/node": "15.6.1",
     "@types/rmfr": "^2.0.0",
     "@types/sanitize-html": "^2.3.1",
-    "@typescript-eslint/eslint-plugin": "^4.23.0",
-    "eslint": "^7.26.0",
+    "@typescript-eslint/eslint-plugin": "^4.25.0",
+    "eslint": "^7.27.0",
     "eslint-plugin-jest": "^24.3.6",
-    "jest": "^26.6.3",
+    "jest": "^27.0.1",
     "jest-date-mock": "^1.0.8",
-    "jest-matcher-utils": "^26.6.2",
-    "ts-jest": "^26.5.6",
-    "typescript": "^4.2.4"
+    "jest-matcher-utils": "^27.0.1",
+    "ts-jest": "^27.0.1",
+    "typescript": "^4.3.2"
   }
 }

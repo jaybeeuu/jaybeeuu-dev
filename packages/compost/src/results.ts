@@ -27,16 +27,21 @@ export function success<Value>(value?: Value): Success<Value> {
   return { success: true, value: value as Value };
 }
 
-const getError = <Reason extends string>(reason: Reason, messageOrError: string | Error | undefined, framesSincePublic: number): FailureError<Reason> => {
+const getError = <Reason extends string>(
+  reason: Reason,
+  messageOrError: string | Error | undefined,
+  framesSincePublic: number
+): FailureError<Reason> => {
   if (messageOrError instanceof Error) {
 
     return {
       ...messageOrError,
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       name: `Failure(${reason})` as FailureName<Reason>
     };
   }
 
-  const error = new Error();
+  const error = new Error("");
   const stack = error.stack;
   assertIsNotNullish(stack);
   const publicStack = stack.slice(1 + framesSincePublic);
@@ -44,6 +49,7 @@ const getError = <Reason extends string>(reason: Reason, messageOrError: string 
   return {
     ...error,
     stack: publicStack,
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     name: `Failure(${reason})` as FailureName<Reason>,
     message: messageOrError ?? ""
   };
