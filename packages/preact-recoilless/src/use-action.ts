@@ -1,4 +1,4 @@
-import { Action } from "@bickley-wallace/recoilless";
+import type { Action } from "@bickley-wallace/recoilless";
 import { useMemo } from "preact/hooks";
 import { useStore } from "./store-provider";
 

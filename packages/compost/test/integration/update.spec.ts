@@ -1,10 +1,10 @@
 import path from "path";
 import { advanceTo } from "jest-date-mock";
 import { writeTextFiles, readTextFile, deleteDirectories } from "../../src/files";
-import { PostManifest, UpdateOptions } from "../../src/posts/src/types";
+import type { PostManifest, UpdateOptions } from "../../src/posts/src/types";
 import { update } from "../../src/posts";
-import { Result } from "../../src/results";
-import { UpdateFailureReason } from "packages/compost/src/posts/src/update";
+import type { Result } from "../../src/results";
+import type { UpdateFailureReason } from "packages/compost/src/posts/src/update";
 
 const jestWorkerId = +(process.env.JEST_WORKER_ID || 0);
 const sourceDir = path.resolve(`./fs/test/${jestWorkerId.toString()}/src`);

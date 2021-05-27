@@ -1,4 +1,4 @@
-import { Value } from "./value";
+import type { Value } from "./value";
 import { ValueState } from "./value-state";
 
 export interface PrimitiveValue<Val> {

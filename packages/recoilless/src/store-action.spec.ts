@@ -1,5 +1,6 @@
-import { PrimitiveValue } from "./state/index";
-import { Action, ActionContext, Store } from "./store";
+import type { PrimitiveValue } from "./state/index";
+import type { Action, ActionContext} from "./store";
+import { Store } from "./store";
 
 describe("recoilless store", () => {
   describe("action", () => {

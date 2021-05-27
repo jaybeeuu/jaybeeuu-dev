@@ -1,7 +1,5 @@
-const { base } = require("./base");
-
 module.exports = {
-  ...base,
+  extends: ["./base.js"],
   env: {
     node: true
   }

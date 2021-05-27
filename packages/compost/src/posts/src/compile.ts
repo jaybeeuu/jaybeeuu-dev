@@ -1,6 +1,8 @@
 import highlight from "highlight.js";
-import marked, { MarkedOptions, Slugger }  from "marked";
-import sanitizeHtml, { IOptions } from "sanitize-html";
+import type { MarkedOptions, Slugger } from "marked";
+import marked  from "marked";
+import type { IOptions } from "sanitize-html";
+import sanitizeHtml from "sanitize-html";
 import { readTextFile } from "../../files";
 
 interface RenderContext {

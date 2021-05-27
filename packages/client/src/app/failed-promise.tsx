@@ -1,6 +1,7 @@
-import { FailedProps } from "@bickley-wallace/preact-recoilless";
+import type { FailedProps } from "@bickley-wallace/preact-recoilless";
 import { log } from "@bickley-wallace/utilities";
-import { h, VNode } from "preact";
+import type { VNode } from "preact";
+import { h } from "preact";
 import { useEffect } from "preact/hooks";
 
 export const FailedPromise = ({ error }: FailedProps): VNode<any> => {

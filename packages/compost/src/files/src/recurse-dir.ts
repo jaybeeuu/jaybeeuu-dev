@@ -1,4 +1,5 @@
-import fs, { Stats } from "fs";
+import type { Stats } from "fs";
+import fs from "fs";
 import path from "path";
 
 export interface FileInfo {

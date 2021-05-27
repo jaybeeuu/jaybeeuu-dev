@@ -1,8 +1,10 @@
 /**
  * @jest-environment jsdom
  */
-import { ComponentType, h } from "preact";
-import { Action, ActionContext, PrimitiveValue, Store } from "@bickley-wallace/recoilless";
+import type { ComponentType} from "preact";
+import { h } from "preact";
+import type { Action, ActionContext, PrimitiveValue} from "@bickley-wallace/recoilless";
+import { Store } from "@bickley-wallace/recoilless";
 import { assertIsNotNullish } from "@bickley-wallace/utilities";
 import { renderHook } from "@testing-library/preact-hooks";
 import { StoreProvider } from "./store-provider";

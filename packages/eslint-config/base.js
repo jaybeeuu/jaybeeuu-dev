@@ -37,15 +37,16 @@ module.exports = {
         "plugin:@typescript-eslint/recommended-requiring-type-checking"
       ],
       rules: {
+        "@typescript-eslint/consistent-type-imports": ["error", { prefer: "type-imports" }],
         "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }],
-        "indent": "off",
         "@typescript-eslint/indent": ["error", 2, { SwitchCase: 1 }],
         "@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: false }],
-        "no-unused-vars": "off",
+        "@typescript-eslint/no-shadow": "error",
         "@typescript-eslint/no-unused-vars": ["error", { ignoreRestSiblings: true }],
         "@typescript-eslint/switch-exhaustiveness-check": "error",
+        "indent": "off",
         "no-shadow": "off",
-        "@typescript-eslint/no-shadow": "error"
+        "no-unused-vars": "off"
       }
     },
     {

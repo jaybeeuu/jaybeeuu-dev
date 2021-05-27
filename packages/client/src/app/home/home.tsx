@@ -1,4 +1,5 @@
-import { h, VNode } from "preact";
+import type { VNode } from "preact";
+import { h } from "preact";
 import { asRoute } from "../as-route";
 import { useBackgrounds } from "../use-background";
 
