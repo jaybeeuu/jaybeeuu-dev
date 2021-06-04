@@ -123,6 +123,7 @@ importers:
       '@types/node': 15.6.1
       '@types/rmfr': ^2.0.0
       '@types/sanitize-html': ^2.3.1
+      '@types/yargs': ^17.0.0
       '@typescript-eslint/eslint-plugin': ^4.25.0
       chalk: ^4.1.1
       chokidar: ^3.5.1
@@ -140,6 +141,7 @@ importers:
       typescript: ^4.3.2
       yargs: ^17.0.1
     dependencies:
+      '@types/yargs': 17.0.0
       chalk: 4.1.1
       chokidar: 3.5.1
       highlight.js: 10.7.2
@@ -2130,7 +2132,6 @@ packages:
 
   /@types/yargs-parser/20.2.0:
     resolution: {integrity: sha512-37RSHht+gzzgYeobbG+KWryeAW8J33Nhr69cjTqSYymXVZEN9NbRYWoYlRtDhHKPVT1FyNKwaTPC1NynKZpzRA==}
-    dev: true
 
   /@types/yargs/15.0.13:
     resolution: {integrity: sha512-kQ5JNTrbDv3Rp5X2n/iUu37IJBDU2gsZ5R/g1/KHOOEc5IKfUFjXT6DENPGduh08I/pamwtEq4oul7gUqKTQDQ==}
@@ -2143,6 +2144,12 @@ packages:
     dependencies:
       '@types/yargs-parser': 20.2.0
     dev: true
+
+  /@types/yargs/17.0.0:
+    resolution: {integrity: sha512-RS7u2X7vdXjVQs160PWY1pjLBw6GJj04utojn0KU8p2rRZR37FSzzK6XOT+KLzT/DVbDYRyezroc0LHIvM5Z2A==}
+    dependencies:
+      '@types/yargs-parser': 20.2.0
+    dev: false
 
   /@types/yauzl/2.9.1:
     resolution: {integrity: sha512-A1b8SU4D10uoPjwb0lnHmmu8wZhR9d+9o2PKBQT2jU5YPTKsxac6M2qGAdY7VcL+dHHhARVUDmeg0rOrcd9EjA==}

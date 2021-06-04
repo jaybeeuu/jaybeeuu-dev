@@ -3,7 +3,7 @@ import type { MarkedOptions, Slugger } from "marked";
 import marked  from "marked";
 import type { IOptions } from "sanitize-html";
 import sanitizeHtml from "sanitize-html";
-import { readTextFile } from "../../files";
+import { readTextFile } from "../../files/index.js";
 
 interface RenderContext {
   hrefRoot: string;

@@ -1,11 +1,14 @@
 import { debounce, log } from "@bickley-wallace/utilities";
 import chokidar from "chokidar";
-import yargs from "yargs";
+import yargsFactory from "yargs";
 import { update } from "../posts/index.js";
 import type { UpdateOptions } from "../posts/src/types.js";
-import type { UpdateFailureReason } from "../posts/src/update";
-import type { Result} from "../results";
-import { success, failure } from "../results";
+import type { UpdateFailureReason } from "../posts/src/update.js";
+import type { Result} from "../results.js";
+import { success, failure } from "../results.js";
+
+// https://github.com/yargs/yargs/issues/1854
+const yargs = yargsFactory() as unknown as typeof yargsFactory;
 
 const run = async (
   options: UpdateOptions
@@ -138,4 +141,4 @@ yargs.help("help")
 yargs.demandCommand();
 yargs.recommendCommands();
 yargs.strict();
-yargs.parse();
+void yargs.parse();

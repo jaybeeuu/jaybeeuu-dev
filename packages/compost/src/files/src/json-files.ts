@@ -1,8 +1,8 @@
-import { readTextFile, writeTextFile } from "./text-files";
-import { canAccess } from "./can-access";
 import { getErrorMessage } from "@bickley-wallace/utilities";
-import type { Result} from "../../results";
-import { failure, success } from "../../results";
+import type { Result} from "../../results.js";
+import { failure, success } from "../../results.js";
+import { canAccess } from "./can-access.js";
+import { readTextFile, writeTextFile } from "./text-files.js";
 
 export type ReadJsonFileFailureReason = "no access" | "parse error" | "validation failed";
 

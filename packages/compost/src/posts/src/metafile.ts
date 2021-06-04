@@ -1,9 +1,9 @@
 import { is, isObject } from "@bickley-wallace/utilities";
-import type { PostMetaData } from "./types";
-import type { FileInfo} from "../../files";
-import { readJsonFile } from "../../files";
-import type { Result} from "../../results";
-import { repackError } from "../../results";
+import type { PostMetaData } from "./types.js";
+import type { FileInfo} from "../../files/index.js";
+import { readJsonFile } from "../../files/index.js";
+import type { Result} from "../../results.js";
+import { repackError } from "../../results.js";
 
 export type PostMetaFileData = Pick<PostMetaData, "abstract" | "title" | "publish">;
 

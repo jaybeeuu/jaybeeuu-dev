@@ -1,2 +1,2 @@
-export { update } from "./src/update";
-export type { PostManifest, PostMetaData } from "./src/types";
+export { update } from "./src/update.js";
+export type { PostManifest, PostMetaData } from "./src/types.js";

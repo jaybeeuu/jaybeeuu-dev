@@ -1,7 +1,7 @@
 import path from "path";
-import { getHash } from "../../hash";
-import type { Result } from "../../results";
-import { success, failure } from "../../results";
+import { getHash } from "../../hash.js";
+import type { Result } from "../../results.js";
+import { success, failure } from "../../results.js";
 
 const HASH_LENGTH = 6;
 const HASH_ALLOWED_CHARS = "0-9A-z";
