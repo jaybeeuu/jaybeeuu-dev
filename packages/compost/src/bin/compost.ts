@@ -1,14 +1,14 @@
 import { debounce, log } from "@bickley-wallace/utilities";
 import chokidar from "chokidar";
-import yargsFactory from "yargs";
+import { hideBin } from "yargs/helpers";
+import yargsFactory from "yargs/yargs";
 import { update } from "../posts/index.js";
 import type { UpdateOptions } from "../posts/src/types.js";
 import type { UpdateFailureReason } from "../posts/src/update.js";
 import type { Result} from "../results.js";
 import { success, failure } from "../results.js";
 
-// https://github.com/yargs/yargs/issues/1854
-const yargs = yargsFactory() as unknown as typeof yargsFactory;
+const yargs = yargsFactory(hideBin(process.argv));
 
 const run = async (
   options: UpdateOptions
@@ -118,7 +118,6 @@ yargs.command(
   },
   async (args) => {
     const options = mapArgsToOptions(args);
-
     if (options.watch) {
       watch(options);
     } else {
