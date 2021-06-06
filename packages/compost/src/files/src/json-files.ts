@@ -1,7 +1,8 @@
 import { readTextFile, writeTextFile } from "./text-files";
 import { canAccess } from "./can-access";
 import { getErrorMessage } from "@bickley-wallace/utilities";
-import { Result, failure, success } from "../../results";
+import type { Result} from "../../results";
+import { failure, success } from "../../results";
 
 export type ReadJsonFileFailureReason = "no access" | "parse error" | "validation failed";
 

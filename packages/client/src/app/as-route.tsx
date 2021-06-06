@@ -1,4 +1,5 @@
-import { FunctionComponent, ComponentType, h, VNode } from "preact";
+import type { FunctionComponent, ComponentType, VNode } from "preact";
+import { h } from "preact";
 import { getDisplayName } from "../utils/component";
 
 export type RouteProps = { path: string };

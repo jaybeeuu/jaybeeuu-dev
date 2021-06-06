@@ -1,7 +1,9 @@
 import { useValue } from "@bickley-wallace/preact-recoilless";
 import classNames from "classnames";
-import { h, VNode } from "preact";
-import { Ref, useLayoutEffect, useRef } from "preact/hooks";
+import type { VNode } from "preact";
+import { h } from "preact";
+import type { Ref} from "preact/hooks";
+import { useLayoutEffect, useRef } from "preact/hooks";
 import { Link } from "preact-router";
 import { NavBar } from "../nav-bar";
 import { titleBarHeight, titleBarStyle } from "../state";

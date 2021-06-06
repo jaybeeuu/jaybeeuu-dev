@@ -4,15 +4,18 @@ import {
   useMemo,
   useState
 } from "preact/hooks";
-import {
+import type {
   DerivedValue,
-  isPrimitiveValue,
   PrimitiveValue,
   Value,
   ValueState
 } from "@bickley-wallace/recoilless";
+import {
+  isPrimitiveValue
+} from "@bickley-wallace/recoilless";
 import { useAsyncGenerator } from "./async-hooks";
-import { monitorPromise, PromiseState } from "./promise-status";
+import type { PromiseState } from "./promise-status";
+import { monitorPromise } from "./promise-status";
 import { useStore } from "./store-provider";
 
 const useValueStateSubscription = <Val>(

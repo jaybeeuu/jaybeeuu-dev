@@ -1,4 +1,5 @@
-import { h, FunctionComponent } from "preact";
+import type { FunctionComponent } from "preact";
+import { h } from "preact";
 import { main as e2eHooks } from "@bickley-wallace/e2e-hooks";
 import classNames from "classnames";
 import Router from "preact-router";

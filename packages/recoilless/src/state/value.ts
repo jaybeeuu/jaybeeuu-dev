@@ -1,7 +1,7 @@
 import { hasFunctionProperty } from "@bickley-wallace/utilities";
-import { PrimitiveValue } from "../state";
-import { DerivedValue } from "./derived-value";
-import { ValueState as ValueState } from "./value-state";
+import type { PrimitiveValue } from "../state";
+import type { DerivedValue } from "./derived-value";
+import type { ValueState as ValueState } from "./value-state";
 
 type ValueType<Candidate extends ValueState<unknown>> = Candidate extends ValueState<infer Val>
   ? Val

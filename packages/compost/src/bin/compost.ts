@@ -1,10 +1,11 @@
 import { debounce, log } from "@bickley-wallace/utilities";
 import chokidar from "chokidar";
 import yargs from "yargs";
-import { update } from "../posts";
-import { UpdateOptions } from "../posts/src/types";
-import { UpdateFailureReason } from "../posts/src/update";
-import { Result, success, failure } from "../results";
+import { update } from "../posts/index.js";
+import type { UpdateOptions } from "../posts/src/types.js";
+import type { UpdateFailureReason } from "../posts/src/update";
+import type { Result} from "../results";
+import { success, failure } from "../results";
 
 const run = async (
   options: UpdateOptions

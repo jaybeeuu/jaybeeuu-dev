@@ -1,4 +1,5 @@
-import { DerivationContext, DerivedValue, DerivedValueState, PrimitiveValue } from "./state/index";
+import type { DerivationContext, DerivedValue, PrimitiveValue } from "./state/index";
+import { DerivedValueState } from "./state/index";
 import { Store } from "./store";
 
 describe("recoilless store", () => {

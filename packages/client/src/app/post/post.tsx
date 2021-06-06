@@ -1,7 +1,8 @@
-import { h, FunctionComponent, JSX, createRef, render, RefObject } from "preact";
+import type { FunctionComponent, JSX, RefObject } from "preact";
+import { h, createRef, render } from "preact";
 import { useEffect, useLayoutEffect } from "preact/hooks";
 import classNames from "classnames";
-import { PostMetaData } from "@bickley-wallace/compost";
+import type { PostMetaData } from "@bickley-wallace/compost";
 import { assertIsString } from "@bickley-wallace/utilities";
 import { post as e2eHooks } from "@bickley-wallace/e2e-hooks";
 import { useAction, useValue } from "@bickley-wallace/preact-recoilless";

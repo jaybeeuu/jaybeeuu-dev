@@ -1,15 +1,17 @@
-import {
-  assertIsSettableValueState,
+import type {
   DerivedValue,
-  DerivedValueState,
   GetDependency,
-  isDerivedValue,
   PrimitiveValue,
-  PrimitiveValueState,
   RemoveFromStore,
   SettableValue,
   Value,
   ValueState
+} from "./state/index";
+import {
+  assertIsSettableValueState,
+  DerivedValueState,
+  isDerivedValue,
+  PrimitiveValueState
 } from "./state/index";
 
 const createValue = <Val>(

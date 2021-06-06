@@ -1,4 +1,5 @@
-import { PrimitiveValue, PrimitiveValueState } from "./state/index";
+import type { PrimitiveValue} from "./state/index";
+import { PrimitiveValueState } from "./state/index";
 import { Store } from "./store";
 
 const firstName: PrimitiveValue<string> = {

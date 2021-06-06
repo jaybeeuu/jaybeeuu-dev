@@ -1,4 +1,5 @@
-import { h, VNode } from "preact";
+import type { VNode } from "preact";
+import { h } from "preact";
 import { useState } from "preact/hooks";
 import { navBar as e2eHooks } from "@bickley-wallace/e2e-hooks";
 import classNames from "classnames";

@@ -1,4 +1,4 @@
-import { PostManifest, PostMetaData } from "@bickley-wallace/compost";
+import type { PostManifest, PostMetaData } from "@bickley-wallace/compost";
 
 export type PostSlug = "memoising-selectors" | "module-spotting" | "the-rewrite";
 

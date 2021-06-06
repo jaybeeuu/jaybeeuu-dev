@@ -1,9 +1,11 @@
 
-import { h, JSX } from "preact";
+import type { JSX } from "preact";
+import { h } from "preact";
 import { useValue } from "@bickley-wallace/preact-recoilless";
 import classNames from "classnames";
 import { Icon } from "../icon";
-import { theme, Theme } from "../state";
+import type { Theme } from "../state";
+import { theme } from "../state";
 
 import css from "./theme-toggle.module.css";
 

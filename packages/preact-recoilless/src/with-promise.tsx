@@ -1,5 +1,7 @@
-import { h, VNode, ComponentType, FunctionComponent } from "preact";
-import { PromiseState, combinePromises } from "./promise-status";
+import type { VNode, ComponentType, FunctionComponent } from "preact";
+import { h } from "preact";
+import type { PromiseState} from "./promise-status";
+import { combinePromises } from "./promise-status";
 
 export type MaybePromises<ContentProps extends object> = {
   [Key in keyof ContentProps]: PromiseState<ContentProps[Key]> | ContentProps[Key];

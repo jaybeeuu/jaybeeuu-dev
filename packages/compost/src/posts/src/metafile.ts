@@ -1,7 +1,9 @@
 import { is, isObject } from "@bickley-wallace/utilities";
-import { PostMetaData } from "./types";
-import { FileInfo, readJsonFile } from "../../files";
-import { Result, repackError } from "../../results";
+import type { PostMetaData } from "./types";
+import type { FileInfo} from "../../files";
+import { readJsonFile } from "../../files";
+import type { Result} from "../../results";
+import { repackError } from "../../results";
 
 export type PostMetaFileData = Pick<PostMetaData, "abstract" | "title" | "publish">;
 

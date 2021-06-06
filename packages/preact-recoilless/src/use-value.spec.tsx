@@ -1,8 +1,10 @@
 /**
  * @jest-environment jsdom
  */
-import { ComponentType, h } from "preact";
-import { DerivedValue, Store } from "@bickley-wallace/recoilless";
+import type { ComponentType} from "preact";
+import { h } from "preact";
+import type { DerivedValue} from "@bickley-wallace/recoilless";
+import { Store } from "@bickley-wallace/recoilless";
 import { act, renderHook } from "@testing-library/preact-hooks";
 import { StoreProvider } from "./store-provider";
 import { useValue } from "./use-value";

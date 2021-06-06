@@ -1,7 +1,8 @@
 import { is, isObject, isRecord, or } from "@bickley-wallace/utilities";
-import { PostManifest, PostMetaData } from "./types";
+import type { PostManifest, PostMetaData } from "./types";
 import { readJsonFile } from "../../files";
-import { Result, repackError, success } from "../../results";
+import type { Result} from "../../results";
+import { repackError, success } from "../../results";
 
 const isPostMetaData = isObject<PostMetaData>({
   abstract: is("string"),

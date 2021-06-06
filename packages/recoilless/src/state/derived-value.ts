@@ -1,5 +1,6 @@
-import { Value } from "./value";
-import { Unsubscribe, ValueState } from "./value-state";
+import type { Value } from "./value";
+import type { Unsubscribe} from "./value-state";
+import { ValueState } from "./value-state";
 
 export interface DerivedValue<Val> {
   name: string;

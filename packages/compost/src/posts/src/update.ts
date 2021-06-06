@@ -6,17 +6,22 @@ import {
   writeTextFile,
   deleteDirectories
 } from "../../files";
-import { Result, success } from "../../results";
+import type { Result} from "../../results";
+import { success } from "../../results";
 import { compilePost } from "./compile";
-import { getMetaFileContent, GetMetaFileContentFailure } from "./metafile";
+import type { GetMetaFileContentFailure } from "./metafile";
+import { getMetaFileContent } from "./metafile";
+import type {
+  ValidateSlugFailureReason
+} from "./file-paths";
 import {
   getCompiledPostFileName,
   getPostMarkdownFilePath,
-  validateSlug,
-  ValidateSlugFailureReason
+  validateSlug
 } from "./file-paths";
-import { UpdateOptions, PostManifest } from "./types";
-import { getManifest, GetManifestFailure } from "./manifest";
+import type { UpdateOptions, PostManifest } from "./types";
+import type { GetManifestFailure } from "./manifest";
+import { getManifest } from "./manifest";
 
 export type UpdateFailureReason
  = ValidateSlugFailureReason

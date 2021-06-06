@@ -1,5 +1,6 @@
 
-import { h, createContext, ComponentChildren, JSX } from "preact";
+import type { ComponentChildren, JSX } from "preact";
+import { h, createContext } from "preact";
 import { useContext, useMemo } from "preact/hooks";
 import { Store } from "@bickley-wallace/recoilless";
 

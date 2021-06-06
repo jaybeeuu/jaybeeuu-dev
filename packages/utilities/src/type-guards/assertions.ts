@@ -1,7 +1,9 @@
-import {
-  is,
+import type {
   TypeString,
   TypeStringPrimitiveTypeMap
+} from "./base";
+import {
+  is
 } from "./base";
 
 const assertIs = <Type extends TypeString | "null">(

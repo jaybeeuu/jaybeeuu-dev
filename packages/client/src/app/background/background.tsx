@@ -1,4 +1,5 @@
-import { h, ComponentChildren, JSX, Fragment } from "preact";
+import type { ComponentChildren, JSX} from "preact";
+import { h, Fragment } from "preact";
 import { useAction, useValue } from "@bickley-wallace/preact-recoilless";
 import classNames from "classnames";
 import { backgroundImages, onMainContentScroll, theme } from "../state";
