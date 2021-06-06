@@ -1,0 +1,16 @@
+.component-root {
+  fill: var(--fill-icon);
+  width: 2.4rem;
+  height: 2.4rem;
+  transition: var(--transition-theme);
+  border: none;
+}
+
+.component-root:link, .component-root:visited, .component-root:hover, .component-root:active {
+  text-decoration: none;
+}
+
+.component-root img {
+  width: 2.4rem;
+  height: 2.4rem;
+}

@@ -6,6 +6,11 @@ import classNames from "classnames";
 import { Link } from "preact-router/match";
 import { Icon } from "../icon";
 import { ThemeToggle } from "../theme-toggle";
+import { ImageLink } from "../image-link";
+import linkedInLogo from "./in-blue-logo.png";
+
+import githubLight from "./github-light.png";
+import githubDark from "./github-dark.png";
 
 import css from "./nav-bar.module.css";
 
@@ -36,12 +41,27 @@ export const NavBar = ({ className }: NavBarProps): VNode<any> => {
         </Link>
         <Link
           activeClassName={css.active}
-          className={classNames(css.link, e2eHooks.postListLink)}
+          className={classNames(css.link, e2eHooks.postsListLink)}
           onClick={() => setIsOpen(false)}
           href={"/posts"}
         >
             Blog
         </Link>
+        <ImageLink
+          alt={"Linked In"}
+          href={"https://linkedin.com/in/jaybeeuu"}
+          imageSrc={linkedInLogo}
+          className={e2eHooks.linkedInLink}
+        />
+        <ImageLink
+          alt={"GitHub"}
+          href={"https://github.com/jaybeeuu"}
+          imageSrc={{
+            light: githubDark,
+            dark: githubLight
+          }}
+          className={e2eHooks.gitHubLink}
+        />
         <ThemeToggle className={e2eHooks.switch} />
       </div>
       <div
