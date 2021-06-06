@@ -28,11 +28,7 @@
   },
   "exports": {
     "./package.json": "./package.json",
-    ".": [
-      {
-        "import": "./lib/index.js"
-      }
-    ]
+    ".": "./lib/index.js"
   },
   "dependencies": {
     "chalk": "^4.1.1",
