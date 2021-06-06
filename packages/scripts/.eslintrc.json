@@ -1,7 +1,7 @@
 
 {
   "extends": [
-    "@bickley-wallace/eslint-config/base"
+    "@jaybeeuu/eslint-config/base"
   ],
   "env": {
     "node": true

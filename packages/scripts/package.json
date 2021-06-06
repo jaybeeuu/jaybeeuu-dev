@@ -1,7 +1,7 @@
 {
-  "name": "@bickley-wallace/scripts",
+  "name": "@jaybeeuu/scripts",
   "version": "0.0.0",
-  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jayseeare)",
+  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "private": true,
   "license": "UNLICENSED",
   "description": "CLI tooks used wihin this repo.",
@@ -21,7 +21,7 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "devDependencies": {
-    "@bickley-wallace/eslint-config": "workspace:*",
+    "@jaybeeuu/eslint-config": "workspace:*",
     "@types/node": "15.6.1",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "eslint": "^7.27.0",

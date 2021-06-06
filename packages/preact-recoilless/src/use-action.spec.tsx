@@ -3,9 +3,9 @@
  */
 import type { ComponentType} from "preact";
 import { h } from "preact";
-import type { Action, ActionContext, PrimitiveValue} from "@bickley-wallace/recoilless";
-import { Store } from "@bickley-wallace/recoilless";
-import { assertIsNotNullish } from "@bickley-wallace/utilities";
+import type { Action, ActionContext, PrimitiveValue} from "@jaybeeuu/recoilless";
+import { Store } from "@jaybeeuu/recoilless";
+import { assertIsNotNullish } from "@jaybeeuu/utilities";
 import { renderHook } from "@testing-library/preact-hooks";
 import { StoreProvider } from "./store-provider";
 import { useAction } from "./use-action";

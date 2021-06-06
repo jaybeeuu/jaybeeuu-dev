@@ -3,12 +3,12 @@
  */
 import type { ComponentType} from "preact";
 import { h } from "preact";
-import type { DerivedValue} from "@bickley-wallace/recoilless";
-import { Store } from "@bickley-wallace/recoilless";
+import type { DerivedValue} from "@jaybeeuu/recoilless";
+import { Store } from "@jaybeeuu/recoilless";
 import { act, renderHook } from "@testing-library/preact-hooks";
 import { StoreProvider } from "./store-provider";
 import { useValue } from "./use-value";
-import { echo } from "@bickley-wallace/utilities";
+import { echo } from "@jaybeeuu/utilities";
 import { setupMockTimers } from "../test/time";
 
 // eslint-disable-next-line react/display-name

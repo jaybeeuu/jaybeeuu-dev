@@ -1,4 +1,4 @@
-import { hasFunctionProperty } from "@bickley-wallace/utilities";
+import { hasFunctionProperty } from "@jaybeeuu/utilities";
 import type { PrimitiveValue } from "../state";
 import type { DerivedValue } from "./derived-value";
 import type { ValueState as ValueState } from "./value-state";

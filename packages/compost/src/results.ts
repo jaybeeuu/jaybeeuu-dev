@@ -1,4 +1,4 @@
-import { assertIsNotNullish } from "@bickley-wallace/utilities";
+import { assertIsNotNullish } from "@jaybeeuu/utilities";
 
 export interface Success<Value> {
   success: true;

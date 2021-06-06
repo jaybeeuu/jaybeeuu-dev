@@ -1,7 +1,7 @@
 {
-  "name": "@bickley-wallace/preact-recoilless",
+  "name": "@jaybeeuu/preact-recoilless",
   "version": "0.0.0",
-  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jayseeare)",
+  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
   "description": "Rool you own state management... of course.",
   "keywords": [
@@ -26,14 +26,14 @@
     "tslib": "^2.2.0"
   },
   "peerDependencies": {
-    "@bickley-wallace/recoilless": "workspace:*",
-    "@bickley-wallace/utilities": "workspace:*",
+    "@jaybeeuu/recoilless": "workspace:*",
+    "@jaybeeuu/utilities": "workspace:*",
     "preact": "^10.5.5"
   },
   "devDependencies": {
-    "@bickley-wallace/eslint-config": "workspace:*",
-    "@bickley-wallace/recoilless": "workspace:*",
-    "@bickley-wallace/utilities": "workspace:*",
+    "@jaybeeuu/eslint-config": "workspace:*",
+    "@jaybeeuu/recoilless": "workspace:*",
+    "@jaybeeuu/utilities": "workspace:*",
     "@testing-library/preact": "^2.0.1",
     "@testing-library/preact-hooks": "^1.1.0",
     "@types/jest": "^26.0.23",

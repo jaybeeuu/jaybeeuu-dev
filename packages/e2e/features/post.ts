@@ -1,5 +1,5 @@
 
-import { makeClassSelectors, post } from "@bickley-wallace/e2e-hooks";
+import { makeClassSelectors, post } from "@jaybeeuu/e2e-hooks";
 import type { PostSlug} from "../routes/posts";
 import { getPostsAlias, withPostMetaData } from "../routes/posts";
 

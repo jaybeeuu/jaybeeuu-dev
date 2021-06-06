@@ -1,6 +1,6 @@
 {
   "extends": [
-    "@bickley-wallace/eslint-config/base",
+    "@jaybeeuu/eslint-config/base",
     "plugin:react/recommended"
   ],
   "env": {

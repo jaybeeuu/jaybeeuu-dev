@@ -1,4 +1,4 @@
-import { asError, echo } from "@bickley-wallace/utilities";
+import { asError, echo } from "@jaybeeuu/utilities";
 import { advanceByTimeThenAwait } from "../test/async-helpers";
 import { setupMockTimers } from "../test/time";
 import type { PromiseState} from "./promise-status";

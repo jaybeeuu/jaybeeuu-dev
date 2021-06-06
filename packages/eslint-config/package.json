@@ -1,7 +1,7 @@
 {
-  "name": "@bickley-wallace/eslint-config",
+  "name": "@jaybeeuu/eslint-config",
   "version": "0.0.0",
-  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jayseeare)",
+  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "private": true,
   "license": "UNLICENSED",
   "description": "The shared eslint config for my application",

@@ -1,4 +1,4 @@
-import { asError, echo, multiPartition } from "@bickley-wallace/utilities";
+import { asError, echo, multiPartition } from "@jaybeeuu/utilities";
 
 export const PromiseStatusTuple = ["pending", "slow", "failed", "complete"] as const;
 export const PromiseStatuses = PromiseStatusTuple as readonly string[];

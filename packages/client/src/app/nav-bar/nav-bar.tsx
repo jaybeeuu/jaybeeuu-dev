@@ -1,7 +1,7 @@
 import type { VNode } from "preact";
 import { h } from "preact";
 import { useState } from "preact/hooks";
-import { navBar as e2eHooks } from "@bickley-wallace/e2e-hooks";
+import { navBar as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import classNames from "classnames";
 import { Link } from "preact-router/match";
 import { Icon } from "../icon";

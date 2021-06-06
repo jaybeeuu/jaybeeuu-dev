@@ -1,4 +1,4 @@
-import { joinUrlPath } from"@bickley-wallace/utilities";
+import { joinUrlPath } from"@jaybeeuu/utilities";
 import path from "path";
 import {
   recurseDirectory,

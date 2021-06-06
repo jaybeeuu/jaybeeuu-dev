@@ -9,10 +9,10 @@ import type {
   PrimitiveValue,
   Value,
   ValueState
-} from "@bickley-wallace/recoilless";
+} from "@jaybeeuu/recoilless";
 import {
   isPrimitiveValue
-} from "@bickley-wallace/recoilless";
+} from "@jaybeeuu/recoilless";
 import { useAsyncGenerator } from "./async-hooks";
 import type { PromiseState } from "./promise-status";
 import { monitorPromise } from "./promise-status";

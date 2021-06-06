@@ -1,4 +1,4 @@
-import { debounce, log } from "@bickley-wallace/utilities";
+import { debounce, log } from "@jaybeeuu/utilities";
 import chokidar from "chokidar";
 import { hideBin } from "yargs/helpers";
 import yargsFactory from "yargs";

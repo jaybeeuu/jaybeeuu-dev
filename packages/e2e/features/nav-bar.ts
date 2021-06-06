@@ -1,4 +1,4 @@
-import { makeClassSelectors, navBar } from "@bickley-wallace/e2e-hooks";
+import { makeClassSelectors, navBar } from "@jaybeeuu/e2e-hooks";
 
 const navBarSelectors = makeClassSelectors(navBar);
 

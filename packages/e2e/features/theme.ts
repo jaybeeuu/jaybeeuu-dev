@@ -1,4 +1,4 @@
-import { makeClassSelectors, theme } from "@bickley-wallace/e2e-hooks";
+import { makeClassSelectors, theme } from "@jaybeeuu/e2e-hooks";
 
 const themeSelectors = makeClassSelectors(theme);
 

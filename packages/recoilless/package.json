@@ -1,7 +1,7 @@
 {
-  "name": "@bickley-wallace/recoilless",
+  "name": "@jaybeeuu/recoilless",
   "version": "0.0.0",
-  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jayseeare)",
+  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
   "description": "Role your own state management... of course.",
   "keywords": [
@@ -23,11 +23,11 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "@bickley-wallace/utilities": "workspace:*",
+    "@jaybeeuu/utilities": "workspace:*",
     "tslib": "^2.2.0"
   },
   "devDependencies": {
-    "@bickley-wallace/eslint-config": "workspace:*",
+    "@jaybeeuu/eslint-config": "workspace:*",
     "@types/jest": "^26.0.23",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "eslint": "^7.27.0",
