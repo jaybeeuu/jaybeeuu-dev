@@ -1,7 +1,7 @@
 import { debounce, log } from "@bickley-wallace/utilities";
 import chokidar from "chokidar";
 import { hideBin } from "yargs/helpers";
-import yargsFactory from "yargs/yargs";
+import yargsFactory from "yargs";
 import { update } from "../posts/index.js";
 import type { UpdateOptions } from "../posts/src/types.js";
 import type { UpdateFailureReason } from "../posts/src/update.js";
