@@ -13,6 +13,10 @@
     "*.js",
     "index.js"
   ],
+  "exports": {
+    "./base": "./base.js",
+    "./jest": "./jest.js"
+  },
   "scripts": {
     "lint": "eslint --ext .js,.ts --format codeframe -c ./base.js ."
   },

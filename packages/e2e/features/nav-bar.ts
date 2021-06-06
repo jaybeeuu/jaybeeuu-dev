@@ -6,7 +6,8 @@ export const get = (): Cypress.Chainable<JQuery<HTMLElement>> => {
   return cy.get(navBarSelectors.block);
 };
 
-export const getPostListLink = (): Cypress.Chainable<JQuery<HTMLElement>> => cy.get(navBarSelectors.postListLink);
-export const getHomeLink = (): Cypress.Chainable<JQuery<HTMLElement>> => cy.get(navBarSelectors.homeLink);
-
+export const getGithubLink = (): Cypress.Chainable<JQuery<HTMLAnchorElement>> => cy.get(navBarSelectors.gitHubLink);
+export const getLinkedInLink = (): Cypress.Chainable<JQuery<HTMLAnchorElement>> => cy.get(navBarSelectors.linkedInLink);
+export const getHomeLink = (): Cypress.Chainable<JQuery<HTMLAnchorElement>> => cy.get(navBarSelectors.homeLink);
+export const getPostListLink = (): Cypress.Chainable<JQuery<HTMLAnchorElement>> => cy.get(navBarSelectors.postsListLink);
 export const getThemeSwitch = (): Cypress.Chainable<JQuery<HTMLElement>> => cy.get(navBarSelectors.switch);
