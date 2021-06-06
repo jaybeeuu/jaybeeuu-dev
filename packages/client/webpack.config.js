@@ -146,7 +146,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "node_modules/@bickley-wallace/posts/lib/*",
+          from: "node_modules/@jaybeeuu/posts/lib/*",
           to: "posts/[name][ext]"
         }
       ]

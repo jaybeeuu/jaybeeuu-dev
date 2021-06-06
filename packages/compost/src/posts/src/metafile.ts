@@ -1,4 +1,4 @@
-import { is, isObject } from "@bickley-wallace/utilities";
+import { is, isObject } from "@jaybeeuu/utilities";
 import type { PostMetaData } from "./types.js";
 import type { FileInfo} from "../../files/index.js";
 import { readJsonFile } from "../../files/index.js";

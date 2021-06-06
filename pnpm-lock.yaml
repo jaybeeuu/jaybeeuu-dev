@@ -12,14 +12,14 @@ importers:
       '@babel/plugin-transform-react-jsx': ^7.14.3
       '@babel/preset-env': ^7.14.2
       '@babel/preset-typescript': ^7.13.0
-      '@bickley-wallace/compost': workspace:*
-      '@bickley-wallace/e2e-hooks': workspace:*
-      '@bickley-wallace/eslint-config': workspace:*
-      '@bickley-wallace/posts': workspace:*
-      '@bickley-wallace/preact-recoilless': workspace:*
-      '@bickley-wallace/recoilless': workspace:*
-      '@bickley-wallace/scripts': workspace:*
-      '@bickley-wallace/utilities': workspace:*
+      '@jaybeeuu/compost': workspace:*
+      '@jaybeeuu/e2e-hooks': workspace:*
+      '@jaybeeuu/eslint-config': workspace:*
+      '@jaybeeuu/posts': workspace:*
+      '@jaybeeuu/preact-recoilless': workspace:*
+      '@jaybeeuu/recoilless': workspace:*
+      '@jaybeeuu/scripts': workspace:*
+      '@jaybeeuu/utilities': workspace:*
       '@prefresh/babel-plugin': ^0.4.1
       '@prefresh/core': ^1.3.2
       '@prefresh/webpack': ^3.3.0
@@ -67,14 +67,14 @@ importers:
       '@babel/plugin-transform-react-jsx': 7.14.3_@babel+core@7.14.3
       '@babel/preset-env': 7.14.2_@babel+core@7.14.3
       '@babel/preset-typescript': 7.13.0_@babel+core@7.14.3
-      '@bickley-wallace/compost': link:../compost
-      '@bickley-wallace/e2e-hooks': link:../e2e-hooks
-      '@bickley-wallace/eslint-config': link:../eslint-config
-      '@bickley-wallace/posts': link:../posts
-      '@bickley-wallace/preact-recoilless': link:../preact-recoilless
-      '@bickley-wallace/recoilless': link:../recoilless
-      '@bickley-wallace/scripts': link:../scripts
-      '@bickley-wallace/utilities': link:../utilities
+      '@jaybeeuu/compost': link:../compost
+      '@jaybeeuu/e2e-hooks': link:../e2e-hooks
+      '@jaybeeuu/eslint-config': link:../eslint-config
+      '@jaybeeuu/posts': link:../posts
+      '@jaybeeuu/preact-recoilless': link:../preact-recoilless
+      '@jaybeeuu/recoilless': link:../recoilless
+      '@jaybeeuu/scripts': link:../scripts
+      '@jaybeeuu/utilities': link:../utilities
       '@prefresh/babel-plugin': 0.4.1
       '@prefresh/webpack': 3.3.0_d07e9bc15d6e368a53e54415c830b07a
       '@types/react': 17.0.8
@@ -114,8 +114,8 @@ importers:
 
   packages/compost:
     specifiers:
-      '@bickley-wallace/eslint-config': workspace:*
-      '@bickley-wallace/utilities': workspace:*
+      '@jaybeeuu/eslint-config': workspace:*
+      '@jaybeeuu/utilities': workspace:*
       '@types/jest': ^26.0.23
       '@types/marked': ^2.0.3
       '@types/node': 15.6.1
@@ -148,8 +148,8 @@ importers:
       tslib: 2.2.0
       yargs: 17.0.1
     devDependencies:
-      '@bickley-wallace/eslint-config': link:../eslint-config
-      '@bickley-wallace/utilities': link:../utilities
+      '@jaybeeuu/eslint-config': link:../eslint-config
+      '@jaybeeuu/utilities': link:../utilities
       '@types/jest': 26.0.23
       '@types/marked': 2.0.3
       '@types/node': 15.6.1
@@ -169,9 +169,9 @@ importers:
     specifiers:
       '@babel/core': ^7.14.3
       '@babel/preset-env': ^7.14.2
-      '@bickley-wallace/compost': workspace:*
-      '@bickley-wallace/e2e-hooks': workspace:*
-      '@bickley-wallace/eslint-config': workspace:*
+      '@jaybeeuu/compost': workspace:*
+      '@jaybeeuu/e2e-hooks': workspace:*
+      '@jaybeeuu/eslint-config': workspace:*
       '@types/node': 15.6.1
       '@typescript-eslint/eslint-plugin': ^4.25.0
       core-js: 3.13.0
@@ -182,9 +182,9 @@ importers:
     dependencies:
       '@babel/core': 7.14.3
       '@babel/preset-env': 7.14.2_@babel+core@7.14.3
-      '@bickley-wallace/compost': link:../compost
-      '@bickley-wallace/e2e-hooks': link:../e2e-hooks
-      '@bickley-wallace/eslint-config': link:../eslint-config
+      '@jaybeeuu/compost': link:../compost
+      '@jaybeeuu/e2e-hooks': link:../e2e-hooks
+      '@jaybeeuu/eslint-config': link:../eslint-config
       '@types/node': 15.6.1
       '@typescript-eslint/eslint-plugin': 4.25.0_eslint@7.27.0+typescript@4.3.2
       core-js: 3.13.0
@@ -195,12 +195,12 @@ importers:
 
   packages/e2e-hooks:
     specifiers:
-      '@bickley-wallace/eslint-config': workspace:*
+      '@jaybeeuu/eslint-config': workspace:*
       '@typescript-eslint/eslint-plugin': ^4.25.0
       eslint: ^7.27.0
       typescript: ^4.3.2
     devDependencies:
-      '@bickley-wallace/eslint-config': link:../eslint-config
+      '@jaybeeuu/eslint-config': link:../eslint-config
       '@typescript-eslint/eslint-plugin': 4.25.0_eslint@7.27.0+typescript@4.3.2
       eslint: 7.27.0
       typescript: 4.3.2
@@ -215,19 +215,19 @@ importers:
 
   packages/posts:
     specifiers:
-      '@bickley-wallace/compost': workspace:*
+      '@jaybeeuu/compost': workspace:*
       markdown-spellcheck: ^1.3.1
       markdownlint-cli2: ^0.1.3
     devDependencies:
-      '@bickley-wallace/compost': link:../compost
+      '@jaybeeuu/compost': link:../compost
       markdown-spellcheck: 1.3.1
       markdownlint-cli2: 0.1.3
 
   packages/preact-recoilless:
     specifiers:
-      '@bickley-wallace/eslint-config': workspace:*
-      '@bickley-wallace/recoilless': workspace:*
-      '@bickley-wallace/utilities': workspace:*
+      '@jaybeeuu/eslint-config': workspace:*
+      '@jaybeeuu/recoilless': workspace:*
+      '@jaybeeuu/utilities': workspace:*
       '@testing-library/preact': ^2.0.1
       '@testing-library/preact-hooks': ^1.1.0
       '@types/jest': ^26.0.23
@@ -242,9 +242,9 @@ importers:
     dependencies:
       tslib: 2.2.0
     devDependencies:
-      '@bickley-wallace/eslint-config': link:../eslint-config
-      '@bickley-wallace/recoilless': link:../recoilless
-      '@bickley-wallace/utilities': link:../utilities
+      '@jaybeeuu/eslint-config': link:../eslint-config
+      '@jaybeeuu/recoilless': link:../recoilless
+      '@jaybeeuu/utilities': link:../utilities
       '@testing-library/preact': 2.0.1_preact@10.5.13
       '@testing-library/preact-hooks': 1.1.0_8a3b8354086a0a31d950b2aa8b26d524
       '@types/jest': 26.0.23
@@ -258,8 +258,8 @@ importers:
 
   packages/recoilless:
     specifiers:
-      '@bickley-wallace/eslint-config': workspace:*
-      '@bickley-wallace/utilities': workspace:*
+      '@jaybeeuu/eslint-config': workspace:*
+      '@jaybeeuu/utilities': workspace:*
       '@types/jest': ^26.0.23
       '@typescript-eslint/eslint-plugin': ^4.25.0
       eslint: ^7.27.0
@@ -270,10 +270,10 @@ importers:
       tslib: ^2.2.0
       typescript: ^4.3.2
     dependencies:
-      '@bickley-wallace/utilities': link:../utilities
+      '@jaybeeuu/utilities': link:../utilities
       tslib: 2.2.0
     devDependencies:
-      '@bickley-wallace/eslint-config': link:../eslint-config
+      '@jaybeeuu/eslint-config': link:../eslint-config
       '@types/jest': 26.0.23
       '@typescript-eslint/eslint-plugin': 4.25.0_eslint@7.27.0+typescript@4.3.2
       eslint: 7.27.0
@@ -285,7 +285,7 @@ importers:
 
   packages/scripts:
     specifiers:
-      '@bickley-wallace/eslint-config': workspace:*
+      '@jaybeeuu/eslint-config': workspace:*
       '@types/node': 15.6.1
       '@typescript-eslint/eslint-plugin': ^4.25.0
       devcert: ^1.1.3
@@ -296,7 +296,7 @@ importers:
       devcert: 1.1.3
       getopts: 2.3.0
     devDependencies:
-      '@bickley-wallace/eslint-config': link:../eslint-config
+      '@jaybeeuu/eslint-config': link:../eslint-config
       '@types/node': 15.6.1
       '@typescript-eslint/eslint-plugin': 4.25.0_eslint@7.27.0+typescript@4.3.2
       eslint: 7.27.0
@@ -304,7 +304,7 @@ importers:
 
   packages/utilities:
     specifiers:
-      '@bickley-wallace/eslint-config': workspace:*
+      '@jaybeeuu/eslint-config': workspace:*
       '@types/jest': ^26.0.23
       '@typescript-eslint/eslint-plugin': ^4.25.0
       eslint: ^7.27.0
@@ -316,7 +316,7 @@ importers:
     dependencies:
       tslib: 2.2.0
     devDependencies:
-      '@bickley-wallace/eslint-config': link:../eslint-config
+      '@jaybeeuu/eslint-config': link:../eslint-config
       '@types/jest': 26.0.23
       '@typescript-eslint/eslint-plugin': 4.25.0_eslint@7.27.0+typescript@4.3.2
       eslint: 7.27.0

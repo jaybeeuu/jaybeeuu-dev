@@ -1,4 +1,4 @@
-import { is, isObject, isRecord, or } from "@bickley-wallace/utilities";
+import { is, isObject, isRecord, or } from "@jaybeeuu/utilities";
 import type { PostManifest, PostMetaData } from "./types.js";
 import { readJsonFile } from "../../files/index.js";
 import type { Result} from "../../results.js";

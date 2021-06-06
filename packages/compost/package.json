@@ -1,7 +1,7 @@
 {
-  "name": "@bickley-wallace/compost",
+  "name": "@jaybeeuu/compost",
   "version": "0.0.0",
-  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jayseeare)",
+  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
   "description": "A CLI took for compiling the posts in my blog.",
   "keywords": [
@@ -41,8 +41,8 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
-    "@bickley-wallace/eslint-config": "workspace:*",
-    "@bickley-wallace/utilities": "workspace:*",
+    "@jaybeeuu/eslint-config": "workspace:*",
+    "@jaybeeuu/utilities": "workspace:*",
     "@types/jest": "^26.0.23",
     "@types/marked": "^2.0.3",
     "@types/node": "15.6.1",

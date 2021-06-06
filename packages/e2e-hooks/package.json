@@ -1,7 +1,7 @@
 {
-  "name": "@bickley-wallace/e2e-hooks",
+  "name": "@jaybeeuu/e2e-hooks",
   "version": "0.0.0",
-  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jayseeare)",
+  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
   "description": "The E2E hooks used to test my application",
   "keywords": [
@@ -21,7 +21,7 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "devDependencies": {
-    "@bickley-wallace/eslint-config": "workspace:*",
+    "@jaybeeuu/eslint-config": "workspace:*",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "eslint": "^7.27.0",
     "typescript": "^4.3.2"

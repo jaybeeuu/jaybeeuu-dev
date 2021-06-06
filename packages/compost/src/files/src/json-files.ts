@@ -1,4 +1,4 @@
-import { getErrorMessage } from "@bickley-wallace/utilities";
+import { getErrorMessage } from "@jaybeeuu/utilities";
 import type { Result} from "../../results.js";
 import { failure, success } from "../../results.js";
 import { canAccess } from "./can-access.js";

@@ -1,5 +1,5 @@
 
-import { makeClassSelectors, main } from "@bickley-wallace/e2e-hooks";
+import { makeClassSelectors, main } from "@jaybeeuu/e2e-hooks";
 
 const mainSelectors = makeClassSelectors(main);
 

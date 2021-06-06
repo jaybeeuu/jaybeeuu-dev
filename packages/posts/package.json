@@ -1,7 +1,7 @@
 {
-  "name": "@bickley-wallace/posts",
+  "name": "@jaybeeuu/posts",
   "version": "0.0.0",
-  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jayseeare)",
+  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
   "description": "My blog",
   "keywords": [
@@ -20,7 +20,7 @@
     "build": "compost --href-root posts"
   },
   "devDependencies": {
-    "@bickley-wallace/compost": "workspace:*",
+    "@jaybeeuu/compost": "workspace:*",
     "markdown-spellcheck": "^1.3.1",
     "markdownlint-cli2": "^0.1.3"
   }

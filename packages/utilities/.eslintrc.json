@@ -1,7 +1,7 @@
 {
   "extends": [
-    "@bickley-wallace/eslint-config/base",
-    "@bickley-wallace/eslint-config/jest"
+    "@jaybeeuu/eslint-config/base",
+    "@jaybeeuu/eslint-config/jest"
   ],
     "env": {
     "browser": true

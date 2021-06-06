@@ -1,5 +1,5 @@
-import type { FailedProps } from "@bickley-wallace/preact-recoilless";
-import { log } from "@bickley-wallace/utilities";
+import type { FailedProps } from "@jaybeeuu/preact-recoilless";
+import { log } from "@jaybeeuu/utilities";
 import type { VNode } from "preact";
 import { h } from "preact";
 import { useEffect } from "preact/hooks";

@@ -1,5 +1,5 @@
 {
-  "extends": ["@bickley-wallace/eslint-config/base"],
+  "extends": ["@jaybeeuu/eslint-config/base"],
     "env": {
     "browser": true
   }

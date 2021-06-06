@@ -1,4 +1,4 @@
-import { useValue } from "@bickley-wallace/preact-recoilless";
+import { useValue } from "@jaybeeuu/preact-recoilless";
 import { useEffect } from "preact/hooks";
 import type { BackgroundImages } from "./state";
 import { backgroundImages } from "./state";

@@ -1,11 +1,11 @@
-import type { PostManifest, PostMetaData } from "@bickley-wallace/compost";
+import type { PostManifest, PostMetaData } from "@jaybeeuu/compost";
 import { fetchJson, fetchText } from "../utils/request";
 import type {
   DerivationContext,
   DerivedValue,
   PrimitiveValue,
   ActionContext
-} from "@bickley-wallace/recoilless";
+} from "@jaybeeuu/recoilless";
 
 export const postsManifest: DerivedValue<Promise<PostManifest>> = {
   name: "postManifest",
