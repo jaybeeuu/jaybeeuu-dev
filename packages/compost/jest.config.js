@@ -1,4 +1,4 @@
-module.exports = {
+const config = {
   clearMocks: true,
   testEnvironment: "node",
   collectCoverageFrom : [
@@ -16,5 +16,10 @@ module.exports = {
   watchPathIgnorePatterns: [
     "<rootDir>/fs",
     "<rootDir>/lib"
-  ]
+  ],
+  moduleNameMapper: {
+    "(\\.\\.?/.*)\\.js$": "$1"
+  },
 };
+
+export default config;

@@ -5,23 +5,23 @@ import {
   writeJsonFile,
   writeTextFile,
   deleteDirectories
-} from "../../files";
-import type { Result} from "../../results";
-import { success } from "../../results";
-import { compilePost } from "./compile";
-import type { GetMetaFileContentFailure } from "./metafile";
-import { getMetaFileContent } from "./metafile";
+} from "../../files/index.js";
+import type { Result} from "../../results.js";
+import { success } from "../../results.js";
+import { compilePost } from "./compile.js";
+import type { GetMetaFileContentFailure } from "./metafile.js";
+import { getMetaFileContent } from "./metafile.js";
 import type {
   ValidateSlugFailureReason
-} from "./file-paths";
+} from "./file-paths.js";
 import {
   getCompiledPostFileName,
   getPostMarkdownFilePath,
   validateSlug
-} from "./file-paths";
-import type { UpdateOptions, PostManifest } from "./types";
-import type { GetManifestFailure } from "./manifest";
-import { getManifest } from "./manifest";
+} from "./file-paths.js";
+import type { UpdateOptions, PostManifest } from "./types.js";
+import type { GetManifestFailure } from "./manifest.js";
+import { getManifest } from "./manifest.js";
 
 export type UpdateFailureReason
  = ValidateSlugFailureReason

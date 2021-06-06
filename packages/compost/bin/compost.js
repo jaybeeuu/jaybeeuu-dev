@@ -1,1 +1,1 @@
-require("../lib/bin/compost.js");
+import "../lib/bin/compost.js";
