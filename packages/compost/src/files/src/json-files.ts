@@ -15,9 +15,10 @@ export const readJsonFile = async <T>(
 
   if (!haveAccess) {
     return defaultValue === undefined
-      ? failure("no access", "Could not access file.")
+      ? failure("no access", "Could not access file. Either the file is missing or permission was denied.")
       : success(defaultValue);
   }
+
   const fileContent = await readTextFile(filePath);
   let parsedFileContent: unknown;
 

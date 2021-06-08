@@ -52,6 +52,7 @@ interface CompostCommandArgs {
   "additional-watch-paths"?: string[];
   "href-root": string;
   "manifest-file-name": string;
+  "old-manifest-locator"?: string;
   "output-dir": string;
   "source-dir": string;
   "watch": boolean;
@@ -62,6 +63,7 @@ const mapArgsToOptions = (args: CompostCommandArgs): UpdateOptions => ({
   additionalWatchPaths: args["additional-watch-paths"] ?? [],
   hrefRoot: args["href-root"],
   manifestFileName: args["manifest-file-name"],
+  oldManifestLocator: args["old-manifest-locator"],
   outputDir: args["output-dir"],
   sourceDir: args["source-dir"],
   watch: args["watch"],
@@ -96,6 +98,11 @@ yargs.command(
       description: "The nam of the output JSON manifest file.",
       type: "string",
       default: "manifest.json"
+    },
+    "old-manifest-locator": {
+      alias: ["oml"],
+      description: "The path or URL of the old manifest. If none is given then the output-dir and manifest-file-name options will be used to infer the location. If this option is given and no manifest is found compost will fail.",
+      type: "string"
     },
     "output-dir": {
       alias: ["o"],

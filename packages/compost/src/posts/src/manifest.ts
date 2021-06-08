@@ -1,6 +1,6 @@
 import { is, isObject, isRecord, or } from "@jaybeeuu/utilities";
 import type { PostManifest, PostMetaData } from "./types.js";
-import { readJsonFile } from "../../files/index.js";
+import { fetchJsonFile, readJsonFile } from "../../files/index.js";
 import type { Result} from "../../results.js";
 import { repackError, success } from "../../results.js";
 
@@ -20,20 +20,27 @@ const isManifestFile = isRecord<PostManifest>(isPostMetaData);
 export type GetManifestFailure = "read manifest failed";
 
 export const getManifest = async (
-  manifestFilePath: string
+  manifestOutputFileName: string,
+  manifestLocator?: string
 ): Promise<Result<PostManifest, GetManifestFailure>> => {
-  const readResult = await readJsonFile(manifestFilePath, isManifestFile);
+  const defaultedManifestLocator = manifestLocator ?? manifestOutputFileName;
+
+  const readResult = (/https?/).test(defaultedManifestLocator)
+    ? await fetchJsonFile(defaultedManifestLocator, isManifestFile)
+    : await readJsonFile(defaultedManifestLocator, isManifestFile);
+
   if (readResult.success) {
     return readResult;
   }
 
-  if (readResult.reason === "no access") {
+  const canFailToRead = manifestLocator === undefined;
+  if (canFailToRead && readResult.reason === "no access") {
     return success({});
   }
 
   return repackError(
     readResult,
     "read manifest failed",
-    `Reading manifest file ${manifestFilePath} failed.`
+    `Reading manifest file ${defaultedManifestLocator} failed.`
   );
 };

@@ -20,9 +20,10 @@ export interface PostRedirectsMap {
 export interface UpdateOptions {
   additionalWatchPaths: string[];
   hrefRoot: string;
+  includeUnpublished: boolean;
   manifestFileName: string;
+  oldManifestLocator?: string;
   outputDir: string;
   sourceDir: string;
   watch: boolean;
-  includeUnpublished: boolean;
 }

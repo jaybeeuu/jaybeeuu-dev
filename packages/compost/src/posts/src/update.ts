@@ -31,7 +31,10 @@ export type UpdateFailureReason
 export const update = async (
   options: UpdateOptions
 ): Promise<Result<PostManifest, UpdateFailureReason>> => {
-  const oldManifestReadResult = await getManifest(path.join(options.outputDir, options.manifestFileName));
+  const oldManifestReadResult = await getManifest(
+    path.join(options.outputDir, options.manifestFileName),
+    options.oldManifestLocator
+  );
   if (!oldManifestReadResult.success) {
     return oldManifestReadResult;
   }
