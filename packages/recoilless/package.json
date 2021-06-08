@@ -9,11 +9,10 @@
     "Josh",
     "State Management"
   ],
-  "main": "lib/index.js",
+  "main": "./lib/index.js",
   "files": [
-    "lib"
+    "./lib"
   ],
-  "type": "module",
   "sideEffects": false,
   "exports": {
     ".": "./lib/index.js"
