@@ -26,7 +26,7 @@ export const fetchJsonFile = async <T>(
           `ErrorNo: ${error.errno ?? "(no errno)"}`,
           `Type: ${error.type ?? "(no type)"}`,
           `Message: ${error.message ?? "(no message)"}`,
-          `Stack:\n${error.stack?? "(no stack)"}`
+          `Stack:\n${error.stack ?? "(no stack)"}`
         ].join("\n")
       );
     }
