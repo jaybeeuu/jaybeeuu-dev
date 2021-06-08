@@ -7,6 +7,7 @@ import { failure, success } from "../../results";
 type FetchJsonFileFailureReason
   = "error"
   | "fetch failed"
+  | "parse error"
   | "validation failed";
 
 export const fetchJsonFile = async <T>(
