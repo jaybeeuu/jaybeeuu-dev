@@ -1,8 +1,8 @@
 
 import type { Response} from "node-fetch";
 import fetch, { FetchError } from "node-fetch";
-import type { Result} from "../../results";
-import { failure, success } from "../../results";
+import type { Result} from "../../results.js";
+import { failure, success } from "../../results.js";
 
 type FetchJsonFileFailureReason
   = "error"

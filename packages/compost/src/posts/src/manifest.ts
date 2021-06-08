@@ -1,7 +1,7 @@
 import { is, isObject, isRecord, or } from "@jaybeeuu/utilities";
 import type { PostManifest, PostMetaData } from "./types.js";
 import { fetchJsonFile, readJsonFile } from "../../files/index.js";
-import type { Result} from "../../results.js";
+import type { Result } from "../../results.js";
 import { repackError, success } from "../../results.js";
 
 const isPostMetaData = isObject<PostMetaData>({
