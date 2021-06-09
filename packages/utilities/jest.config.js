@@ -12,9 +12,5 @@ module.exports = {
   testPathIgnorePatterns: [
     "/node_modules/",
     "/lib/"
-  ],
-  watchPathIgnorePatterns: [
-    "<rootDir>/fs",
-    "<rootDir>/lib"
   ]
 };

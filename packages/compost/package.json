@@ -24,7 +24,7 @@
     "lint": "eslint --ext .js,.ts --format codeframe .",
     "type-check": "tsc --noEmit --pretty",
     "test": "jest",
-    "test:watch": "jest --watch  --no-cache --runInBand"
+    "test:watch": "jest --watch"
   },
   "exports": {
     "./package.json": "./package.json",
