@@ -25,7 +25,7 @@ export const getManifest = async (
 ): Promise<Result<PostManifest, GetManifestFailure>> => {
   const defaultedManifestLocator = manifestLocator ?? manifestOutputFileName;
 
-  const readResult = (/https?/).test(defaultedManifestLocator)
+  const readResult = (/^https?/).test(defaultedManifestLocator)
     ? await fetchJsonFile(defaultedManifestLocator, isManifestFile)
     : await readJsonFile(defaultedManifestLocator, isManifestFile);
 

@@ -37,7 +37,6 @@
     "highlight.js": "^10.7.2",
     "marked": "^2.0.6",
     "node-fetch": "^2.6.1",
-    "rmfr": "^2.0.0",
     "sanitize-html": "^2.4.0",
     "tslib": "^2.2.0",
     "yargs": "^17.0.1"
@@ -48,7 +47,6 @@
     "@types/jest": "^26.0.23",
     "@types/marked": "^2.0.3",
     "@types/node": "15.6.1",
-    "@types/rmfr": "^2.0.0",
     "@types/sanitize-html": "^2.3.1",
     "@types/yargs": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.25.0",

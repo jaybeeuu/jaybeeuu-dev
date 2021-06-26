@@ -5,9 +5,17 @@ import { update } from "../../src/posts/index.js";
 import type { Result } from "../../src/results.js";
 import type { UpdateFailureReason } from "packages/compost/src/posts/src/update.js";
 
+jest.mock("fs");
+
 export const jestWorkerId = +(process.env.JEST_WORKER_ID || 0);
-export const sourceDir = path.resolve(`./fs/test/${jestWorkerId.toString()}/src`);
-export const outputDir = path.resolve(`./fs/test/${jestWorkerId.toString()}/out`);
+const packageDir = path.resolve(__dirname, "../..");
+
+const resolveToPackage = (...pathSegments: string[]): string => {
+  return path.resolve(packageDir, ...pathSegments);
+};
+
+export const sourceDir = resolveToPackage(`.fs/test/${jestWorkerId.toString()}/src`);
+export const outputDir = resolveToPackage(`.fs/test/${jestWorkerId.toString()}/out`);
 export const manifestFileName = "mainfest.post.json";
 
 const getOutputFile = async (filePath: string): Promise<string> => {

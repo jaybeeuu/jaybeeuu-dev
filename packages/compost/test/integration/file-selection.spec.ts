@@ -1,6 +1,16 @@
+import {
+  compilePosts,
+  getPost,
+  getPostManifest,
+  outputDir,
+  sourceDir
+} from "./helpers";
+
 import { advanceTo } from "jest-date-mock";
-import { writeTextFiles, deleteDirectories } from "../../src/files/index";
-import { compilePosts, getPost, getPostManifest, outputDir, sourceDir } from "./helpers";
+import {
+  deleteDirectories,
+  writeTextFiles
+} from "../../src/files/index";
 
 describe("file-selection", () => {
   it("makes the post available in the manifest on /post, after a refresh from a blank slate.", async () => {

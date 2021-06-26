@@ -1,6 +1,13 @@
+import {
+  compilePosts,
+  getPost,
+  getPostManifest,
+  outputDir,
+  sourceDir
+} from "./helpers";
+
 import { deleteDirectories, writeTextFiles } from "../../src/files";
 import type { UpdateOptions } from "../../src/posts/src/types";
-import { compilePosts, getPost, getPostManifest, outputDir, sourceDir } from "./helpers";
 
 describe("compile", () => {
   const setupPostFiles = async (slug: string, contentLines: string[]): Promise<void> => {
@@ -28,6 +35,7 @@ describe("compile", () => {
     await setupPostFiles(slug, contentLines);
     await compilePosts(updateOptions);
     const manifest = await getPostManifest();
+
     return await getPost(manifest[slug].href);
   };
 

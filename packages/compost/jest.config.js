@@ -14,7 +14,7 @@ const config = {
     "/lib/"
   ],
   watchPathIgnorePatterns: [
-    "<rootDir>/fs/",
+    "<rootDir>/.fs/",
     "<rootDir>/lib/"
   ],
   moduleNameMapper: {
