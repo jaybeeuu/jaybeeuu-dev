@@ -4,7 +4,7 @@ importers:
 
   .:
     specifiers:
-      jest: 27.0.1
+      jest: ^27.0.1
     devDependencies:
       jest: 27.0.1
 
@@ -121,7 +121,6 @@ importers:
       '@jaybeeuu/utilities': workspace:*
       '@types/jest': ^26.0.23
       '@types/marked': ^2.0.3
-      '@types/mock-fs': ^4.13.0
       '@types/node': 15.6.1
       '@types/node-fetch': ^2.5.10
       '@types/sanitize-html': ^2.3.1
@@ -136,7 +135,6 @@ importers:
       jest-date-mock: ^1.0.8
       jest-matcher-utils: ^27.0.1
       marked: ^2.0.6
-      mock-fs: ^5.0.0
       node-fetch: ^2.6.1
       sanitize-html: ^2.4.0
       ts-jest: ^27.0.1
@@ -158,7 +156,6 @@ importers:
       '@jaybeeuu/utilities': link:../utilities
       '@types/jest': 26.0.23
       '@types/marked': 2.0.3
-      '@types/mock-fs': 4.13.0
       '@types/node': 15.6.1
       '@types/sanitize-html': 2.3.1
       '@types/yargs': 17.0.0
@@ -168,7 +165,6 @@ importers:
       jest: 27.0.1
       jest-date-mock: 1.0.8
       jest-matcher-utils: 27.0.1
-      mock-fs: 5.0.0
       ts-jest: 27.0.1_jest@27.0.1+typescript@4.3.2
       typescript: 4.3.2
 
@@ -2003,12 +1999,6 @@ packages:
     dependencies:
       '@types/node': 15.6.1
     dev: false
-
-  /@types/mock-fs/4.13.0:
-    resolution: {integrity: sha512-FUqxhURwqFtFBCuUj3uQMp7rPSQs//b3O9XecAVxhqS9y4/W8SIJEZFq2mmpnFVZBXwR/2OyPLE97CpyYiB8Mw==}
-    dependencies:
-      '@types/node': 15.6.1
-    dev: true
 
   /@types/node-fetch/2.5.10:
     resolution: {integrity: sha512-IpkX0AasN44hgEad0gEF/V6EgR5n69VEqPEgnmoM8GsIGro3PowbWs4tR6IhxUTyPLpOn+fiGG6nrQhcmoCuIQ==}
@@ -7936,10 +7926,6 @@ packages:
     resolution: {integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==}
     engines: {node: '>=10'}
     hasBin: true
-    dev: true
-
-  /mock-fs/5.0.0:
-    resolution: {integrity: sha512-A5mm/SpSDwwc/klSaEvvKMGQQtiGiQy8UcDAd/vpVO1fV+4zaHjt39yKgCSErFzv2zYxZIUx9Ud/7ybeHBf8Fg==}
     dev: true
 
   /mozjpeg/7.0.0:
