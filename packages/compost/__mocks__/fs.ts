@@ -169,12 +169,14 @@ const makeFile = (
     update(newContent: string) {
       this.content = newContent;
       this.stats = new Stats({
+        type: "file",
         ...this.stats,
         mtime: new Date()
       });
     },
     logAccess() {
       this.stats = new Stats({
+        type: "file",
         ...this.stats,
         atime: new Date()
       });
