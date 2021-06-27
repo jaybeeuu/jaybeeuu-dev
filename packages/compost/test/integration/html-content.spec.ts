@@ -1,7 +1,6 @@
 import {
   compilePosts,
   getPost,
-  getPostManifest,
   outputDir,
   sourceDir
 } from "./helpers";
@@ -34,10 +33,19 @@ describe("compile", () => {
     await deleteDirectories(sourceDir, outputDir);
     await setupPostFiles(slug, contentLines);
     await compilePosts(updateOptions);
-    const manifest = await getPostManifest();
 
-    return await getPost(manifest[slug].href);
+    return await getPost(slug);
   };
+
+  it("compiles a post tto include some basic content.", async () => {
+    const postContent = "This is the content";
+    const post = await getCompiledPostWithContent([
+      "# This is the first post",
+      "",
+      postContent
+    ]);
+    expect(post).toContain(postContent);
+  });
 
   it("compiles a code block.", async () => {
     const codeLine = "console.log(\"Here's a message\")";

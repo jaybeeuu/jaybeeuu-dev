@@ -29,8 +29,9 @@ export const getPostManifest = async (): Promise<PostManifest> => {
   return JSON.parse(fileContent) as PostManifest;
 };
 
-export const getPost = (href: string): Promise<string> => {
-  return getOutputFile(`.${href}`);
+export const getPost = async (slug: string): Promise<string> => {
+  const manifest = await getPostManifest();
+  return await getOutputFile(`.${manifest[slug]?.href}`);
 };
 
 export const compilePosts = async (options?: Partial<UpdateOptions>): Promise<Result<PostManifest, UpdateFailureReason>> => {

@@ -51,34 +51,6 @@ describe("file-selection", () => {
     });
   });
 
-  it("makes the posts available, after a refresh from a blank slate.", async () => {
-    await deleteDirectories(sourceDir, outputDir);
-
-    const slug = "first-post";
-    const postContent = "It has some content";
-    await writeTextFiles(
-      sourceDir,
-      [{
-        path: `./${slug}.md`,
-        content: `# This is the first post\n\n${postContent}.`
-      }, {
-        path: "./first-post.post.json",
-        content: JSON.stringify({
-          title: "This is the first post",
-          abstract: "This is the very first post.",
-          publish: true
-        }, null, 2)
-      }]
-    );
-
-    await compilePosts();
-
-    const manifest = await getPostManifest();
-    const post = await getPost(manifest[slug].href);
-
-    expect(post).toContain(postContent);
-  });
-
   it("ignores unpublished articles.", async () => {
     await deleteDirectories(sourceDir, outputDir);
 
@@ -173,9 +145,7 @@ describe("file-selection", () => {
 
     await compilePosts();
 
-    const manifest = await getPostManifest();
-
-    const post = await getPost(manifest[slug].href);
+    const post = await getPost(slug);
 
     expect(post).toContain(postContent);
   });
