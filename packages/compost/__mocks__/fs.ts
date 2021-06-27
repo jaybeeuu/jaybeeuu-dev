@@ -47,13 +47,6 @@ interface StatsProps {
   birthtime: Date;
 }
 
-interface File {
-  type: "file";
-  path: string;
-  content: string;
-  stats: fsModule.Stats;
-}
-
 class Stats implements fsModule.Stats {
   private readonly props: StatsProps;
   constructor(props: StatsProps) {
@@ -137,6 +130,15 @@ class Stats implements fsModule.Stats {
   }
 }
 
+interface File {
+  type: "file";
+  path: string;
+  content: string;
+  stats: fsModule.Stats;
+  update: (newContent: string) => void;
+  logAccess: () => void;
+}
+
 const makeFile = (
   path: string,
   content: string,
@@ -163,7 +165,20 @@ const makeFile = (
       ctime: new Date(),
       birthtime: new Date(),
       ...stats
-    })
+    }),
+    update(newContent: string) {
+      this.content = newContent;
+      this.stats = new Stats({
+        ...this.stats,
+        mtime: new Date()
+      });
+    },
+    logAccess() {
+      this.stats = new Stats({
+        ...this.stats,
+        atime: new Date()
+      });
+    }
   };
 };
 
@@ -589,6 +604,26 @@ mocked<Readdir>(
   }
 );
 
+const assertIsSupportedReadFileArguments: (
+  args: Parameters<typeof fs.promises.readFile>
+) => asserts args is [string, "utf8"] = (
+  args
+) => {
+  const [path, options] = args;
+  if (typeof path !== "string" || options !== "utf8" ) {
+    throw new Error("Only string path and utf8 options is supported. other argument types have not been implemented.");
+  }
+};
+
+mocked(fs.promises.readFile).mockImplementation(async (...args) => {
+  assertIsSupportedReadFileArguments(args);
+  const [path] = args;
+  await Promise.resolve();
+  const file = getFile(path);
+  file.logAccess();
+  return file.content;
+});
+
 const assertIsSupportedWriteFileArguments: (
   args: Parameters<typeof fs.promises.writeFile>
 ) => asserts args is [string, "utf8"] = (
@@ -600,14 +635,6 @@ const assertIsSupportedWriteFileArguments: (
   }
 };
 
-mocked(fs.promises.readFile).mockImplementation(async (...args) => {
-  assertIsSupportedReadFileArguments(args);
-  const [path] = args;
-  const file = getFile(path);
-  await Promise.resolve();
-  return file.content;
-});
-
 mocked(fs.promises.writeFile).mockImplementation(async (...args) => {
   assertIsSupportedWriteFileArguments(args);
   const [path, data] = args;
@@ -616,26 +643,21 @@ mocked(fs.promises.writeFile).mockImplementation(async (...args) => {
   const fileName = pathUtils.basename(resolvedPath);
   const parentDirName = pathUtils.dirname(resolvedPath);
   const directory = getDirectory(parentDirName);
+  const file = directory.entries[fileName];
 
-  if (directory.entries[fileName]?.type === "directory") {
+  if (!file) {
+    directory.entries[fileName] = makeFile(
+      resolvedPath,
+      data
+    );
+    return;
+  }
+
+  if (file.type === "directory") {
     throw new Error(`Failed to writeFile: ${resolvedPath} contains a directory called ${fileName}. You're not allowed to overwrite.`);
   }
 
-  directory.entries[fileName] = makeFile(
-    resolvedPath,
-    data
-  );
+  file.content = data;
 });
-
-const assertIsSupportedReadFileArguments: (
-  args: Parameters<typeof fs.promises.readFile>
-) => asserts args is [string, "utf8"] = (
-  args
-) => {
-  const [path, options] = args;
-  if (typeof path !== "string" || options !== "utf8" ) {
-    throw new Error("Only string path and utf8 options is supported. other argument types have not been implemented.");
-  }
-};
 
 export default fs;
