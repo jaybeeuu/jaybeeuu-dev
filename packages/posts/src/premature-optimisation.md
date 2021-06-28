@@ -10,6 +10,8 @@ time is spent in your code, intuition is often wrong.
 
 Here's a quick example. Have a look at this code:
 
+things
+
 ```js
 const numberOfIterations = 100_000;
 const lengthOfString = 10;

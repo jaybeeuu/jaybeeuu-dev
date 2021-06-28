@@ -64,7 +64,10 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
     <div className={classNames(css.componentRoot, e2eHooks.article)}>
       <div>
         <h1 className={css.title}>{postMeta.title}</h1>
-        <h4 className={css.date}>{new Date(postMeta.lastUpdateDate ?? postMeta.publishDate).toLocaleDateString()}</h4>
+        <h4 className={css.date}>
+          {new Date(postMeta.publishDate).toLocaleDateString()}
+          {postMeta.lastUpdateDate ? ` (updated ${new Date(postMeta.lastUpdateDate).toLocaleDateString()})` : null}
+        </h4>
       </div>
       <article
         ref={articleRef}
