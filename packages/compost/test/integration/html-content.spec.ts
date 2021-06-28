@@ -2,24 +2,24 @@ import {
   compilePosts,
   getPost,
   outputDir,
-  sourceDir
+  sourceDir,
+  writePostFiles
 } from "./helpers";
 
-import { deleteDirectories, writeTextFiles } from "../../src/files";
+import { deleteDirectories } from "../../src/files";
 import type { UpdateOptions } from "../../src/posts/src/types";
 
 describe("compile", () => {
-  const setupPostFiles = async (slug: string, contentLines: string[]): Promise<void> => {
-    await writeTextFiles(
-      sourceDir,
-      [{
-        path: `./${slug}.md`,
-        content: contentLines.join("\n")
-      }, {
-        path: `./${slug}.post.json`,
-        content: JSON.stringify({ title: "{title}", abstract: "abstract", publish: true }, null, 2),
-      }]
-    );
+  const setupPostFiles = async (slug: string, content: string[]): Promise<void> => {
+    await writePostFiles({
+      slug,
+      content,
+      meta: {
+        abstract: "abstract",
+        publish: true,
+        title: "{title}"
+      }
+    });
   };
 
   const getCompiledPostWithContent = async (
@@ -33,7 +33,6 @@ describe("compile", () => {
     await deleteDirectories(sourceDir, outputDir);
     await setupPostFiles(slug, contentLines);
     await compilePosts(updateOptions);
-
     return await getPost(slug);
   };
 

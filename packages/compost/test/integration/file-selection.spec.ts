@@ -3,72 +3,29 @@ import {
   getPost,
   getPostManifest,
   outputDir,
-  sourceDir
+  sourceDir,
+  writePostFiles
 } from "./helpers";
 
-import { advanceTo } from "jest-date-mock";
-import {
-  deleteDirectories,
-  writeTextFiles
-} from "../../src/files/index";
+import { deleteDirectories } from "../../src/files/index";
 
 describe("file-selection", () => {
-  it("makes the post available in the manifest on /post, after a refresh from a blank slate.", async () => {
-    await deleteDirectories(sourceDir, outputDir);
-
-    const publishDate = "2020-03-11";
-    advanceTo(publishDate);
-    const slug = "first-post";
-    const meta = {
-      title: "This is the first post",
-      abstract: "This is the very first post.",
-      publish: true
-    };
-    await writeTextFiles(
-      sourceDir,
-      [{
-        path: `./${slug}.md`,
-        content: "# This is the first post\n\nIt has some content."
-      }, {
-        path: `./${slug}.post.json`,
-        content: JSON.stringify(meta, null, 2)
-      }]
-    );
-    const hrefRoot = "posts";
-    await compilePosts({ hrefRoot });
-
-    const manifest = await getPostManifest();
-
-    expect(manifest).toStrictEqual({
-      [slug]: {
-        ...meta,
-        publishDate: new Date(publishDate).toUTCString(),
-        lastUpdateDate: null,
-        slug,
-        fileName: expect.stringMatching(new RegExp(`${slug}-[A-z0-9]{6}.html`)) as unknown,
-        href: expect.stringMatching(new RegExp(`/${hrefRoot}/${slug}-[A-z0-9]{6}.html`)) as unknown
-      }
-    });
-  });
-
   it("ignores unpublished articles.", async () => {
     await deleteDirectories(sourceDir, outputDir);
 
     const slug = "unfinished-post";
-    await writeTextFiles(
-      sourceDir,
-      [{
-        path: `./${slug}.md`,
-        content: "# This a work inn progress.\n\nSome COntent."
-      }, {
-        path: `./${slug}.post.json`,
-        content: JSON.stringify({
-          title: "This an unfinished post",
-          abstract: "Still a work in progress.",
-          publish: false
-        }, null, 2)
-      }]
-    );
+    await writePostFiles({
+      slug,
+      content: [
+        "# This a work in progress.",
+        "Some Content."
+      ],
+      meta: {
+        title: "This an unfinished post",
+        abstract: "Still a work in progress.",
+        publish: false
+      }
+    });
 
     await compilePosts();
 
@@ -81,13 +38,14 @@ describe("file-selection", () => {
     await deleteDirectories(sourceDir, outputDir);
 
     const slug = "not-a-post";
-    await writeTextFiles(
-      sourceDir,
-      [{
-        path: `./${slug}.md`,
-        content: "# This is not a post.\n\nSome Content."
-      }]
-    );
+    await writePostFiles({
+      slug,
+      content: [
+        "# This is not a post.",
+        "Some Content."
+      ],
+      meta: null
+    });
 
     await compilePosts();
 
@@ -99,20 +57,18 @@ describe("file-selection", () => {
     await deleteDirectories(sourceDir, outputDir);
 
     const slug = "unfinished-post";
-    await writeTextFiles(
-      sourceDir,
-      [{
-        path: `./${slug}.md`,
-        content: "# This a work inn progress.\n\nSome content."
-      }, {
-        path: `./${slug}.post.json`,
-        content: JSON.stringify({
-          title: "This an unfinished post",
-          abstract: "Still a work in progress.",
-          publish: false
-        }, null, 2)
-      }]
-    );
+    await writePostFiles({
+      slug,
+      content: [
+        "# This a work in progress.",
+        "Some content."
+      ],
+      meta: {
+        title: "This an unfinished post",
+        abstract: "Still a work in progress.",
+        publish: false
+      }
+    });
 
     await compilePosts({ includeUnpublished: true });
 
@@ -125,23 +81,19 @@ describe("file-selection", () => {
 
     const slug = "first-post";
     const postContent = "It has some content";
-    await writeTextFiles(
-      sourceDir,
-      [{
-        path: `./sub-directory/${slug}.md`,
-        content: [
-          "# This is the first post",
-          postContent
-        ].join("\n")
-      }, {
-        path: `./sub-directory/${slug}.post.json`,
-        content: JSON.stringify({
-          title: "This is the first post",
-          abstract: "This is the very first post.",
-          publish: true
-        }, null, 2)
-      }]
-    );
+    await writePostFiles({
+      slug,
+      path: "./sub-directory",
+      content: [
+        "# This is the first post",
+        postContent
+      ],
+      meta: {
+        title: "This is the first post",
+        abstract: "This is the very first post.",
+        publish: true
+      }
+    });
 
     await compilePosts();
 

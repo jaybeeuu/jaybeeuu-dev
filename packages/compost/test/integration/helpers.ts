@@ -1,9 +1,11 @@
 import path from "path";
-import { readTextFile } from "../../src/files/index";
+import type { File } from "../../src/files/index";
+import { readTextFile, writeTextFiles } from "../../src/files/index";
 import type { PostManifest, UpdateOptions } from "../../src/posts/src/types.js";
 import { update } from "../../src/posts/index.js";
 import type { Result } from "../../src/results.js";
 import type { UpdateFailureReason } from "packages/compost/src/posts/src/update.js";
+import type { PostMetaFileData } from "packages/compost/src/posts/src/metafile";
 
 jest.mock("fs");
 
@@ -17,6 +19,40 @@ const resolveToPackage = (...pathSegments: string[]): string => {
 export const sourceDir = resolveToPackage(`.fs/test/${jestWorkerId.toString()}/src`);
 export const outputDir = resolveToPackage(`.fs/test/${jestWorkerId.toString()}/out`);
 export const manifestFileName = "mainfest.post.json";
+
+export interface PostFile {
+  content: string | string[];
+  meta: PostMetaFileData | null;
+  path?: string;
+  slug: string;
+}
+
+export const writePostFiles = async (
+  ...postFiles: PostFile[]
+): Promise<void> => {
+  await Promise.all(postFiles.map(async ({
+    content,
+    meta,
+    path: filePath = ".",
+    slug
+  }) => await writeTextFiles(
+    sourceDir,
+    [
+      {
+        path: path.join(filePath, `${slug}.md`),
+        content: Array.isArray(content) ? content.join("\n") : content
+      },
+      meta !== null ? {
+        path: path.join(filePath, `${slug}.post.json`),
+        content: JSON.stringify(meta, null, 2)
+      } : null
+    ].filter((
+      member: File | null
+    ): member is File => {
+      return member !== null;
+    })
+  )));
+};
 
 const getOutputFile = async (filePath: string): Promise<string> => {
   const resolvedFilePath = path.resolve(outputDir, filePath);
