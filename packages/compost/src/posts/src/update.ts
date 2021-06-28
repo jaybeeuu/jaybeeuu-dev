@@ -1,5 +1,5 @@
-import { joinUrlPath } from"@jaybeeuu/utilities";
 import path from "path";
+import { joinUrlPath, log } from"@jaybeeuu/utilities";
 import {
   recurseDirectory,
   writeJsonFile,
@@ -19,9 +19,9 @@ import {
   getPostMarkdownFilePath,
   validateSlug
 } from "./file-paths.js";
-import type { UpdateOptions, PostManifest } from "./types.js";
 import type { GetManifestFailure } from "./manifest.js";
 import { getManifest } from "./manifest.js";
+import type { UpdateOptions, PostManifest } from "./types.js";
 
 export type UpdateFailureReason
  = ValidateSlugFailureReason
@@ -36,10 +36,14 @@ export const update = async (
     options.oldManifestLocator
   );
   if (!oldManifestReadResult.success) {
-    return oldManifestReadResult;
+    if (options.requireOldManifest) {
+      return oldManifestReadResult;
+    } else {
+      log.warn(`Could not find old manifest: ${oldManifestReadResult.message}`);
+    }
   }
 
-  const oldManifest = oldManifestReadResult.value;
+  const oldManifest: PostManifest = oldManifestReadResult.success ? oldManifestReadResult.value : {};
   const newManifest: PostManifest = {};
   const resolvedOutputDir = path.resolve(options.outputDir);
   const resolvedSourceDir = path.resolve(options.sourceDir);

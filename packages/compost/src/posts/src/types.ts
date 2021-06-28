@@ -24,6 +24,7 @@ export interface UpdateOptions {
   manifestFileName: string;
   oldManifestLocator?: string;
   outputDir: string;
+  requireOldManifest: boolean;
   sourceDir: string;
   watch: boolean;
 }

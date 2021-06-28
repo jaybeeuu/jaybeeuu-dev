@@ -48,69 +48,53 @@ const watch = (
   chokidar.watch(watchPaths).on("all", debouncedRun);
 };
 
-interface CompostCommandArgs {
-  "additional-watch-paths"?: string[];
-  "href-root": string;
-  "manifest-file-name": string;
-  "old-manifest-locator"?: string;
-  "output-dir": string;
-  "source-dir": string;
-  "watch": boolean;
-  "include-unpublished": boolean;
-}
-
-const mapArgsToOptions = (args: CompostCommandArgs): UpdateOptions => ({
-  additionalWatchPaths: args["additional-watch-paths"] ?? [],
-  hrefRoot: args["href-root"],
-  manifestFileName: args["manifest-file-name"],
-  oldManifestLocator: args["old-manifest-locator"],
-  outputDir: args["output-dir"],
-  sourceDir: args["source-dir"],
-  watch: args["watch"],
-  includeUnpublished: args["include-unpublished"],
-});
-
 yargs.command(
   "$0",
   "Here we go!",
   {
-    "href-root": {
+    "hrefRoot": {
       type: "string",
       default: "/",
       alias: ["r"],
       description: "The root path to apply when compiling hrefs (e.g. links)."
     },
-    "additional-watch-paths": {
+    "additionalWatchPaths": {
       alias: ["a"],
       description: "Paths other than --source-dir to watch when in watch mode.",
       implies: "watch",
       type: "string",
       array: true
     },
-    "include-unpublished": {
+    "includeUnpublished": {
       alias: ["u"],
       description: "Whether or not to compile posts not marked as published in their metadata.json file.",
       type: "boolean",
       default: false
     },
-    "manifest-file-name": {
+    "manifestFileName": {
       alias: ["m"],
       description: "The nam of the output JSON manifest file.",
       type: "string",
       default: "manifest.json"
     },
-    "old-manifest-locator": {
+    "oldManifestLocator": {
       alias: ["oml"],
       description: "The path or URL of the old manifest. If none is given then the output-dir and manifest-file-name options will be used to infer the location. If this option is given and no manifest is found compost will fail.",
       type: "string"
     },
-    "output-dir": {
+    "outputDir": {
       alias: ["o"],
       description: "The directory into which the compiled files should be written.",
       type: "string",
       default: "./lib"
     },
-    "source-dir": {
+    "requireOldManifest": {
+      alias: ["rom"],
+      description: "Indicates whether the process will fail if the old manifest is not found.",
+      type: "boolean",
+      default: false
+    },
+    "sourceDir": {
       alias: ["s"],
       description: "The directory containing the source files.",
       type: "string",
@@ -123,8 +107,11 @@ yargs.command(
       default: false
     }
   },
-  async (args) => {
-    const options = mapArgsToOptions(args);
+  async (rawOptions) => {
+    const options: UpdateOptions = {
+      ...rawOptions,
+      additionalWatchPaths: rawOptions.additionalWatchPaths ?? [],
+    };
     if (options.watch) {
       watch(options);
     } else {
