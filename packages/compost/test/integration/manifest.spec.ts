@@ -76,6 +76,45 @@ describe("manifest", () => {
     );
   });
 
+  it("does not change publish date when a post is updated and recompiled, and compost has access to the old manifest.", async () => {
+    const slug = "first-post";
+    const postFile: PostFile = {
+      slug,
+      meta: {
+        title: "This is the first post",
+        abstract: "This is the very first post.",
+        publish: true
+      },
+      content: [
+        "# This is the first post",
+        "It has some content."
+      ]
+    };
+    await writePostFiles(postFile);
+
+    const publishDate = "2020-03-11";
+    advanceTo(publishDate);
+    await compilePosts();
+
+    await writePostFiles({
+      ...postFile,
+      content: [
+        ...postFile.content,
+        "some new content"
+      ]
+    });
+
+    const updatedDate = "2020-03-12";
+    advanceTo(updatedDate);
+    await compilePosts();
+
+    const manifest = await getPostManifest();
+
+    expect(manifest[slug].publishDate).toStrictEqual(
+      new Date(publishDate).toUTCString(),
+    );
+  });
+
   it("updates the lastUpdatedDate when a post is updated and recompiled, and compost has access to the old manifest.", async () => {
     await deleteDirectories(sourceDir, outputDir);
 
