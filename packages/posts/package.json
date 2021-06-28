@@ -17,7 +17,7 @@
     "lint": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
     "spellcheck-interactive": "mdspell --en-GB --ignore-numbers \"**/*.md\" \"!**/node_modules/**/*.md\"",
     "spellcheck": "pnpm run spellcheck-interactive -- --report",
-    "build": "compost --href-root posts"
+    "build": "compost --href-root posts --old-manifest-locator \"https://jaybeeuu.dev/posts/manifest.json\""
   },
   "devDependencies": {
     "@jaybeeuu/compost": "workspace:*",

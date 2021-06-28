@@ -1,5 +1,6 @@
 import type {
-  PostFile} from "./helpers";
+  PostFile
+} from "./helpers";
 import {
   compilePosts,
   getPostManifest,
