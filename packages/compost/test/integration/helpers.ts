@@ -1,4 +1,5 @@
 import path from "path";
+import type Utilities from "@jaybeeuu/utilities";
 import type { File } from "../../src/files/index";
 import { readTextFile, writeTextFiles } from "../../src/files/index";
 import type { PostManifest, UpdateOptions } from "../../src/posts/src/types.js";
@@ -8,6 +9,16 @@ import type { UpdateFailureReason } from "packages/compost/src/posts/src/update.
 import type { PostMetaFileData } from "packages/compost/src/posts/src/metafile";
 
 jest.mock("fs");
+jest.mock("@jaybeeuu/utilities", () => {
+  const utils = jest.requireActual<typeof Utilities>("@jaybeeuu/utilities");
+  utils.log = {
+    error: jest.fn(),
+    getErrorMessage: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn()
+  };
+  return utils;
+});
 
 export const jestWorkerId = +(process.env.JEST_WORKER_ID || 0);
 const packageDir = path.resolve(__dirname, "../..");
