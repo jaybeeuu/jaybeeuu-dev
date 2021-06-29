@@ -238,6 +238,7 @@ describe("manifest", () => {
   });
 
   it("fails to compost it manifest is not available and the require-old-manifest flag is set.", async () => {
+    await deleteDirectories(sourceDir, outputDir);
     await writePostFiles({
       slug: "slug",
       meta: {
