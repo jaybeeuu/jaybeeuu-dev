@@ -14,8 +14,8 @@ const config = {
     "/lib/"
   ],
   watchPathIgnorePatterns: [
-    "<rootDir>/fs",
-    "<rootDir>/lib"
+    "<rootDir>/.fs/",
+    "<rootDir>/lib/"
   ],
   moduleNameMapper: {
     "(\\.\\.?/.*)\\.js$": "$1"

@@ -9,11 +9,14 @@
     "Josh",
     "State Management"
   ],
-  "main": "lib/index.js",
+  "main": "./lib/index.js",
   "files": [
-    "lib"
+    "./lib"
   ],
   "sideEffects": false,
+  "exports": {
+    ".": "./lib/index.js"
+  },
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json --pretty",
     "lint": "eslint --ext .js,.ts --format codeframe .",

@@ -23,3 +23,7 @@ export const getErrorMessage = (err: any | null | undefined): string => {
 export const error = (...errs: unknown[]): void => {
   console.error(...errs);
 };
+
+export const warn = (message: string, ...args: unknown[]): void => {
+  console.warn(message, ...args);
+};

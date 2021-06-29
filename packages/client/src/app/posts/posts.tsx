@@ -35,7 +35,8 @@ const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
               {meta.title}
             </h2>
             <p className={css.date}>
-              {new Date(meta.lastUpdateDate ?? meta.publishDate).toLocaleDateString()}
+              {new Date(meta.publishDate).toLocaleDateString()}
+              {meta.lastUpdateDate ? ` (updated ${new Date(meta.lastUpdateDate).toLocaleDateString()})` : null}
             </p>
             <summary>{meta.abstract}</summary>
           </Link>
