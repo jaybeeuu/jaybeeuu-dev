@@ -1,28 +1,21 @@
-import type {
-  PostFile
-} from "./helpers";
+import type { PostFile } from "./helpers";
 import {
   compilePosts,
   getPostManifest,
-  outputDir,
-  sourceDir,
+  cleanUpDirectories,
   writePostFiles
 } from "./helpers";
 
 import { advanceTo } from "jest-date-mock";
 import fetch from "node-fetch";
 import { mocked } from "ts-jest/utils";
-
-import {
-  deleteDirectories,
-} from "../../src/files/index";
 import type { PostMetaFileData } from "../../src/posts/src/metafile";
 
 jest.mock("node-fetch");
 
 describe("manifest", () => {
   it("has an entry for a new post with the correct properties.", async () => {
-    await deleteDirectories(sourceDir, outputDir);
+    await cleanUpDirectories();
 
     const publishDate = "2020-03-11";
     advanceTo(publishDate);
@@ -55,8 +48,7 @@ describe("manifest", () => {
   });
 
   it("compiles the posts to the specified hrefRoot when one is supplied..", async () => {
-    await deleteDirectories(sourceDir, outputDir);
-
+    await cleanUpDirectories();
     const slug = "first-post";
     await writePostFiles({
       slug,
@@ -78,6 +70,7 @@ describe("manifest", () => {
   });
 
   it("does not change publish date when a post is updated and recompiled, and compost has access to the old manifest.", async () => {
+    await cleanUpDirectories();
     const slug = "first-post";
     const postFile: PostFile = {
       slug,
@@ -117,8 +110,7 @@ describe("manifest", () => {
   });
 
   it("updates the lastUpdatedDate when a post is updated and recompiled, and compost has access to the old manifest.", async () => {
-    await deleteDirectories(sourceDir, outputDir);
-
+    await cleanUpDirectories();
     const slug = "first-post";
     const postFile: PostFile = {
       slug,
@@ -158,8 +150,7 @@ describe("manifest", () => {
   });
 
   it("does not add an updated date if the post hsa not updated.", async () => {
-    await deleteDirectories(sourceDir, outputDir);
-
+    await cleanUpDirectories();
     const slug = "first-post";
     await writePostFiles({
       slug,
@@ -188,8 +179,7 @@ describe("manifest", () => {
   });
 
   it("updates the lastUpdatedDate when the manifest needs to be fetched.", async () => {
-    await deleteDirectories(sourceDir, outputDir);
-
+    await cleanUpDirectories();
     const slug = "first-post";
     const postFile: PostFile = {
       slug,
@@ -238,7 +228,7 @@ describe("manifest", () => {
   });
 
   it("fails to compost it manifest is not available and the require-old-manifest flag is set.", async () => {
-    await deleteDirectories(sourceDir, outputDir);
+    await cleanUpDirectories();
     await writePostFiles({
       slug: "slug",
       meta: {

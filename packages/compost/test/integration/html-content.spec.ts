@@ -1,12 +1,10 @@
 import {
+  cleanUpDirectories,
   compilePosts,
   getPost,
-  outputDir,
-  sourceDir,
   writePostFiles
 } from "./helpers";
 
-import { deleteDirectories } from "../../src/files";
 import type { UpdateOptions } from "../../src/posts/src/types";
 
 describe("compile", () => {
@@ -30,7 +28,7 @@ describe("compile", () => {
     }> = {}
   ): Promise<string> => {
     const { slug = "{slug}", updateOptions } = options;
-    await deleteDirectories(sourceDir, outputDir);
+    await cleanUpDirectories();
     await setupPostFiles(slug, contentLines);
     await compilePosts(updateOptions);
     return await getPost(slug);

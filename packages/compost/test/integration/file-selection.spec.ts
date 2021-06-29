@@ -1,17 +1,14 @@
 import {
+  cleanUpDirectories,
   compilePosts,
   getPost,
   getPostManifest,
-  outputDir,
-  sourceDir,
   writePostFiles
 } from "./helpers";
 
-import { deleteDirectories } from "../../src/files/index";
-
 describe("file-selection", () => {
   it("ignores unpublished articles.", async () => {
-    await deleteDirectories(sourceDir, outputDir);
+    await cleanUpDirectories();
 
     const slug = "unfinished-post";
     await writePostFiles({
@@ -35,7 +32,7 @@ describe("file-selection", () => {
   });
 
   it("ignores markdown files with no .post.json.", async () => {
-    await deleteDirectories(sourceDir, outputDir);
+    await cleanUpDirectories();
 
     const slug = "not-a-post";
     await writePostFiles({
@@ -54,7 +51,7 @@ describe("file-selection", () => {
   });
 
   it("ignores unpublished articles unless told to include them with the option.", async () => {
-    await deleteDirectories(sourceDir, outputDir);
+    await cleanUpDirectories();
 
     const slug = "unfinished-post";
     await writePostFiles({
@@ -77,7 +74,7 @@ describe("file-selection", () => {
   });
 
   it("recurses the all the directories.", async () => {
-    await deleteDirectories(sourceDir, outputDir);
+    await cleanUpDirectories();
 
     const slug = "first-post";
     const postContent = "It has some content";

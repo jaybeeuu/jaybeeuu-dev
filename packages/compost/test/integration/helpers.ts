@@ -1,7 +1,7 @@
 import path from "path";
 import type Utilities from "@jaybeeuu/utilities";
 import type { File } from "../../src/files/index";
-import { readTextFile, writeTextFiles } from "../../src/files/index";
+import { readTextFile, writeTextFiles , deleteDirectories} from "../../src/files/index";
 import type { PostManifest, UpdateOptions } from "../../src/posts/src/types.js";
 import { update } from "../../src/posts/index.js";
 import type { Result } from "../../src/results.js";
@@ -30,6 +30,10 @@ const resolveToPackage = (...pathSegments: string[]): string => {
 export const sourceDir = resolveToPackage(`.fs/test/${jestWorkerId.toString()}/src`);
 export const outputDir = resolveToPackage(`.fs/test/${jestWorkerId.toString()}/out`);
 export const manifestFileName = "mainfest.post.json";
+
+export const cleanUpDirectories = async (): Promise<void> => {
+  await deleteDirectories(sourceDir, outputDir);
+};
 
 export interface PostFile {
   content: string | string[];
