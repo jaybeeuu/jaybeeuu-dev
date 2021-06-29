@@ -72,13 +72,14 @@ export const getPost = async (slug: string): Promise<string> => {
 
 export const compilePosts = async (options?: Partial<UpdateOptions>): Promise<Result<PostManifest, UpdateFailureReason>> => {
   return update({
+    additionalWatchPaths: [],
     hrefRoot: "posts",
+    includeUnpublished: false,
     manifestFileName,
     outputDir: path.join(outputDir, "posts"),
+    requireOldManifest: false,
     sourceDir,
     watch: false,
-    additionalWatchPaths: [],
-    includeUnpublished: false,
     ...options
   });
 };

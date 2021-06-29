@@ -236,4 +236,19 @@ describe("manifest", () => {
       new Date(updatedDate).toUTCString()
     );
   });
+
+  it("fails to compost it manifest is not available and the require-old-manifest flag is set.", async () => {
+    await writePostFiles({
+      slug: "slug",
+      meta: {
+        title: "This is the first post",
+        abstract: "This is the very first post.",
+        publish: true
+      },
+      content: [ "# A Post"]
+    });
+    const result = await compilePosts({ requireOldManifest: true });
+
+    expect(result.success).toBe(false);
+  });
 });

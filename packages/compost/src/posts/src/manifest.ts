@@ -2,7 +2,7 @@ import { is, isObject, isRecord, or } from "@jaybeeuu/utilities";
 import type { PostManifest, PostMetaData } from "./types.js";
 import { fetchJsonFile, readJsonFile } from "../../files/index.js";
 import type { Result } from "../../results.js";
-import { repackError, success } from "../../results.js";
+import { repackError } from "../../results.js";
 
 const isPostMetaData = isObject<PostMetaData>({
   abstract: is("string"),
@@ -31,11 +31,6 @@ export const getManifest = async (
 
   if (readResult.success) {
     return readResult;
-  }
-
-  const canFailToRead = manifestLocator === undefined;
-  if (canFailToRead && readResult.reason === "no access") {
-    return success({});
   }
 
   return repackError(
