@@ -44,16 +44,18 @@ reductively
 LTS
 destructuring
 v14
+lifecycle
  - src/premature-optimisation.md
 v14.15.1
 Hrn
 0.2s
  - src/module-spotting.md
-mɒdju
-Spacelab
-odule
+commonjsStrictGlobal.js
 efinitions
+mɒdju
 nified
+odule
+Spacelab
  - src/what-is-this/what-is-this.md
 methodness
 functionness
