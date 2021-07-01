@@ -476,7 +476,9 @@ otherwise not possible.
 
 ## Conclusion
 
-HOpefully you found that interesting. I'll admit it's mostly interesting from an historical standpoint.
-For day to day coding `CommonJS` and increasingly `ES Modules` are really all you need.
-But I find it fascinating to see the aspects of those historical module systems exhibiting themselves in the modern
-solution we have in the language not.
+Hopefully you found that interesting.
+I'll admit it's mostly interesting from an historical standpoint.
+For day to day coding `CommonJS` and increasingly `ES Modules` are really all you need,
+but there are times when you see these in the wild, e.g. debugging a package you're pulling in from `node_modules`.
+I also find it fascinating to see the aspects of those historical module systems exhibiting themselves in the modern
+solution we have in the language now.
