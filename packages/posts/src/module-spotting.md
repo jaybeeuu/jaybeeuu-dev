@@ -35,20 +35,21 @@ The main systems you will come in contact with are now `CommonJS` and `ES6 Modul
 A module is a file containing JavaScript code.
 They allow us to build up complex applications from smaller simpler components.
 
-A modules might export a class or a group of constants or functions,
-but whatever export should be closely related.
+A module might export a class or a group of constants or functions,
+but whatever it exports should be closely related.
 This is similar to classes in OO languages (like Java or C#).
 
 OK, but we had files, so what was the problem?
 The bit we were missing was a "module system".
 
-## Right... module system>
+## Right... module systems
 
 Reductively, a module system is the definition of how code gets into and out of a module,
 It will also define the context of declarations which are made within the module.
 
 Let's tackle that last bit.
-By context I mean "what can things access" for example if you have 2 modules (in an imaginary module system):
+By context I mean "what things can I access from here".
+For example if you have 2 modules (in an imaginary module system):
 
 ```js
 // a.js
