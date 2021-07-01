@@ -83,7 +83,7 @@ and had it's own answer to each of those questions.
 
 Lets have a look at a few.
 
-## Styles of Module you might see in the wild
+## Styles of module you might see in the wild
 
 ### [AMD](https://en.wikipedia.org/wiki/Asynchronous_module_definition)
 
