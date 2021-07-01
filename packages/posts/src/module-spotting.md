@@ -121,7 +121,7 @@ define(["movement/prowl", "noises/miaow"],
 ```
 
 The key here is the `define` function on line 1.
-The AMD runtime (e.g. require.js) uses wraps the module code and supplies a couple of variables to use to define your
+The AMD runtime (e.g. Require.js) uses wraps the module code and supplies a couple of variables to use to define your
 module. Define is one of those.
 `define` tells the `AMD` runtime you are going to... define a module.
 The first argument is an array of the dependencies.
@@ -133,8 +133,8 @@ It's arguments are the dependencies (e.g. `prowl` and `miaow`) and that is how r
 The result of the function (e.g. `return Cat;`) defines the export of the module (in this case the `Cat` class).
 
 In order to fulfil the dependencies and be able to make our `Cat` class,
-when require.js executes the `define` function it first downloads the dependencies in the array (in parallel).
-The javascript it gets back is then executed to get it's exports, and so on until the whole graph has been discovered.
+when Require.js executes the `define` function it first downloads the dependencies in the array (in parallel).
+The JavaScript it gets back is then executed to get it's exports, and so on until the whole graph has been discovered.
 The results into the module definition function. Any one module is only initialised once.
 so if two modules request the same dependency it will only be retrieved & executed once
 and they will get the same instance of the exports.
@@ -152,7 +152,7 @@ They can often be configured to have an `AMD` style output so that code may look
 This is the module system implemented by [Node.js](https://nodejs.org/en/).
 Because of this it is much more likely you will come across it.
 It is definitely worth getting into some detail about this one.
-Although it's worth noting that from v14 node.js
+Although it's worth noting that from v14 Node.js
 (in latest LTS version at the time of writing)
 supports ES modules (more on that later).
 So expect to see the ecosystem move in that direction.
@@ -333,7 +333,7 @@ Once it knows what the module system it's in, it injects the `exports` object an
 `factory` function (lines 16-22, the second top level indentation).
 
 Again this isn't a module definition type that you are likely to come across regularly,
-unless you look at the source code of some older libraries, are find your self rooting arround in node_modules.
+unless you look at the source code of some older libraries, are find your self rooting around in `node_modules`.
 So don't worry too much.
 If `AMD` is a penny-farthing then I suppose `UMD` is a horse with a penny-farthing bolted on one side
 and a reasonably price car (`CommonJS`) tied to the other.
@@ -364,7 +364,7 @@ export const circumference = (r) => 2 * PI * r;
 export const diameter = (r) => 2 * r;
 ```
 
-In this adaptation of the circle example i showed in [CommonJS](#commonjs) you can see 3 things being exported.
+In this adaptation of the circle example I showed in [CommonJS](#commonjs) you can see 3 things being exported.
 The `area`, `circumference` and `diameter` functions are *named exports* from this module to access them
 you must use curly braces in your `import` statement.
 Like this:
@@ -504,6 +504,6 @@ and opens up some really interesting features like
 Hopefully you found that interesting.
 I'll admit the `AMD` and `UMD` stops on the tour are mostly interesting from an historical standpoint.
 For day to day coding `CommonJS` and increasingly `ES Modules` are really all you need,
-but there are times when you see these in the wild and it's good ot know what you're looking at.
+but there are times when you see these in the wild and it's good to know what you're looking at.
 I also find it fascinating to see the aspects of those historical module systems exhibiting themselves in the solution
 adopted into the language now, and some of their failings addressed.
