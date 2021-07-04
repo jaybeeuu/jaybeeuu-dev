@@ -145,16 +145,16 @@ module.exports = {
     splitChunks: {
       maxInitialRequests: 6,
       cacheGroups: {
-        fastVendors: {
-          test: /[\\/]lib[\\/]/,
-          chunks: "initial",
-          filename: "fast-vendors.[contenthash].js",
-          priority: -10,
-        },
         slowVendors: {
           test: /[\\/]node_modules[\\/]/,
           chunks: "initial",
           filename: "slow-vendors.[contenthash].js",
+          priority: -10,
+        },
+        fastVendors: {
+          test: /[\\/]lib[\\/]/,
+          chunks: "initial",
+          filename: "fast-vendors.[contenthash].js",
           priority: -20,
         },
         default: {
