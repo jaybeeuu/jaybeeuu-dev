@@ -54,7 +54,7 @@ module.exports = {
         oneOf: [
           {
             test: /\.(ts|tsx|js|jsx)$/,
-            include: [paths.src, /@bickley-wallace\/.*/],
+            include: [paths.src, /@jaybeeuu\/.*/],
             use: "babel-loader"
           },
           {
@@ -98,7 +98,7 @@ module.exports = {
                 loader: "url-loader",
                 options: {
                   limit: 5000,
-                  name: "static/[name].[hash:8].[ext]",
+                  name: "static/[name].[contenthash].[ext]",
                 },
               }
             ]
@@ -110,7 +110,7 @@ module.exports = {
                 loader: "url-loader",
                 options: {
                   limit: 5000,
-                  name: "static/[name].[hash:8].[ext]",
+                  name: "static/[name].[contenthash].[ext]",
                 },
               },
               {
@@ -126,7 +126,7 @@ module.exports = {
             exclude: [/\.(ts|tsx|js|jsx)$/, /\.css$/, /\.html$/, /\.json$/, /\.(bmp|gif|jpe?g|png|svg)$/],
             loader: "file-loader",
             options: {
-              name: "static/[name].[hash:8].[ext]",
+              name: "static/[name].[contenthash].[ext]",
             }
           }
         ]
@@ -134,13 +134,37 @@ module.exports = {
     ]
   },
   optimization: {
+    moduleIds: "deterministic",
     minimizer: [
       "...",
       new CssMinimizerPlugin(),
       new TerserPlugin({
         parallel: isProduction ? 2 : true
       })
-    ]
+    ],
+    splitChunks: {
+      maxInitialRequests: 6,
+      cacheGroups: {
+        fastVendors: {
+          test: /[\\/]lib[\\/]/,
+          chunks: "initial",
+          filename: "fast-vendors.[contenthash].js",
+          priority: -10,
+        },
+        slowVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          chunks: "initial",
+          filename: "slow-vendors.[contenthash].js",
+          priority: -20,
+        },
+        default: {
+          filename: "[name].[contenthash].js",
+          chunks: "initial",
+          priority: -30,
+          reuseExistingChunk: true
+        }
+      }
+    }
   },
   plugins: [
     new CopyWebpackPlugin({
