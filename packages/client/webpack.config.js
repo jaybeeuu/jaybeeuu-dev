@@ -186,7 +186,8 @@ module.exports = {
     !isProduction ? new webpack.HotModuleReplacementPlugin() : null,
     !isProduction ? new PreactRefreshPlugin() : null,
     isProduction && !isWatching ? new BundleAnalyzerPlugin({
-      analyzerMode: "static"
+      analyzerMode: "static",
+      reportFilename: "bundle-report.html"
     }) : null,
     isProduction ? new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css"
