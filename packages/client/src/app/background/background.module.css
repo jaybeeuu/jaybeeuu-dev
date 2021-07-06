@@ -17,10 +17,20 @@
   background-repeat: no-repeat;
   background-position: center bottom;
   background-size: cover;
-  opacity: 0;
   transition: var(--transition-theme), opacity var(--transition-theme-timing);
 }
 
-.background-image.show {
+.appear,
+.enter,
+.exit.exit-active,
+.exit-done {
+  opacity: 0;
+}
+
+.appear.appear-active,
+.appear-done,
+.enter.enter-active,
+.enter-done,
+.exit {
   opacity: 1;
 }

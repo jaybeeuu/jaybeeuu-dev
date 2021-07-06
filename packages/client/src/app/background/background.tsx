@@ -1,9 +1,9 @@
 import type { ComponentChildren, JSX} from "preact";
 import { h, Fragment } from "preact";
+import { CSSTransition } from "preact-transitioning";
 import { useAction, useValue } from "@jaybeeuu/preact-recoilless";
 import classNames from "classnames";
 import { backgroundImages, onMainContentScroll, theme } from "../state";
-
 import css from "./background.module.css";
 import backgrounds from "./background-images.module.css";
 
@@ -20,16 +20,28 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
     <div className={classNames(className, css.componentRoot)}>
       {images ? (
         <Fragment>
-          <div className={classNames(
-            css.backgroundImage,
-            backgrounds[images.light],
-            { [css.show]: currentTheme === "light" }
-          )}/>
-          <div className={classNames(
-            css.backgroundImage,
-            backgrounds[images.dark],
-            { [css.show]: currentTheme === "dark" }
-          )}/>
+          <CSSTransition
+            classNames={css}
+            in={currentTheme === "light"}
+            duration={500}
+            appear
+          >
+            <div className={classNames(
+              css.backgroundImage,
+              backgrounds[images.light]
+            )}/>
+          </CSSTransition>
+          <CSSTransition
+            classNames={css}
+            in={currentTheme === "dark"}
+            duration={500}
+            appear
+          >
+            <div className={classNames(
+              css.backgroundImage,
+              backgrounds[images.dark]
+            )}/>
+          </CSSTransition>
         </Fragment>
       ) : null}
       <div
