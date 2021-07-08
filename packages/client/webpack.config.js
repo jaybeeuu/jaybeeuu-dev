@@ -26,6 +26,7 @@ module.exports = {
     historyApiFallback: true,
     host: env.CLIENT_HOST_NAME,
     hot: true,
+    http2: true,
     https: {
       key: fs.readFileSync(paths.certs.key),
       cert: fs.readFileSync(paths.certs.certificate),
@@ -109,30 +110,14 @@ module.exports = {
               {
                 loader: "url-loader",
                 options: {
-                  limit: 5000,
+                  limit: 1000,
                   name: "static/[name].[contenthash].[ext]",
                 },
               },
               {
                 loader: "image-webpack-loader",
                 options: {
-                  enforce: "pre",
                   bypassOnDebug: true,
-                  mozjpeg: {
-                    progressive: true,
-                    quality: 75
-                  },
-                  optipng: {
-                    enabled: false,
-                  },
-                  pngquant: {
-                    quality: [0.65, 0.90],
-                    speed: 4
-                  },
-                  gifsicle: {
-                    interlaced: false,
-                  },
-                  // the webp option will enable WEBP
                   webp: {
                     quality: 75
                   }
@@ -161,28 +146,38 @@ module.exports = {
       })
     ],
     splitChunks: {
-      maxInitialRequests: 6,
-      cacheGroups: {
-        slowVendors: {
-          test: /[\\/]node_modules[\\/]/,
-          chunks: "initial",
-          filename: "slow-vendors.[contenthash].js",
-          priority: -10,
-        },
-        fastVendors: {
-          test: /[\\/]lib[\\/]/,
-          chunks: "initial",
-          filename: "fast-vendors.[contenthash].js",
-          priority: -20,
-        },
-        default: {
-          filename: "[name].[contenthash].js",
-          chunks: "initial",
-          priority: -30,
-          reuseExistingChunk: true
-        }
-      }
-    }
+      chunks: "all",
+      filename: "[name].[contenthash].js",
+      maxSize: 30000,
+      minSize: 5000
+    },
+    // splitChunks: {
+    //   maxInitialRequests: 6,
+    //   maxSize: 3000,
+    //   maxInitialSize: 40,
+    //   cacheGroups: {
+    //     slowVendors: {
+    //       test: /[\\/]node_modules[\\/]/,
+    //       chunks: "initial",
+    //       filename: "slow-vendors.[contenthash].js",
+    //       priority: -10,
+    //       reuseExistingChunk: true
+    //     },
+    //     fastVendors: {
+    //       test: /[\\/]lib[\\/]/,
+    //       chunks: "initial",
+    //       filename: "fast-vendors.[contenthash].js",
+    //       priority: -20,
+    //       reuseExistingChunk: true
+    //     },
+    //     default: {
+    //       filename: "[name].[contenthash].js",
+    //       chunks: "initial",
+    //       priority: -30,
+    //       reuseExistingChunk: true
+    //     }
+    //   }
+    // }
   },
   plugins: [
     new CopyWebpackPlugin({
