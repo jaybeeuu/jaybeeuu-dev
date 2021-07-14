@@ -13,6 +13,9 @@
   "files": [
     "lib"
   ],
+  "exports": {
+    ".": "./lib/index.js"
+  },
   "sideEffects": false,
   "scripts": {
     "build": "tsc --pretty",
