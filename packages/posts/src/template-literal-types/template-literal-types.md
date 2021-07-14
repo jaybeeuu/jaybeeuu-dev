@@ -90,13 +90,16 @@ CSS class names using the BEM naming convention.
 That's a lot of words.
 Let me explain.
 
-On my current project we separate out the concerns of styling our components (we are using react)
-and selecting elements to assert on or interact with in our UI end to end (E2E) tests (we use Cypress).
-So rather than using css classes to apply both styles and select elements in E2E.
-We add classes to style our elements (style classes) and *also* add different classes for use in E2E (E2E Hooks).
+I like to separate out the concerns of styling my components (I use react at the moment)
+and selecting elements to assert on or interact with in my UI end to end (E2E) tests (I use Cypress).
+So rather than using CSS classes to apply both styles and select elements in E2E,
+I add classes to style our elements (style classes) and *also* add different classes for use in E2E (E2E Hooks).
+If you inspect a couple of elements on this blog (try the buttons in the navbar/header) you'll see them;
+they are the classes.
+
 This is good.
-We are free to restyle our elements or refactor the classes we apply without breaking our tests.
-Tests that don't need to change as a result of refactors bring most _value_.
+I am free to restyle components or elements or refactor the classes I apply without breaking my tests.
+Tests that don't need to change as a result of refactors bring more _value_.
 
 The problem is that we need to have unique class names because CSS classes are globally scoped.
 For Our style classes we use CSS modules (which are fantastic) but that would be awkward as E2E hooks,
@@ -170,7 +173,7 @@ export const makeHookBlock = (block) => {
 ```
 
 OK so hopefully you can see what's happening here:
-Fisrt we make a class (`blockClass`).
+First we make a class (`blockClass`).
 (It doesn't have a `.` because it's going on the the class attribute of a DOM element.)
 It combines `"e2e"` with the `block` argument.
 That's only really so we can see the classes that are e2e hooks at a glance.
@@ -180,7 +183,7 @@ Then attach a couple of functions to it.
 `element` simply combines an argument with `blockClass` using the `__` that indicates an element.
 `modifier` the same with the `--` of a modifier.
 
-Here's the thing being used;:
+Here's the thing being used:
 
 ```jsx
 import classNames from 'classnames';
@@ -238,7 +241,6 @@ Lets have a go with template literal types.
 
 ```ts
 interface HookBlock<Block extends string> {
-
   () => Block;
 
   element: <Element extends string>(
