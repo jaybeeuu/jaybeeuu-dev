@@ -15,6 +15,7 @@
     "bin",
     "lib"
   ],
+  "exports": {},
   "scripts": {
     "build": "tsc --pretty",
     "lint": "eslint --ext .js,.ts --format codeframe .",
