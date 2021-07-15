@@ -45,6 +45,10 @@ LTS
 destructuring
 v14
 lifecycle
+BEM
+ES2015
+E2E
+typings
  - src/premature-optimisation.md
 v14.15.1
 Hrn
@@ -60,3 +64,6 @@ Spacelab
 methodness
 functionness
 eventHandler
+ - src/template-literal-types/template-literal-types.md
+navbar
+tas

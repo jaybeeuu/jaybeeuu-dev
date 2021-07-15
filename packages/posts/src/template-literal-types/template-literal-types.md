@@ -4,13 +4,13 @@ They make building up strings terse and legible.
 
 I like using them so much what when I saw that
 [Version 4.1](https://devblogs.microsoft.com/typescript/announcing-typescript-4-1/#template-literal-types)
-of TypeScript added a way of defining type definitions with them i got a bit excited.
+of TypeScript added a way of defining type definitions with them I got a bit excited.
 
 As with so many shiny features though
 (like tagged templates still need to find and excuse to use those...)
 I had to wait until I found the right use case.
 But finally I found one: BEM naming conventions!
-Let's hve a look at them in the context of a real use case.
+Let's have a look at them in the context of a real use case.
 
 ## What are template literals?
 
@@ -117,7 +117,7 @@ BEM stands for Block Element Modifier.
 I don't want to get too deep but understanding this is important to see why the use case works.
 THe idea is that your classes will be made up of combinations of those three things.
 
-Blocks are top level containers; "a standalone entity that is meaningful on its own".
+Blocks are top level containers; "a stand alone entity that is meaningful on its own".
 For example you might have a "Carousel" a block.
 
 Elements are use to build up the Block.
@@ -143,7 +143,7 @@ The segments are joined with `__` to indicate an element, and `--` to indicate a
 
 The rules are simple, but pretty effective.
 
-## BEM Prefixer
+## BEM Builder
 
 Manually building up those class names is a hassle.
 And I'm lazy so I use a set of functions to build them:
@@ -176,7 +176,7 @@ OK so hopefully you can see what's happening here:
 First we make a class (`blockClass`).
 (It doesn't have a `.` because it's going on the the class attribute of a DOM element.)
 It combines `"e2e"` with the `block` argument.
-That's only really so we can see the classes that are e2e hooks at a glance.
+That's only really so we can see the classes that are E2E hooks at a glance.
 
 We make a `getBlock` function which will be returned as our block.
 Then attach a couple of functions to it.
