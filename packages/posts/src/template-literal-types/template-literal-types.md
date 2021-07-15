@@ -82,8 +82,10 @@ Fun right?
 
 Yeah fun, but it's not obvious to me yet why I should care.
 
-## Lets see a use case
+## What';'s the use?
 
+Like iI said,
+it took me a while to find ~~an excuse~~ a reason to use these types.
 The use case I found was to create a set of functions which define
 CSS class names using the BEM naming convention.
 
@@ -93,9 +95,10 @@ Let me explain.
 I like to separate out the concerns of styling my components (I use react at the moment)
 and selecting elements to assert on or interact with in my UI end to end (E2E) tests (I use Cypress).
 So rather than using CSS classes to apply both styles and select elements in E2E,
-I add classes to style our elements (style classes) and *also* add different classes for use in E2E (E2E Hooks).
+I add classes to style our elements (style classes) and *also* add different classes for use in E2E (E2E Hooks),
+when I need them.
 If you inspect a couple of elements on this blog (try the buttons in the navbar/header) you'll see them;
-they are the classes.
+they are the classes that start `e2e__`.
 
 This is good.
 I am free to restyle components or elements or refactor the classes I apply without breaking my tests.
@@ -149,7 +152,7 @@ Manually building up those class names is a hassle.
 And I'm lazy so I use a set of functions to build them:
 
 ```js
-export const makeHookBlock = (block) => {
+const makeHookBlock = (block) => {
   const blockClass = `e2e__${block}`;
 
   const getBlock = () => {
@@ -186,10 +189,12 @@ Then attach a couple of functions to it.
 Here's the thing being used:
 
 ```jsx
-import classNames from 'classnames';
+import classNames from "classnames";
+import { makeHookBlock } from "@jaybeeuu/e2e-hooks";
 
 const carouselBlock = makeHookBlock("carousel");
 const scrollTrack = carouselBlock.element("scroll-track");
+
 const activeScrollTrack = carouselBlock.modifiedElement(
   "scroll-track",
   "active"
@@ -220,18 +225,18 @@ Here's a first pass at the return type for `makeHookBlock`:
 
 ```ts
 interface HookBlock {
-  () => string;
+  (): string;
   element: (element: string) => string;
   modifiedElement: (element: string, modifier: string) => string;
   modifier: (modifier: string) => string;
 }
 
 const makeHookBlock = (block: string): HookBlock => {
-  // ...
+  // ...the same implementation as before.
 };
 ```
 
-OK that works fine, but where you are using the result you only see `string` for the type.
+OK that works fine, but where you are using the hooks you only see `string` for the type.
 So if you share these classes or define them in one module and use them in another,
 your don't necessarily know what your getting.
 That's not great because it could slow down the debug cycle.
@@ -241,7 +246,7 @@ Lets have a go with template literal types.
 
 ```ts
 interface HookBlock<Block extends string> {
-  () => Block;
+  (): `e2e__${Block}`;
 
   element: <Element extends string>(
     element: Element
@@ -273,12 +278,25 @@ Pretty cool no?
 OK it's a bit verbose.
 But I think it's cool.
 
-Essentially we use generics to pass through the segments of the eventual class.
-Then Template Literal Types too join them together.
+Essentially we use generics to pass through the segments of the eventual css class,
+then Template Literal Types too join them together.
+Type inference means that when we use it all the generis go away and it ends up nice and clean
+(just like before).
 
+```ts
+const carouselBlock = makeHookBlock("carousel");
+const scrollTrack = carouselBlock.element("scroll-track");
+
+const activeScrollTrack = carouselBlock.modifiedElement(
+  "scroll-track",
+  "active"
+);
+```
+
+The only difference is the types.
 Now you don't have to do the mental gymnastics to figure out what the actual hook text is TypeScript has your back.
 Just hover over it in the IDE with your mouse.
 
-![active-scroll-track](active-sscroll-track.png)
+![active-scroll-track](active-scroll-track.png)
 
 Fan. tas. tic.

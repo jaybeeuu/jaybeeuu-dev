@@ -89,5 +89,3 @@ export const makeClassSelectors = <Hooks extends HookMap>(hooks: Hooks): ClassSe
     return acc;
   }, { }) as ClassSelectors<Hooks>;
 };
-
-const carousel = makeHookBlock("carousel");
