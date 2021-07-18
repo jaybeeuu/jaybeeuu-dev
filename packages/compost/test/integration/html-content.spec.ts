@@ -1,38 +1,8 @@
 import {
-  cleanUpDirectories,
-  compilePosts,
-  getPost,
-  writePostFiles
+  getCompiledPostWithContent,
 } from "./helpers";
 
-import type { UpdateOptions } from "../../src/posts/src/types";
-
 describe("compile", () => {
-  const setupPostFiles = async (slug: string, content: string[]): Promise<void> => {
-    await writePostFiles({
-      slug,
-      content,
-      meta: {
-        abstract: "abstract",
-        publish: true,
-        title: "{title}"
-      }
-    });
-  };
-
-  const getCompiledPostWithContent = async (
-    contentLines: string[],
-    options: RecursivePartial<{
-      slug: string
-      updateOptions: UpdateOptions
-    }> = {}
-  ): Promise<string> => {
-    const { slug = "{slug}", updateOptions } = options;
-    await cleanUpDirectories();
-    await setupPostFiles(slug, contentLines);
-    await compilePosts(updateOptions);
-    return await getPost(slug);
-  };
 
   it("compiles a post tto include some basic content.", async () => {
     const postContent = "This is the content";

@@ -98,3 +98,25 @@ export const compilePosts = async (options?: Partial<UpdateOptions>): Promise<Re
     ...options
   });
 };
+
+export const getCompiledPostWithContent = async (
+  contentLines: string[],
+  options: RecursivePartial<{
+    slug: string
+    updateOptions: UpdateOptions
+  }> = {}
+): Promise<string> => {
+  const { slug = "{slug}", updateOptions } = options;
+  await cleanUpDirectories();
+  await writePostFiles({
+    slug,
+    content: contentLines,
+    meta: {
+      abstract: "abstract",
+      publish: true,
+      title: "{title}"
+    }
+  });
+  await compilePosts(updateOptions);
+  return await getPost(slug);
+};
