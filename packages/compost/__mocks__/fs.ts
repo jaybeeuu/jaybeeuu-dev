@@ -535,8 +535,13 @@ mocked(fs.promises.rm).mockImplementation(async (path, options) => {
   await Promise.resolve();
   const resolvedPath = resolvePath(path);
   const parentDirName = pathUtils.dirname(resolvedPath);
-  const getParentDirResult = maybeGetDirectory(parentDirName);
 
+  if (path === "/" && options?.recursive && options?.force) {
+    root.entries = {};
+    return;
+  }
+
+  const getParentDirResult = maybeGetDirectory(parentDirName);
   if (getParentDirResult.existed === false) {
     if (!options?.force) {
       throw new Error(`Unable to rm ${path}: ${getParentDirResult.message}`);
