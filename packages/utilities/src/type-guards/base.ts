@@ -46,6 +46,10 @@ export const hasFunctionProperty = <Obj extends {}, Property extends PropertyKey
   return hasPropertyOfType<Obj, Property, string>(obj, property, "function");
 };
 
+export const isNull = (candidate: unknown): candidate is null => {
+  return candidate === null;
+};
+
 export const isObject = <Obj extends {}>(
   properties: { [key in keyof Obj]: TypePredicate<Obj[key]> }
 ): TypePredicate<Obj> => (
@@ -63,6 +67,15 @@ export const isObject = <Obj extends {}>(
     return hasOwnProperty(candidate, key)
       && (isCorrectType as (candidate: unknown) => boolean)(candidate[key]);
   });
+};
+
+export const isArrayOf = <Arr extends []>(
+  isElement: TypePredicate<Arr extends (infer Element)[] ? Element : never>
+): TypePredicate<Arr> => (
+  candidate: unknown
+): candidate is Arr => {
+  return Array.isArray(candidate)
+    && candidate.every((element) => isElement(element));
 };
 
 export type RecordValue<Rec> = Rec extends Record<string, infer Value>
