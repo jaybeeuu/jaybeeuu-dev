@@ -19,7 +19,7 @@ const run = async (
     if (result.success) {
       log.info(`Complete:\n\n${
         Object.entries(result.value).map(([slug, postMeta]) => {
-          return `    ${slug}: ${postMeta.fileName}`;
+          return `    ${slug}: ${postMeta?.fileName ?? "{no meta data}"}`;
         }).join("\n")
       }`);
       return success();

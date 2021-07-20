@@ -70,7 +70,7 @@ export const update = async (
     }
 
     const postMarkdownFilePath = getPostMarkdownFilePath(metadataFileInfo.absolutePath, slug);
-    const compiledPost = await compilePost(postMarkdownFilePath, { postSlug: slug, hrefRoot: options.hrefRoot });
+    const compiledPost = await compilePost(postMarkdownFilePath, { hrefRoot: options.hrefRoot });
     const compiledFileName = getCompiledPostFileName(slug, compiledPost);
     const compiledFilePath = path.join(resolvedOutputDir, compiledFileName);
     await writeTextFile(compiledFilePath, compiledPost);

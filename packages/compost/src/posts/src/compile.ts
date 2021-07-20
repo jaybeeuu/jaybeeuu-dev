@@ -1,13 +1,14 @@
+import path from "path";
 import highlight from "highlight.js";
 import type { MarkedOptions, Slugger } from "marked";
 import marked  from "marked";
 import type { IOptions } from "sanitize-html";
 import sanitizeHtml from "sanitize-html";
+import { assertIsNotNullish } from "@jaybeeuu/utilities";
 import { readTextFile } from "../../files/index.js";
 
 interface RenderContext {
   hrefRoot: string;
-  postSlug: string
 }
 
 class CustomRenderer extends marked.Renderer {
@@ -41,6 +42,13 @@ class CustomRenderer extends marked.Renderer {
       `</h${level}>`
     ].join("\n");
   }
+
+  image(href: string | null, title: string | null, text: string): string {
+    assertIsNotNullish(href);
+    //todo: consider http(s) and non relative paths.
+    const transformedHref = `/${path.posix.join(this.renderContext.hrefRoot, href)}`;
+    return super.image(transformedHref, title, text);
+  }
 }
 
 const markedOptions = {
@@ -59,18 +67,19 @@ const markedOptions = {
 const sanitizeOptions: IOptions = {
   ...sanitizeHtml.defaults,
   disallowedTagsMode: process.env.NODE_ENV === "production" ? "discard" : "recursiveEscape",
-  allowedTags: [ ...sanitizeHtml.defaults.allowedTags, "h1", "h2", "span" ],
+  allowedTags: [ ...sanitizeHtml.defaults.allowedTags, "img", "h1", "h2", "span" ],
   allowedAttributes: {
     ...sanitizeHtml.defaults.allowedAttributes,
+    a: ["class", ...sanitizeHtml.defaults.allowedAttributes.a],
     h1: ["id"],
     h2: ["id"],
     h3: ["id"],
     h4: ["id"],
     h5: ["id"],
     h6: ["id"],
-    span: ["class"],
+    img: ["alt", "src"],
     pre: ["class"],
-    a: ["class", ...sanitizeHtml.defaults.allowedAttributes.a],
+    span: ["class"]
   }
 };
 
