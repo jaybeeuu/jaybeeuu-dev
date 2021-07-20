@@ -10,7 +10,7 @@ export interface PostMetaData {
 }
 
 export interface PostManifest {
-  [slug: string]: PostMetaData;
+  [slug: string]: PostMetaData | undefined;
 }
 
 export interface PostRedirectsMap {
