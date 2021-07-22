@@ -3,9 +3,6 @@ import { getHash } from "../../hash.js";
 import type { Result } from "../../results.js";
 import { success, failure } from "../../results.js";
 
-const HASH_LENGTH = 6;
-const HASH_ALLOWED_CHARS = "0-9A-z";
-
 const ALLOWED_SLUG_FORMAT = "[0-9A-z-]{4,}";
 
 export type ValidateSlugFailureReason = "invalid slug"
@@ -22,10 +19,6 @@ export const getPostMarkdownFilePath = (metadataAbsolutePath: string, slug: stri
 };
 
 export const getCompiledPostFileName = (slug: string, fileContent: string): string => {
-  const compiledFileHash = getHash(fileContent);
-  const hashFragment  = compiledFileHash.replace(
-    new RegExp(`[^${HASH_ALLOWED_CHARS}]`, "g"),
-    ""
-  ).substring(0, HASH_LENGTH);
+  const hashFragment = getHash(fileContent);
   return `${slug}-${hashFragment}.html`;
 };
