@@ -30,7 +30,28 @@ export interface PostFile {
   meta: PostMetaFileData | null;
   path?: string;
   slug: string;
+  otherFiles?: {
+    content: string,
+    path: string
+  }[]
 }
+
+const getDefaultedUpdateOptions = (
+  options: Partial<UpdateOptions> = {}
+): UpdateOptions => {
+  const defaultedHrefRoot = options?.hrefRoot ?? "posts";
+  return {
+    additionalWatchPaths: [],
+    hrefRoot: defaultedHrefRoot,
+    includeUnpublished: false,
+    manifestFileName: "manifest.post.json",
+    outputDir: path.join("out", defaultedHrefRoot),
+    requireOldManifest: false,
+    sourceDir: "src",
+    watch: false,
+    ...options
+  };
+};
 
 export const writePostFile = async (
   postFile: PostFile,
@@ -41,36 +62,32 @@ export const writePostFile = async (
   const {
     content,
     meta,
-    path: filePath = ".",
-    slug
+    path: postPath = ".",
+    slug,
+    otherFiles
   } = postFile;
 
   await writeTextFiles(
     defaultedUpdateOptions.sourceDir,
     [
       {
-        path: path.join(filePath, `${slug}.md`),
+        path: path.join(postPath, `${slug}.md`),
         content: Array.isArray(content) ? content.join("\n") : content
       },
       meta !== null ? {
-        path: path.join(filePath, `${slug}.post.json`),
+        path: path.join(postPath, `${slug}.post.json`),
         content: JSON.stringify(meta, null, 2)
-      } : null
+      } : null,
+      ...otherFiles?.map((file) => ({
+        path: path.join(postPath, file.path),
+        content: file.content
+      })) ?? []
     ].filter((
       member: File | null
     ): member is File => {
       return member !== null;
     })
   );
-};
-
-const writePostFiles = async (
-  postFiles: PostFile[],
-  options: Partial<UpdateOptions> = {}
-): Promise<void> => {
-  await Promise.all(postFiles.map(
-    (postFile) => writePostFile(postFile, options)
-  ));
 };
 
 const getOutputFile = async (
@@ -110,47 +127,32 @@ export const getPost = async (
   return await getOutputFile(relativePath, options);
 };
 
-const getDefaultedUpdateOptions = (
-  options: Partial<UpdateOptions> = {}
-): UpdateOptions => {
-  const defaultedHrefRoot = options?.hrefRoot ?? "posts";
-  return {
-    additionalWatchPaths: [],
-    hrefRoot: defaultedHrefRoot,
-    includeUnpublished: false,
-    manifestFileName: "manifest.post.json",
-    outputDir: path.join("out", defaultedHrefRoot),
-    requireOldManifest: false,
-    sourceDir: "src",
-    watch: false,
-    ...options
-  };
-};
-
 export const compilePosts = async (options?: Partial<UpdateOptions>): Promise<Result<PostManifest, UpdateFailureReason>> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
   return update(defaultedUpdateOptions);
 };
 
 export const getCompiledPostWithContent = async (
-  contentLines: string[],
-  options: RecursivePartial<{
-    slug: string
-    updateOptions: UpdateOptions
-  }> = {}
+  contentOrPost: string[] | RecursivePartial<PostFile>,
+  options: Partial<UpdateOptions> = {}
 ): Promise<string> => {
-  const { slug = "{slug}", updateOptions } = options;
   await cleanUpDirectories();
-  await writePostFiles([{
-    slug,
-    content: contentLines,
+  const userPost = Array.isArray(contentOrPost)
+    ? { content: contentOrPost }
+    : contentOrPost;
+  const postFile = {
+    slug: "{slug}",
+    content: ["{content}"],
+    ...userPost,
     meta: {
-      abstract: "abstract",
+      abstract: "{abstract}",
       publish: true,
-      title: "{title}"
+      title: "{title}",
+      ...userPost.meta
     }
-  }]);
-  const defaultedUpdateOptions = getDefaultedUpdateOptions(updateOptions);
-  await compilePosts(defaultedUpdateOptions);
-  return await getPost(slug, defaultedUpdateOptions);
+  };
+
+  await writePostFile(postFile, options);
+  await compilePosts(options);
+  return await getPost(postFile.slug, options);
 };

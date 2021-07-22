@@ -5,7 +5,7 @@ import {
 describe("images", () => {
   it("includes image tags in the compiled html.", async () => {
     const post = await getCompiledPostWithContent([
-      "# This pot needs an image",
+      "# This post needs an image",
       "![Here is the image!](./some-image.jpg)"
     ]);
 
@@ -18,7 +18,7 @@ describe("images", () => {
 
   it("gives the image tags the correct alt attribute.", async () => {
     const post = await getCompiledPostWithContent([
-      "# This pot needs an image",
+      "# This post needs an image",
       "![Here is the image!](./some-image.jpg)"
     ]);
 
@@ -30,10 +30,15 @@ describe("images", () => {
   });
 
   it("transforms the src of the image tags, placing it in the hrefRoot.", async () => {
-    const post = await getCompiledPostWithContent([
-      "# This pot needs an image",
-      "![Here is the image!](./some-image.jpg)"
-    ], { updateOptions: { hrefRoot: "posts-root" } });
+    const post = await getCompiledPostWithContent({
+      content: [
+        "# This post needs an image",
+        "![Here is the image!](./some-image.jpg)"
+      ],
+      otherFiles: [
+        { path: "./some-image.jpg", content: "this is an image, honest." }
+      ]
+    }, { hrefRoot: "posts-root" });
 
     expect(post).toStrictEqual(
       expect.stringContaining(

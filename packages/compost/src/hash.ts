@@ -16,7 +16,10 @@ const defaultHashOptions: HashOptions = {
   allowedChars: "0-9A-z"
 };
 
-export const getHash = (data: string, userOptions: Partial<HashOptions> = {}): string => {
+export const getHash = (
+  data: string,
+  userOptions: Partial<HashOptions> = {}
+): string => {
   const options = {
     ...defaultHashOptions,
     ...userOptions
