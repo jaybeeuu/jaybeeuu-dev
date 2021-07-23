@@ -4,7 +4,7 @@ import type { MarkedOptions, Slugger } from "marked";
 import marked  from "marked";
 import type { IOptions } from "sanitize-html";
 import sanitizeHtml from "sanitize-html";
-import { assertIsNotNullish, getErrorMessage } from "@jaybeeuu/utilities";
+import { assertIsNotNullish } from "@jaybeeuu/utilities";
 import { canAccessSync, Mode, readTextFile, readTextFileSync } from "../../files/index.js";
 import { getHash } from "../../hash.js";
 import type { Result } from "../../results.js";
