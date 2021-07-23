@@ -5,15 +5,45 @@ export interface Success<Value> {
   value: Value;
 }
 
-export type FailureName<Reason extends string> = `Failure(${Reason})`;
-export interface FailureError<Reason extends string> extends Error {
-  name: FailureName<Reason>;
-}
+const getPublicStack = (
+  error: Error,
+  framesSincePublic: number
+): string => {
+  const { message, name, stack } = error;
+  assertIsNotNullish(stack);
+  const messageAndName = `${name}: ${message}`;
+  const stackIncludesMessage = stack.startsWith(messageAndName);
+  const stackWithoutMessage = stackIncludesMessage
+    ? stack.replace(messageAndName, "")
+    : stack;
+  const stackFrames = stackWithoutMessage.trim().split("\n");
+  const publicFrames = stackFrames.slice(framesSincePublic);
+  const publicStack = publicFrames.join("\n");
+  return stackIncludesMessage ? `${messageAndName}\n${publicStack}` : publicStack;
+};
 
-export interface Failure<Reason extends string> extends FailureError<Reason> {
-  success: false;
-  reason: Reason;
-  name: FailureName<Reason>;
+export type FailureName<Reason extends string> = `Failure(${Reason})`;
+export class Failure<Reason extends string> extends Error {
+  public readonly name: FailureName<Reason>;
+  public readonly success = false;
+  public readonly reason: string;
+
+  constructor(
+    reason: Reason,
+    messageOrError: string | Error,
+    framesSincePublic: number
+  ) {
+    super(messageOrError instanceof Error ? messageOrError.message : messageOrError);
+    this.name = `Failure(${reason})`;
+    if (this.stack?.startsWith("Error")) {
+      this.stack = this.stack.replace("Error", this.name);
+    }
+    this.reason = reason;
+
+    this.stack = messageOrError instanceof Error && messageOrError.stack
+      ? messageOrError.stack
+      : getPublicStack(this, framesSincePublic);
+  }
 }
 
 export type Result<Value, FailureReason extends string> = Success<Value> | Failure<FailureReason>;
@@ -27,42 +57,16 @@ export function success<Value>(value?: Value): Success<Value> {
   return { success: true, value: value as Value };
 }
 
-const getError = <Reason extends string>(
+const failure = <Reason extends string>(
   reason: Reason,
-  messageOrError: string | Error | undefined,
-  framesSincePublic: number
-): FailureError<Reason> => {
-  if (messageOrError instanceof Error) {
-
-    return {
-      ...messageOrError,
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-      name: `Failure(${reason})` as FailureName<Reason>
-    };
-  }
-
-  const error = new Error("");
-  const stack = error.stack;
-  assertIsNotNullish(stack);
-  const publicStack = stack.slice(1 + framesSincePublic);
-
-  return {
-    ...error,
-    stack: publicStack,
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    name: `Failure(${reason})` as FailureName<Reason>,
-    message: messageOrError ?? ""
-  };
-};
-
-const failure = <Reason extends string>(reason: Reason, messageOrError?: string | Error, framesSincePublic: number = 1): Failure<Reason> => {
-  const error = getError(reason, messageOrError, framesSincePublic);
-
-  return {
-    success: false,
+  messageOrError?: string | Error,
+  framesSincePublic: number = 1
+): Failure<Reason> => {
+  return new Failure(
     reason,
-    ...error
-  };
+    messageOrError ?? "{No message}",
+    framesSincePublic
+  );
 };
 
 const repackError = <Value, FailureReason extends string>(

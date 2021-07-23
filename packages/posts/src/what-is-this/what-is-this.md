@@ -21,7 +21,6 @@ I had look through the ECMA spec to find a definitive list.
 But it gets a little involved and only gives part of the story given the W3C API we use in the browser.
 Perhaps its the subject of another post another time.
 Instead I'm going to present a slightly augmented version of a list you find on [w3schools](https://www.w3schools.com/js/js_this.asp).
-
 > * Alone, `this` refers to the global object.
 > * In a method, `this` refers to the owner object.
 > * In a function, `this` refers to the global object.

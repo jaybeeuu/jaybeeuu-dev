@@ -153,6 +153,9 @@ export const getCompiledPostWithContent = async (
   };
 
   await writePostFile(postFile, options);
-  await compilePosts(options);
+  const result = await compilePosts(options);
+  if (!result.success) {
+    throw result;
+  }
   return await getPost(postFile.slug, options);
 };

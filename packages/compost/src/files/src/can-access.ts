@@ -14,6 +14,15 @@ export enum Mode {
   execute = fs.constants.X_OK
 }
 
+export const canAccessSync = (file: string, mode?: Mode): boolean => {
+  try {
+    fs.accessSync(file, mode);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 export const canAccess = async (file: string, mode?: Mode): Promise<boolean> => {
   try {
     await fs.promises.access(file, mode);

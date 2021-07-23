@@ -415,6 +415,21 @@ mocked(fs.promises.access).mockImplementation(async (...args): Promise<void> => 
   throw new Error(`Could not access ${path}: Neither file nor directory called ${fileOrDirName} existed in ${parentDirName}`);
 });
 
+mocked(fs.accessSync).mockImplementation((...args): void => {
+  assertIsSupportedAccessArguments(args);
+  const [path] = args;
+  const resolvedPath = resolvePath(path);
+  const parentDirName = pathUtils.dirname(resolvedPath);
+  const parentDir = getDirectory(parentDirName);
+  const fileOrDirName = pathUtils.basename(resolvedPath);
+
+  if (parentDir.entries[fileOrDirName]) {
+    return;
+  }
+
+  throw new Error(`Could not access ${path}: Neither file nor directory called ${fileOrDirName} existed in ${parentDirName}`);
+});
+
 type LstatOptions
   = fsModule.StatOptions & { bigint?: false }
   | fsModule.StatOptions & { bigint: true }
@@ -612,7 +627,7 @@ mocked<Readdir>(
 );
 
 const assertIsSupportedReadFileArguments: (
-  args: Parameters<typeof fs.promises.readFile>
+  args: Parameters<typeof fs.promises.readFile> | Parameters<typeof fs.readFileSync>
 ) => asserts args is [string, "utf8"] = (
   args
 ) => {
@@ -621,6 +636,14 @@ const assertIsSupportedReadFileArguments: (
     throw new Error("Only string path and utf8 options is supported. other argument types have not been implemented.");
   }
 };
+
+mocked(fs.readFileSync).mockImplementation((...args) => {
+  assertIsSupportedReadFileArguments(args);
+  const [path] = args;
+  const file = getFile(path);
+  file.logAccess();
+  return file.content;
+});
 
 mocked(fs.promises.readFile).mockImplementation(async (...args) => {
   assertIsSupportedReadFileArguments(args);
