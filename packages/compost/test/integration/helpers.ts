@@ -90,7 +90,7 @@ export const writePostFile = async (
   );
 };
 
-const getOutputFile = async (
+export const getOutputFile = async (
   filePath: string,
   options: Partial<UpdateOptions> = {}
 ): Promise<string> => {

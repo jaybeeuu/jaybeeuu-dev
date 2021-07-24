@@ -1,5 +1,6 @@
+import type { UpdateOptions } from "packages/compost/src/posts/src/types";
 import {
-  getCompiledPostWithContent
+  getCompiledPostWithContent, getOutputFile
 } from "./helpers";
 
 describe("images", () => {
@@ -52,8 +53,27 @@ describe("images", () => {
 
     expect(post).toStrictEqual(
       expect.stringContaining(
-        "src=\"/posts-root/some-image-j8Ri3I.jpg\""
+        "src=\"posts-root/some-image-j8Ri3I.jpg\""
       )
+    );
+  });
+
+  it("copies the image into the output dir in the right place.", async () => {
+    const updateOptions: Partial<UpdateOptions> = { hrefRoot: "posts-root" };
+    void await getCompiledPostWithContent({
+      content: [
+        "# This post needs an image",
+        "![Here is the image!](./some-image.jpg)"
+      ],
+      otherFiles: [
+        { path: "./some-image.jpg", content: "this is an image, honest." }
+      ]
+    }, updateOptions);
+
+    expect(
+      await getOutputFile("some-image-j8Ri3I.jpg", updateOptions)
+    ).toBe(
+      "this is an image, honest."
     );
   });
 });

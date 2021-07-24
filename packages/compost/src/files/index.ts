@@ -4,3 +4,7 @@ export { readJsonFile, ReadJsonFileFailureReason, writeJsonFile } from "./src/js
 export { fetchJsonFile } from "./src/json-file-url.js";
 export { FileInfo, RecurseDirectoryOptions, recurseDirectory } from "./src/recurse-dir.js";
 export { File, readTextFile, readTextFileSync, writeTextFile, writeTextFiles } from "./src/text-files.js";
+
+import fs from "fs";
+const { copyFile } = fs.promises;
+export { copyFile };

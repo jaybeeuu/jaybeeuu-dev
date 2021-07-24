@@ -388,6 +388,32 @@ const assertPathIsString: (path: fsModule.PathLike) => asserts path is string = 
   }
 };
 
+const assertIsSupportedCopyFileArguments: (
+  args: Parameters<typeof fsModule.promises.copyFile>
+) => asserts args is [string, string, undefined] = (args) => {
+  const [source, destination, flags] = args;
+  if (
+    typeof source !== "string"
+    || typeof destination !== "string"
+    || typeof flags !== "undefined"
+  ) {
+    throw new Error("copyFIle mock only supports string source and destination and undefined flags.");
+  }
+};
+
+mocked(
+  fs.promises.copyFile
+).mockImplementation(
+  async (...args) => {
+    assertIsSupportedCopyFileArguments(args);
+    const [source, destination] = args;
+    await Promise.resolve();
+    const resolvedSource = resolvePath(source);
+    const file = getFile(resolvedSource);
+    await fs.promises.writeFile(destination, file.content, "utf8");
+  }
+);
+
 const assertIsSupportedAccessArguments: (
   args: Parameters<typeof fs.promises.access>
 ) => asserts args is [string, undefined] = (

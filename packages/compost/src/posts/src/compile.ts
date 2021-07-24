@@ -10,12 +10,12 @@ import { getHash } from "../../hash.js";
 import type { Result } from "../../results.js";
 import { success, failure } from "../../results.js";
 
-interface RenderContext {
+export interface RenderContext {
   hrefRoot: string;
   sourceFilePath: string;
 }
 
-export interface AdditionalFile {
+export interface Assets {
   sourcePath: string;
   destinationPath: string;
 }
@@ -29,10 +29,10 @@ const escapeText = (text: string): string => {
 
 class CustomRenderer extends marked.Renderer {
   #renderContext: RenderContext;
-  #additionalFiles: AdditionalFile[] = [];
+  #assets: Assets[] = [];
 
-  public get additionalFiles(): AdditionalFile[] {
-    return this.#additionalFiles;
+  public get assets(): Assets[] {
+    return this.#assets;
   }
 
   constructor(renderContext: RenderContext, markedOptions?: MarkedOptions) {
@@ -72,12 +72,16 @@ class CustomRenderer extends marked.Renderer {
     }
     const imageFileContent = readTextFileSync(resolvedImagePath);
     const imageHash = getHash(imageFileContent);
-    const [imageFileName, imageFIleExtension] = path.basename(resolvedImagePath).split(".");
+    const [imageFileName, imageFileExtension] = path.basename(resolvedImagePath).split(".");
+    const hashedFileName = `${imageFileName}-${imageHash}.${imageFileExtension}`;
     const transformedHref = path.posix.join(
-      "/",
       this.#renderContext.hrefRoot,
-      `${imageFileName}-${imageHash}.${imageFIleExtension}`
+      hashedFileName
     );
+    this.assets.push({
+      sourcePath: resolvedImagePath,
+      destinationPath: hashedFileName
+    });
     return super.image(transformedHref, title, text);
   }
 }
@@ -116,13 +120,23 @@ const sanitizeOptions: IOptions = {
 
 export type CompileFailureReason = `Failed to compile ${string}`;
 
-export const compilePost = async (renderContext: RenderContext): Promise<Result<string, CompileFailureReason>> => {
+export interface CompiledPost {
+  html: string;
+  assets: Assets[];
+}
+
+export const compilePost = async (
+  renderContext: RenderContext
+): Promise<Result<CompiledPost, CompileFailureReason>> => {
   try {
     const fileAsString = await readTextFile(renderContext.sourceFilePath);
     const renderer = new CustomRenderer(renderContext);
     const html = marked(fileAsString, { renderer, ...markedOptions });
     const sanitized = sanitizeHtml(html, sanitizeOptions);
-    return success(sanitized);
+    return success({
+      html: sanitized,
+      assets: renderer.assets
+    });
   } catch (error) {
     return failure(`Failed to compile ${renderContext.sourceFilePath}`, error);
   }

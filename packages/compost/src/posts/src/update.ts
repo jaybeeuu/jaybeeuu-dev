@@ -4,7 +4,8 @@ import {
   recurseDirectory,
   writeJsonFile,
   writeTextFile,
-  deleteDirectories
+  deleteDirectories,
+  copyFile
 } from "../../files/index.js";
 import type { Result} from "../../results.js";
 import { success } from "../../results.js";
@@ -80,11 +81,19 @@ export const update = async (
     if (!compiledPostResult.success) {
       return compiledPostResult;
     }
-    const compiledPost = compiledPostResult.value;
+    const { html: compiledPost, assets } = compiledPostResult.value;
 
     const compiledFileName = getCompiledPostFileName(slug, compiledPost);
     const compiledFilePath = path.join(resolvedOutputDir, compiledFileName);
-    await writeTextFile(compiledFilePath, compiledPost);
+
+    await Promise.all([
+      writeTextFile(compiledFilePath, compiledPost),
+      ...assets.map((asset) => copyFile(
+        asset.sourcePath,
+        path.join(options.outputDir, asset.destinationPath)
+      ))
+    ]);
+
     const href = joinUrlPath(options.hrefRoot, compiledFileName);
 
     const originalRecord = oldManifest[slug];
