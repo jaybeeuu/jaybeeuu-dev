@@ -21,6 +21,7 @@
     "@jaybeeuu/compost": "workspace:*",
     "@jaybeeuu/e2e-hooks": "workspace:*",
     "@jaybeeuu/eslint-config": "workspace:*",
+    "@jaybeeuu/utilities": "workspace:*",
     "@types/node": "15.6.1",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "core-js": "3.13.0",
