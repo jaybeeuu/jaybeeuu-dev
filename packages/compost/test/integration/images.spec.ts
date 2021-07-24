@@ -58,6 +58,44 @@ describe("images", () => {
     );
   });
 
+  it("leaves https urls intact.", async () => {
+    const updateOptions: Partial<UpdateOptions> = { hrefRoot: "posts-root" };
+    const post = await getCompiledPostWithContent({
+      content: [
+        "# This post needs an image",
+        "![Here is the image!](https://somwhere.net/some-image.jpg)"
+      ],
+      otherFiles: [
+        { path: "./some-image.jpg", content: "this is an image, honest." }
+      ]
+    }, updateOptions);
+
+    expect(post).toStrictEqual(
+      expect.stringContaining(
+        "src=\"https://somwhere.net/some-image.jpg\""
+      )
+    );
+  });
+
+  it("leaves http urls intact.", async () => {
+    const updateOptions: Partial<UpdateOptions> = { hrefRoot: "posts-root" };
+    const post = await getCompiledPostWithContent({
+      content: [
+        "# This post needs an image",
+        "![Here is the image!](http://somwhere.net/some-image.jpg)"
+      ],
+      otherFiles: [
+        { path: "./some-image.jpg", content: "this is an image, honest." }
+      ]
+    }, updateOptions);
+
+    expect(post).toStrictEqual(
+      expect.stringContaining(
+        "src=\"http://somwhere.net/some-image.jpg\""
+      )
+    );
+  });
+
   it("copies the image into the output dir in the right place.", async () => {
     const updateOptions: Partial<UpdateOptions> = { hrefRoot: "posts-root" };
     void await getCompiledPostWithContent({

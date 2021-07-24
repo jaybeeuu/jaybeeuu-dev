@@ -62,11 +62,17 @@ class CustomRenderer extends marked.Renderer {
 
   image(href: string | null, title: string | null, text: string): string {
     assertIsNotNullish(href);
+
+    if (href.startsWith("https:") || href.startsWith("http:")) {
+      return super.image(href, title, text);
+    }
+
     // TODO: consider http(s) and non relative paths.
     const resolvedImagePath = path.resolve(
       path.dirname(this.#renderContext.sourceFilePath),
       href
     );
+
     if (!canAccessSync(resolvedImagePath, Mode.read)) {
       throw new Error(`Unable to access image file: ${resolvedImagePath}`);
     }
