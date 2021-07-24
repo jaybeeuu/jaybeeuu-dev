@@ -67,7 +67,6 @@ class CustomRenderer extends marked.Renderer {
       return super.image(href, title, text);
     }
 
-    // TODO: consider http(s) and non relative paths.
     const resolvedImagePath = path.resolve(
       path.dirname(this.#renderContext.sourceFilePath),
       href
