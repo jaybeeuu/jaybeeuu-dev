@@ -110,10 +110,12 @@ I am free to restyle components or elements or refactor the classes I apply with
 Tests that don't need to change as a result of refactors bring more _value_.
 
 The problem is that we need to have unique class names because CSS classes are globally scoped.
-For Our style classes we use CSS modules (which are fantastic) but that would be awkward as E2E hooks,
-since they don't exist in style sheets.
+For style classes I use CSS modules (which are fantastic) but that would be awkward as E2E hooks,
+since the hooks,
+by definition,
+don't exist in style sheets.
 
-So instead we revert to an old tactic for scoping CSS classes.
+So instead I revert to an old tactic for scoping CSS classes.
 
 ## BEM
 
@@ -146,10 +148,10 @@ To make up a CSS class using these we join them with various delimiters:
 }
 ```
 
-In this example the class indicates the `carousel` block's `scroll-track` which is currently in `active` state.
+In this example the class indicates the `carousel` block's `scroll-track` element which is currently in `active` state.
 The segments are joined with `__` to indicate an element, and `--` to indicate a modifier.
 
-The rules are simple, but pretty effective.
+The rules are simple, but pretty effective at manually scoping the classes.
 
 ## BEM Builder
 
