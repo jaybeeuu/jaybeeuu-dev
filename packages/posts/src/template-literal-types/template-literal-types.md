@@ -1,16 +1,19 @@
-Template literals are a fantastic feature of JavaScript
+[Template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
+are a fantastic feature of JavaScript
 (well a few languages, but I find myself thinking mostly about JavaScript at the moment).
 They make building up strings terse and legible.
 
 I like using them so much what when I saw that
 [Version 4.1](https://devblogs.microsoft.com/typescript/announcing-typescript-4-1/#template-literal-types)
-of TypeScript added a way of defining type definitions with them I got a bit excited.
+of TypeScript added a way of defining type definitions with a similar syntax I got a bit excited.
 
 As with so many shiny features though
 (like tagged templates still need to find and excuse to use those...)
 I had to wait until I found the right use case.
 But finally I found one: BEM naming conventions!
 Let's have a look at them in the context of a real use case.
+
+Today I'm going to talk through what template literal types are and how they helped.
 
 ## What are template literals?
 
@@ -77,17 +80,19 @@ type Fruit = "pear";
 type Instruction = `${Action} a ${Fruit}`;
 ```
 
-Instruction will have the type `"eat a pear"`;
+Instruction will have the string literal type `"eat a pear"`;
 Fun right?
 
 Yeah fun, but it's not obvious to me yet why I should care.
 
-## What';'s the use?
+## What's the use?
 
-Like iI said,
+Like I said,
 it took me a while to find ~~an excuse~~ a reason to use these types.
 The use case I found was to create a set of functions which define
-CSS class names using the BEM naming convention.
+CSS class names,
+for use as end to end (E2E) test hooks,
+using the BEM naming convention.
 
 That's a lot of words.
 Let me explain.
@@ -149,7 +154,17 @@ The rules are simple, but pretty effective.
 ## BEM Builder
 
 Manually building up those class names is a hassle.
-And I'm lazy so I use a set of functions to build them:
+And I'm lazy so I use a set of functions to build them.
+OK I'm being flippant here.
+There's better reasons to take this next step.
+
+* It's easier to discover BEM syntax is being used if you have words describing it, rather than just the classes and
+(you document your teams working practices and conventions right?) some wiki page somewhere.
+* It's more likely those who follow after will use your naming convention if it's easy.
+  Encoding how to do it in code,
+  then publicising and documenting it makes it pretty difficult to do anything but follow the pattern.
+
+Here we go...
 
 ```js
 const makeHookBlock = (block) => {
@@ -218,9 +233,31 @@ A bit more expressive than manually typing it out right?
 (In fact rather than `modifiedElement` we have a `makeChildElement` function that returns another decorated function,
 but that's a bit more involved than we need for this post.)
 
+The problem, though is that while the code is more accessible to the uninitiated
+(they don't need to earn how to mak a BEM element, they can call a function).
+What you actually end up with is not obvious, and that could slow things down.
+What if, for example, you want to manually check a hook has appeared on an element?
+You have to know what to expect.
+WHich means going back to the definitions, now hidden behind layers of code.
+
+With JavaScript you don't get much help.
+Even jumping to the definition is hit and miss depending on your IDE/Editor.
+So in that way then maybe we would have been better leaving the strings - the functions are mystifying things.
+
+Fortunately, we no longer live in the dark ages (2-3 years ago in FE time) and JavaScript is not the only tool in our box.
+As far as I am concerned one TypeScript's key selling points is that it's great at making code self-documenting.
+
+With TS you get back all the tools like intellisense and
+code navigation that you come to expect if you work with strongly typed languages like Java or C#.
+It's difficult to overstate how much time you save when autocomplete tells you which params you need for a function,
+compared to having to track down the definition or docs.
+
+Can TypeScript help us out of this hole and improve the Dev Ex of my helpers too?
+(Spoiler alert the answer is yes.
+which... you probably figured out given that I bothered writing this post...)
+
 ## Typings
 
-Alright now we have the use case lets see the typings.
 Here's a first pass at the return type for `makeHookBlock`:
 
 ```ts
@@ -237,20 +274,20 @@ const makeHookBlock = (block: string): HookBlock => {
 ```
 
 OK that works fine, but where you are using the hooks you only see `string` for the type.
-So if you share these classes or define them in one module and use them in another,
-your don't necessarily know what your getting.
-That's not great because it could slow down the debug cycle.
-I'm all about creating a better developer experience so can we do better?
+So you still don't know what your getting.
+Can we do better?
 
 Lets have a go with template literal types.
 
 ```ts
+type Hook<Block extends string> = `e2e__${Block}`
+
 interface HookBlock<Block extends string> {
-  (): `e2e__${Block}`;
+  (): Hook<Block>;
 
   element: <Element extends string>(
     element: Element
-  ) => `${Block}__${Element}`;
+  ) => `${Hook<Block>}__${Element}`;
 
   modifiedElement: <
     Element extends string,
@@ -258,11 +295,11 @@ interface HookBlock<Block extends string> {
   >(
     element: Element,
     modifier: Modifier
-  ) => `${Block}__${Element}--${Modifier}`;
+  ) => `${Hook<Block>}__${Element}--${Modifier}`;
 
   modifier: <Modifier extends string>(
     modifier: Modifier
-  ) => `${Block}--${Modifier}`;
+  ) => `${Hook<Block>}--${Modifier}`;
 }
 
 const makeHookBlock = <Block extends string>(
@@ -272,16 +309,19 @@ const makeHookBlock = <Block extends string>(
 };
 ```
 
-(Apologies - apparently  `highlightjs` doesn't know what generics are.)
+(Apologies, `highlightjs` has a bug; there's a fix on the way.)
 
 Pretty cool no?
 OK it's a bit verbose.
 But I think it's cool.
 
-Essentially we use generics to pass through the segments of the eventual css class,
+Essentially we use generics to pass through the segments of the eventual CSS class,
 then Template Literal Types too join them together.
+
 Type inference means that when we use it all the generis go away and it ends up nice and clean
 (just like before).
+
+Here's an example usage:
 
 ```ts
 const carouselBlock = makeHookBlock("carousel");
@@ -293,10 +333,37 @@ const activeScrollTrack = carouselBlock.modifiedElement(
 );
 ```
 
-The only difference is the types.
-Now you don't have to do the mental gymnastics to figure out what the actual hook text is TypeScript has your back.
-Just hover over it in the IDE with your mouse.
+Let's look at the `element` call as an example.
+The type for that funciton is:
 
-![active-scroll-track](active-scroll-track.png)
+```ts
+element: <Element extends string>(
+  element: Element
+) => `${Hook<Block>}__${Element}`;
+```
+
+The `Element` generic type is the value we pass into the function - it's the bit that will end up after the `__`.
+In the example  here it's type will be a string literal: `"scroll-track"`
+(not just `string`).
+
+`Hook<Block>` is the root class for your hook block.
+It gets figured out when you `makeHookBlock`, and it will be another string literal type.
+THis one is made up of the `"e2e__"` prefix, and the `Block`, which is what you called `makeHookBlock` with.
+So in this example `Hook<Block>` will be `"e2e_carousel"`.
+
+The return type of the `element` function is the final piece of the puzzle.
+It sticks those two components together using a `"__"`.
+The final result then is `"e2e__carousel__scroll-track"`.
+
+If that seems daunting it's worth remembering that
+type inference means you won't need to use the generics when you call the function.
+Great! the API stays nice and clean, the only difference is the types.
+
+Just hover over it in the IDE with your mouse:
+
+![active-scroll-track intellisense](scroll-track.png)
+
+Now you don't have to do the mental gymnastics, or code navigation,
+to figure out what the actual hook is; TypeScript has your back.
 
 Fan. tas. tic.

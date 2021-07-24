@@ -1,9 +1,11 @@
+type Hook<Block extends string> = `e2e__${Block}`
+
 interface HookBlock<Block extends string> {
-  (): `e2e__${Block}`;
+  (): Hook<Block>;
 
   element: <Element extends string>(
     element: Element
-  ) => `${Block}__${Element}`;
+  ) => `${Hook<Block>}__${Element}`;
 
   modifiedElement: <
     Element extends string,
@@ -11,25 +13,25 @@ interface HookBlock<Block extends string> {
   >(
     element: Element,
     modifier: Modifier
-  ) => `${Block}__${Element}--${Modifier}`;
+  ) => `${Hook<Block>}__${Element}--${Modifier}`;
 
   modifier: <Modifier extends string>(
     modifier: Modifier
-  ) => `${Block}--${Modifier}`;
+  ) => `${Hook<Block>}--${Modifier}`;
 }
 
 const makeHookBlock = <Block extends string>(
   block: Block
 ): HookBlock<Block> => {
-  const blockClass = `e2e__${block}` as const;
+  const blockClass: Hook<Block> = `e2e__${block}`;
 
-  const getBlock: HookBlock<Block> = (): `e2e__${Block}` => {
+  const getBlock = (): Hook<Block> => {
     return blockClass;
   };
 
   getBlock.element = <Element extends string>(
     element: Element
-  ): `${Block}__${Element}` => `${block}__${element}`;
+  ): `${Hook<Block>}__${Element}` => `${blockClass}__${element}`;
 
   getBlock.modifiedElement = <
     Element extends string,
@@ -37,20 +39,17 @@ const makeHookBlock = <Block extends string>(
   >(
     element: Element,
     modifier: Modifier
-  ): `${Block}__${Element}--${Modifier}` => `${block}__${element}--${modifier}`;
+  ): `${Hook<Block>}__${Element}--${Modifier}` => `${blockClass}__${element}--${modifier}`;
 
   getBlock.modifier = <Modifier extends string>(
     modifier: Modifier
-  ): `${Block}--${Modifier}` => `${block}--${modifier}`;
+  ): `${Hook<Block>}--${Modifier}` => `${blockClass}--${modifier}`;
 
   return getBlock;
 };
 
 const carouselBlock = makeHookBlock("carousel");
-const scrollTrack = carouselBlock.element("scroll-track");
 
-const activeScrollTrack = carouselBlock.modifiedElement(
-  "scroll-track",
-  "active"
-);
+
+const scrollTrack = carouselBlock.element("scroll-track");
 
