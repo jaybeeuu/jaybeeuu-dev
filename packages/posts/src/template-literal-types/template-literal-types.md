@@ -193,13 +193,14 @@ const makeHookBlock = (block) => {
 ```
 
 OK so hopefully you can see what's happening here:
-First we make a class (`blockClass`).
-(It doesn't have a `.` because it's going on the the class attribute of a DOM element.)
-It combines `"e2e"` with the `block` argument.
-That's only really so we can see the classes that are E2E hooks at a glance.
+First we make a class (`blockClass`), which is the class at the root of our block.
+(It doesn't have a `.` because it's going on the the class attribute of a DOM element,
+not as a selector.)
+The `"e2e"` prefix is only really so we can see the classes that are E2E hooks at a glance,
+and ensure (for example in review) that they don't end up in stylesheets.
 
 We make a `getBlock` function which will be returned as our block.
-Then attach a couple of functions to it.
+Then attach a couple of other functions to it.
 `element` simply combines an argument with `blockClass` using the `__` that indicates an element.
 `modifier` the same with the `--` of a modifier.
 
@@ -240,7 +241,7 @@ The problem, though is that while the code is more accessible to the uninitiated
 What you actually end up with is not obvious, and that could slow things down.
 What if, for example, you want to manually check a hook has appeared on an element?
 You have to know what to expect.
-WHich means going back to the definitions, now hidden behind layers of code.
+Which means going back to the definitions, now hidden behind layers of code.
 
 With JavaScript you don't get much help.
 Even jumping to the definition is hit and miss depending on your IDE/Editor.
