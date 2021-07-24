@@ -1,5 +1,5 @@
 {
   "title": "Template Literal Types",
   "abstract": "Template literals are a neat way of building strings, but they are also great at building types... if you have the right use case.",
-  "publish": false
+  "publish": true
 }
