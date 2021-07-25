@@ -51,5 +51,5 @@ const makeHookBlock = <Block extends string>(
 const carouselBlock = makeHookBlock("carousel");
 
 
-const scrollTrack = carouselBlock.element("scroll-track");
+const dotButton = carouselBlock.element("dot-button");
 

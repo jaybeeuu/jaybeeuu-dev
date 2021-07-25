@@ -123,32 +123,39 @@ So instead I revert to an old tactic for scoping CSS classes.
 is a naming convention defines a series of rule for giving your classes names to avoid naming collisions
 and improving readability.
 
+I don't want to get too deep but understanding BEM a little is important to grokking the use case.
+
 BEM stands for Block Element Modifier.
-I don't want to get too deep but understanding this is important to see why the use case works.
-THe idea is that your classes will be made up of combinations of those three things.
+The idea is that your CSS classes will be made up of combinations of those three things.
+This does a couple of things.
+For one it's _a_ convention, so naming becomes more consistent.
+Also it give you some concept of scoping and so helps to avoid the global CSS classes problem.
 
 Blocks are top level containers; "a stand alone entity that is meaningful on its own".
-For example you might have a "Carousel" a block.
+For example you might have an image carousel letting you display a sequence of images on your site.
+The root CSS style of that might then be the "carousel" block.
 
-Elements are use to build up the Block.
-For example our carousel might have images or dot buttons to select the images.
+Elements are sub components of the Block.
+For example our carousel might have images or
+a series of dot-buttons to select the images/show which is active.
 
 Finally Modifiers are roughly "states" of the elements or blocks.
-Maybe a carousel's scroll is animating or the one of the dot buttons is active to indicate that is the current image.
+Maybe a carousel's images are animating in and out of sight
+or the one of the dot buttons is active to indicate that is the current image.
 
 To make up a CSS class using these we join them with various delimiters:
 
 ```css
-.carousel__scroll-track--active {
+.carousel__dot-button {
   color: grey;
 }
 
-.carousel__scroll-track--active {
-  color: grey;
+.carousel__dot-button--active {
+  color: white;
 }
 ```
 
-In this example the class indicates the `carousel` block's `scroll-track` element which is currently in `active` state.
+In this example the class indicates the `carousel` block's `dot-button` element which is currently in `active` state.
 The segments are joined with `__` to indicate an element, and `--` to indicate a modifier.
 
 The rules are simple, but pretty effective at manually scoping the classes.
@@ -211,26 +218,26 @@ import classNames from "classnames";
 import { makeHookBlock } from "@jaybeeuu/e2e-hooks";
 
 const carouselBlock = makeHookBlock("carousel");
-const scrollTrack = carouselBlock.element("scroll-track");
+const dotButton = carouselBlock.element("dot-button");
 
-const activeScrollTrack = carouselBlock.modifiedElement(
-  "scroll-track",
+const activeDotButton = carouselBlock.modifiedElement(
+  "dot-button",
   "active"
 );
 
-const ScrollTrack = ({ active, onClick }) => (
+const dotButton = ({ active, onClick }) => (
   <button
     className={classNames(
-      scrollTrack,
-      { active: activeScrollTrack }
+      dotButton,
+      { active: activeDotButton }
     )}
     onClick={onClick}
   />
 );
 ```
 
-`scrollTrack` ends up being `"e2e__carousel__scroll-track"`,
-`activeScrollTrack`, `"e2e__carousel__scroll-track--active"`.
+`dotButton` ends up being `"e2e__carousel__dot-button"`,
+`activeDotButton`, `"e2e__carousel__dot-button--active"`.
 
 A bit more expressive than manually typing it out right?
 (In fact rather than `modifiedElement` we have a `makeChildElement` function that returns another decorated function,
@@ -328,10 +335,10 @@ Here's an example usage:
 
 ```ts
 const carouselBlock = makeHookBlock("carousel");
-const scrollTrack = carouselBlock.element("scroll-track");
+const dotButton = carouselBlock.element("dot-button");
 
-const activeScrollTrack = carouselBlock.modifiedElement(
-  "scroll-track",
+const activeDotButton = carouselBlock.modifiedElement(
+  "dot-button",
   "active"
 );
 ```
@@ -346,17 +353,17 @@ element: <Element extends string>(
 ```
 
 The `Element` generic type is the value we pass into the function - it's the bit that will end up after the `__`.
-In the example  here it's type will be a string literal: `"scroll-track"`
+In the example  here it's type will be a string literal: `"dot-button"`
 (not just `string`).
 
 `Hook<Block>` is the root class for your hook block.
 It gets figured out when you `makeHookBlock`, and it will be another string literal type.
-THis one is made up of the `"e2e__"` prefix, and the `Block`, which is what you called `makeHookBlock` with.
+This one is made up of the `"e2e__"` prefix, and the `Block`, which is what you called `makeHookBlock` with.
 So in this example `Hook<Block>` will be `"e2e_carousel"`.
 
 The return type of the `element` function is the final piece of the puzzle.
 It sticks those two components together using a `"__"`.
-The final result then is `"e2e__carousel__scroll-track"`.
+The final result then is `"e2e__carousel__dot-button"`.
 
 If that seems daunting it's worth remembering that
 type inference means you won't need to use the generics when you call the function.
@@ -364,7 +371,7 @@ Great! the API stays nice and clean, the only difference is the types.
 
 Just hover over it in the IDE with your mouse:
 
-![active-scroll-track intellisense](scroll-track.png)
+![dot-button intellisense](dot-button.png)
 
 Now you don't have to do the mental gymnastics, or code navigation,
 to figure out what the actual hook is; TypeScript has your back.
