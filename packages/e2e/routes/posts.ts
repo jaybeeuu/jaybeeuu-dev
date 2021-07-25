@@ -1,4 +1,5 @@
 import type { PostManifest, PostMetaData } from "@jaybeeuu/compost";
+import { assertIsNotNullish } from "@jaybeeuu/utilities";
 
 export type PostSlug = "memoising-selectors" | "module-spotting" | "the-rewrite";
 
@@ -10,7 +11,9 @@ export const withManifest = (): Cypress.Chainable<PostManifest> => {
 
 export const withPostMetaData = (slug: PostSlug): Cypress.Chainable<PostMetaData> => {
   return withManifest().then((manifest) => {
-    return manifest[slug];
+    const meta = manifest[slug];
+    assertIsNotNullish(meta);
+    return meta;
   });
 };
 

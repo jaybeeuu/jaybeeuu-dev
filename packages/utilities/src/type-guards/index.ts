@@ -4,6 +4,8 @@ export {
   hasOwnProperty,
   hasStringProperty,
   is,
+  isArrayOf,
+  isNull,
   isObject,
   isRecord,
   or,

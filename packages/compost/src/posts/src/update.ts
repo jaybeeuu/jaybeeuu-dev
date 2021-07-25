@@ -4,10 +4,12 @@ import {
   recurseDirectory,
   writeJsonFile,
   writeTextFile,
-  deleteDirectories
+  deleteDirectories,
+  copyFile
 } from "../../files/index.js";
 import type { Result} from "../../results.js";
 import { success } from "../../results.js";
+import type { CompileFailureReason} from "./compile.js";
 import { compilePost } from "./compile.js";
 import type { GetMetaFileContentFailure } from "./metafile.js";
 import { getMetaFileContent } from "./metafile.js";
@@ -24,7 +26,8 @@ import { getManifest } from "./manifest.js";
 import type { UpdateOptions, PostManifest } from "./types.js";
 
 export type UpdateFailureReason
- = ValidateSlugFailureReason
+ = CompileFailureReason
+ | ValidateSlugFailureReason
  | GetManifestFailure
  | GetMetaFileContentFailure;
 
@@ -70,10 +73,27 @@ export const update = async (
     }
 
     const postMarkdownFilePath = getPostMarkdownFilePath(metadataFileInfo.absolutePath, slug);
-    const compiledPost = await compilePost(postMarkdownFilePath, { postSlug: slug, hrefRoot: options.hrefRoot });
+    const compiledPostResult = await compilePost({
+      hrefRoot: options.hrefRoot,
+      sourceFilePath: postMarkdownFilePath
+    });
+
+    if (!compiledPostResult.success) {
+      return compiledPostResult;
+    }
+    const { html: compiledPost, assets } = compiledPostResult.value;
+
     const compiledFileName = getCompiledPostFileName(slug, compiledPost);
     const compiledFilePath = path.join(resolvedOutputDir, compiledFileName);
-    await writeTextFile(compiledFilePath, compiledPost);
+
+    await Promise.all([
+      writeTextFile(compiledFilePath, compiledPost),
+      ...assets.map((asset) => copyFile(
+        asset.sourcePath,
+        path.join(options.outputDir, asset.destinationPath)
+      ))
+    ]);
+
     const href = joinUrlPath(options.hrefRoot, compiledFileName);
 
     const originalRecord = oldManifest[slug];

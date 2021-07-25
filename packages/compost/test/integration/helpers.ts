@@ -1,12 +1,13 @@
 import path from "path";
 import type Utilities from "@jaybeeuu/utilities";
 import type { File } from "../../src/files/index";
-import { readTextFile, writeTextFiles , deleteDirectories} from "../../src/files/index";
+import { readTextFile, writeTextFiles, deleteDirectories} from "../../src/files/index";
 import type { PostManifest, UpdateOptions } from "../../src/posts/src/types.js";
 import { update } from "../../src/posts/index.js";
 import type { Result } from "../../src/results.js";
 import type { UpdateFailureReason } from "packages/compost/src/posts/src/update.js";
 import type { PostMetaFileData } from "packages/compost/src/posts/src/metafile";
+import { assertIsNotNullish } from "@jaybeeuu/utilities";
 
 jest.mock("fs");
 jest.mock("@jaybeeuu/utilities", () => {
@@ -20,19 +21,8 @@ jest.mock("@jaybeeuu/utilities", () => {
   return utils;
 });
 
-export const jestWorkerId = +(process.env.JEST_WORKER_ID || 0);
-const packageDir = path.resolve(__dirname, "../..");
-
-const resolveToPackage = (...pathSegments: string[]): string => {
-  return path.resolve(packageDir, ...pathSegments);
-};
-
-export const sourceDir = resolveToPackage(`.fs/test/${jestWorkerId.toString()}/src`);
-export const outputDir = resolveToPackage(`.fs/test/${jestWorkerId.toString()}/out`);
-export const manifestFileName = "mainfest.post.json";
-
 export const cleanUpDirectories = async (): Promise<void> => {
-  await deleteDirectories(sourceDir, outputDir);
+  await deleteDirectories("/");
 };
 
 export interface PostFile {
@@ -40,61 +30,132 @@ export interface PostFile {
   meta: PostMetaFileData | null;
   path?: string;
   slug: string;
+  otherFiles?: {
+    content: string,
+    path: string
+  }[]
 }
 
-export const writePostFiles = async (
-  ...postFiles: PostFile[]
+const getDefaultedUpdateOptions = (
+  options: Partial<UpdateOptions> = {}
+): UpdateOptions => {
+  const defaultedHrefRoot = options?.hrefRoot ?? "posts";
+  return {
+    additionalWatchPaths: [],
+    hrefRoot: defaultedHrefRoot,
+    includeUnpublished: false,
+    manifestFileName: "manifest.post.json",
+    outputDir: path.join("out", defaultedHrefRoot),
+    requireOldManifest: false,
+    sourceDir: "src",
+    watch: false,
+    ...options
+  };
+};
+
+export const writePostFile = async (
+  postFile: PostFile,
+  options: Partial<UpdateOptions> = {}
 ): Promise<void> => {
-  await Promise.all(postFiles.map(async ({
+  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
+
+  const {
     content,
     meta,
-    path: filePath = ".",
-    slug
-  }) => await writeTextFiles(
-    sourceDir,
+    path: postPath = ".",
+    slug,
+    otherFiles
+  } = postFile;
+
+  await writeTextFiles(
+    defaultedUpdateOptions.sourceDir,
     [
       {
-        path: path.join(filePath, `${slug}.md`),
+        path: path.join(postPath, `${slug}.md`),
         content: Array.isArray(content) ? content.join("\n") : content
       },
       meta !== null ? {
-        path: path.join(filePath, `${slug}.post.json`),
+        path: path.join(postPath, `${slug}.post.json`),
         content: JSON.stringify(meta, null, 2)
-      } : null
+      } : null,
+      ...otherFiles?.map((file) => ({
+        path: path.join(postPath, file.path),
+        content: file.content
+      })) ?? []
     ].filter((
       member: File | null
     ): member is File => {
       return member !== null;
     })
-  )));
+  );
 };
 
-const getOutputFile = async (filePath: string): Promise<string> => {
-  const resolvedFilePath = path.resolve(outputDir, filePath);
+export const getOutputFile = async (
+  filePath: string,
+  options: Partial<UpdateOptions> = {}
+): Promise<string> => {
+  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
+  const resolvedFilePath = path.join(
+    defaultedUpdateOptions.outputDir,
+    filePath
+  );
   return readTextFile(resolvedFilePath);
 };
 
-export const getPostManifest = async (): Promise<PostManifest> => {
-  const fileName = path.join("posts", manifestFileName);
-  const fileContent = await getOutputFile(fileName);
+export const getPostManifest = async (
+  options: Partial<UpdateOptions> = {}
+): Promise<PostManifest> => {
+  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
+  const fileContent = await getOutputFile(
+    defaultedUpdateOptions.manifestFileName,
+    defaultedUpdateOptions
+  );
   return JSON.parse(fileContent) as PostManifest;
 };
 
-export const getPost = async (slug: string): Promise<string> => {
-  const manifest = await getPostManifest();
-  return await getOutputFile(`.${manifest[slug]?.href}`);
+export const getPost = async (
+  slug: string,
+  options: Partial<UpdateOptions> = {}
+): Promise<string> => {
+  const manifest = await getPostManifest(options);
+  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
+  const manifestEntry = manifest[slug];
+  assertIsNotNullish(manifestEntry);
+
+  const relativePath = path.relative(defaultedUpdateOptions.hrefRoot, `.${manifestEntry.href}`);
+
+  return await getOutputFile(relativePath, options);
 };
 
 export const compilePosts = async (options?: Partial<UpdateOptions>): Promise<Result<PostManifest, UpdateFailureReason>> => {
-  return update({
-    additionalWatchPaths: [],
-    hrefRoot: "posts",
-    includeUnpublished: false,
-    manifestFileName,
-    outputDir: path.join(outputDir, "posts"),
-    requireOldManifest: false,
-    sourceDir,
-    watch: false,
-    ...options
-  });
+  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
+  return update(defaultedUpdateOptions);
+};
+
+export const getCompiledPostWithContent = async (
+  contentOrPost: string[] | RecursivePartial<PostFile>,
+  options: Partial<UpdateOptions> = {}
+): Promise<string> => {
+  await cleanUpDirectories();
+  const userPost = Array.isArray(contentOrPost)
+    ? { content: contentOrPost }
+    : contentOrPost;
+  const postFile = {
+    slug: "{slug}",
+    content: ["{content}"],
+    ...userPost,
+    meta: {
+      abstract: "{abstract}",
+      publish: true,
+      title: "{title}",
+      ...userPost.meta
+    }
+  };
+
+  await writePostFile(postFile, options);
+  const result = await compilePosts(options);
+  if (!result.success) {
+    throw result;
+  }
+  return await getPost(postFile.slug, options);
 };

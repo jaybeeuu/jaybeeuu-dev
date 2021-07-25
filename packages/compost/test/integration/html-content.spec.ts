@@ -1,38 +1,8 @@
 import {
-  cleanUpDirectories,
-  compilePosts,
-  getPost,
-  writePostFiles
+  getCompiledPostWithContent,
 } from "./helpers";
 
-import type { UpdateOptions } from "../../src/posts/src/types";
-
 describe("compile", () => {
-  const setupPostFiles = async (slug: string, content: string[]): Promise<void> => {
-    await writePostFiles({
-      slug,
-      content,
-      meta: {
-        abstract: "abstract",
-        publish: true,
-        title: "{title}"
-      }
-    });
-  };
-
-  const getCompiledPostWithContent = async (
-    contentLines: string[],
-    options: RecursivePartial<{
-      slug: string
-      updateOptions: UpdateOptions
-    }> = {}
-  ): Promise<string> => {
-    const { slug = "{slug}", updateOptions } = options;
-    await cleanUpDirectories();
-    await setupPostFiles(slug, contentLines);
-    await compilePosts(updateOptions);
-    return await getPost(slug);
-  };
 
   it("compiles a post tto include some basic content.", async () => {
     const postContent = "This is the content";
@@ -78,9 +48,12 @@ describe("compile", () => {
   it("compiles a heading to contain a link.", async () => {
     const hrefRoot = "posts";
     const slug = "{slug}";
-    const post = await getCompiledPostWithContent([
-      "# This is the first post"
-    ],  { slug, updateOptions: { hrefRoot } });
+    const post = await getCompiledPostWithContent({
+      slug,
+      content: [
+        "# This is the first post"
+      ]
+    },  { hrefRoot });
 
     expect(post).toBe([
       "",
@@ -94,10 +67,13 @@ describe("compile", () => {
   it("compiles a heading to contain a unique link.", async () => {
     const hrefRoot = "posts";
     const slug = "{slug}";
-    const post = await getCompiledPostWithContent([
-      "# This is the first post",
-      "# This is the first post"
-    ],  { slug, updateOptions: { hrefRoot } });
+    const post = await getCompiledPostWithContent({
+      slug,
+      content: [
+        "# This is the first post",
+        "# This is the first post"
+      ]
+    }, { hrefRoot });
 
     expect(post).toBe([
       "",
@@ -124,9 +100,12 @@ describe("compile", () => {
     it(`compiles subheading ${level} correctly.`, async () => {
       const hrefRoot = "posts";
       const slug = "{slug}";
-      const post = await getCompiledPostWithContent([
-        `${"".padEnd(level, "#")} This is the first post`,
-      ],  { slug, updateOptions: { hrefRoot } });
+      const post = await getCompiledPostWithContent({
+        slug,
+        content: [
+          `${"".padEnd(level, "#")} This is the first post`,
+        ]
+      }, { hrefRoot });
 
       expect(post).toBe([
         "",
@@ -141,9 +120,12 @@ describe("compile", () => {
   it("compiles a heading link to contain a link which only includes the text - not the rest of the link.", async () => {
     const hrefRoot = "posts";
     const slug = "{slug}";
-    const post = await getCompiledPostWithContent([
-      "# [This is the first post](www.example.com)"
-    ],  { slug, updateOptions: { hrefRoot } });
+    const post = await getCompiledPostWithContent({
+      slug,
+      content: [
+        "# [This is the first post](www.example.com)"
+      ]
+    }, { hrefRoot });
 
     expect(post).toBe([
       "",
@@ -157,11 +139,14 @@ describe("compile", () => {
   it("compiles an inline hash link to link properly within the document.", async () => {
     const hrefRoot = "posts";
     const slug = "{slug}";
-    const post = await getCompiledPostWithContent([
-      "# A Post",
-      "",
-      "This is a [link](#destination)"
-    ], { slug, updateOptions: { hrefRoot } });
+    const post = await getCompiledPostWithContent({
+      slug,
+      content: [
+        "# A Post",
+        "",
+        "This is a [link](#destination)"
+      ]
+    }, { hrefRoot });
 
     expect(post).toBe([
       "",

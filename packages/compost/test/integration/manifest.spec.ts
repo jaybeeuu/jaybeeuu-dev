@@ -1,9 +1,9 @@
 import type { PostFile } from "./helpers";
 import {
+  cleanUpDirectories,
   compilePosts,
   getPostManifest,
-  cleanUpDirectories,
-  writePostFiles
+  writePostFile
 } from "./helpers";
 
 import { advanceTo } from "jest-date-mock";
@@ -25,7 +25,7 @@ describe("manifest", () => {
       abstract: "This is the very first post.",
       publish: true
     };
-    await writePostFiles({
+    await writePostFile({
       slug,
       meta,
       content: "# This is the first post\n\nIt has some content."
@@ -50,7 +50,7 @@ describe("manifest", () => {
   it("compiles the posts to the specified hrefRoot when one is supplied..", async () => {
     await cleanUpDirectories();
     const slug = "first-post";
-    await writePostFiles({
+    await writePostFile({
       slug,
       meta: {
         title: "This is the first post",
@@ -64,7 +64,7 @@ describe("manifest", () => {
 
     const manifest = await getPostManifest();
 
-    expect(manifest[slug].href).toStrictEqual(
+    expect(manifest[slug]?.href).toStrictEqual(
       expect.stringMatching(new RegExp(`/${hrefRoot}/${slug}-[A-z0-9]{6}.html`)) as unknown
     );
   });
@@ -84,13 +84,13 @@ describe("manifest", () => {
         "It has some content."
       ]
     };
-    await writePostFiles(postFile);
+    await writePostFile(postFile);
 
     const publishDate = "2020-03-11";
     advanceTo(publishDate);
     await compilePosts();
 
-    await writePostFiles({
+    await writePostFile({
       ...postFile,
       content: [
         ...postFile.content,
@@ -104,7 +104,7 @@ describe("manifest", () => {
 
     const manifest = await getPostManifest();
 
-    expect(manifest[slug].publishDate).toStrictEqual(
+    expect(manifest[slug]?.publishDate).toStrictEqual(
       new Date(publishDate).toUTCString(),
     );
   });
@@ -124,13 +124,13 @@ describe("manifest", () => {
         "It has some content."
       ]
     };
-    await writePostFiles(postFile);
+    await writePostFile(postFile);
 
     const publishDate = "2020-03-11";
     advanceTo(publishDate);
     await compilePosts();
 
-    await writePostFiles({
+    await writePostFile({
       ...postFile,
       content: [
         ...postFile.content,
@@ -144,7 +144,7 @@ describe("manifest", () => {
 
     const manifest = await getPostManifest();
 
-    expect(manifest[slug].lastUpdateDate).toStrictEqual(
+    expect(manifest[slug]?.lastUpdateDate).toStrictEqual(
       new Date(updatedDate).toUTCString()
     );
   });
@@ -152,7 +152,7 @@ describe("manifest", () => {
   it("does not add an updated date if the post hsa not updated.", async () => {
     await cleanUpDirectories();
     const slug = "first-post";
-    await writePostFiles({
+    await writePostFile({
       slug,
       meta: {
         title: "This is the first post",
@@ -175,7 +175,7 @@ describe("manifest", () => {
 
     const manifest = await getPostManifest();
 
-    expect(manifest[slug].lastUpdateDate).toBeNull();
+    expect(manifest[slug]?.lastUpdateDate).toBeNull();
   });
 
   it("updates the lastUpdatedDate when the manifest needs to be fetched.", async () => {
@@ -193,7 +193,7 @@ describe("manifest", () => {
         "It has some content."
       ]
     };
-    await writePostFiles(postFile);
+    await writePostFile(postFile);
 
     const oldManifestLocator = "https://www.oldManifest.com";
     await compilePosts({ oldManifestLocator });
@@ -207,7 +207,7 @@ describe("manifest", () => {
       } as any);
     });
 
-    await writePostFiles({
+    await writePostFile({
       ...postFile,
       content: [
         ...postFile.content,
@@ -222,14 +222,14 @@ describe("manifest", () => {
     expect(fetch).toHaveBeenCalledWith(oldManifestLocator);
 
     const newManifest = await getPostManifest();
-    expect(newManifest[slug].lastUpdateDate).toStrictEqual(
+    expect(newManifest[slug]?.lastUpdateDate).toStrictEqual(
       new Date(updatedDate).toUTCString()
     );
   });
 
   it("fails to compost it manifest is not available and the require-old-manifest flag is set.", async () => {
     await cleanUpDirectories();
-    await writePostFiles({
+    await writePostFile({
       slug: "slug",
       meta: {
         title: "This is the first post",

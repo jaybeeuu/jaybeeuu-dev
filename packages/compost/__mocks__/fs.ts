@@ -388,6 +388,32 @@ const assertPathIsString: (path: fsModule.PathLike) => asserts path is string = 
   }
 };
 
+const assertIsSupportedCopyFileArguments: (
+  args: Parameters<typeof fsModule.promises.copyFile>
+) => asserts args is [string, string, undefined] = (args) => {
+  const [source, destination, flags] = args;
+  if (
+    typeof source !== "string"
+    || typeof destination !== "string"
+    || typeof flags !== "undefined"
+  ) {
+    throw new Error("copyFIle mock only supports string source and destination and undefined flags.");
+  }
+};
+
+mocked(
+  fs.promises.copyFile
+).mockImplementation(
+  async (...args) => {
+    assertIsSupportedCopyFileArguments(args);
+    const [source, destination] = args;
+    await Promise.resolve();
+    const resolvedSource = resolvePath(source);
+    const file = getFile(resolvedSource);
+    await fs.promises.writeFile(destination, file.content, "utf8");
+  }
+);
+
 const assertIsSupportedAccessArguments: (
   args: Parameters<typeof fs.promises.access>
 ) => asserts args is [string, undefined] = (
@@ -402,6 +428,21 @@ const assertIsSupportedAccessArguments: (
 mocked(fs.promises.access).mockImplementation(async (...args): Promise<void> => {
   assertIsSupportedAccessArguments(args);
   await Promise.resolve();
+  const [path] = args;
+  const resolvedPath = resolvePath(path);
+  const parentDirName = pathUtils.dirname(resolvedPath);
+  const parentDir = getDirectory(parentDirName);
+  const fileOrDirName = pathUtils.basename(resolvedPath);
+
+  if (parentDir.entries[fileOrDirName]) {
+    return;
+  }
+
+  throw new Error(`Could not access ${path}: Neither file nor directory called ${fileOrDirName} existed in ${parentDirName}`);
+});
+
+mocked(fs.accessSync).mockImplementation((...args): void => {
+  assertIsSupportedAccessArguments(args);
   const [path] = args;
   const resolvedPath = resolvePath(path);
   const parentDirName = pathUtils.dirname(resolvedPath);
@@ -535,8 +576,13 @@ mocked(fs.promises.rm).mockImplementation(async (path, options) => {
   await Promise.resolve();
   const resolvedPath = resolvePath(path);
   const parentDirName = pathUtils.dirname(resolvedPath);
-  const getParentDirResult = maybeGetDirectory(parentDirName);
 
+  if (path === "/" && options?.recursive && options?.force) {
+    root.entries = {};
+    return;
+  }
+
+  const getParentDirResult = maybeGetDirectory(parentDirName);
   if (getParentDirResult.existed === false) {
     if (!options?.force) {
       throw new Error(`Unable to rm ${path}: ${getParentDirResult.message}`);
@@ -607,7 +653,7 @@ mocked<Readdir>(
 );
 
 const assertIsSupportedReadFileArguments: (
-  args: Parameters<typeof fs.promises.readFile>
+  args: Parameters<typeof fs.promises.readFile> | Parameters<typeof fs.readFileSync>
 ) => asserts args is [string, "utf8"] = (
   args
 ) => {
@@ -616,6 +662,14 @@ const assertIsSupportedReadFileArguments: (
     throw new Error("Only string path and utf8 options is supported. other argument types have not been implemented.");
   }
 };
+
+mocked(fs.readFileSync).mockImplementation((...args) => {
+  assertIsSupportedReadFileArguments(args);
+  const [path] = args;
+  const file = getFile(path);
+  file.logAccess();
+  return file.content;
+});
 
 mocked(fs.promises.readFile).mockImplementation(async (...args) => {
   assertIsSupportedReadFileArguments(args);

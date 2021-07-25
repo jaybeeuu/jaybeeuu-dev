@@ -3,7 +3,7 @@ import {
   compilePosts,
   getPost,
   getPostManifest,
-  writePostFiles
+  writePostFile
 } from "./helpers";
 
 describe("file-selection", () => {
@@ -11,7 +11,7 @@ describe("file-selection", () => {
     await cleanUpDirectories();
 
     const slug = "unfinished-post";
-    await writePostFiles({
+    await writePostFile({
       slug,
       content: [
         "# This a work in progress.",
@@ -35,7 +35,7 @@ describe("file-selection", () => {
     await cleanUpDirectories();
 
     const slug = "not-a-post";
-    await writePostFiles({
+    await writePostFile({
       slug,
       content: [
         "# This is not a post.",
@@ -54,7 +54,7 @@ describe("file-selection", () => {
     await cleanUpDirectories();
 
     const slug = "unfinished-post";
-    await writePostFiles({
+    await writePostFile({
       slug,
       content: [
         "# This a work in progress.",
@@ -78,7 +78,7 @@ describe("file-selection", () => {
 
     const slug = "first-post";
     const postContent = "It has some content";
-    await writePostFiles({
+    await writePostFile({
       slug,
       path: "./sub-directory",
       content: [
