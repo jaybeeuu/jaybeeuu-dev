@@ -197,7 +197,7 @@ First we make a class (`blockClass`), which is the class at the root of our bloc
 (It doesn't have a `.` because it's going on the the class attribute of a DOM element,
 not as a selector.)
 The `"e2e"` prefix is only really so we can see the classes that are E2E hooks at a glance,
-and ensure (for example in review) that they don't end up in stylesheets.
+and ensure (for example in review) that they don't end up in style sheets.
 
 We make a `getBlock` function which will be returned as our block.
 Then attach a couple of other functions to it.
@@ -237,7 +237,7 @@ A bit more expressive than manually typing it out right?
 but that's a bit more involved than we need for this post.)
 
 The problem, though is that while the code is more accessible to the uninitiated
-(they don't need to earn how to mak a BEM element, they can call a function).
+(they don't need to earn how to make a BEM element, they can call a function).
 What you actually end up with is not obvious, and that could slow things down.
 What if, for example, you want to manually check a hook has appeared on an element?
 You have to know what to expect.
@@ -321,7 +321,7 @@ But I think it's cool.
 Essentially we use generics to pass through the segments of the eventual CSS class,
 then Template Literal Types too join them together.
 
-Type inference means that when we use it all the generis go away and it ends up nice and clean
+Type inference means that when we use it all the generics go away and it ends up nice and clean
 (just like before).
 
 Here's an example usage:
@@ -337,7 +337,7 @@ const activeScrollTrack = carouselBlock.modifiedElement(
 ```
 
 Let's look at the `element` call as an example.
-The type for that funciton is:
+The type for that function is:
 
 ```ts
 element: <Element extends string>(

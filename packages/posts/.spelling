@@ -49,6 +49,10 @@ BEM
 ES2015
 E2E
 typings
+FE
+TS
+intellisense
+params
  - src/premature-optimisation.md
 v14.15.1
 Hrn
