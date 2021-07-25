@@ -16,7 +16,7 @@ import css from "./posts.module.css";
 const compareDateString = (
   left: PostMetaData,
   right: PostMetaData
-): number => Date.parse(left.publishDate) - Date.parse(right.publishDate);
+): number => Date.parse(right.publishDate) - Date.parse(left.publishDate);
 
 const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
   usePageInfo({ title: "Blog posts", description: "Index of my blog posts" });
@@ -28,8 +28,13 @@ const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
         : manifestValues.sort(compareDateString).map((meta) => (
           <Link
             href={`/posts/${meta.slug}`}
-            className={classNames(css.post, e2eHooks.link(meta.slug))}
+            className={classNames(
+              css.post,
+              e2eHooks.link,
+              e2eHooks.sluggedLink(meta.slug)
+            )}
             key={meta.slug}
+            data-slug={meta.slug}
           >
             <h2 className={css.title}>
               {meta.title}
