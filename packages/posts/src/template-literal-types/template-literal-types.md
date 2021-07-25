@@ -280,7 +280,7 @@ OK that works fine, but where you are using the hooks you only see `string` for 
 So you still don't know what your getting.
 Can we do better?
 
-Lets have a go with template literal types.
+Lets have a go with template literal types:
 
 ```ts
 type Hook<Block extends string> = `e2e__${Block}`
@@ -314,13 +314,13 @@ const makeHookBlock = <Block extends string>(
 
 (Apologies, `highlightjs` has a bug; there's a fix on the way.)
 
-Pretty cool no?
-OK it's a bit verbose.
-But I think it's cool.
-
 Essentially we use generics to pass through the segments of the eventual CSS class,
 then Template Literal Types too join them together.
 
+Pretty cool no?
+OK it's a bit verbose.
+But I think it's cool and importantly that verbosity doesn't carry through to the calls.
+So it doesn't impact the DevX of the helpers.
 Type inference means that when we use it all the generics go away and it ends up nice and clean
 (just like before).
 
