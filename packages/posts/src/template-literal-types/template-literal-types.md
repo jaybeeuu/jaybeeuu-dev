@@ -237,17 +237,17 @@ A bit more expressive than manually typing it out right?
 but that's a bit more involved than we need for this post.)
 
 The problem, though is that while the code is more accessible to the uninitiated
-(they don't need to earn how to make a BEM element, they can call a function).
+(they don't need to learn how to make a BEM element, they can call a function).
 What you actually end up with is not obvious, and that could slow things down.
 What if, for example, you want to manually check a hook has appeared on an element?
 You have to know what to expect.
 Which means going back to the definitions, now hidden behind layers of code.
 
 With JavaScript you don't get much help.
-Even jumping to the definition is hit and miss depending on your IDE/Editor.
-So in that way then maybe we would have been better leaving the strings - the functions are mystifying things.
+Even jumping to the definition is hit and miss depending on your IDE/editor & the context of the call.
+So from that point of view maybe we would have been better leaving the strings - the functions are mystifying things.
 
-Fortunately, we no longer live in the dark ages (2-3 years ago in FE time) and JavaScript is not the only tool in our box.
+Fortunately, JavaScript is not the only tool in our box.
 As far as I am concerned one TypeScript's key selling points is that it's great at making code self-documenting.
 
 With TS you get back all the tools like intellisense and
@@ -255,7 +255,7 @@ code navigation that you come to expect if you work with strongly typed language
 It's difficult to overstate how much time you save when autocomplete tells you which params you need for a function,
 compared to having to track down the definition or docs.
 
-Can TypeScript help us out of this hole and improve the Dev Ex of my helpers too?
+Can TypeScript help us out of this hole and improve the DevX (developer experience) of my helpers too?
 (Spoiler alert the answer is yes.
 which... you probably figured out given that I bothered writing this post...)
 
