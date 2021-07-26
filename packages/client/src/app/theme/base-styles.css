@@ -121,3 +121,7 @@ article :not(pre) code {
   border-radius: 0.3rem;
   padding: 0.1rem 0.3rem;
 }
+
+article p {
+  overflow: auto;
+}
