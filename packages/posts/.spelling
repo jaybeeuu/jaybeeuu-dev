@@ -11,6 +11,7 @@ config
 const
 dedupes
 devtools
+DevX
 ECMA
 Eich
 ES6
@@ -70,4 +71,5 @@ functionness
 eventHandler
  - src/template-literal-types/template-literal-types.md
 navbar
+_a_
 tas
