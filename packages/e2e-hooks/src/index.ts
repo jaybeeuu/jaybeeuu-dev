@@ -2,31 +2,33 @@ import { makeClassSelectors, makeHookBlock } from "./make-hooks";
 
 export { makeClassSelectors };
 
-const postHookBlock = makeHookBlock("post");
+const postBlock = makeHookBlock("post");
 export const post = {
-  block: postHookBlock(),
-  article: postHookBlock.element("article")
+  block: postBlock(),
+  article: postBlock.element("article")
 };
 
-const navBarHookBlock = makeHookBlock("nav-bar");
+const navBarBlock = makeHookBlock("nav-bar");
 export const navBar = {
-  block: navBarHookBlock(),
-  gitHubLink: navBarHookBlock.element("github-link"),
-  homeLink: navBarHookBlock.element("home-link"),
-  linkedInLink: navBarHookBlock.element("linked-in-link"),
-  postsListLink: navBarHookBlock.element("posts-list-link"),
-  switch: navBarHookBlock.element("switch")
+  block: navBarBlock(),
+  gitHubLink: navBarBlock.element("github-link"),
+  homeLink: navBarBlock.element("home-link"),
+  linkedInLink: navBarBlock.element("linked-in-link"),
+  postsListLink: navBarBlock.element("posts-list-link"),
+  switch: navBarBlock.element("switch")
 };
 
-const postListHookBlock = makeHookBlock("post-list");
+const postListBlock = makeHookBlock("post-list");
+const postListLinkBlock = postListBlock.childBlock("post-link");
 export const postList = {
-  block: postListHookBlock(),
-  link: postListHookBlock.makeModifierFactory()
+  block: postListBlock(),
+  link: postListLinkBlock(),
+  sluggedLink: postListLinkBlock.makeModifierFactory()
 };
 
-const themeHookBlock = makeHookBlock("theme");
+const themeBlock = makeHookBlock("theme");
 export const theme = {
-  root: themeHookBlock.element("root"),
+  root: themeBlock.element("root"),
 };
 
 const mainBlock = makeHookBlock("main");

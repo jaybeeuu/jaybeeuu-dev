@@ -1,14 +1,15 @@
 We all know the benefits of breaking the code for an application down into small easily understood coherent components,
-which can be edited with confidence.
-In the old days JS had no built in way of doing this  (it was after all only intended to make the monkey dance)
+which can be tested and edited with confidence.
+In the old days JS had no built in way of doing this
+(it was after all only intended to make the monkey dance)
 but as web pages turned into web applications it become obvious that this needed to change.
 
 One way that it could be achieved pretty early on was "importing" modules using a series of `<script>` tags from your html.
 This was pretty crude.
 JavaScript files grew pretty large since breaking them down was hard work.
 So it was done at the "library" level.
-Dependencies often weren't clear & there was no automatic way to go and update all of the places they were used,
-and the order of imports was sacrosanct.
+Dependencies often weren't clear and since there was no automatic way to go and update all of the places they were used,
+the order of imports was sacrosanct.
 Utility files in projects would grow and grow and often be imported on every page.
 Dead code was hard to identify and eliminate.
 
@@ -16,24 +17,25 @@ Because there was no definition of a module there was also no definition of how 
 The global scope was the only real choice and soon became a busy place.
 That resulted in name collisions and, JavaScript being what it is,
 that was perfectly OK from the point of view of the interpreter.
-Even Libraries like `jQuery` and `Underscore` whose exports and aliases were well known ran into others using their names.
+Even libraries like `jQuery` and `Underscore` whose exports and aliases were well known ran into others using their names.
 Techniques were used like namespacing to try and avoid collisions,
 but inevitably someone would overwrite someone else's behaviour,
 bugs ate up whole applications.
-
+Words were said.
 Something had to give.
+
 The great thing about JavaScript has always been it's rich ecosystem and community,
 and it really pulled together over this problem to create a few competing standards in userland.
 Each had it's own quirks and benefits and in this article we'll have a look at a few.
 
 Before we get into it though I should point out that this is mostly interesting from an historical point of view,
 you don't need to know all of them.
-The main systems you will come in contact with are now `CommonJS` and `ES6 Modules`.
+The main systems you will come in contact with are now [`CommonJS`](#commonjs) and [`ES6 Modules`](#es6).
 
 ## What is a module anyway?
 
 A module is a file containing JavaScript code.
-They allow us to build up complex applications from smaller simpler components.
+They allow us to build up complex applications from smaller simpler chunks of code.
 
 A module might export a class or a group of constants or functions,
 but whatever it exports should be closely related.
@@ -492,7 +494,9 @@ We're getting the best of both here!
 
 One thing to bear in mind is that during the lifecycle of `ESM` they are subjected to a static analysis step.
 So, in contrast to `CommonJS`, you can only define imports
-(with the exception of [dynamic imports](https://github.com/tc39/proposal-dynamic-import))
+(with the exception of
+[dynamic imports](https://github.com/tc39/proposal-dynamic-import)
+)
 and exports at the top level.
 That means that other tools can also statically analyse the modules
 and opens up some really interesting features like
@@ -502,8 +506,8 @@ and opens up some really interesting features like
 ## Conclusion
 
 Hopefully you found that interesting.
-I'll admit the `AMD` and `UMD` stops on the tour are mostly interesting from an historical standpoint.
+As I said up top, the `AMD` and `UMD` stops on the tour are mostly interesting from an historical standpoint.
 For day to day coding `CommonJS` and increasingly `ES Modules` are really all you need,
 but there are times when you see these in the wild and it's good to know what you're looking at.
 I also find it fascinating to see the aspects of those historical module systems exhibiting themselves in the solution
-adopted into the language now, and some of their failings addressed.
+built into the language, with some of their failings addressed.

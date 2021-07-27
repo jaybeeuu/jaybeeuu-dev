@@ -43,6 +43,16 @@ context("Post navigation", (): void => {
     postList.hasLinkToPost("the-rewrite");
   });
 
+  it("sorts the posts in ascending age order.", (): void => {
+    postList.getPostLinkSlugs().then((slugs) => {
+      expect(slugs).to.deep.equal([
+        "the-rewrite",
+        "module-spotting",
+        "memoising-selectors"
+      ]);
+    });
+  });
+
   it("shows the paragraphs of the memoising-selectors post when the link is clicked.", () => {
     postList.openPost("memoising-selectors");
     post.getArticle().should("contain.post.paragraphs", "memoising-selectors");

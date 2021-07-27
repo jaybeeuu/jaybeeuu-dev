@@ -1,7 +1,11 @@
 `this` is one of the most derided and maligned concepts of JavaScript, and rightfully so.
 It is complex and confusing.
 When I was learning JavaScript I was coming from the well ordered world of C#.
-`this` seemed like a poltergeist in the code.
+`this` seemed like a poltergeist in the code. No matter what I thought the key word `this` referred to,
+it always seemed to be something different.
+Sometimes even that same `this` in the same function seemed to change half way through my application.
+Infuriating!
+
 There have been improvements in the intervening years
 so you can weave through the bear traps
 but even now working in professional teams I see regular confusion

@@ -29,7 +29,10 @@ const registerPostRoute = (slug: PostSlug): void => {
 };
 
 export const registerRoutes = (): void => {
-  cy.intercept("/posts/manifest.json", { fixture: "posts/manifest.json" }).as("get-posts-manifest");
+  cy.intercept(
+    "/posts/manifest.json",
+    { fixture: "posts/manifest.json" }
+  ).as("get-posts-manifest");
   registerPostRoute("memoising-selectors");
   registerPostRoute("module-spotting");
   registerPostRoute("the-rewrite");

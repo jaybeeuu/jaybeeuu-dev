@@ -14,8 +14,14 @@ export const openList = (): void => {
   get().should("be.visible");
 };
 
+export const getPostLinkSlugs = (): Cypress.Chainable<string[]> => {
+  return cy.get<HTMLElement>(postListSelectors.link).then(($links): string[] => {
+    return $links.map((index, link) => link.getAttribute("data-slug")).get();
+  });
+};
+
 const getPostLink = (slug: PostSlug): Cypress.Chainable<JQuery<HTMLElement>> => {
-  return cy.get<HTMLElement>(postListSelectors.link(slug));
+  return cy.get<HTMLElement>(postListSelectors.sluggedLink(slug));
 };
 
 export const hasLinkToPost = (slug: PostSlug): void => {
