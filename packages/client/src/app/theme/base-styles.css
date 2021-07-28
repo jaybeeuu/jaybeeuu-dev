@@ -32,20 +32,6 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
   border-bottom: none;
 }
 
-article {
-  padding: var(--padding-content);
-  border-radius: var(--border-radius-content);
-  font-size: 2rem;
-}
-
-article > :first-child {
-  margin-top: 0;
-}
-
-article > :last-child {
-  margin-bottom: 0;
-}
-
 a.hash-link {
   border-bottom: none;
   line-height: 2.4rem;
@@ -65,15 +51,6 @@ a.hash-link svg {
   }
 }
 
-article h1:hover a.hash-link svg,
-article h2:hover a.hash-link svg,
-article h3:hover a.hash-link svg,
-article h4:hover a.hash-link svg,
-article h5:hover a.hash-link svg,
-article h6:hover a.hash-link svg {
-  fill: var(--fill-icon);
-}
-
 h1, h2, h3, h4, h5, h6 {
   color: var(--text-heading);
   transition: var(--transition-theme);
@@ -85,15 +62,31 @@ h1 {
   padding-bottom: 0.25rem;
   border-bottom: 0.4rem solid var(--border-code-heading);
 }
+
 h2 {
   margin-top: 5rem;
 }
+
 h3 {
   margin-top: 4rem;
 }
 
 code {
   font-family: consolas, monospace, monospace;
+}
+
+article {
+  padding: var(--padding-content);
+  border-radius: var(--border-radius-content);
+  font-size: 1.8rem;
+}
+
+article > :first-child {
+  margin-top: 0;
+}
+
+article > :last-child {
+  margin-bottom: 0;
 }
 
 article code {
@@ -114,6 +107,15 @@ article h6 code {
   font-size: 0.9em;
 }
 
+article h1:hover a.hash-link svg,
+article h2:hover a.hash-link svg,
+article h3:hover a.hash-link svg,
+article h4:hover a.hash-link svg,
+article h5:hover a.hash-link svg,
+article h6:hover a.hash-link svg {
+  fill: var(--fill-icon);
+}
+
 article :not(pre) code {
   color: var(--colour-text-code);
   background-color: var(--background-colour-text-code);
@@ -123,5 +125,6 @@ article :not(pre) code {
 }
 
 article p {
+  overflow-y: hidden;
   overflow-x: auto;
 }
