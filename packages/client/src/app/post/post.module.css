@@ -8,8 +8,7 @@
   transition: var(--transition-theme);
 }
 
-/* for-phone-only */
-@media only screen and (max-width: 599px) {
+@media only screen and (max-width: 820px) {
   .title, .date {
     padding: 0 var(--padding-content);
   }
