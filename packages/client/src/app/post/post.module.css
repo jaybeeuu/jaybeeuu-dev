@@ -3,8 +3,17 @@
   margin: var(--margin-content);
 }
 
-.component-root article {
+.article-content {
   background-color: var(--background-colour-content);
+  border-radius: var(--border-radius-content);
+  padding: var(--padding-content);
+  transition: var(--transition-theme);
+}
+
+.date {
+  border-bottom: 0.2rem solid var(--border-code-heading);
+  font-size: 1.8rem;
+  margin-bottom: calc(var(--margin-content-width) / 2);
   transition: var(--transition-theme);
 }
 
