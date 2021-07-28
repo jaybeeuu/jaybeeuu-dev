@@ -7,11 +7,9 @@
 .link {
   color: var(--colour-text-main);
   transition: var(--transition-theme), border-color var(--transition-average);
-  padding: 0 1rem;
   border: none;
   border-left: 0.2rem dotted transparent;
   border-right: 0.2rem dotted transparent;
-  /* border-color: var(--background-colour-content); */
 }
 
 .link:hover, .link.active {
@@ -24,11 +22,11 @@
 }
 
 .options-list > * {
-  margin-left: 1rem;
+  margin: 0 1rem;
 }
-
-.options-list > :first-child {
-  margin-left: 0;
+.options-list > .link {
+  margin: 0;
+  padding: 0 1rem;
 }
 
 .menu-button {
