@@ -3,13 +3,24 @@
   margin: var(--margin-content);
 }
 
-.component-root article {
+.article-content {
   background-color: var(--background-colour-content);
+  border-radius: var(--border-radius-content);
+  padding: var(--padding-content);
+  transition: var(--transition-theme);
+}
+.article-content > :first-child {
+  margin-top: 0;
+}
+
+.date {
+  border-bottom: 0.2rem solid var(--border-code-heading);
+  font-size: 1.8rem;
+  margin-bottom: var(--padding-content);
   transition: var(--transition-theme);
 }
 
-/* for-phone-only */
-@media only screen and (max-width: 599px) {
+@media only screen and (max-width: 820px) {
   .title, .date {
     padding: 0 var(--padding-content);
   }
