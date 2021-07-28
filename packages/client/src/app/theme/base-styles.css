@@ -78,7 +78,13 @@ code {
 article {
   padding: var(--padding-content);
   border-radius: var(--border-radius-content);
-  font-size: 1.8rem;
+  font-size: 2rem;
+}
+/* for-phone-only */
+@media only screen and (max-width: 650px) {
+  article {
+    font-size: 1.8rem;
+  }
 }
 
 article > :first-child {
