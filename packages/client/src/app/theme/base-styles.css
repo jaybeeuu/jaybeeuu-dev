@@ -123,5 +123,5 @@ article :not(pre) code {
 }
 
 article p {
-  overflow: auto;
+  overflow-x: auto;
 }
