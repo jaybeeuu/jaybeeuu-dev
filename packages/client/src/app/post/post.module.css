@@ -9,11 +9,14 @@
   padding: var(--padding-content);
   transition: var(--transition-theme);
 }
+.article-content > :first-child {
+  margin-top: 0;
+}
 
 .date {
   border-bottom: 0.2rem solid var(--border-code-heading);
   font-size: 1.8rem;
-  margin-bottom: calc(var(--margin-content-width) / 2);
+  margin-bottom: var(--padding-content);
   transition: var(--transition-theme);
 }
 
