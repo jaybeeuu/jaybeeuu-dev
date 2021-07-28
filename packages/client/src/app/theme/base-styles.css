@@ -80,12 +80,6 @@ article {
   border-radius: var(--border-radius-content);
   font-size: 2rem;
 }
-/* for-phone-only */
-@media only screen and (max-width: 650px) {
-  article {
-    font-size: 1.8rem;
-  }
-}
 
 article > :first-child {
   margin-top: 0;
@@ -96,7 +90,7 @@ article > :last-child {
 }
 
 article code {
-  font-size: 1.7rem;
+  font-size: 0.9em;
 }
 
 article pre {
@@ -133,4 +127,11 @@ article :not(pre) code {
 article p {
   overflow-y: hidden;
   overflow-x: auto;
+}
+
+/* for-phone-only */
+@media only screen and (max-width: 650px) {
+  article {
+    font-size: 1.8rem;
+  }
 }
