@@ -26,18 +26,18 @@ But it gets a little involved and only gives part of the story given the W3C API
 Perhaps its the subject of another post another time.
 Instead I'm going to present a slightly augmented version of a list you find on [w3schools](https://www.w3schools.com/js/js_this.asp).
 
-> * Alone, `this` refers to the global object.
-> * In a method, `this` refers to the owner object.
-> * In a function, `this` refers to the global object.
-> * In a function, in strict mode, `this` is `undefined`.
-> * Methods like
+* Alone, `this` refers to the global object.
+* In a method, `this` refers to the owner object.
+* In a function, `this` refers to the global object.
+* In a function, in strict mode, `this` is `undefined`.
+* Methods like
 [`call`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call)
  and
 [`apply`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)
 can refer `this` to any object.
-> * In a "bound" function `this` is the value of the first the argument of [`bind`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).
-> * In a callback or event handler; consult the docs.
-> * In an arrow function `this` gets it's value from the enclosing scope.
+* In a "bound" function `this` is the value of the first the argument of [`bind`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).
+* In a callback or event handler; consult the docs.
+* In an arrow function `this` gets it's value from the enclosing scope.
 
 If that looks like a lot of rules, I agree.
 I also suspect this isn't all of them - one person I spoke to had heard there are 26 different values `this` can take.

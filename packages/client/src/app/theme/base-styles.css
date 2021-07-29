@@ -41,9 +41,6 @@ a.hash-link svg {
 
 /* for-phone-only */
 @media only screen and (max-width: 599px) {
-  a.hash-link svg {
-    fill: var(--fill-icon);
-  }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -128,8 +125,16 @@ article p {
 }
 
 /* for-phone-only */
-@media only screen and (max-width: 650px) {
+@media only screen and (max-width: 599px) {
+  a.hash-link svg {
+    fill: var(--fill-icon);
+  }
+
   article {
     font-size: 1.8rem;
+  }
+
+  ul, ol {
+    padding-left: 2.5rem;
   }
 }
