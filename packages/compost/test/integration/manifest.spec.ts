@@ -38,7 +38,7 @@ describe("manifest", () => {
     expect(manifest).toStrictEqual({
       [slug]: {
         ...meta,
-        publishDate: new Date(publishDate).toUTCString(),
+        publishDate: new Date(publishDate).toISOString(),
         lastUpdateDate: null,
         slug,
         fileName: expect.stringMatching(new RegExp(`${slug}-[A-z0-9]{6}.html`)) as unknown,
@@ -105,7 +105,7 @@ describe("manifest", () => {
     const manifest = await getPostManifest();
 
     expect(manifest[slug]?.publishDate).toStrictEqual(
-      new Date(publishDate).toUTCString(),
+      new Date(publishDate).toISOString(),
     );
   });
 
@@ -145,7 +145,7 @@ describe("manifest", () => {
     const manifest = await getPostManifest();
 
     expect(manifest[slug]?.lastUpdateDate).toStrictEqual(
-      new Date(updatedDate).toUTCString()
+      new Date(updatedDate).toISOString()
     );
   });
 
@@ -223,7 +223,7 @@ describe("manifest", () => {
 
     const newManifest = await getPostManifest();
     expect(newManifest[slug]?.lastUpdateDate).toStrictEqual(
-      new Date(updatedDate).toUTCString()
+      new Date(updatedDate).toISOString()
     );
   });
 

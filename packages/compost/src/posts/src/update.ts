@@ -101,8 +101,8 @@ export const update = async (
 
     newManifest[slug] = {
       ...metaData,
-      publishDate: originalRecord?.publishDate || new Date().toUTCString(),
-      lastUpdateDate: hasBeenUpdated ? new Date().toUTCString() : null,
+      publishDate: originalRecord?.publishDate || new Date().toISOString(),
+      lastUpdateDate: hasBeenUpdated ? new Date().toISOString() : null,
       slug,
       fileName: compiledFileName,
       href
