@@ -195,7 +195,7 @@ module.exports = {
           to: "posts/[name][ext]"
         },
         {
-          from: 'public/robots.txt', to: 'robots.txt'
+          from: "public/robots.txt", to: "robots.txt"
         }
       ]
     }),
