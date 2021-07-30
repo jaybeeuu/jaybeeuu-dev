@@ -46,6 +46,7 @@
     "html-webpack-plugin": "^5.3.1",
     "image-webpack-loader": "^7.0.1",
     "mini-css-extract-plugin": "^1.6.0",
+    "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^5.1.2",
     "ts-node": "^10.0.0",
@@ -69,7 +70,6 @@
     "preact": "^10.5.13",
     "preact-router": "^3.2.1",
     "preact-transitioning": "^1.2.0",
-    "regenerator-runtime": "^0.13.7",
-    "sitemap-webpack-plugin": "^1.1.1"
+    "regenerator-runtime": "^0.13.7"
   }
 }
