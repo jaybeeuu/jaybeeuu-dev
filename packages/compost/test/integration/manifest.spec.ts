@@ -1,4 +1,5 @@
-import type { PostFile } from "./helpers";
+import type { PostFile} from "./helpers";
+import { writeOutputManifestFile as baseWriteOutputManifestFile } from "./helpers";
 import {
   cleanUpDirectories,
   compilePosts,
@@ -9,9 +10,30 @@ import {
 import { advanceTo } from "jest-date-mock";
 import fetch from "node-fetch";
 import { mocked } from "ts-jest/utils";
+import type { PostMetaData } from "../../src/index";
 import type { PostMetaFileData } from "../../src/posts/src/metafile";
 
 jest.mock("node-fetch");
+
+const writeOutputManifestFile = (
+  metaData: Pick<PostMetaData, "slug"> & Partial<Omit<PostMetaData, "slug">>
+): Promise<void> => {
+  const defaultedManifest = {
+    [metaData.slug]: {
+      title: "{title}",
+      abstract: "{abstract}",
+      publish: false,
+      publishDate: "Fri, 30 Jul 2021 20:18:43 GMT",
+      lastUpdateDate: "Sun, 06 Jun 2021 22:08:34 GMT",
+      fileName: "{fileName}",
+      href: "{href}",
+      ...metaData,
+      slug: metaData.slug
+    }
+  };
+
+  return baseWriteOutputManifestFile(defaultedManifest);
+};
 
 describe("manifest", () => {
   it("has an entry for a new post with the correct properties.", async () => {
@@ -159,10 +181,7 @@ describe("manifest", () => {
         abstract: "This is the very first post.",
         publish: true
       },
-      content: [
-        "# This is the first post",
-        "It has some content."
-      ]
+      content: "# This is the first post"
     });
 
     const publishDate = "2020-03-11";
@@ -188,10 +207,7 @@ describe("manifest", () => {
         abstract: "This is the very first post.",
         publish: true
       },
-      content: [
-        "# This is the first post",
-        "It has some content."
-      ]
+      content: "# This is the first post"
     };
     await writePostFile(postFile);
 
@@ -223,6 +239,33 @@ describe("manifest", () => {
     );
   });
 
+  it("transforms old manifest data which are not in ISO format into ISO.", async () => {
+    await cleanUpDirectories();
+    const slug = "first-post";
+    await writePostFile({
+      slug,
+      meta: {
+        title: "This is the first post",
+        abstract: "This is the very first post.",
+        publish: true
+      },
+      content: "# This is the first post"
+    });
+    await writeOutputManifestFile({
+      fileName: "first-post-aLp83p.html",
+      lastUpdateDate: "Fri, 30 Jul 2021 20:18:43 GMT",
+      publishDate: "Sun, 06 Jun 2021 22:08:34 GMT",
+      slug
+    });
+
+    await compilePosts();
+
+    const manifest = await getPostManifest();
+
+    expect(manifest[slug].publishDate).toStrictEqual("2021-06-06T22:08:34.000Z");
+    expect(manifest[slug].lastUpdateDate).toStrictEqual("2021-07-30T20:18:43.000Z");
+  });
+
   it("updates the lastUpdatedDate when the manifest needs to be fetched.", async () => {
     await cleanUpDirectories();
     const slug = "first-post";
@@ -233,10 +276,7 @@ describe("manifest", () => {
         abstract: "This is the very first post.",
         publish: true
       },
-      content: [
-        "# This is the first post",
-        "It has some content."
-      ]
+      content: "# This is the first post"
     };
     await writePostFile(postFile);
 

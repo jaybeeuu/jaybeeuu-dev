@@ -97,14 +97,20 @@ export const update = async (
     const href = joinUrlPath(options.hrefRoot, compiledFileName);
 
     const originalRecord = oldManifest[slug];
+
+    const publishDate = new Date(originalRecord?.publishDate ?? new Date()).toISOString();
+
     const hasBeenUpdated = originalRecord && originalRecord.fileName !== compiledFileName;
+    const lastUpdateDate = hasBeenUpdated
+      ? new Date().toISOString()
+      : originalRecord?.lastUpdateDate
+        ? new Date(originalRecord.lastUpdateDate).toISOString()
+        : null;
 
     newManifest[slug] = {
       ...metaData,
-      publishDate: originalRecord?.publishDate ?? new Date().toISOString(),
-      lastUpdateDate: hasBeenUpdated
-        ? new Date().toISOString()
-        : originalRecord?.lastUpdateDate ?? null,
+      publishDate,
+      lastUpdateDate,
       slug,
       fileName: compiledFileName,
       href
