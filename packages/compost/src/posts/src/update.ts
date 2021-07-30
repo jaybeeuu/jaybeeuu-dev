@@ -101,14 +101,15 @@ export const update = async (
 
     newManifest[slug] = {
       ...metaData,
-      publishDate: originalRecord?.publishDate || new Date().toISOString(),
-      lastUpdateDate: hasBeenUpdated ? new Date().toISOString() : null,
+      publishDate: originalRecord?.publishDate ?? new Date().toISOString(),
+      lastUpdateDate: hasBeenUpdated
+        ? new Date().toISOString()
+        : originalRecord?.lastUpdateDate ?? null,
       slug,
       fileName: compiledFileName,
       href
     };
   }
-
   await writeJsonFile(
     path.resolve(options.outputDir, options.manifestFileName),
     newManifest
