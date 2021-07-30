@@ -6,6 +6,8 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const path = require("path");
+const SitemapPlugin = require("sitemap-webpack-plugin").default;
 const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
@@ -15,9 +17,10 @@ const paths = require("./config/paths");
 const isProduction = env.NODE_ENV === "production";
 const isWatching = process.argv.includes("serve");
 
-/**
- * @type import("webpack").Configuration
- */
+/** @type {import("@jaybeeuu/compost").PostManifest} */
+const postManifest = JSON.parse(fs.readFileSync(paths.manifest));
+
+/** @type {import("webpack").Configuration} */
 module.exports = {
   mode: isProduction ? "production" : "development",
   devtool: isProduction ? "source-map" : "source-map",
@@ -190,6 +193,9 @@ module.exports = {
         {
           from: "node_modules/@jaybeeuu/posts/lib/*",
           to: "posts/[name][ext]"
+        },
+        {
+          from: "public/robots.txt", to: "robots.txt"
         }
       ]
     }),
@@ -197,6 +203,35 @@ module.exports = {
       inject: true,
       base: "/",
       template: paths.indexHtml
+    }),
+    new SitemapPlugin({
+      base: "https://jaybeeuu.dev",
+      options: {
+        lastmod: true,
+        changefreq: "monthly",
+        priority: 0.4
+      },
+      paths: [
+        {
+          path: "/",
+          priority: 0.3,
+          changefreq: "yearly",
+        },
+        {
+          path: "/posts",
+          priority: 0.8,
+          changefreq: "weekly"
+        },
+        ...Object.values(postManifest).map((meta) => {
+          const lastmod = (meta.lastUpdateDate ?? meta.publishDate).split("T")[0];
+          return {
+            path: path.posix.join("/posts", meta.slug),
+            lastmod,
+            priority: 0.5,
+            changefreq: "monthly"
+          };
+        })
+      ],
     }),
     new webpack.DefinePlugin(stringifiedEnv),
     new CaseSensitivePathsPlugin(),

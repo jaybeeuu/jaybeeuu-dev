@@ -40,21 +40,22 @@
     "css-minimizer-webpack-plugin": "^3.0.0",
     "css-modules-typescript-loader": "^4.0.1",
     "dotenv": "^10.0.0",
-    "eslint-plugin-react": "^7.23.2",
     "eslint": "^7.27.0",
+    "eslint-plugin-react": "^7.23.2",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.1",
     "image-webpack-loader": "^7.0.1",
     "mini-css-extract-plugin": "^1.6.0",
+    "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^5.1.2",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.2",
     "url-loader": "^4.1.1",
+    "webpack": "^5.38.0",
     "webpack-bundle-analyzer": "^4.4.2",
     "webpack-cli": "^4.7.0",
-    "webpack-dev-server": "^3.11.2",
-    "webpack": "^5.38.0"
+    "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
     "@jaybeeuu/e2e-hooks": "workspace:*",
@@ -62,11 +63,13 @@
     "@jaybeeuu/preact-recoilless": "workspace:*",
     "@jaybeeuu/recoilless": "workspace:*",
     "@jaybeeuu/utilities": "workspace:*",
+    "@types/node": "^16.4.7",
+    "@typescript-eslint/parser": "^4.28.5",
     "classnames": "^2.3.1",
     "core-js": "^3.13.0",
+    "preact": "^10.5.13",
     "preact-router": "^3.2.1",
     "preact-transitioning": "^1.2.0",
-    "preact": "^10.5.13",
     "regenerator-runtime": "^0.13.7"
   }
 }

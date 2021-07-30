@@ -1,6 +1,7 @@
 import path from "path";
 import type Utilities from "@jaybeeuu/utilities";
-import type { File } from "../../src/files/index";
+import type { File} from "../../src/files/index";
+import { writeJsonFile } from "../../src/files/index";
 import { readTextFile, writeTextFiles, deleteDirectories} from "../../src/files/index";
 import type { PostManifest, UpdateOptions } from "../../src/posts/src/types.js";
 import { update } from "../../src/posts/index.js";
@@ -51,6 +52,17 @@ const getDefaultedUpdateOptions = (
     watch: false,
     ...options
   };
+};
+
+export const writeOutputManifestFile = async (
+  manifest: PostManifest,
+  options: Partial<UpdateOptions> = {}
+): Promise<void> => {
+  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
+  await writeJsonFile(
+    path.join(defaultedUpdateOptions.outputDir, defaultedUpdateOptions.manifestFileName),
+    manifest
+  );
 };
 
 export const writePostFile = async (

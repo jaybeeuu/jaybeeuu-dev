@@ -17,5 +17,7 @@ module.exports = {
   certs: {
     key: path.join(certs, "key.key"),
     certificate: path.join(certs, "cert.crt")
-  }
+  },
+  manifest: resolveApp("node_modules/@jaybeeuu/posts/lib/manifest.json"),
+  postsLib: "node_modules/@jaybeeuu/posts/lib"
 };
