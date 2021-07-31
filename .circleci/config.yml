@@ -70,7 +70,7 @@ jobs:
   e2e:
     <<: *base
     docker:
-      - image: cypress/included:7.4.0
+      - image: cypress/included:8.1.0
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
