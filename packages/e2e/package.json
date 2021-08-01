@@ -23,7 +23,7 @@
     "@jaybeeuu/e2e-hooks": "workspace:*",
     "@jaybeeuu/eslint-config": "workspace:*",
     "@jaybeeuu/utilities": "workspace:*",
-    "@types/node": "16.4.8",
+    "@types/node": "^14.17.0",
     "@typescript-eslint/eslint-plugin": "^4.28.5",
     "core-js": "3.16.0",
     "cypress": "8.1.0",

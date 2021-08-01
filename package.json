@@ -11,7 +11,7 @@
   ],
   "engines": {
     "node": ">=14.17.0",
-    "pnpm": ">=6.2.3"
+    "pnpm": ">=6.11.0"
   },
   "repository": {
     "type": "git",
@@ -30,7 +30,6 @@
     "e2e-ci": "pnpm run start --filter @jaybeeuu/client & pnpx wait-on --timeout=60000 https://localhost:3443/ && pnpm run e2e run",
     "gen-certs": "pnpm run --no-bail --no-sort -r gen-certs --filter {packages}",
     "lint": "pnpm run --no-bail --no-sort -r lint --filter {packages}",
-    "nvm": "nvm install && nvm use",
     "spellcheck": "pnpm run --no-bail --no-sort -r spellcheck --filter {packages}",
     "start": "pnpm run -r start --no-sort --workspace-concurrency=Infinity --filter @jaybeeuu/client...",
     "test": "jest",
