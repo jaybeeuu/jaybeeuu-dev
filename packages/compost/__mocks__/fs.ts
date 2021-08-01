@@ -618,8 +618,8 @@ mocked(fs.promises.rm).mockImplementation(async (path, options) => {
 });
 
 type ReaddirOptions
-  = fsModule.ObjectEncodingOptions & { withFileTypes?: false }
-  | fsModule.ObjectEncodingOptions & { withFileTypes: true }
+  = fsModule.BaseEncodingOptions & { withFileTypes?: false }
+  | fsModule.BaseEncodingOptions & { withFileTypes: true }
   | BufferEncoding
   | null
   | { encoding: "buffer"; withFileTypes?: false }
