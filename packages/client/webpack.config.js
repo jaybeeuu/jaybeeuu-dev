@@ -1,3 +1,5 @@
+// @ts-check
+
 const PreactRefreshPlugin = require("@prefresh/webpack");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
@@ -18,7 +20,7 @@ const isProduction = env.NODE_ENV === "production";
 const isWatching = process.argv.includes("serve");
 
 /** @type {import("@jaybeeuu/compost").PostManifest} */
-const postManifest = JSON.parse(fs.readFileSync(paths.manifest));
+const postManifest = JSON.parse(fs.readFileSync(paths.manifest, "utf8"));
 
 /** @type {import("webpack").Configuration} */
 module.exports = {
@@ -76,7 +78,7 @@ module.exports = {
                 loader: "css-loader",
                 options: {
                   modules: {
-                    localIdentName: isProduction ? "bw-[hash:base64:5]" : "[name]__[local]--[hash:base64:5]",
+                    localIdentName: isProduction ? "jbw-[hash:base64:5]" : "[name]__[local]--[hash:base64:5]",
                     exportLocalsConvention: "camelCaseOnly"
                   },
                   sourceMap: true
