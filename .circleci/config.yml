@@ -4,7 +4,7 @@ src-dir: &src-dir ~/src
 
 base: &base
   docker:
-    - image: circleci/node:14.16.1
+    - image: circleci/node:14.17.4
       auth:
         username: $DOCKERHUB_USERNAME
         password: $DOCKERHUB_PASSWORD
@@ -19,7 +19,7 @@ jobs:
       - checkout:
           path: *src-dir
 
-      - run: sudo npm i -g pnpm@6.2.3
+      - run: sudo npm i -g pnpm@6.11.5
       - run: npm run bootstrap
       - run: npm run build
       - run: npm run gen-certs
@@ -37,7 +37,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: sudo npm i -g pnpm@6.2.3
+      - run: sudo npm i -g pnpm@6.11.5
       - run: npm run lint
 
   spellcheck:
@@ -46,7 +46,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: sudo npm i -g pnpm@6.2.3
+      - run: sudo npm i -g pnpm@6.11.5
       - run: npm run spellcheck
 
   type-check:
@@ -55,7 +55,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: sudo npm i -g pnpm@6.2.3
+      - run: sudo npm i -g pnpm@6.11.5
       - run: npm run type-check
 
   test:
@@ -64,13 +64,13 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: sudo npm i -g pnpm@6.2.3
+      - run: sudo npm i -g pnpm@6.11.5
       - run: npm run test
 
   e2e:
     <<: *base
     docker:
-      - image: cypress/included:7.4.0
+      - image: cypress/included:8.1.0
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
@@ -80,7 +80,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: npm i -g pnpm@6.2.3 wait-on
+      - run: npm i -g pnpm@6.11.5 wait-on
       - run: npm run e2e-ci
       - store_artifacts:
           path: ./packages/e2e/.screenshots

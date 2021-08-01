@@ -14,9 +14,9 @@ export interface NavBarProps {
   className: string;
 }
 
-export const useTitleBarRef = (): Ref<HTMLDivElement> => {
+export const useTitleBarRef = (): Ref<HTMLDivElement | null> => {
   const [, setTitleBaeHeight] = useValue(titleBarHeight);
-  const titleRef = useRef<HTMLDivElement>();
+  const titleRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     setTitleBaeHeight(
