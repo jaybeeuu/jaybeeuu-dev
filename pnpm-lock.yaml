@@ -26,8 +26,7 @@ importers:
       '@prefresh/babel-plugin': ^0.4.1
       '@prefresh/core': ^1.3.2
       '@prefresh/webpack': ^3.3.2
-      '@types/node': ^14.17.0
-      '@types/webpack': ^5.28.0
+      '@types/node': ^14.7.0
       '@typescript-eslint/eslint-plugin': ^4.28.5
       '@typescript-eslint/parser': ^4.28.5
       babel-loader: ^8.2.2
@@ -53,6 +52,7 @@ importers:
       regenerator-runtime: ^0.13.9
       sitemap-webpack-plugin: ^1.1.1
       style-loader: ^3.2.1
+      svgo-loader: ^3.0.0
       terser-webpack-plugin: ^5.1.4
       ts-node: ^10.1.0
       typescript: ^4.3.5
@@ -67,7 +67,6 @@ importers:
       '@jaybeeuu/preact-recoilless': link:../preact-recoilless
       '@jaybeeuu/recoilless': link:../recoilless
       '@jaybeeuu/utilities': link:../utilities
-      '@types/node': 14.17.6
       '@typescript-eslint/parser': 4.28.5_eslint@7.32.0+typescript@4.3.5
       classnames: 2.3.1
       core-js: 3.16.0
@@ -87,7 +86,7 @@ importers:
       '@prefresh/babel-plugin': 0.4.1
       '@prefresh/core': 1.3.2_preact@10.5.14
       '@prefresh/webpack': 3.3.2_b13128c485d81e200b26cd5250faf6a9
-      '@types/webpack': 5.28.0_webpack-cli@4.7.2
+      '@types/node': 14.17.6
       '@typescript-eslint/eslint-plugin': 4.28.5_a8e83fcad666e1ba86be4b2e27a20aea
       babel-loader: 8.2.2_645039d67596ff7dbfe0a9bea30a8c7e
       case-sensitive-paths-webpack-plugin: 2.4.0
@@ -106,6 +105,7 @@ importers:
       mini-css-extract-plugin: 2.1.0_webpack@5.47.1
       sitemap-webpack-plugin: 1.1.1
       style-loader: 3.2.1_webpack@5.47.1
+      svgo-loader: 3.0.0
       terser-webpack-plugin: 5.1.4_webpack@5.47.1
       ts-node: 10.1.0_13403c2f2d9ddab699dd2f492f123cbf
       typescript: 4.3.5
@@ -2038,16 +2038,6 @@ packages:
   /@types/tmp/0.0.33:
     resolution: {integrity: sha1-EHPEvIJHVK49EM+riKsCN7qWTk0=}
     dev: false
-
-  /@types/webpack/5.28.0_webpack-cli@4.7.2:
-    resolution: {integrity: sha512-8cP0CzcxUiFuA9xGJkfeVpqmWTk9nx6CWwamRGCj95ph1SmlRRk9KlCZ6avhCbZd4L68LvYT6l1kpdEnQXrF8w==}
-    dependencies:
-      '@types/node': 16.4.8
-      tapable: 2.2.0
-      webpack: 5.47.1_webpack-cli@4.7.2
-    transitivePeerDependencies:
-      - webpack-cli
-    dev: true
 
   /@types/yargs-parser/20.2.1:
     resolution: {integrity: sha512-7tFImggNeNBVMsn0vLrpn1H1uPrUBdnARPTpZoitY37ZrdJREzf7I16tMrlK3hen349gr1NYh8CmZQa7CTG6Aw==}
@@ -10047,6 +10037,13 @@ packages:
     dependencies:
       has-flag: 4.0.0
       supports-color: 7.2.0
+    dev: true
+
+  /svgo-loader/3.0.0:
+    resolution: {integrity: sha512-gwyFuzTxZ8hEWYKQ9GodudSKRHzW8CUqgdfsdNpu1U5Keow5dPIgxT4DoHUEVXQRolefgSCeBtW3y12CyhIGxw==}
+    dependencies:
+      loader-utils: 1.4.0
+      svgo: 2.3.1
     dev: true
 
   /svgo/1.3.2:

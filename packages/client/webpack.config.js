@@ -42,10 +42,12 @@ module.exports = {
     paths.srcIndex,
   ],
   output: {
-    pathinfo: true,
-    path: paths.dist,
-    publicPath: "/",
+    assetModuleFilename: "static/[name].[contenthash][ext]",
+    clean: true,
     filename: "main.[contenthash].js",
+    path: paths.dist,
+    pathinfo: true,
+    publicPath: "/"
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
@@ -96,26 +98,12 @@ module.exports = {
           },
           {
             test: [/\.sprite.svg$/],
-            use: [
-              {
-                loader: "url-loader",
-                options: {
-                  limit: 5000,
-                  name: "static/[name].[contenthash].[ext]",
-                },
-              }
-            ]
+            type: "asset"
           },
           {
             test: [/\.(bmp|gif|jpe?g|png|svg)$/],
+            type: "asset",
             use: [
-              {
-                loader: "url-loader",
-                options: {
-                  limit: 5000,
-                  name: "static/[name].[contenthash].[ext]",
-                },
-              },
               {
                 loader: "image-webpack-loader",
                 options: {
@@ -135,7 +123,6 @@ module.exports = {
                   gifsicle: {
                     interlaced: false,
                   },
-                  // the webp option will enable WEBP
                   webp: {
                     quality: 75
                   }
