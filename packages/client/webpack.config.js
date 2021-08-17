@@ -238,11 +238,11 @@ module.exports = {
       atomFileName: "feeds/atom.xml",
       rssFileName: "feeds/rss.xml",
       feedOptions: {
-        title: "jaybeeuu.dev",
-        description: "Software engineering thoughts, trials & tribulations.!",
+        title: "Josh Bickley-Wallace",
+        description: "Software engineering.",
         id: siteURL,
         link: siteURL,
-        language: "en", // optional, used only in RSS 2.0, possible values: http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
+        language: "en",
         favicon: siteURL,
         copyright: `All rights reserved ${new Date().getFullYear()}, Josh Bickley-Wallace`,
         feedLinks: {
