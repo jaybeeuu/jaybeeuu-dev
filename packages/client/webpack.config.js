@@ -1,4 +1,7 @@
+// @ts-check
+
 const PreactRefreshPlugin = require("@prefresh/webpack");
+const { FeedWebpackPlugin } = require("@jaybeeuu/feed-webpack-plugin");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
@@ -18,7 +21,18 @@ const isProduction = env.NODE_ENV === "production";
 const isWatching = process.argv.includes("serve");
 
 /** @type {import("@jaybeeuu/compost").PostManifest} */
-const postManifest = JSON.parse(fs.readFileSync(paths.manifest));
+const postManifest = JSON.parse(fs.readFileSync(paths.manifest, "utf8"));
+
+const siteURL = "https://jaybeeuu.dev";
+const postsRoot = "posts";
+
+/**
+ * @param {string[]} pathFragments
+ * @returns {string}
+ */
+const resolvedURLToSite = (...pathFragments) => {
+  return path.posix.join(siteURL, ...pathFragments);
+};
 
 /** @type {import("webpack").Configuration} */
 module.exports = {
@@ -76,7 +90,7 @@ module.exports = {
                 loader: "css-loader",
                 options: {
                   modules: {
-                    localIdentName: isProduction ? "bw-[hash:base64:5]" : "[name]__[local]--[hash:base64:5]",
+                    localIdentName: isProduction ? "jbw-[hash:base64:5]" : "[name]__[local]--[hash:base64:5]",
                     exportLocalsConvention: "camelCaseOnly"
                   },
                   sourceMap: true
@@ -179,7 +193,7 @@ module.exports = {
       patterns: [
         {
           from: "node_modules/@jaybeeuu/posts/lib/*",
-          to: "posts/[name][ext]"
+          to: `${postsRoot}/[name][ext]`
         },
         {
           from: "public/robots.txt", to: "robots.txt"
@@ -205,14 +219,14 @@ module.exports = {
           changefreq: "yearly",
         },
         {
-          path: "/posts",
+          path: `/${postsRoot}`,
           priority: 0.8,
           changefreq: "weekly"
         },
         ...Object.values(postManifest).map((meta) => {
           const lastmod = (meta.lastUpdateDate ?? meta.publishDate).split("T")[0];
           return {
-            path: path.posix.join("/posts", meta.slug),
+            path: path.posix.join(postsRoot, meta.slug),
             lastmod,
             priority: 0.5,
             changefreq: "monthly"
@@ -220,6 +234,43 @@ module.exports = {
         })
       ],
     }),
+    new FeedWebpackPlugin({
+      atomFileName: "feeds/atom.xml",
+      rssFileName: "feeds/rss.xml",
+      feedOptions: {
+        title: "Josh Bickley-Wallace",
+        description: "Software engineering.",
+        id: siteURL,
+        link: siteURL,
+        language: "en",
+        favicon: siteURL,
+        copyright: `All rights reserved ${new Date().getFullYear()}, Josh Bickley-Wallace`,
+        feedLinks: {
+          atom: resolvedURLToSite("feeds/atom.xml"),
+          rss: resolvedURLToSite("feeds/rss.xml")
+        },
+        author: {
+          name: "Josh bickley-Wallace",
+          email: "joshbickleywallace@outlook.com",
+          link: siteURL
+        }
+      },
+      items: Object.values(postManifest).map(
+        /**
+         * @param {import("@jaybeeuu/compost").PostMetaData} meta
+         * @returns {import("@jaybeeuu/feed-webpack-plugin").FeedItem}
+         */
+        (meta) => ({
+          date: new Date(meta.lastUpdateDate),
+          description: meta.abstract,
+          id: meta.slug,
+          link: resolvedURLToSite(postsRoot, meta.slug),
+          published: new Date(meta.publishDate),
+          title: meta.title
+        })
+      )
+    }),
+    new webpack.ProgressPlugin(),
     new webpack.DefinePlugin(stringifiedEnv),
     new CaseSensitivePathsPlugin(),
     isProduction ? new CleanWebpackPlugin() : null,

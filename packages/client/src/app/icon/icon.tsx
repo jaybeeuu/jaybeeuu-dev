@@ -9,6 +9,7 @@ export type IconName
   = "link"
   | "menu"
   | "moon"
+  | "rss_feed"
   | "sun";
 
 export interface IconProps {
