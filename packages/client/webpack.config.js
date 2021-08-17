@@ -24,6 +24,7 @@ const isWatching = process.argv.includes("serve");
 const postManifest = JSON.parse(fs.readFileSync(paths.manifest, "utf8"));
 
 const siteURL = "https://jaybeeuu.dev";
+const postsRoot = "posts";
 
 /**
  * @param {string[]} pathFragments
@@ -192,7 +193,7 @@ module.exports = {
       patterns: [
         {
           from: "node_modules/@jaybeeuu/posts/lib/*",
-          to: "posts/[name][ext]"
+          to: `${postsRoot}/[name][ext]`
         },
         {
           from: "public/robots.txt", to: "robots.txt"
@@ -218,14 +219,14 @@ module.exports = {
           changefreq: "yearly",
         },
         {
-          path: "/posts",
+          path: `/${postsRoot}`,
           priority: 0.8,
           changefreq: "weekly"
         },
         ...Object.values(postManifest).map((meta) => {
           const lastmod = (meta.lastUpdateDate ?? meta.publishDate).split("T")[0];
           return {
-            path: path.posix.join("/posts", meta.slug),
+            path: path.posix.join(postsRoot, meta.slug),
             lastmod,
             priority: 0.5,
             changefreq: "monthly"
@@ -235,6 +236,7 @@ module.exports = {
     }),
     new FeedWebpackPlugin({
       atomFileName: "atom.xml",
+      rssFileName: "rss.xml",
       feedOptions: {
         title: "jaybeeuu.dev",
         description: "Software engineering thoughts, trials & tribulations.!",
@@ -261,7 +263,7 @@ module.exports = {
           date: new Date(meta.lastUpdateDate),
           description: meta.abstract,
           id: meta.slug,
-          link: resolvedURLToSite("posts", meta.slug),
+          link: resolvedURLToSite(postsRoot, meta.slug),
           published: new Date(meta.publishDate),
           title: meta.title
         })

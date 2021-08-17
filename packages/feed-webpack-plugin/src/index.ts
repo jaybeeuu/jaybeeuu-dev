@@ -6,9 +6,10 @@ import { Compilation, sources } from "webpack";
 export { FeedItem, FeedOptions };
 
 export interface FeedWebpackPluginOptions {
-  atomFileName: string;
-  items: FeedItem[];
+  atomFileName?: string;
   feedOptions: FeedOptions;
+  items: FeedItem[];
+  rssFileName?: string;
 }
 
 export class FeedWebpackPlugin {
@@ -23,10 +24,20 @@ export class FeedWebpackPlugin {
 
     this.options.items.forEach((item) => feed.addItem(item));
 
-    compilation.emitAsset(
-      this.options.atomFileName,
-      new sources.RawSource(feed.atom1())
-    );
+    if (this.options.rssFileName) {
+      compilation.emitAsset(
+        this.options.rssFileName,
+        new sources.RawSource(feed.rss2())
+      );
+    }
+
+    if (this.options.atomFileName) {
+      compilation.emitAsset(
+        this.options.atomFileName,
+        new sources.RawSource(feed.atom1())
+      );
+    }
+
     return Promise.resolve();
   }
 

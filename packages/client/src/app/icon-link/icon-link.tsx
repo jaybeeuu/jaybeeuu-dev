@@ -10,15 +10,18 @@ export type { IconName };
 export interface IconLinkProps {
   name: IconName;
   href: string;
+  type: string;
 }
 
 export const IconLink = ({
   href,
-  name
+  name,
+  type
 }: IconLinkProps): JSX.Element => (
   <a
     className={css.componentRoot}
     href={href}
+    type={type}
   >
     <Icon name={name} />
   </a>
