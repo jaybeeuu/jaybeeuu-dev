@@ -246,7 +246,8 @@ module.exports = {
         favicon: siteURL,
         copyright: `All rights reserved ${new Date().getFullYear()}, Josh Bickley-Wallace`,
         feedLinks: {
-          atom: resolvedURLToSite("feed.atom")
+          atom: resolvedURLToSite("atom.xml"),
+          rss: resolvedURLToSite("rss.xml")
         },
         author: {
           name: "Josh bickley-Wallace",
