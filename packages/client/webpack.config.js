@@ -1,6 +1,7 @@
 // @ts-check
 
 const PreactRefreshPlugin = require("@prefresh/webpack");
+const { FeedWebpackPlugin } = require("@jaybeeuu/feed-webpack-plugin");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
@@ -222,6 +223,44 @@ module.exports = {
         })
       ],
     }),
+    new FeedWebpackPlugin({
+      atomFileName: "posts/posts.atom",
+      feedOptions: {
+        title: "jaybeeuu.dev",
+        description: "Software engineering thoughts, trials & tribulations.!",
+        id: "https://jaybeeuu.dev/",
+        link: "https://jaybeeuu.dev/",
+        updated: new Date(new Date().toISOString().split("T")[0]),
+        language: "en", // optional, used only in RSS 2.0, possible values: http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
+        favicon: "https://jaybeeuu.dev/favicon.ico",
+        copyright: `All rights reserved ${new Date().getFullYear()}, Josh Bickley-Wallace`,
+        feedLinks: {
+          atom: "https://jaybeeuu.dev/posts/posts.atom"
+        },
+        author: {
+          name: "Josh bickley-Wallace",
+          email: "joshbickleywallace@outlook.com",
+          link: "https://jaybeeuu.dev/"
+        }
+      },
+      items: Object.values(postManifest).map(
+        /**
+         * @param {import("@jaybeeuu/compost").PostMetaData} meta
+         * @returns {import("@jaybeeuu/feed-webpack-plugin").FeedItem}
+         */
+        (meta) => {
+          return {
+            date: new Date(meta.lastUpdateDate),
+            description: meta.abstract,
+            id: meta.slug,
+            link: path.posix.join("https://jaybeeuu.dev", "posts", meta.slug),
+            published: new Date(meta.publishDate),
+            title: meta.title
+          };
+        }
+      )
+    }),
+    new webpack.ProgressPlugin(),
     new webpack.DefinePlugin(stringifiedEnv),
     new CaseSensitivePathsPlugin(),
     isProduction ? new CleanWebpackPlugin() : null,

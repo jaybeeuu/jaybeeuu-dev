@@ -18,6 +18,7 @@ importers:
       '@jaybeeuu/compost': workspace:*
       '@jaybeeuu/e2e-hooks': workspace:*
       '@jaybeeuu/eslint-config': workspace:*
+      '@jaybeeuu/feed-webpack-plugin': workspace:*
       '@jaybeeuu/posts': workspace:*
       '@jaybeeuu/preact-recoilless': workspace:*
       '@jaybeeuu/recoilless': workspace:*
@@ -89,6 +90,7 @@ importers:
       '@babel/preset-typescript': 7.14.5_@babel+core@7.14.8
       '@jaybeeuu/compost': link:../compost
       '@jaybeeuu/eslint-config': link:../eslint-config
+      '@jaybeeuu/feed-webpack-plugin': link:../feed-webpack-plugin
       '@jaybeeuu/scripts': link:../scripts
       '@prefresh/babel-plugin': 0.4.1
       '@prefresh/core': 1.3.2_preact@10.5.14
@@ -231,6 +233,23 @@ importers:
     dependencies:
       '@typescript-eslint/parser': 4.28.5_typescript@4.3.5
       typescript: 4.3.5
+
+  packages/feed-webpack-plugin:
+    specifiers:
+      '@jaybeeuu/eslint-config': workspace:*
+      '@types/node': ^14.17.0
+      eslint: ^7.32.0
+      feed: ^4.2.2
+      typescript: ^4.3.5
+      webpack: ^5.0.0
+    dependencies:
+      feed: 4.2.2
+    devDependencies:
+      '@jaybeeuu/eslint-config': link:../eslint-config
+      '@types/node': 14.17.6
+      eslint: 7.32.0
+      typescript: 4.3.5
+      webpack: 5.47.1
 
   packages/posts:
     specifiers:
@@ -5098,7 +5117,6 @@ packages:
     engines: {node: '>=0.4.0'}
     dependencies:
       xml-js: 1.6.11
-    dev: true
 
   /figures/1.7.0:
     resolution: {integrity: sha1-y+Hjr/zxzUS4DK3+0o3Hk6lwHS4=}
@@ -9460,7 +9478,6 @@ packages:
 
   /sax/1.2.4:
     resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
-    dev: true
 
   /saxes/5.0.1:
     resolution: {integrity: sha512-5LBh1Tls8c9xgGjw3QrMwETmTMVk0oFgvrFSvWx62llR2hcEInrKNZ2GZCCuuy2lvWrdl5jhbpeqc5hRYKFOcw==}
@@ -11008,6 +11025,41 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
+  /webpack/5.47.1:
+    resolution: {integrity: sha512-cW+Mzy9SCDapFV4OrkHuP6EFV2mAsiQd+gOa3PKtHNoKg6qPqQXZzBlHH+CnQG1osplBCqwsJZ8CfGO6XWah0g==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    peerDependencies:
+      webpack-cli: '*'
+    peerDependenciesMeta:
+      webpack-cli:
+        optional: true
+    dependencies:
+      '@types/eslint-scope': 3.7.1
+      '@types/estree': 0.0.50
+      '@webassemblyjs/ast': 1.11.1
+      '@webassemblyjs/wasm-edit': 1.11.1
+      '@webassemblyjs/wasm-parser': 1.11.1
+      acorn: 8.4.1
+      browserslist: 4.16.6
+      chrome-trace-event: 1.0.3
+      enhanced-resolve: 5.8.2
+      es-module-lexer: 0.7.1
+      eslint-scope: 5.1.1
+      events: 3.3.0
+      glob-to-regexp: 0.4.1
+      graceful-fs: 4.2.6
+      json-parse-better-errors: 1.0.2
+      loader-runner: 4.2.0
+      mime-types: 2.1.32
+      neo-async: 2.6.2
+      schema-utils: 3.1.1
+      tapable: 2.2.0
+      terser-webpack-plugin: 5.1.4_webpack@5.47.1
+      watchpack: 2.2.0
+      webpack-sources: 3.1.2
+    dev: true
+
   /webpack/5.47.1_webpack-cli@4.7.2:
     resolution: {integrity: sha512-cW+Mzy9SCDapFV4OrkHuP6EFV2mAsiQd+gOa3PKtHNoKg6qPqQXZzBlHH+CnQG1osplBCqwsJZ8CfGO6XWah0g==}
     engines: {node: '>=10.13.0'}
@@ -11174,7 +11226,6 @@ packages:
     hasBin: true
     dependencies:
       sax: 1.2.4
-    dev: true
 
   /xml-name-validator/3.0.0:
     resolution: {integrity: sha512-A5CUptxDsvxKJEU3yO6DuWBSJz/qizqzJKOMIfUJHETbBw/sFaDxgd6fxm1ewUaM0jZ444Fc5vC5ROYurg/4Pw==}
