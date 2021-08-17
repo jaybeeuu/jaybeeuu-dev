@@ -64,7 +64,7 @@ export const NavBar = ({ className }: NavBarProps): VNode<any> => {
           className={e2eHooks.gitHubLink}
         />
         <IconLink
-          href={"/atom.xml"}
+          href={"feeds/atom.xml"}
           name={"rss_feed"}
           type={"application/atom+xml"}
         />

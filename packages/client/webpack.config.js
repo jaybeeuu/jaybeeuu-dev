@@ -235,8 +235,8 @@ module.exports = {
       ],
     }),
     new FeedWebpackPlugin({
-      atomFileName: "atom.xml",
-      rssFileName: "rss.xml",
+      atomFileName: "feeds/atom.xml",
+      rssFileName: "feeds/rss.xml",
       feedOptions: {
         title: "jaybeeuu.dev",
         description: "Software engineering thoughts, trials & tribulations.!",
@@ -246,8 +246,8 @@ module.exports = {
         favicon: siteURL,
         copyright: `All rights reserved ${new Date().getFullYear()}, Josh Bickley-Wallace`,
         feedLinks: {
-          atom: resolvedURLToSite("atom.xml"),
-          rss: resolvedURLToSite("rss.xml")
+          atom: resolvedURLToSite("feeds/atom.xml"),
+          rss: resolvedURLToSite("feeds/rss.xml")
         },
         author: {
           name: "Josh bickley-Wallace",
