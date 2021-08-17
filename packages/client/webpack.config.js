@@ -234,7 +234,7 @@ module.exports = {
       ],
     }),
     new FeedWebpackPlugin({
-      atomFileName: "feed.atom",
+      atomFileName: "atom.xml",
       feedOptions: {
         title: "jaybeeuu.dev",
         description: "Software engineering thoughts, trials & tribulations.!",

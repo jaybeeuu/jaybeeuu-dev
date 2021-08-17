@@ -4,9 +4,10 @@ import { useState } from "preact/hooks";
 import { navBar as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import classNames from "classnames";
 import { Link } from "preact-router/match";
-import { Icon } from "../icon";
-import { ThemeToggle } from "../theme-toggle";
-import { ImageLink } from "../image-link";
+import { Icon } from "../icon/index";
+import { ThemeToggle } from "../theme-toggle/index";
+import { ImageLink } from "../image-link/index";
+import { IconLink } from "../icon-link/index";
 import linkedInLogo from "./in-blue-logo.png";
 
 import githubLight from "./github-light.png";
@@ -61,6 +62,10 @@ export const NavBar = ({ className }: NavBarProps): VNode<any> => {
             dark: githubLight
           }}
           className={e2eHooks.gitHubLink}
+        />
+        <IconLink
+          href={"/atom.xml"}
+          name={"rss_feed"}
         />
         <ThemeToggle className={e2eHooks.switch} />
       </div>
