@@ -244,6 +244,11 @@ module.exports = {
         link: siteURL,
         language: "en",
         favicon: siteURL,
+        updated: new Date(
+          Math.max(...Object.values(postManifest).map((meta) => {
+            return +new Date(meta.lastUpdateDate ?? meta.publishDate);
+          }))
+        ),
         copyright: `All rights reserved ${new Date().getFullYear()}, Josh Bickley-Wallace`,
         feedLinks: {
           atom: resolvedURLToSite("feeds/atom.xml"),
@@ -261,7 +266,7 @@ module.exports = {
          * @returns {import("@jaybeeuu/feed-webpack-plugin").FeedItem}
          */
         (meta) => ({
-          date: new Date(meta.lastUpdateDate),
+          date: new Date(meta.lastUpdateDate ?? meta.publishDate),
           description: meta.abstract,
           id: meta.slug,
           link: resolvedURLToSite(postsRoot, meta.slug),
