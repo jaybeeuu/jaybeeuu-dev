@@ -95,7 +95,7 @@ This is one of the early standards.
 It was designed to run in the browser with a custom runtime downloading smaller modules, in parallel, as they were required.
 The aim here was to improve load times by parallelising the downloads
 and delaying download of the whole app until it was really needed.
-There is also an "optimizer" which allowed the modules to be bundled and minified for production.
+There is also an "optimizer" which allowed the modules to be bundled and minified for production (does this sound [familiar](https://www.snowpack.dev/)?).
 
 Here's what an AMD module looks like:
 
@@ -326,7 +326,7 @@ So the wrapper is a function (this is JavaScript after all). You can see it defi
 It takes two arguments.
 `root` will be the global `this` and `factory` will contain the actual definition of the code.
 
-n that first top level indentation (line 2-15) you can see the wrapper looking to see where it's landed.
+In that first top level indentation (line 2-15) you can see the wrapper looking to see where it's landed.
 First it tests to see if it's in an `AMD` environment with `typeof define === 'function'`, then for `CommonJS`
 (`if (typeof exports === 'object')`) and finally the module falls back to assuming it's dependencies are defined in the
 global scope.
@@ -453,7 +453,7 @@ module below...
 
 ```js
 // triangle.js
-export const area = (base, height) => 1/2 b * h
+export const area = (base, height) => 1/2 * b * h
 
 class Triangle {
   constructor(base, height) {
@@ -465,10 +465,11 @@ class Triangle {
   }
 }
 
-export default Triangle
+export default Triangle;
 ```
 
 ```js
+// main.js
 import Triangle, { area } from './triangle.js';
 
 const triangle = new Triangle(4, 2);
