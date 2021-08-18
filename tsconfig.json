@@ -21,9 +21,5 @@
     "noImplicitReturns": true,
 
     "types": []
-  },
-  "exclude": [
-    "node_modules",
-    "lib"
-  ]
+  }
 }
