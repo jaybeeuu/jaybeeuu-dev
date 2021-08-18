@@ -246,7 +246,7 @@ module.exports = {
         favicon: siteURL,
         updated: new Date(
           Math.max(...Object.values(postManifest).map((meta) => {
-            return +new Date(meta.lastUpdateDate ?? meta.publishDate);
+            return +new Date(meta.publishDate);
           }))
         ),
         copyright: `All rights reserved ${new Date().getFullYear()}, Josh Bickley-Wallace`,
@@ -266,7 +266,7 @@ module.exports = {
          * @returns {import("@jaybeeuu/feed-webpack-plugin").FeedItem}
          */
         (meta) => ({
-          date: new Date(meta.lastUpdateDate ?? meta.publishDate),
+          date: new Date(meta.publishDate),
           description: meta.abstract,
           id: meta.slug,
           link: resolvedURLToSite(postsRoot, meta.slug),
