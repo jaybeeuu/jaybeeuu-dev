@@ -92,15 +92,6 @@ function spaghetti() {
 }
 
 spaghetti(); // prints meatballs. true
-
-const plate = { spaghetti };
-plate.spaghetti(); // prints meatballs. false
-
-function doSomething(callback) {
-  callback();
-}
-
-doSomething(plate.spaghetti); // prints meatballs. true
 ```
 
 Head spinning?
@@ -129,15 +120,6 @@ function spaghetti() {
 }
 
 spaghetti(); // prints meatballs. true
-
-const plate = { spaghetti };
-plate.spaghetti(); // prints meatballs. false
-
-function doSomething(callback) {
-  callback();
-}
-
-doSomething(plate.spaghetti); // prints meatballs. true
 ```
 
 The only differences here are I've swapped `window` for `undefined`,
@@ -295,7 +277,7 @@ console.log(
 No thanks.
 We clearly didn't get `strawberry` on `this` so what was it?
 Turns out to be `window`.
-We get an `unndefined` smoothie because `window` has no `type` property.
+We get an `undefined` smoothie because `window` has no `type` property.
 We can confirm that by altering `makeSmoothie` like this:
 
 ```js
