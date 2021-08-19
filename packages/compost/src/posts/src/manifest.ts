@@ -1,8 +1,9 @@
 import { is, isObject, isRecord, or } from "@jaybeeuu/utilities";
 import type { PostManifest, PostMetaData } from "./types.js";
+import type { FetchJsonFileFailureReason, ReadJsonFileFailureReason } from "../../files/index.js";
 import { fetchJsonFile, readJsonFile } from "../../files/index.js";
-import type { Result } from "../../results.js";
-import { repackError } from "../../results.js";
+import type { Failure, Result } from "../../results.js";
+import { failure } from "../../results.js";
 
 const isPostMetaData = isObject<PostMetaData>({
   abstract: is("string"),
@@ -19,23 +20,35 @@ const isManifestFile = isRecord<PostManifest>(isPostMetaData);
 
 export type GetManifestFailure = "read manifest failed";
 
-export const getManifest = async (
-  manifestOutputFileName: string,
-  manifestLocator?: string
-): Promise<Result<PostManifest, GetManifestFailure>> => {
-  const defaultedManifestLocator = manifestLocator ?? manifestOutputFileName;
-
-  const readResult = (/^https?/).test(defaultedManifestLocator)
-    ? await fetchJsonFile(defaultedManifestLocator, isManifestFile)
-    : await readJsonFile(defaultedManifestLocator, isManifestFile);
+const getManifestFromOldManifestLocator = async (
+  manifestLocator: string
+): Promise<Result<PostManifest, FetchJsonFileFailureReason | ReadJsonFileFailureReason>> => {
+  const readResult = (/^https?/).test(manifestLocator)
+    ? await fetchJsonFile(manifestLocator, isManifestFile)
+    : await readJsonFile(manifestLocator, isManifestFile);
 
   if (readResult.success) {
     return readResult;
   }
 
-  return repackError(
-    readResult,
-    "read manifest failed",
-    `Reading manifest file ${defaultedManifestLocator} failed.`
-  );
+  return readResult;
+};
+
+export const getManifest = async (
+  manifestOutputFileName: string,
+  manifestLocators: string[]
+): Promise<Result<PostManifest, GetManifestFailure>> => {
+  const defaultedManifestLocators = [...manifestLocators, manifestOutputFileName];
+  const failures: Failure<FetchJsonFileFailureReason | ReadJsonFileFailureReason>[] = [];
+
+  for (const manifestLocator of defaultedManifestLocators) {
+    const result = await getManifestFromOldManifestLocator(manifestLocator);
+    if (result.success) {
+      return result;
+    }
+
+    failures.push(result);
+  }
+
+  return failure("read manifest failed", failures.map((fail) => fail.stack ?? fail.message).join("\n"));
 };

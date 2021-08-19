@@ -36,7 +36,7 @@ export const update = async (
 ): Promise<Result<PostManifest, UpdateFailureReason>> => {
   const oldManifestReadResult = await getManifest(
     path.join(options.outputDir, options.manifestFileName),
-    options.oldManifestLocator
+    options.oldManifestLocators
   );
   if (!oldManifestReadResult.success) {
     if (options.requireOldManifest) {

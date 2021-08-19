@@ -22,7 +22,7 @@ export interface UpdateOptions {
   hrefRoot: string;
   includeUnpublished: boolean;
   manifestFileName: string;
-  oldManifestLocator?: string;
+  oldManifestLocators: string[];
   outputDir: string;
   requireOldManifest: boolean;
   sourceDir: string;

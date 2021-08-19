@@ -27,13 +27,16 @@ export class Failure<Reason extends string> extends Error {
   public readonly name: FailureName<Reason>;
   public readonly success = false;
   public readonly reason: string;
+  public readonly messageOrError: string | Error | AggregateError;
 
   constructor(
     reason: Reason,
-    messageOrError: string | Error,
+    messageOrError: string | Error | AggregateError,
     framesSincePublic: number
   ) {
     super(messageOrError instanceof Error ? messageOrError.message : messageOrError);
+    this.messageOrError = messageOrError;
+
     this.name = `Failure(${reason})`;
     if (this.stack?.startsWith("Error")) {
       this.stack = this.stack.replace("Error", this.name);
@@ -59,7 +62,7 @@ export function success<Value>(value?: Value): Success<Value> {
 
 const failure = <Reason extends string>(
   reason: Reason,
-  messageOrError?: string | Error,
+  messageOrError?: string | Error | AggregateError,
   framesSincePublic: number = 1
 ): Failure<Reason> => {
   return new Failure(
