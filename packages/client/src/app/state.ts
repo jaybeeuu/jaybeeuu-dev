@@ -10,7 +10,7 @@ import type {
 export const postsManifest: DerivedValue<Promise<PostManifest>> = {
   name: "postManifest",
   derive: async (): Promise<PostManifest> => {
-    return fetchJson<PostManifest>("/posts/manifest.json");
+    return fetchJson<PostManifest>("/blog/manifest.json");
   }
 };
 

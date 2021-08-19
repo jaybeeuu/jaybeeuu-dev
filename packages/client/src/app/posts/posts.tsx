@@ -27,7 +27,7 @@ const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
         ? "Nothing to see? Write some posts..."
         : manifestValues.sort(compareDateString).map((meta) => (
           <Link
-            href={`/posts/${meta.slug}`}
+            href={`/blog/${meta.slug}`}
             className={classNames(
               css.post,
               e2eHooks.link,

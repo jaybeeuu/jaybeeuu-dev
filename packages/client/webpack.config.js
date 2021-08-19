@@ -24,7 +24,7 @@ const isWatching = process.argv.includes("serve");
 const postManifest = JSON.parse(fs.readFileSync(paths.manifest, "utf8"));
 
 const siteURL = "https://jaybeeuu.dev";
-const postsRoot = "posts";
+const postsRoot = "blog";
 
 /**
  * @param {string[]} pathFragments

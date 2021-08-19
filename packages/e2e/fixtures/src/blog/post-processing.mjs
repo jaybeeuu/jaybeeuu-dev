@@ -7,7 +7,7 @@ import fs from "fs";
  * @typedef {import("@jaybeeuu/compost").PostMetaData} PostMetaData
  */
 
-const manifestPath = "./fixtures/posts/manifest.json";
+const manifestPath = "./fixtures/blog/manifest.json";
 
 /**
  * @return {Promise<PostManifest>}

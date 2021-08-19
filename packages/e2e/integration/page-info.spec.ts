@@ -1,4 +1,4 @@
-import { registerRoutes, withPostMetaData } from "../routes/posts";
+import { registerRoutes, withPostMetaData } from "../routes/blog";
 import * as postList from "../features/post-list";
 import * as post from "../features/post";
 

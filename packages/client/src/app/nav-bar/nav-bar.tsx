@@ -44,7 +44,7 @@ export const NavBar = ({ className }: NavBarProps): VNode<any> => {
           activeClassName={css.active}
           className={classNames(css.link, e2eHooks.postsListLink)}
           onClick={() => setIsOpen(false)}
-          href={"/posts"}
+          href={"/blog"}
         >
             Blog
         </Link>
