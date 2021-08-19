@@ -13,11 +13,11 @@
     "lib"
   ],
   "scripts": {
-    "start": "compost --watch --href-root posts --include-unpublished --old-manifest-locator \"https://jaybeeuu.dev/posts/manifest.json\"",
+    "start": "compost --watch --href-root blog --include-unpublished --old-manifest-locator \"https://jaybeeuu.dev/posts/manifest.json\" --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\"",
     "lint": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
     "spellcheck-interactive": "mdspell --en-GB --ignore-numbers \"**/*.md\" \"!**/node_modules/**/*.md\"",
     "spellcheck": "pnpm run spellcheck-interactive -- --report",
-    "build": "compost --href-root posts --old-manifest-locator \"https://jaybeeuu.dev/posts/manifest.json\""
+    "build": "compost --href-root blog --old-manifest-locator \"https://jaybeeuu.dev/posts/manifest.json\" --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\""
   },
   "devDependencies": {
     "@jaybeeuu/compost": "workspace:*",

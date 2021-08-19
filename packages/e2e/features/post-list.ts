@@ -1,6 +1,6 @@
 import { makeClassSelectors, postList } from "@jaybeeuu/e2e-hooks";
-import type { PostSlug} from "../routes/posts";
-import { withPostMetaData, getPostsAlias } from "../routes/posts";
+import type { PostSlug} from "../routes/blog";
+import { withPostMetaData, getPostsAlias } from "../routes/blog";
 import { getPostListLink } from "./nav-bar";
 
 const postListSelectors = makeClassSelectors(postList);

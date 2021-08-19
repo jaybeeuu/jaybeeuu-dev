@@ -4,7 +4,7 @@ import { assertIsNotNullish } from "@jaybeeuu/utilities";
 export type PostSlug = "memoising-selectors" | "module-spotting" | "the-rewrite";
 
 export const withManifest = (): Cypress.Chainable<PostManifest> => {
-  return cy.fixture("posts/manifest.json").then((manifest) => {
+  return cy.fixture("blog/manifest.json").then((manifest) => {
     return manifest as PostManifest;
   });
 };
@@ -17,27 +17,29 @@ export const withPostMetaData = (slug: PostSlug): Cypress.Chainable<PostMetaData
   });
 };
 
-export const getPostsAlias = (route: PostSlug | "manifest"): string => `@get-posts-${route}`;
+export const getPostsAlias = <Route extends PostSlug | "manifest">(
+  route: Route
+): `@get-blog-${Route}` => `@get-blog-${route}`;
 
 const registerPostRoute = (slug: PostSlug): void => {
   withPostMetaData(slug).then((postMetaData) => {
     cy.intercept(
-      `/posts/${postMetaData.fileName}`,
-      { fixture: `posts/${postMetaData.fileName}` }
-    ).as(`get-posts-${postMetaData.slug}`);
+      `/blog/${postMetaData.fileName}`,
+      { fixture: `blog/${postMetaData.fileName}` }
+    ).as(`get-blog-${postMetaData.slug}`);
   });
 };
 
 export const registerRoutes = (): void => {
   cy.intercept(
-    "/posts/manifest.json",
-    { fixture: "posts/manifest.json" }
-  ).as("get-posts-manifest");
+    "/blog/manifest.json",
+    { fixture: "blog/manifest.json" }
+  ).as("get-blog-manifest");
   registerPostRoute("memoising-selectors");
   registerPostRoute("module-spotting");
   registerPostRoute("the-rewrite");
 };
 
 export const registerEmptyRoutes = (): void => {
-  cy.intercept("/posts/manifest.json", { body: {} }).as("get-posts-manifest");
+  cy.intercept("/blog/manifest.json", { body: {} }).as("get-blog-manifest");
 };

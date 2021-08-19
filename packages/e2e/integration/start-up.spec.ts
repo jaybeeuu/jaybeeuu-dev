@@ -1,5 +1,5 @@
 import * as navBar from "../features/nav-bar";
-import { registerRoutes } from "../routes/posts";
+import { registerRoutes } from "../routes/blog";
 
 context("Start up", (): void => {
   it("loads the page.", () => {

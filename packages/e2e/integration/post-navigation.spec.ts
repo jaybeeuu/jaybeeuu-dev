@@ -3,7 +3,7 @@ import {
   registerEmptyRoutes,
   registerRoutes,
   withPostMetaData
-} from "../routes/posts";
+} from "../routes/blog";
 import * as navBar from "../features/nav-bar";
 import * as post from "../features/post";
 import * as postList from "../features/post-list";

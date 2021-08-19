@@ -1,7 +1,7 @@
 
 import { makeClassSelectors, post } from "@jaybeeuu/e2e-hooks";
-import type { PostSlug} from "../routes/posts";
-import { getPostsAlias, withPostMetaData } from "../routes/posts";
+import type { PostSlug} from "../routes/blog";
+import { getPostsAlias, withPostMetaData } from "../routes/blog";
 
 const mainPanelSelectors = makeClassSelectors(post);
 
@@ -27,7 +27,7 @@ export type ArticleChainable = Cypress.Chainable<JQuery<HTMLElement>> & {
 
 const shouldContainPostParagraphs = (...[, slug]: ShouldContainPostParagraphsParameters): void => {
   withPostMetaData(slug).then((meta) => {
-    cy.fixture(`posts/${meta.fileName}`).then((postContent: string) => {
+    cy.fixture(`blog/${meta.fileName}`).then((postContent: string) => {
       const paragraphs = [...postContent.matchAll(/(<p>.*?<\/p>)/g)].flat();
       if (!paragraphs) {
         throw new Error("Post did not contain any paragraphs.");
@@ -80,16 +80,16 @@ export const getArticle = (): ArticleChainable => {
 };
 
 export const navigateTo = (slug: PostSlug): void => {
-  cy.visit(`/posts/${slug}`);
+  cy.visit(`/blog/${slug}`);
   cy.wait(getPostsAlias(slug));
 };
 
 export const navigateToAnchor = (slug: PostSlug, hash: string): void => {
-  cy.visit(`/posts/${slug}#${hash}`);
+  cy.visit(`/blog/${slug}#${hash}`);
 };
 
 export const getAnchor = (slug: PostSlug, hash: string): Cypress.Chainable<JQuery<HTMLElement>> => {
-  return getArticle().find(`.hash-link[href="/posts/${slug}#${hash}"]`);
+  return getArticle().find(`.hash-link[href="/blog/${slug}#${hash}"]`);
 };
 
 export const getAnchorDestination = (hash: string): Cypress.Chainable<JQuery<HTMLElement>> => {

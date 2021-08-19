@@ -18,8 +18,8 @@ export const App: FunctionComponent = () => (
       <TitleBar className={css.static} />
       <Router>
         <HomeRoute path={"/"}/>
-        <PostsRoute path={"posts"}/>
-        <PostRoute path={"posts/:slug"}/>
+        <PostsRoute path={"blog"}/>
+        <PostRoute path={"blog/:slug"}/>
       </Router>
     </Background>
   </Theme>
