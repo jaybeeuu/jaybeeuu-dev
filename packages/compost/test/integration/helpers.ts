@@ -45,6 +45,7 @@ const getDefaultedUpdateOptions = (
     additionalWatchPaths: [],
     hrefRoot: defaultedHrefRoot,
     includeUnpublished: false,
+    oldManifestLocators:[],
     manifestFileName: "manifest.post.json",
     outputDir: path.join("out", defaultedHrefRoot),
     requireOldManifest: false,

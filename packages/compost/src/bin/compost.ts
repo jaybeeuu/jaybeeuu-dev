@@ -111,8 +111,10 @@ yargs.command(
   async (rawOptions) => {
     const options: UpdateOptions = {
       ...rawOptions,
+      oldManifestLocators: rawOptions.oldManifestLocator ?? [],
       additionalWatchPaths: rawOptions.additionalWatchPaths ?? [],
     };
+
     if (options.watch) {
       watch(options);
     } else {

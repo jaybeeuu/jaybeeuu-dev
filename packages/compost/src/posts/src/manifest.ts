@@ -36,9 +36,9 @@ const getManifestFromOldManifestLocator = async (
 
 export const getManifest = async (
   manifestOutputFileName: string,
-  manifestLocators?: string[]
+  manifestLocators: string[]
 ): Promise<Result<PostManifest, GetManifestFailure>> => {
-  const defaultedManifestLocators = manifestLocators ?? [manifestOutputFileName];
+  const defaultedManifestLocators = [...manifestLocators, manifestOutputFileName];
   const failures: Failure<FetchJsonFileFailureReason | ReadJsonFileFailureReason>[] = [];
 
   for (const manifestLocator of defaultedManifestLocators) {
