@@ -4,7 +4,7 @@ import fetch, { FetchError } from "node-fetch";
 import type { Result} from "../../results.js";
 import { failure, success } from "../../results.js";
 
-type FetchJsonFileFailureReason
+export type FetchJsonFileFailureReason
   = "error"
   | "fetch failed"
   | "parse error"

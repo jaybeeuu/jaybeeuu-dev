@@ -8,6 +8,7 @@ import {
 } from "./helpers";
 
 import { advanceTo } from "jest-date-mock";
+import type { Response } from "node-fetch";
 import fetch from "node-fetch";
 import { mocked } from "ts-jest/utils";
 import type { PostMetaData } from "../../src/index";
@@ -280,17 +281,15 @@ describe("manifest", () => {
     };
     await writePostFile(postFile);
 
-    const oldManifestLocator = "https://www.oldManifest.com";
-    await compilePosts({ oldManifestLocator });
+    const oldManifestLocator = "https://www.old-manifest.com";
+    await compilePosts({ oldManifestLocators: [oldManifestLocator] });
     const manifest = await getPostManifest();
 
-    mocked(fetch).mockImplementation(() => {
-      return Promise.resolve({
-        json: (): Promise<unknown> => {
-          return Promise.resolve(manifest);
-        }
-      } as any);
-    });
+    mocked(fetch).mockReturnValue(Promise.resolve<Response>({
+      json: (): Promise<unknown> => {
+        return Promise.resolve(manifest);
+      }
+    } as unknown as Response));
 
     await writePostFile({
       ...postFile,
@@ -302,9 +301,97 @@ describe("manifest", () => {
 
     const updatedDate = "2020-03-12";
     advanceTo(updatedDate);
-    await compilePosts({ oldManifestLocator });
+    await compilePosts({ oldManifestLocators: [oldManifestLocator] });
 
     expect(fetch).toHaveBeenCalledWith(oldManifestLocator);
+
+    const newManifest = await getPostManifest();
+    expect(newManifest[slug]?.lastUpdateDate).toStrictEqual(
+      new Date(updatedDate).toISOString()
+    );
+  });
+
+  it("updates the lastUpdatedDate when the manifest needs to be fetched from the first of several old manifest locations.", async () => {
+    await cleanUpDirectories();
+    const slug = "first-post";
+    const postFile: PostFile = {
+      slug,
+      meta: {
+        title: "This is the first post",
+        abstract: "This is the very first post.",
+        publish: true
+      },
+      content: "# This is the first post"
+    };
+    await writePostFile(postFile);
+
+    const oldManifestLocators = ["https://www.old-manifest.com", "https://www.new-old-manifest.com"];
+    await compilePosts({ oldManifestLocators });
+    const manifest = await getPostManifest();
+
+    mocked(fetch).mockReturnValue(Promise.resolve<Response>({
+      json: (): Promise<unknown> => {
+        return Promise.resolve(manifest);
+      }
+    } as unknown as Response)
+    );
+
+    await writePostFile({
+      ...postFile,
+      content: [
+        ...postFile.content,
+        "some new content"
+      ]
+    });
+
+    const updatedDate = "2020-03-12";
+    advanceTo(updatedDate);
+    await compilePosts({ oldManifestLocators });
+
+    const newManifest = await getPostManifest();
+    expect(newManifest[slug]?.lastUpdateDate).toStrictEqual(
+      new Date(updatedDate).toISOString()
+    );
+  });
+
+  it("updates the lastUpdatedDate when the manifest needs to be fetched from the fallback.", async () => {
+    await cleanUpDirectories();
+    const slug = "first-post";
+    const postFile: PostFile = {
+      slug,
+      meta: {
+        title: "This is the first post",
+        abstract: "This is the very first post.",
+        publish: true
+      },
+      content: "# This is the first post"
+    };
+    await writePostFile(postFile);
+
+    const oldManifestLocators = ["https://www.old-manifest.com", "https://www.new-old-manifest.com"];
+
+    await compilePosts({ oldManifestLocators });
+    const manifest = await getPostManifest();
+
+    mocked(fetch)
+      .mockReturnValueOnce(Promise.reject(new Error("Whoops")))
+      .mockReturnValue(Promise.resolve<Response>({
+        json: (): Promise<unknown> => {
+          return Promise.resolve(manifest);
+        }
+      } as unknown as Response));
+
+    await writePostFile({
+      ...postFile,
+      content: [
+        ...postFile.content,
+        "some new content"
+      ]
+    });
+
+    const updatedDate = "2020-03-12";
+    advanceTo(updatedDate);
+    await compilePosts({ oldManifestLocators });
 
     const newManifest = await getPostManifest();
     expect(newManifest[slug]?.lastUpdateDate).toStrictEqual(
@@ -321,7 +408,7 @@ describe("manifest", () => {
         abstract: "This is the very first post.",
         publish: true
       },
-      content: [ "# A Post"]
+      content: ["# A Post"]
     });
     const result = await compilePosts({ requireOldManifest: true });
 
