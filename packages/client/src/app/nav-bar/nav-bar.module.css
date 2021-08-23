@@ -22,6 +22,7 @@
 
 .options-list {
   display: flex;
+  align-items: center;
 }
 
 .options-list > * {
