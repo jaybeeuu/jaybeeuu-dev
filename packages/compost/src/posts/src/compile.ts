@@ -107,7 +107,7 @@ const markedOptions = {
 const sanitizeOptions: IOptions = {
   ...sanitizeHtml.defaults,
   disallowedTagsMode: process.env.NODE_ENV === "production" ? "discard" : "recursiveEscape",
-  allowedTags: [ ...sanitizeHtml.defaults.allowedTags, "img", "h1", "h2", "span" ],
+  allowedTags: [ ...sanitizeHtml.defaults.allowedTags, "img", "h1", "h2", "span", "del" ],
   allowedAttributes: {
     ...sanitizeHtml.defaults.allowedAttributes,
     a: ["class", ...sanitizeHtml.defaults.allowedAttributes.a],

@@ -159,5 +159,18 @@ describe("compile", () => {
         ""
       ].join("\n"));
     });
+
+    it("compiles a strike through correctly.", async () => {
+      const hrefRoot = "posts";
+      const slug = "{slug}";
+      const post = await getCompiledPostWithContent({
+        slug,
+        content: [
+          "~~This is struck through~~"
+        ]
+      }, { hrefRoot });
+
+      expect(post).toContain("<p><del>This is struck through</del></p>");
+    });
   });
 });
