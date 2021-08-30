@@ -319,8 +319,6 @@ const makeHookBlock = <Block extends string>(
 };
 ```
 
-(Apologies, `highlightjs` has a bug; there's a fix on the way.)
-
 Essentially we use generics to pass through the segments of the eventual CSS class,
 then Template Literal Types too join them together.
 
