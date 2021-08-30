@@ -77,6 +77,11 @@ yargs.command(
       type: "string",
       default: "manifest.json"
     },
+    "codeLineNumbers": {
+      description: "Include tags and classes in code blocks that can be styled to show line numbers with the Prism line number styles.",
+      type: "boolean",
+      default: false
+    },
     "oldManifestLocator": {
       alias: ["oml"],
       description: "The path or URL of the old manifest. If none is given then the output-dir and manifest-file-name options will be used to infer the location. If this option is given and no manifest is found compost will fail.",

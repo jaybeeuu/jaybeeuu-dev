@@ -21,6 +21,7 @@ export interface UpdateOptions {
   additionalWatchPaths: string[];
   hrefRoot: string;
   includeUnpublished: boolean;
+  codeLineNumbers: boolean;
   manifestFileName: string;
   oldManifestLocators: string[];
   outputDir: string;

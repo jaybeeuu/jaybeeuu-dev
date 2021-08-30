@@ -13,6 +13,7 @@ import type { Result } from "../../results.js";
 import { success, failure } from "../../results.js";
 
 export interface RenderContext {
+  codeLineNumbers: boolean;
   hrefRoot: string;
   sourceFilePath: string;
 }
@@ -44,14 +45,24 @@ class CustomRenderer extends marked.Renderer {
 
   code(code: string, language: string | undefined, isEscaped: any): string {
     const rendered = super.code(code, language, isEscaped);
-    const adjusted = rendered.replace(/<pre>/, `<pre class="language-${language ?? "unknown"} line-numbers">`);
-    const lineNumberRows = [
-      "<span aria-hidden=\"true\" class=\"line-number-rows\">",
-      ...Array.from({ length: code.split("\n").length }, () => "<span></span>"),
-      "</span>"
-    ].join("");
-    const withLineNumbers = adjusted.replace(/<\/code>/, `${lineNumberRows}</code>`);
-    return withLineNumbers;
+    const preClasses = [
+      `language-${language || "none"}`,
+      this.#renderContext.codeLineNumbers && "line-numbers"
+    ].filter(Boolean).join(" ");
+
+    const adjusted = rendered.replace(/<pre>/, `<pre class="${preClasses}">`);
+
+    if (this.#renderContext.codeLineNumbers) {
+      const lineNumberRows = [
+        "<span aria-hidden=\"true\" class=\"line-number-rows\">",
+        ...Array.from({ length: code.split("\n").length }, () => "<span></span>"),
+        "</span>"
+      ].join("");
+
+      return adjusted.replace(/<\/code>/, `${lineNumberRows}</code>`);
+    }
+
+    return adjusted;
   }
 
   heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6, raw: string, slugger: Slugger): string {
@@ -101,6 +112,9 @@ class CustomRenderer extends marked.Renderer {
 
 const markedOptions = {
   highlight: (code: string, language: string): string => {
+    if (!language) {
+      return code;
+    }
     loadLanguages(language);
     const highlighted = Prism.highlight(code, Prism.languages[language], "language");
     return highlighted;

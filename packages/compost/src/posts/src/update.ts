@@ -74,6 +74,7 @@ export const update = async (
 
     const postMarkdownFilePath = getPostMarkdownFilePath(metadataFileInfo.absolutePath, slug);
     const compiledPostResult = await compilePost({
+      codeLineNumbers: options.codeLineNumbers,
       hrefRoot: options.hrefRoot,
       sourceFilePath: postMarkdownFilePath
     });
