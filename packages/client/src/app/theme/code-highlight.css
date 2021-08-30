@@ -4,6 +4,13 @@ code, pre, :not(pre) > code {
   transition: var(--transition-theme);
 }
 
+
+.line-numbers .line-number-rows,
+.line-number-rows > span::before {
+  color: var(--highlight-line-number-colour, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
 .token.cdata {
   color: var(--highlight-colour-cdata, --highlight-colour);
   transition: var(--transition-theme);
@@ -21,6 +28,15 @@ code, pre, :not(pre) > code {
 
 .token.punctuation {
   color: var(--highlight-colour-punctuation, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.interpolation-punctuation {
+  color: var(
+    --highlight-colour-interpolation-punctuation,
+    --highlight-colour-punctuation,
+    --highlight-colour
+  );
   transition: var(--transition-theme);
 }
 

@@ -5,16 +5,9 @@ code, pre {
   word-spacing: normal;
   word-break: normal;
   word-wrap: normal;
-  line-height: 1.5;
+  line-height: 2.5rem;
   tab-size: 2;
   hyphens: none;
-}
-
-code ::selection,
-code::selection,
-pre ::selection,
-pre::selection {
-  text-shadow: none;
 }
 
 @media print {
@@ -27,15 +20,53 @@ pre {
   overflow-x: auto;
   padding: 1.5rem;
   border-radius: 0.5rem;
+  font-size: 0.85em;
 }
-
 
 :not(pre) > code {
   border-radius: 0.3rem;
   padding: 0.1rem 0.3rem;
   white-space: normal;
+  font-size: 0.85em;
 }
 
 .token.bold, .token.important {
   font-weight: 700;
+}
+
+/* Line number */
+
+pre.line-numbers {
+  padding-left: 3.5em;
+  counter-reset: line-number;
+}
+
+pre.line-numbers > code {
+  counter-reset: line-number;
+  position: relative;
+}
+
+.line-numbers .line-number-rows {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  font-size: 100%;
+  left: -3.8em;
+  width: 3em;
+  letter-spacing: -1px;
+  border-right: 1px solid;
+  user-select: none;
+}
+
+.line-number-rows > span {
+  pointer-events: none;
+  display: block;
+  counter-increment: line-number;
+}
+
+.line-number-rows > span::before {
+  content: counter(line-number);
+  display: block;
+  padding-right: 0.8em;
+  text-align: right;
 }

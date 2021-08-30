@@ -44,8 +44,14 @@ class CustomRenderer extends marked.Renderer {
 
   code(code: string, language: string | undefined, isEscaped: any): string {
     const rendered = super.code(code, language, isEscaped);
-    const adjusted = rendered.replace(/<pre>/, `<pre class="language-${language ?? "unknown"}">`);
-    return adjusted;
+    const adjusted = rendered.replace(/<pre>/, `<pre class="language-${language ?? "unknown"} line-numbers">`);
+    const lineNumberRows = [
+      "<span aria-hidden=\"true\" class=\"line-number-rows\">",
+      ...Array.from({ length: code.split("\n").length }, () => "<span></span>"),
+      "</span>"
+    ].join("");
+    const withLineNumbers = adjusted.replace(/<\/code>/, `${lineNumberRows}</code>`);
+    return withLineNumbers;
   }
 
   heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6, raw: string, slugger: Slugger): string {
@@ -95,8 +101,6 @@ class CustomRenderer extends marked.Renderer {
 
 const markedOptions = {
   highlight: (code: string, language: string): string => {
-    // const validLanguage = highlight.getLanguage(language) ? language : "text";
-    // const highlighted = highlight.highlight(code, { language: validLanguage }).value;
     loadLanguages(language);
     const highlighted = Prism.highlight(code, Prism.languages[language], "language");
     return highlighted;
@@ -121,9 +125,9 @@ const sanitizeOptions: IOptions = {
     h4: ["id"],
     h5: ["id"],
     h6: ["id"],
-    img: ["alt", "src"],
+    img: ["alt", ...sanitizeHtml.defaults.allowedAttributes.img],
     pre: ["class"],
-    span: ["class"]
+    span: ["class", "aria-hidden"]
   }
 };
 

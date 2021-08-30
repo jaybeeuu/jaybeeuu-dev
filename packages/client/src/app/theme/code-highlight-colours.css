@@ -2,6 +2,7 @@
 .dark {
   --highlight-colour: #d6deeb;
   --highlight-background-colour: #00101d;
+  --highlight-line-number-colour: #637777;
 
   --highlight-colour-atrule: #ffcb8b;
   --highlight-colour-attr-name: #addb67;
@@ -20,6 +21,7 @@
   --highlight-colour-function: #82aaff;
   --highlight-colour-important: #d6deeb;
   --highlight-colour-inserted: #addb67;
+  --highlight-colour-interpolation-punctuation: #d3423e;
   --highlight-colour-keyword: #7fdbca;
   --highlight-colour-namespace: #b2ccd6;
   --highlight-colour-number: #f78c6c;
@@ -41,6 +43,7 @@
 .light {
   --highlight-colour: #403f53;
   --highlight-background-colour: #eeeeee;
+  --highlight-line-number-colour: #989fb1;
 
   --highlight-colour-atrule: #111;
   --highlight-colour-attr-name: #4876d6;
@@ -59,6 +62,7 @@
   --highlight-colour-function: #994cc3;
   --highlight-colour-important: #c96765;
   --highlight-colour-inserted: #4876d6;
+  --highlight-colour-interpolation-punctuation: #d3423e;
   --highlight-colour-keyword: #0c969b;
   --highlight-colour-namespace: #0c969b;
   --highlight-colour-number: #aa0982;
