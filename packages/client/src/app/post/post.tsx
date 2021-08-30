@@ -13,9 +13,6 @@ import { useBackgrounds } from "../use-background";
 import { usePageInfo } from "../use-page-info";
 import { withPromise } from "../with-promise";
 
-import "./highlight-colours.css";
-import "./highlight.css";
-
 import css from "./post.module.css";
 
 const useHashLinks = (postHtml: string, articleRef: RefObject<HTMLElement>): void => {

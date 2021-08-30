@@ -1,5 +1,7 @@
 import path from "path";
-import highlight from "highlight.js";
+// import highlight from "highlight.js";
+import Prism from "prismjs";
+import loadLanguages from "prismjs/components/index.js";
 import type { MarkedOptions, Slugger } from "marked";
 import marked  from "marked";
 import type { IOptions } from "sanitize-html";
@@ -42,7 +44,7 @@ class CustomRenderer extends marked.Renderer {
 
   code(code: string, language: string | undefined, isEscaped: any): string {
     const rendered = super.code(code, language, isEscaped);
-    const adjusted = rendered.replace(/<pre>/, "<pre class=\"hljs\">");
+    const adjusted = rendered.replace(/<pre>/, `<pre class="language-${language ?? "unknown"}">`);
     return adjusted;
   }
 
@@ -93,8 +95,10 @@ class CustomRenderer extends marked.Renderer {
 
 const markedOptions = {
   highlight: (code: string, language: string): string => {
-    const validLanguage = highlight.getLanguage(language) ? language : "text";
-    const highlighted = highlight.highlight(code, { language: validLanguage }).value;
+    // const validLanguage = highlight.getLanguage(language) ? language : "text";
+    // const highlighted = highlight.highlight(code, { language: validLanguage }).value;
+    loadLanguages(language);
+    const highlighted = Prism.highlight(code, Prism.languages[language], "language");
     return highlighted;
   },
   gfm: true,

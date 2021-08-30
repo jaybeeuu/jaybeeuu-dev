@@ -1,0 +1,41 @@
+code, pre {
+  font-family: Menlo, Monaco, Consolas, "Andale Mono", "Ubuntu Mono", "Courier New", monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+  tab-size: 2;
+  hyphens: none;
+}
+
+code ::selection,
+code::selection,
+pre ::selection,
+pre::selection {
+  text-shadow: none;
+}
+
+@media print {
+  code, pre {
+    text-shadow: none;
+  }
+}
+
+pre {
+  overflow-x: auto;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+
+:not(pre) > code {
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.3rem;
+  white-space: normal;
+}
+
+.token.bold, .token.important {
+  font-weight: 700;
+}

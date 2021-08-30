@@ -8,6 +8,9 @@ import { theme } from "../state";
 import "./base-styles.css";
 import "./colours.css";
 
+import "./code-highlight-colours.css";
+import "./code-highlight.css";
+import "./code.css";
 export interface ThemeProps {
   children: ComponentChildren;
   className: string;

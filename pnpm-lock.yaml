@@ -57,6 +57,9 @@ importers:
       preact: ^10.5.14
       preact-router: ^3.2.1
       preact-transitioning: ^1.2.0
+      prism-theme-night-owl: ^1.4.0
+      prism-theme-one-light-dark: ^1.0.4
+      prism-theme-vars: ^0.2.2
       regenerator-runtime: ^0.13.9
       sitemap-webpack-plugin: ^1.1.1
       style-loader: ^3.2.1
@@ -81,6 +84,9 @@ importers:
       preact: 10.5.14
       preact-router: 3.2.1_preact@10.5.14
       preact-transitioning: 1.2.0_preact@10.5.14
+      prism-theme-night-owl: 1.4.0
+      prism-theme-one-light-dark: 1.0.4
+      prism-theme-vars: 0.2.2
       regenerator-runtime: 0.13.9
     devDependencies:
       '@babel/core': 7.14.8
@@ -139,6 +145,7 @@ importers:
       '@types/marked': ^2.0.4
       '@types/node': ^14.17.0
       '@types/node-fetch': ^2.5.12
+      '@types/prismjs': ^1.16.6
       '@types/sanitize-html': ^2.3.2
       '@types/yargs': ^17.0.2
       '@typescript-eslint/eslint-plugin': ^4.28.5
@@ -152,18 +159,19 @@ importers:
       jest-matcher-utils: ^27.0.6
       marked: ^2.1.3
       node-fetch: ^2.6.1
+      prismjs: ^1.24.1
       sanitize-html: ^2.4.0
       ts-jest: ^27.0.4
       tslib: ^2.3.0
       typescript: ^4.3.5
       yargs: ^17.0.1
     dependencies:
-      '@types/node-fetch': 2.5.12
       chalk: 4.1.2
       chokidar: 3.5.2
       highlight.js: 11.1.0
       marked: 2.1.3
       node-fetch: 2.6.1
+      prismjs: 1.24.1
       sanitize-html: 2.4.0
       tslib: 2.3.0
       yargs: 17.0.1
@@ -173,6 +181,8 @@ importers:
       '@types/jest': 26.0.24
       '@types/marked': 2.0.4
       '@types/node': 14.17.6
+      '@types/node-fetch': 2.5.12
+      '@types/prismjs': 1.16.6
       '@types/sanitize-html': 2.3.2
       '@types/yargs': 17.0.2
       '@typescript-eslint/eslint-plugin': 4.28.5_eslint@7.32.0+typescript@4.3.5
@@ -2059,7 +2069,7 @@ packages:
     dependencies:
       '@types/node': 16.4.8
       form-data: 3.0.1
-    dev: false
+    dev: true
 
   /@types/node/14.17.6:
     resolution: {integrity: sha512-iBxsxU7eswQDGhlr3AiamBxOssaYxbM+NKXVil8jg9yFXvrfEFbDumLD/2dMTB+zYyg7w+Xjt8yuxfdbUHAtcQ==}
@@ -2073,6 +2083,10 @@ packages:
 
   /@types/prettier/2.3.2:
     resolution: {integrity: sha512-eI5Yrz3Qv4KPUa/nSIAi0h+qX0XyewOliug5F2QAtuRg6Kjg6jfmxe1GIwoIRhZspD1A0RP8ANrPwvEXXtRFog==}
+    dev: true
+
+  /@types/prismjs/1.16.6:
+    resolution: {integrity: sha512-dTvnamRITNqNkqhlBd235kZl3KfVJQQoT5jkXeiWSBK7i4/TLKBNLV0S1wOt8gy4E2TY722KLtdmv2xc6+Wevg==}
     dev: true
 
   /@types/q/1.5.5:
@@ -5336,6 +5350,7 @@ packages:
       asynckit: 0.4.0
       combined-stream: 1.0.8
       mime-types: 2.1.32
+    dev: true
 
   /forwarded/0.2.0:
     resolution: {integrity: sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==}
@@ -8999,6 +9014,22 @@ packages:
       ansi-styles: 5.2.0
       react-is: 17.0.2
     dev: true
+
+  /prism-theme-night-owl/1.4.0:
+    resolution: {integrity: sha512-1N1GVbVorGd5t1Vw76yL/3rhqdiCpDrJg26Is+jGeMV7qiIMZL+bC7Mjx7HMMuVKZoi+2nWSbU5IutBYNy9tiQ==}
+    dev: false
+
+  /prism-theme-one-light-dark/1.0.4:
+    resolution: {integrity: sha512-ift6vo6p6llo2DP9XOUa9nIOgPMOwQ1+Kuv5cS873PuomjUzYGC8dSAP1kz9pYhK07GujLz3i/knf+5DpxAeDA==}
+    dev: false
+
+  /prism-theme-vars/0.2.2:
+    resolution: {integrity: sha512-EL9ifuU/F8tEldoCa2sspiiLWysCL54xDbf2gN/ubwdtbuJROqOGopG5kSwunapwaioT+jLUQ/Ky+7jnv62xJA==}
+    dev: false
+
+  /prismjs/1.24.1:
+    resolution: {integrity: sha512-mNPsedLuk90RVJioIky8ANZEwYm5w9LcvCXrxHlwf4fNVSn8jEipMybMkWUyyF0JhnC+C4VcOVSBuHRKs1L5Ow==}
+    dev: false
 
   /process-nextick-args/2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
