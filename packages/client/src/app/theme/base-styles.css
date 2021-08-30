@@ -68,10 +68,6 @@ h3 {
   margin-top: 4rem;
 }
 
-code {
-  font-family: consolas, monospace, monospace;
-}
-
 article {
   font-size: 2rem;
 }
@@ -82,15 +78,6 @@ article > :first-child {
 
 article > :last-child {
   margin-bottom: 0;
-}
-
-article code {
-  font-size: 0.85em;
-}
-
-article pre {
-  border-radius: 0.5rem;
-  padding: 0.1rem 0.3rem;
 }
 
 article h1 code,
@@ -109,14 +96,6 @@ article h4:hover a.hash-link svg,
 article h5:hover a.hash-link svg,
 article h6:hover a.hash-link svg {
   fill: var(--fill-icon);
-}
-
-:not(pre) > code {
-  color: var(--colour-text-code);
-  background-color: var(--background-colour-text-code);
-  transition: var(--transition-theme);
-  border-radius: 0.3rem;
-  padding: 0.1rem 0.3rem;
 }
 
 article p {

@@ -1,5 +1,7 @@
 import path from "path";
-import highlight from "highlight.js";
+// import highlight from "highlight.js";
+import Prism from "prismjs";
+import loadLanguages from "prismjs/components/index.js";
 import type { MarkedOptions, Slugger } from "marked";
 import marked  from "marked";
 import type { IOptions } from "sanitize-html";
@@ -11,6 +13,7 @@ import type { Result } from "../../results.js";
 import { success, failure } from "../../results.js";
 
 export interface RenderContext {
+  codeLineNumbers: boolean;
   hrefRoot: string;
   sourceFilePath: string;
 }
@@ -42,7 +45,23 @@ class CustomRenderer extends marked.Renderer {
 
   code(code: string, language: string | undefined, isEscaped: any): string {
     const rendered = super.code(code, language, isEscaped);
-    const adjusted = rendered.replace(/<pre>/, "<pre class=\"hljs\">");
+    const preClasses = [
+      `language-${language || "none"}`,
+      this.#renderContext.codeLineNumbers && "line-numbers"
+    ].filter(Boolean).join(" ");
+
+    const adjusted = rendered.replace(/<pre>/, `<pre class="${preClasses}">`);
+
+    if (this.#renderContext.codeLineNumbers) {
+      const lineNumberRows = [
+        "<span aria-hidden=\"true\" class=\"line-number-rows\">",
+        ...Array.from({ length: code.split("\n").length }, () => "<span></span>"),
+        "</span>"
+      ].join("");
+
+      return adjusted.replace(/<\/code>/, `${lineNumberRows}</code>`);
+    }
+
     return adjusted;
   }
 
@@ -93,8 +112,11 @@ class CustomRenderer extends marked.Renderer {
 
 const markedOptions = {
   highlight: (code: string, language: string): string => {
-    const validLanguage = highlight.getLanguage(language) ? language : "text";
-    const highlighted = highlight.highlight(code, { language: validLanguage }).value;
+    if (!language) {
+      return code;
+    }
+    loadLanguages(language);
+    const highlighted = Prism.highlight(code, Prism.languages[language], "language");
     return highlighted;
   },
   gfm: true,
@@ -117,9 +139,9 @@ const sanitizeOptions: IOptions = {
     h4: ["id"],
     h5: ["id"],
     h6: ["id"],
-    img: ["alt", "src"],
+    img: ["alt", ...sanitizeHtml.defaults.allowedAttributes.img],
     pre: ["class"],
-    span: ["class"]
+    span: ["class", "aria-hidden"]
   }
 };
 

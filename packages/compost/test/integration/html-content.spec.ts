@@ -17,8 +17,6 @@ describe("compile", () => {
     it("compiles a code block.", async () => {
       const codeLine = "console.log(\"Here's a message\")";
       const post = await getCompiledPostWithContent([
-        "# This is the first post",
-        "This is the content",
         "```ts",
         codeLine,
         "```"
@@ -26,7 +24,7 @@ describe("compile", () => {
 
       expect(post).toContain(
         [
-          "<pre class=\"hljs\"><code><span class=\"hljs-variable language_\">console</span>.<span class=\"hljs-title function_\">log</span>(<span class=\"hljs-string\">\"Here's a message\"</span>)",
+          "<pre class=\"language-ts\"><code><span class=\"token builtin\">console</span><span class=\"token punctuation\">.</span><span class=\"token function\">log</span><span class=\"token punctuation\">(</span><span class=\"token string\">\"Here's a message\"</span><span class=\"token punctuation\">)</span>",
           "</code></pre>"
         ].join("\n")
       );
@@ -35,14 +33,37 @@ describe("compile", () => {
     it("compiles a code block with no code type.", async () => {
       const codeLine = "console.log(\"Here's a message\");";
       const post = await getCompiledPostWithContent([
-        "# This is the first post",
-        "This is the content",
         "```",
         codeLine,
         "```"
       ]);
 
       expect(post).toContain(codeLine);
+    });
+
+    it("compiles a code block with no code type, adding the correct class to the pre tag.", async () => {
+      const codeLine = "console.log(\"Here's a message\");";
+      const post = await getCompiledPostWithContent([
+        "```",
+        codeLine,
+        "```"
+      ]);
+
+      expect(post).toContain("<pre class=\"language-none\">");
+    });
+
+    it("includes the relevant classes and html tags for line numbers when the option is passed in.", async () => {
+      const codeLine = "console.log(\"Here's a message\");";
+      const post = await getCompiledPostWithContent([
+        "```",
+        codeLine,
+        codeLine,
+        codeLine,
+        "```"
+      ], { codeLineNumbers: true });
+
+      expect(post).toContain("<pre class=\"language-none line-numbers\">");
+      expect(post).toContain("<span aria-hidden=\"true\" class=\"line-number-rows\"><span></span><span></span><span></span></span></code>");
     });
   });
 

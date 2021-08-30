@@ -10,7 +10,7 @@
     "E2E"
   ],
   "scripts": {
-    "build": "compost --source-dir ./fixtures/src/blog --output-dir ./fixtures/blog --href-root blog",
+    "build": "compost --source-dir ./fixtures/src/blog --output-dir ./fixtures/blog --href-root blog --code-line-numbers",
     "postbuild": "node ./fixtures/src/blog/post-processing.mjs",
     "e2e": "cypress",
     "lint": "eslint --ext .js,.ts --format codeframe .",

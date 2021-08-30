@@ -1,0 +1,178 @@
+code, pre, :not(pre) > code {
+  color: var(--highlight-colour);
+  background-color: var(--highlight-background-colour);
+  transition: var(--transition-theme);
+}
+
+
+.line-numbers .line-number-rows,
+.line-number-rows > span::before {
+  color: var(--highlight-line-number-colour, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.cdata {
+  color: var(--highlight-colour-cdata, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.comment {
+  color: var(--highlight-colour-comment, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.prolog {
+  color: var(--highlight-colour-prolog, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.punctuation {
+  color: var(--highlight-colour-punctuation, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.interpolation-punctuation {
+  color: var(
+    --highlight-colour-interpolation-punctuation,
+    --highlight-colour-punctuation,
+    --highlight-colour
+  );
+  transition: var(--transition-theme);
+}
+
+.namespace {
+  color: var(--highlight-colour-namespace, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.deleted {
+  color: var(--highlight-colour-deleted, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.keyword {
+  color: var(--highlight-colour-keyword, --highlight-colour);
+  transition: var(--transition-theme);
+}
+.token.operator {
+  color: var(--highlight-colour-operator, --highlight-colour);
+  transition: var(--transition-theme);
+}
+.token.property {
+  color: var(--highlight-colour-operator, --highlight-colour);
+  transition: var(--transition-theme);
+}
+.token.symbol {
+  color: var(--highlight-colour-symbol, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.tag {
+  color: var(--highlight-colour-tag, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.boolean {
+  color: var(--highlight-colour-boolean, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.number {
+  color: var(--highlight-colour-number, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.language-css .token.string {
+  color: var(--highlight-colour-css-string, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.style .token.string {
+  color: var(--highlight-colour-style-string, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.builtin {
+  color: var(--highlight-colour-builtin, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.char {
+  color: var(--highlight-colour-char, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.constant {
+  color: var(--highlight-colour-constant, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.entity {
+  color: var(--highlight-colour-entity, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.string {
+  color: var(--highlight-colour-string, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.url {
+  color: var(--highlight-colour-url, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.doctype {
+  color: var(--highlight-colour-doctype, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.function {
+  color: var(--highlight-colour-function, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.selector {
+  color: var(--highlight-colour-selector, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.attr-name {
+  color: var(--highlight-colour-attr-name, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.inserted {
+  color: var(--highlight-colour-inserted, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.atrule {
+  color: var(--highlight-atrule);
+  transition: var(--transition-theme);
+}
+
+.token.attr-value {
+  color: var(--highlight-colour-attr-value, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.class-name {
+  color: var(--highlight-colour-class-name, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.important {
+  color: var(--highlight-colour-important, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.regex {
+  color: var(--highlight-colour-regex, --highlight-colour);
+  transition: var(--transition-theme);
+}
+
+.token.variable {
+  color: var(--highlight-colour-variable, --highlight-colour);
+  transition: var(--transition-theme);
+}
