@@ -6,9 +6,21 @@ import { Compilation, sources } from "webpack";
 export { FeedItem, FeedOptions };
 
 export interface FeedWebpackPluginOptions {
+  /**
+   * The file name that the Atom feed should be written to. If undefined no atom feed will be emitted.
+   */
   atomFileName?: string;
+  /**
+   * Options used to build the feed. Passed onto new Feed.
+   */
   feedOptions: FeedOptions;
+  /**
+   * Items to include on the feed. Passed onto feed.addItem
+   */
   items: FeedItem[];
+  /**
+   * The file name that the rss feed should be written to. If undefined no rss feed will be emitted.
+   */
   rssFileName?: string;
 }
 
