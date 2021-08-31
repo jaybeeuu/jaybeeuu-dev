@@ -20,9 +20,9 @@ jobs:
           path: *src-dir
 
       - run: sudo npm i -g pnpm@6.11.5
-      - run: npm run bootstrap
-      - run: npm run build
-      - run: npm run gen-certs
+      - run: pnpm install
+      - run: pnpm build
+      - run: pnpm gen-certs
       - store_artifacts:
           path: ./packages/client/dist
           destination: client-dist
@@ -38,7 +38,7 @@ jobs:
       - attach_workspace:
           at: *src-dir
       - run: sudo npm i -g pnpm@6.11.5
-      - run: npm run lint
+      - run: pnpm lint
 
   spellcheck:
     <<: *base
@@ -47,7 +47,7 @@ jobs:
       - attach_workspace:
           at: *src-dir
       - run: sudo npm i -g pnpm@6.11.5
-      - run: npm run spellcheck
+      - run: pnpm spellcheck
 
   type-check:
     <<: *base
@@ -56,7 +56,7 @@ jobs:
       - attach_workspace:
           at: *src-dir
       - run: sudo npm i -g pnpm@6.11.5
-      - run: npm run type-check
+      - run: pnpm type-check
 
   test:
     <<: *base
@@ -65,7 +65,7 @@ jobs:
       - attach_workspace:
           at: *src-dir
       - run: sudo npm i -g pnpm@6.11.5
-      - run: npm run test
+      - run: pnpm test
 
   e2e:
     <<: *base
@@ -81,7 +81,7 @@ jobs:
       - attach_workspace:
           at: *src-dir
       - run: npm i -g pnpm@6.11.5 wait-on
-      - run: npm run e2e-ci
+      - run: pnpm e2e-ci
       - store_artifacts:
           path: ./packages/e2e/.screenshots
           destination: e2e-screenshots
