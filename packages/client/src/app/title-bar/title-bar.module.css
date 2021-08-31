@@ -12,6 +12,8 @@
   align-items: center;
   justify-content: left;
 
+  z-index: 10;
+
   background-color: var(--background-colour-content);
   border-bottom: var(--title-bar-border) solid var(--border-code-heading);
   transition: var(--transition-theme);
