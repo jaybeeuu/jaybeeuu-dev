@@ -22,18 +22,17 @@
   },
   "homepage": "https://github.com/jaybeeuu/bickleywallace-site#readme",
   "scripts": {
-    "bootstrap": "pnpm install -r",
     "build": "pnpm run -r --stream build --filter {packages}",
-    "build-changes": "pnpm run -r --stream build --filter {packages}[HEAD]",
+    "build-changes": "pnpm run -r --stream build --filter {packages}[main]",
     "clean": "pnpx rimraf ./node_modules ./packages/*/node_modules & git clean -fdX",
     "e2e": "pnpm run -r e2e --filter @jaybeeuu/e2e",
     "e2e-ci": "pnpm run start --filter @jaybeeuu/client & pnpx wait-on --timeout=60000 https://localhost:3443/ && pnpm run e2e run",
     "gen-certs": "pnpm run --no-bail --no-sort -r gen-certs --filter {packages}",
     "lint": "pnpm run --no-bail --no-sort -r lint --filter {packages}",
     "spellcheck": "pnpm run --no-bail --no-sort -r spellcheck --filter {packages}",
-    "start": "pnpm run -r start --no-sort --workspace-concurrency=Infinity --filter @jaybeeuu/client...",
-    "test": "node --inspect node_modules/jest/bin/jest.js",
-    "test:watch": "jest --watch",
+    "start-all": "pnpm run -r start --no-sort --workspace-concurrency=Infinity --filter @jaybeeuu/client...",
+    "test": "jest",
+    "test-debug": "node --inspect node_modules/jest/bin/jest.js",
     "type-check": "pnpm run --no-bail --no-sort -r type-check --filter {packages}"
   },
   "devDependencies": {
