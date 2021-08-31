@@ -2,7 +2,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
   --nav-link-border-width: 0.2rem;
 }
 
