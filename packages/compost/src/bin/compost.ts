@@ -83,7 +83,6 @@ yargs.command(
       default: false
     },
     "oldManifestLocator": {
-      alias: ["oml"],
       description: "The path or URL of the old manifest. If none is given then the output-dir and manifest-file-name options will be used to infer the location. If this option is given and no manifest is found compost will fail.",
       type: "string",
       array: true
