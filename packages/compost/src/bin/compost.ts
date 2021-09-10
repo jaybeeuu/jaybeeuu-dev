@@ -83,7 +83,6 @@ yargs.command(
       default: false
     },
     "oldManifestLocator": {
-      alias: ["oml"],
       description: "The path or URL of the old manifest. If none is given then the output-dir and manifest-file-name options will be used to infer the location. If this option is given and no manifest is found compost will fail.",
       type: "string",
       array: true
@@ -94,8 +93,12 @@ yargs.command(
       type: "string",
       default: "./lib"
     },
+    "removeH1": {
+      description: "Indicates whether the process will remove H1 (#) headings. Useful if you will render that with a custom heading in your page.",
+      type: "boolean",
+      default: false
+    },
     "requireOldManifest": {
-      alias: ["rom"],
       description: "Indicates whether the process will fail if the old manifest is not found.",
       type: "boolean",
       default: false

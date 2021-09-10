@@ -76,6 +76,7 @@ export const update = async (
     const compiledPostResult = await compilePost({
       codeLineNumbers: options.codeLineNumbers,
       hrefRoot: options.hrefRoot,
+      removeH1: options.removeH1,
       sourceFilePath: postMarkdownFilePath
     });
 

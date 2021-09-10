@@ -140,6 +140,16 @@ describe("compile", () => {
       });
     });
 
+    it("removes the first h1's if the remove-h1 flag is passed true.", async () => {
+      const post = await getCompiledPostWithContent({
+        content: [
+          "# [This is the first post](www.example.com)"
+        ]
+      }, { removeH1: true });
+
+      expect(post).toBe("");
+    });
+
     it("compiles a heading link to contain a link which only includes the text - not the rest of the link.", async () => {
       const hrefRoot = "posts";
       const slug = "{slug}";

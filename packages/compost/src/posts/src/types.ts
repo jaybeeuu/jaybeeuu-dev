@@ -28,4 +28,5 @@ export interface UpdateOptions {
   requireOldManifest: boolean;
   sourceDir: string;
   watch: boolean;
+  removeH1: boolean;
 }
