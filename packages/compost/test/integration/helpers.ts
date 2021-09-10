@@ -43,12 +43,13 @@ const getDefaultedUpdateOptions = (
   const defaultedHrefRoot = options?.hrefRoot ?? "posts";
   return {
     additionalWatchPaths: [],
+    codeLineNumbers: false,
     hrefRoot: defaultedHrefRoot,
     includeUnpublished: false,
-    codeLineNumbers: false,
-    oldManifestLocators:[],
     manifestFileName: "manifest.post.json",
+    oldManifestLocators:[],
     outputDir: path.join("out", defaultedHrefRoot),
+    removeH1: false,
     requireOldManifest: false,
     sourceDir: "src",
     watch: false,

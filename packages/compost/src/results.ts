@@ -27,14 +27,14 @@ export class Failure<Reason extends string> extends Error {
   public readonly name: FailureName<Reason>;
   public readonly success = false;
   public readonly reason: string;
-  public readonly messageOrError: string | Error | AggregateError;
+  public readonly messageOrError: unknown;
 
   constructor(
     reason: Reason,
-    messageOrError: string | Error | AggregateError,
+    messageOrError: unknown,
     framesSincePublic: number
   ) {
-    super(messageOrError instanceof Error ? messageOrError.message : messageOrError);
+    super(messageOrError instanceof Error ? messageOrError.message : String(messageOrError));
     this.messageOrError = messageOrError;
 
     this.name = `Failure(${reason})`;
@@ -62,7 +62,7 @@ export function success<Value>(value?: Value): Success<Value> {
 
 const failure = <Reason extends string>(
   reason: Reason,
-  messageOrError?: string | Error | AggregateError,
+  messageOrError?: unknown,
   framesSincePublic: number = 1
 ): Failure<Reason> => {
   return new Failure(
@@ -87,7 +87,7 @@ const repackError = <Value, FailureReason extends string>(
     );
 };
 
-const exportedFailure: <Reason extends string>(reason: Reason, messageOrError?: string | Error) => Failure<Reason> = failure;
+const exportedFailure: <Reason extends string>(reason: Reason, messageOrError?: unknown) => Failure<Reason> = failure;
 const exportedRepackError: <Value, FailureReason extends string>(
   result: Result<Value, string>,
   newFailureReasons: FailureReason,

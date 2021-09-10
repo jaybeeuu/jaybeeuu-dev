@@ -15,6 +15,7 @@ import { success, failure } from "../../results.js";
 export interface RenderContext {
   codeLineNumbers: boolean;
   hrefRoot: string;
+  removeH1: boolean;
   sourceFilePath: string;
 }
 
@@ -66,6 +67,9 @@ class CustomRenderer extends marked.Renderer {
   }
 
   heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6, raw: string, slugger: Slugger): string {
+    if (level === 1 && this.#renderContext.removeH1) {
+      return "";
+    }
     const escapedText = escapeText(text);
     const headerSlug = slugger.slug(escapedText);
     const href = `#${headerSlug}`;

@@ -94,8 +94,12 @@ yargs.command(
       type: "string",
       default: "./lib"
     },
+    "removeH1": {
+      description: "Indicates whether the process will remove H1 (#) headings. Useful if you will render that with a custom heading in your page.",
+      type: "boolean",
+      default: false
+    },
     "requireOldManifest": {
-      alias: ["rom"],
       description: "Indicates whether the process will fail if the old manifest is not found.",
       type: "boolean",
       default: false
