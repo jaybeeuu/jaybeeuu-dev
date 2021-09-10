@@ -1,3 +1,5 @@
+# What is this?
+
 `this` is one of the most derided and maligned concepts of JavaScript, and rightfully so.
 It is complex and confusing.
 When I was learning JavaScript I was coming from the well ordered world of C#.

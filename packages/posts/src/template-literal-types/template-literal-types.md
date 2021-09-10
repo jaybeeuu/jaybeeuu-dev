@@ -1,3 +1,5 @@
+# Template Literals
+
 [Template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
 are a fantastic feature of JavaScript
 (well a few languages, but I find myself thinking mostly about JavaScript at the moment).

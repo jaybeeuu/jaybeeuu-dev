@@ -1,3 +1,5 @@
+# Premature Optimisation
+
 How often have you spotted someone reaching for some fancy data structure or make a mutation or a side effect in an
 unexpected place or some other dubious shortcut, and then brazenly defend it as "more performant"? Did they check?
 Did it make a noticeable difference?
@@ -90,7 +92,7 @@ You might get lucky and be the first element or unlucky
 (we will overwhelmingly be unlucky since the random string is unlikely to be in the array)
 and have to iterate the whole array.
 
-So to speed things up and make your site, API, CLI tool, what have you perform better we could use a
+So to speed things up and make our site, API, CLI tool, what have you perform better we could use a
 [`Set`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
 .
 It's similar to an array in that you can iterate though the members in insertion order,
