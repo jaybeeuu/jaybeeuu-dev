@@ -1,3 +1,5 @@
+# Premature Optimisation
+
 How often have you spotted someone reaching for some fancy data structure or make a mutation or a side effect in an
 unexpected place or some other dubious shortcut, and then brazenly defend it as "more performant"? Did they check?
 Did it make a noticeable difference?

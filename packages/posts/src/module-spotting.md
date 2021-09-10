@@ -1,3 +1,5 @@
+# Module Spotting
+
 We all know the benefits of breaking the code for an application down into small easily understood coherent components,
 which can be tested and edited with confidence.
 In the old days JS had no built in way of doing this

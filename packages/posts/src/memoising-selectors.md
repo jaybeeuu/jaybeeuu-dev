@@ -1,3 +1,5 @@
+# Memoising Selectors
+
 In general don't fall into the trap of
 [Premature Optimization](https://en.wikipedia.org/wiki/Program_optimization#When_to_optimize). So look for where you
 are seeing performance problems before you start worrying about it.

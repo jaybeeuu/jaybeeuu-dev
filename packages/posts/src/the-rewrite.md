@@ -1,3 +1,5 @@
+# The Rewrite
+
 My advice is always not to rewrite your application all in one go.
 
 If you do that every time you add or change a technology they your productivity will tank. We have something like 100,000
