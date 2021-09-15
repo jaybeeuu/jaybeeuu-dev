@@ -146,4 +146,19 @@ but at least we can do better than the sack o' pennies.
 4. Treat test code like prod code.
 
    Make it readable, refactor it, treat it like you want it there.
-   All the things we do to keep prod code maintainable and ensure it stands the test of time, our tests deserve that too.
+   All the things we do to keep prod code maintainable and ensure it stands the test of time,
+   our tests deserve that too.
+   There are somethings that differ.
+   Test code can be WETter for example,
+   since there is a level of DRYness which can hinder the documentation aspect of the tests.
+   But on the whole apply all your good habits to test code just as you do to production code.
+
+I'm not perfect. At the time of writing I don't pretend that I follow strict TDD,
+(Although in the course of writing this I found
+[this](https://www.computer.org/csdl/magazine/so/2007/03/s3024/13rRUygT7kK)
+summary of research on the subject... which makes me think i should take another look.)
+and I understand the pressures of a project as much as the next person.
+But the code I ship is tested in some way,
+and I make every effort to ensure that it is done in a way that keeps the value high and he weight down.
+These points are a distillation of how I think it through.
+I hope you find hem useful too.
