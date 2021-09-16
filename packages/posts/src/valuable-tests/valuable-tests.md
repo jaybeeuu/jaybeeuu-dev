@@ -159,10 +159,38 @@ but at least we can do better than the sack o' pennies.
    since there is a level of DRYness which can hinder the documentation aspect of the tests.
    But on the whole apply all your good habits to test code just as you do to production code.
 
-I'm not perfect. At the time of writing I don't pretend that I follow strict TDD,
+5. Keep your independence.
+
+   If tests are too intertwined,
+   setting up each other's preconditions or relying on state that persists fro one to another...
+   that way madness lies.
+   Tests
+   (especially unit tests)
+   should share as little state as possible.
+   They need to be able to run and pass on their own or in any order.
+
+6. Setup as little as possible.
+
+   Every test needs some data, some input to setup the conditions or something to assert on.
+   The documentation aspect of tests means making the important data obvious,
+   not muddled in amongst defaults or unnecessary data,
+   is vital
+   Otherwise the test can appear more complicated than it should or it's purpose be muddied.
+   Worse extraneous data could cause the test to pass when it should fail.
+   Therefore tests should setup only what they need and no more,
+   and that setup is best right there in the test,
+   doubly so for data the test asserts on.
+   Having those values in helpers or worse hooks obscures them.
+   Helpers
+   (still not hooks, in my opinion)
+   should build the sensible defaults so they are obviously separate.
+
+I'm not perfect.
+At the time of writing I don't pretend that I follow strict TDD,
 (Although in the course of writing this post I found
 [this](https://www.computer.org/csdl/magazine/so/2007/03/s3024/13rRUygT7kK)
-summary of research on the subject... which makes me think I should tighten up and take another look.)
+summary of research on the subject...
+which makes me think I should tighten up and take another look.)
 and I understand the pressures of a project as much as the next person.
 But the code I ship is always tested in some way,
 and I make every effort to ensure that it is done such that keeps the value high and he weight down.
