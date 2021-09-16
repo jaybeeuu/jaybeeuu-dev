@@ -5,27 +5,30 @@ Tests prove your code works.
 As part of your CI pipeline, they prove your code continues to work.
 They help others to change your code with confidence.
 Tests help describe what you meant, even when the code is complex.
-Alright enough preaching to the converted.
 
 The problem with tests, the fly in the ointment, the salt on the pudding is that they get in the way.
 Don't they?
-Ever made a tiny change, pushed it up, asked for review only to find out the test failed?
-Ever wanted to refactor some code to improve something or open it to extension in some way,
-only to find making any change cause the unit tests to fail?
+Ever made a tiny change or refactor,
+pushed it up,
+asked for review only to find out a cascade of tests failed or needed updating?
 Ever tried changing a test only to discover the setup is so complicated,
 or interleaved with other tests that it's impossible to figure out or the change grows indefinitely?
 Run a CI pipeline only for it to spend half an hour running a single test?
 
-Yeah. P.I.T.A.
+Tests at their best are a vital tool to the professional,
+at their worst,
+a hindrance,
+a scourge on the land.
 
-Tests at their best are a vital tool to to the professional,
-at their worst, a hinderance, a scourge on the land.
-
-Invaluable, or worse than valueless.
+Invaluable,
+or worse than valueless.
 
 All tests no matter how well written will have a cost to them.
 At the very least there's the time and energy in your build pipeline to run them.
-But there's also effort used up to maintain them, update them, understand them, etc.
+But there's also effort used up to maintain them,
+update them,
+understand them,
+etc.
 
 So how do you decide whether your test is worthwhile?
 
@@ -48,27 +51,28 @@ Applying that to your tests,
 there are some tests that are obviously worth carrying,
 they take little or no setup,
 they are simple to write,
-simple to read and take pearly any time to run.
-e.g. tests exercising functional code can often fall into this category,
+simple to read and take barely any time to run.
+For example, tests exercising functional code can often fall into this category,
 the ins and outs are all you need,
 there's no pesky side effects or secondary data sources to setup.
 Definitely worthwhile.
-Other tests might be more complicated, but test a core bit of delicate legacy functionality.
+Other tests might be more complicated,
+but test a core bit of delicate legacy functionality.
 The kind of code that is hard to change,
 easy to break,
-and might not be obvious when it is,
+and that might not be obvious when it is,
 but also vital to the use of your system.
 You can't say no to a gold bar.
 Bring 'em along (but not too many).
 
 Those delicate,
-flakey,
+flaky,
 ponderously slow tests tests that you spend hours preening,
 pampering and coaxing to pass,
 and only cover 50% of code you are actively replacing and never make changes to?
 No one likes to hang a sack of pennies round their neck on a marathon.
 
-## What is Value?
+## Where is the Value?
 
 Hopefully the Weight of a test is an easy thing to grasp.
 If not exactly measurable you should have a feel for what I'm getting at.
@@ -77,7 +81,7 @@ in all aspects of our coding life.
 It's the friction (and there is always some) of what has gone before,
 or the heat coming off our CPUs.
 
-Value, at least in the context of Tests I think is harder to define.
+Value, at least in the context of tests, I think is harder to define.
 After all tests by their nature are more abstract than production code.
 More Meta.
 
@@ -89,7 +93,7 @@ If that's not the case then, well done, removing it was the right thing to do.
 But remove a test and (assuming your team mates approve the PR) what happens?
 
 Probably nothing.
-Your PO doesn't stand behind your chair until you put it back.
+Your PO doesn't pace behind your chair until you put it back.
 Emails are not sent to increasingly senior people on the project.
 You will probably have time for lunch and make it home before midnight.
 
@@ -103,18 +107,18 @@ THey will pay dividends.
 Of course justifying time spent doing something that prevented something happening is hard.
 You need to have the counter example in order to prove it,
 so it ends up needing to be taken on faith.
-Add to that a dev team complaining about unit tests that fail or e2e tests that flake out,
+Add to that a dev team complaining about unit tests that fail or E2E tests that flake out,
 spending large amounts of time writing and maintaining test suites instead of writing features
-or simply upping eery estimate in order to allow time to write the tests...
+or simply upping every estimate in order to allow time to write the tests...
 You can see why some people around the project wonder what they are buying.
 
 So in order to do the professional thing and make sure our code is tested properly,
 we must make sure that the value is greater than the weight of *every* test.
 
-## Add Value and Trim the Fat
+## Trim the Fat
 
 OK so if you've gotten this far then you've waded through my dreadful analogy for long enough to deserve a reward.
-Hopefully the big question on your lips is "How to i get Value without the Weight?"
+Hopefully the big question on your lips is "How to I get Value without the Weight?"
 
 Well it's impossible. Every test takes some time to write, some time to run and maintain.
 So there's always some weight.
@@ -148,17 +152,17 @@ but at least we can do better than the sack o' pennies.
    Make it readable, refactor it, treat it like you want it there.
    All the things we do to keep prod code maintainable and ensure it stands the test of time,
    our tests deserve that too.
-   There are somethings that differ.
+   There are some things that differ.
    Test code can be WETter for example,
    since there is a level of DRYness which can hinder the documentation aspect of the tests.
    But on the whole apply all your good habits to test code just as you do to production code.
 
 I'm not perfect. At the time of writing I don't pretend that I follow strict TDD,
-(Although in the course of writing this I found
+(Although in the course of writing this post I found
 [this](https://www.computer.org/csdl/magazine/so/2007/03/s3024/13rRUygT7kK)
-summary of research on the subject... which makes me think i should take another look.)
+summary of research on the subject... which makes me think I should tighten up and take another look.)
 and I understand the pressures of a project as much as the next person.
-But the code I ship is tested in some way,
-and I make every effort to ensure that it is done in a way that keeps the value high and he weight down.
-These points are a distillation of how I think it through.
-I hope you find hem useful too.
+But the code I ship is always tested in some way,
+and I make every effort to ensure that it is done such that keeps the value high and he weight down.
+The points listed above are a distillation of how I think it through.
+I hope you find them useful too.
