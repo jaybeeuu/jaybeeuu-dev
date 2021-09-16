@@ -139,19 +139,21 @@ but at least we can do better than the sack o' pennies.
 
    There are two things that should cause changes to a test.
    Changes to the API and changes to the behaviour.
-   Anything else and they should stay green unless you broke the code.
+   Anything else and they should stay green (unless you break something).
    That means using test patterns which test the *behaviour* not the *implementation*.
 
 3. Keep them passing.
 
    **Pay attention**, keep them passing, squash flake.
-   As soon as they start failing or flaking they lose value and grow heavier.
+   As soon as they start failing or flaking (failing non-deterministically) they lose value and grow heavier.
+   You spend time chasing your tail diagnosing errors or worse begin to ignore the results.
+   This can be catastrophic if some genuine failures sneak in.
 
 4. Treat test code like prod code.
 
-   Make it readable, refactor it, treat it like you want it there.
-   All the things we do to keep prod code maintainable and ensure it stands the test of time,
-   our tests deserve that too.
+   Make it readable, refactor it, lint it, treat your tests like you are proud of them.
+   All the things we do to keep prod code maintainable and ensure it stands the test of time:
+   our tests deserve that treatment too.
    There are some things that differ.
    Test code can be WETter for example,
    since there is a level of DRYness which can hinder the documentation aspect of the tests.
