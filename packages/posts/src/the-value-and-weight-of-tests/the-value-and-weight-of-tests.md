@@ -1,4 +1,4 @@
-# Valuable Tests
+# The Value and Weight of Tests
 
 I think we can all agree that writing tests is a good idea.
 Tests prove your code works.
