@@ -101,32 +101,36 @@ You will probably have time for lunch and make it home before midnight.
 The value of tests comes over time,
 and even then the value is most often in things that don't happen.
 Bugs that *don't* show up,
-time *not* spent understanding what the intended outcome of some twisty logic.
+time *not* spent understanding the intended outcome of some twisty logic.
 They need to be thought of as an investment.
-THey will pay dividends.
+They will pay dividends.
 
-Of course justifying time spent doing something that prevented something happening is hard.
+Of course justifying the time spent preventing something is hard.
+Can you prove the bugs would have happened if there weren't the test?
 You need to have the counter example in order to prove it,
-so it ends up needing to be taken on faith.
-Add to that a dev team complaining about unit tests that fail or E2E tests that flake out,
+so there is a level of needing to take it on faith.
+Add to that a dev team complaining about unit tests getting in the way or E2E tests that flake out,
 spending large amounts of time writing and maintaining test suites instead of writing features
-or simply upping every estimate in order to allow time to write the tests...
+and upping every estimate...
 You can see why some people around the project wonder what they are buying.
 
 So in order to do the professional thing and make sure our code is tested properly,
-we must make sure that the value is greater than the weight of *every* test.
+we must make sure that the value of **every** test is greater than the weight.
 
 ## Trim the Fat
 
-OK so if you've gotten this far then you've waded through my dreadful analogy for long enough to deserve a reward.
 Hopefully the big question on your lips is "How to I get Value without the Weight?"
 
-Well it's impossible. Every test takes some time to write, some time to run and maintain.
+Well it's impossible.
+Every test takes some time to write,
+some time to run and maintain.
 So there's always some weight.
 That's how physics works in this universe.
 Sorry.
 There's no getting around it,
 but at least we can do better than the sack o' pennies.
+
+These are some things I think about when I'm writing tests to try and minimize the weight.
 
 1. Run them.
 
@@ -141,14 +145,14 @@ but at least we can do better than the sack o' pennies.
    There are two things that should cause changes to a test.
    Changes to the API and changes to the behaviour.
    Anything else and they should stay green (unless you break something).
-   That means using test patterns which test the *behaviour* not the *implementation*.
+   That means using patterns which test the *behaviour* not the *implementation*.
 
 3. Keep them passing.
 
    **Pay attention**, keep them passing, squash flake.
    As soon as they start failing or flaking (failing non-deterministically) they lose value and grow heavier.
    You spend time chasing your tail diagnosing errors or worse begin to ignore the results.
-   This can be catastrophic if some genuine failures sneak in.
+   This can be catastrophic if (when) genuine failures sneak in.
 
 4. Treat test code like prod code.
 
@@ -175,7 +179,7 @@ but at least we can do better than the sack o' pennies.
    Every test needs some data, some input to setup the conditions or something to assert on.
    The documentation aspect of tests means making the important data obvious,
    not muddled in amongst defaults or unnecessary data,
-   is vital
+   is vital.
    Otherwise the test can appear more complicated than it should or it's purpose be muddied.
    Worse extraneous data could cause the test to pass when it should fail.
    Therefore tests should setup only what they need and no more,
@@ -194,6 +198,6 @@ summary of research on the subject...
 which makes me think I should tighten up and take another look.)
 and I understand the pressures of a project as much as the next person.
 But the code I ship is always tested in some way,
-and I make every effort to ensure that it is done such that keeps the value high and he weight down.
+and I make every effort to ensure that it is done such that keeps the value high and the weight down.
 The points listed above are a distillation of how I think it through.
 I hope you find them useful too.
