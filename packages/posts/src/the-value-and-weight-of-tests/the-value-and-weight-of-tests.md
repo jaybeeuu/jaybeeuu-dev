@@ -48,7 +48,7 @@ Very valuable, but also very heavy so you probably can't carry too many of them.
 A sack full of pennies? Probably not.
 
 Applying that to your tests,
-there are some tests that are obviously worth carrying,
+there are some that are obviously worth carrying,
 they take little or no setup,
 they are simple to write,
 simple to read and take barely any time to run.
@@ -56,6 +56,7 @@ For example, tests exercising functional code can often fall into this category,
 the ins and outs are all you need,
 there's no pesky side effects or secondary data sources to setup.
 Definitely worthwhile.
+
 Other tests might be more complicated,
 but test a core bit of delicate legacy functionality.
 The kind of code that is hard to change,
@@ -72,7 +73,7 @@ pampering and coaxing to pass,
 and only cover 50% of code you are actively replacing and never make changes to?
 No one likes to hang a sack of pennies round their neck on a marathon.
 
-## Where is the Value?
+## The Tension
 
 Hopefully the Weight of a test is an easy thing to grasp.
 If not exactly measurable you should have a feel for what I'm getting at.
