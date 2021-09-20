@@ -54,6 +54,7 @@ FE
 TS
 intellisense
 params
+heist
  - src/premature-optimisation.md
 v14.15.1
 Hrn
@@ -73,3 +74,7 @@ eventHandler
 navbar
 _a_
 tas
+ - src/valuable-tests/valuable-tests.md
+o
+ - src/the-value-and-weight-of-tests/the-value-and-weight-of-tests.md
+o
