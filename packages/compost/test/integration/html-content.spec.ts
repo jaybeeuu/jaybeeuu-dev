@@ -82,7 +82,7 @@ describe("compile", () => {
         "",
         "<h1 id=\"this-is-the-first-post\">",
         "  This is the first post",
-        "  <a class=\"hash-link\" name=\"this-is-the-first-post\" href=\"#this-is-the-first-post\"></a>",
+        "  <a class=\"hash-link\" title=\"This is the first post\" href=\"#this-is-the-first-post\"></a>",
         "</h1>"
       ].join("\n"));
     });
@@ -102,11 +102,11 @@ describe("compile", () => {
         "",
         "<h1 id=\"this-is-the-first-post\">",
         "  This is the first post",
-        "  <a class=\"hash-link\" name=\"this-is-the-first-post\" href=\"#this-is-the-first-post\"></a>",
+        "  <a class=\"hash-link\" title=\"This is the first post\" href=\"#this-is-the-first-post\"></a>",
         "</h1>",
         "<h1 id=\"this-is-the-first-post-1\">",
         "  This is the first post",
-        "  <a class=\"hash-link\" name=\"this-is-the-first-post-1\" href=\"#this-is-the-first-post-1\"></a>",
+        "  <a class=\"hash-link\" title=\"This is the first post\" href=\"#this-is-the-first-post-1\"></a>",
         "</h1>"
       ].join("\n"));
     });
@@ -134,7 +134,26 @@ describe("compile", () => {
           "",
           `<h${level} id="this-is-the-first-post">`,
           "  This is the first post",
-          "  <a class=\"hash-link\" name=\"this-is-the-first-post\" href=\"#this-is-the-first-post\"></a>",
+          "  <a class=\"hash-link\" title=\"This is the first post\" href=\"#this-is-the-first-post\"></a>",
+          `</h${level}>`
+        ].join("\n"));
+      });
+
+      it("compiles a heading link to contain a link which only includes the text - not the rest of the link.", async () => {
+        const hrefRoot = "posts";
+        const slug = "{slug}";
+        const post = await getCompiledPostWithContent({
+          slug,
+          content: [
+            `${"".padEnd(level, "#")} [This is the #1 post](www.example.com)`
+          ]
+        }, { hrefRoot });
+
+        expect(post).toBe([
+          "",
+          `<h${level} id="this-is-the-1-post">`,
+          "  <a href=\"www.example.com\">This is the #1 post</a>",
+          "  <a class=\"hash-link\" title=\"This is the #1 post\" href=\"#this-is-the-1-post\"></a>",
           `</h${level}>`
         ].join("\n"));
       });
@@ -150,43 +169,18 @@ describe("compile", () => {
       expect(post).toBe("");
     });
 
-    it("compiles a heading link to contain a link which only includes the text - not the rest of the link.", async () => {
-      const hrefRoot = "posts";
-      const slug = "{slug}";
-      const post = await getCompiledPostWithContent({
-        slug,
-        content: [
-          "# [This is the first post](www.example.com)"
-        ]
-      }, { hrefRoot });
-
-      expect(post).toBe([
-        "",
-        "<h1 id=\"this-is-the-first-post\">",
-        "  <a href=\"www.example.com\">This is the first post</a>",
-        "  <a class=\"hash-link\" name=\"this-is-the-first-post\" href=\"#this-is-the-first-post\"></a>",
-        "</h1>"
-      ].join("\n"));
-    });
-
     it("compiles an inline hash link to link properly within the document.", async () => {
       const hrefRoot = "posts";
       const slug = "{slug}";
       const post = await getCompiledPostWithContent({
         slug,
         content: [
-          "# A Post",
-          "",
           "This is a [link](#destination)"
         ]
       }, { hrefRoot });
 
       expect(post).toBe([
-        "",
-        "<h1 id=\"a-post\">",
-        "  A Post",
-        "  <a class=\"hash-link\" name=\"a-post\" href=\"#a-post\"></a>",
-        "</h1><p>This is a <a href=\"#destination\">link</a></p>",
+        "<p>This is a <a href=\"#destination\">link</a></p>",
         ""
       ].join("\n"));
     });

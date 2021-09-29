@@ -253,7 +253,7 @@ describe("manifest", () => {
       content: "# This is the first post"
     });
     await writeOutputManifestFile({
-      fileName: "first-post-aLp83p.html",
+      fileName: "first-post-ulvbV2.html",
       lastUpdateDate: "Fri, 30 Jul 2021 20:18:43 GMT",
       publishDate: "Sun, 06 Jun 2021 22:08:34 GMT",
       slug
@@ -263,8 +263,8 @@ describe("manifest", () => {
 
     const manifest = await getPostManifest();
 
-    expect(manifest[slug].publishDate).toStrictEqual("2021-06-06T22:08:34.000Z");
     expect(manifest[slug].lastUpdateDate).toStrictEqual("2021-07-30T20:18:43.000Z");
+    expect(manifest[slug].publishDate).toStrictEqual("2021-06-06T22:08:34.000Z");
   });
 
   it("updates the lastUpdatedDate when the manifest needs to be fetched.", async () => {

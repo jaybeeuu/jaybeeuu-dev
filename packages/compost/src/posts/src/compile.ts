@@ -24,10 +24,14 @@ export interface Assets {
   destinationPath: string;
 }
 
+const innerHTML = (text: string): string => {
+  return text.replace(/<.*?>/g, "");
+};
+
 const escapeText = (text: string): string => {
-  return text.toLowerCase()
-    .replace(/<.*?>/g, "")
-    .replace(/[^ a-z]+/g, "")
+  return text
+    .toLowerCase()
+    .replace(/[^ a-z0-9]+/g, "")
     .replace(/[ ]/g, "-");
 };
 
@@ -70,7 +74,8 @@ class CustomRenderer extends marked.Renderer {
     if (level === 1 && this.#renderContext.removeH1) {
       return "";
     }
-    const escapedText = escapeText(text);
+    const htmlContent = innerHTML(text);
+    const escapedText = escapeText(htmlContent);
     const headerSlug = slugger.slug(escapedText);
     const href = `#${headerSlug}`;
 
@@ -78,7 +83,7 @@ class CustomRenderer extends marked.Renderer {
       "",
       `<h${level} id="${headerSlug}">`,
       `  ${text}`,
-      `  <a class="hash-link" name="${headerSlug}" href="${href}"></a>`,
+      `  <a class="hash-link" title="${htmlContent}" href="${href}"></a>`,
       `</h${level}>`
     ].join("\n");
   }
@@ -136,7 +141,7 @@ const sanitizeOptions: IOptions = {
   allowedTags: [ ...sanitizeHtml.defaults.allowedTags, "img", "h1", "h2", "span", "del" ],
   allowedAttributes: {
     ...sanitizeHtml.defaults.allowedAttributes,
-    a: ["class", ...sanitizeHtml.defaults.allowedAttributes.a],
+    a: ["class", "title", ...sanitizeHtml.defaults.allowedAttributes.a],
     h1: ["id"],
     h2: ["id"],
     h3: ["id"],
