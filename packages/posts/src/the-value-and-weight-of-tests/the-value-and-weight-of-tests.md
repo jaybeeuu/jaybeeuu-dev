@@ -192,9 +192,9 @@ These are some things I think about when I'm writing tests to try and minimize t
 
 I'm not perfect.
 At the time of writing I don't pretend that I follow strict TDD,
-(Although in the course of writing this post I found
-[this](https://www.computer.org/csdl/magazine/so/2007/03/s3024/13rRUygT7kK)
-summary of research on the subject...
+(Although in the course of writing this post I found this
+[summary of research on the subject](https://www.computer.org/csdl/magazine/so/2007/03/s3024/13rRUygT7kK)
+...
 which makes me think I should tighten up and take another look.)
 and I understand the pressures of a project as much as the next person.
 But the code I ship is always tested in some way,
