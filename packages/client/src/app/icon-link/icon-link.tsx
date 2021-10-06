@@ -8,14 +8,16 @@ import css from "./icon-link.module.css";
 export type { IconName };
 
 export interface IconLinkProps {
-  name: IconName;
+  alt: string;
   href: string;
+  iconName: IconName;
   type: string;
 }
 
 export const IconLink = ({
+  alt,
   href,
-  name,
+  iconName,
   type
 }: IconLinkProps): JSX.Element => (
   <a
@@ -23,7 +25,10 @@ export const IconLink = ({
     href={href}
     type={type}
   >
-    <Icon name={name} />
+    <Icon
+      alt={alt}
+      name={iconName}
+    />
   </a>
 );
 
