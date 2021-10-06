@@ -3,7 +3,7 @@ import { h, createRef, render } from "preact";
 import { useEffect, useLayoutEffect } from "preact/hooks";
 import classNames from "classnames";
 import type { PostMetaData } from "@jaybeeuu/compost";
-import { assertIsString } from "@jaybeeuu/utilities";
+import { assertIsNotNullish, assertIsString } from "@jaybeeuu/utilities";
 import { post as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import { useAction, useValue } from "@jaybeeuu/preact-recoilless";
 import { asRoute } from "../as-route";
@@ -47,7 +47,15 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
     const links = articleRef.current?.querySelectorAll(".hash-link");
 
     links?.forEach((link) => {
-      render(<Icon name="link"/>, link);
+      const title = link.getAttribute("title");
+      assertIsNotNullish(title);
+      render(
+        <Icon
+          title={title}
+          name="link"
+        />,
+        link
+      );
     });
 
     if (window.location.hash) {

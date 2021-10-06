@@ -30,50 +30,51 @@ export const NavBar = ({ className }: NavBarProps): VNode<any> => {
         className={css.menuButton}
         name={"menu"}
         onClick={() => setIsOpen(!isOpen)}
+        title={"Menu"}
       />
       <div className={classNames(css.optionsList, { [css.open]: isOpen })}>
         <Link
           activeClassName={css.active}
           className={classNames(css.link, e2eHooks.homeLink)}
-          onClick={() => setIsOpen(false)}
           href={"/"}
+          onClick={() => setIsOpen(false)}
         >
             Home
         </Link>
         <Link
           activeClassName={css.active}
           className={classNames(css.link, e2eHooks.postsListLink)}
-          onClick={() => setIsOpen(false)}
           href={"/blog"}
+          onClick={() => setIsOpen(false)}
         >
             Blog
         </Link>
         <ImageLink
-          alt={"Linked In"}
+          className={e2eHooks.linkedInLink}
           href={"https://linkedin.com/in/jaybeeuu"}
           imageSrc={linkedInLogo}
-          className={e2eHooks.linkedInLink}
+          title={"Linked In"}
         />
         <ImageLink
-          alt={"GitHub"}
+          className={e2eHooks.gitHubLink}
           href={"https://github.com/jaybeeuu"}
           imageSrc={{
             light: githubDark,
             dark: githubLight
           }}
-          className={e2eHooks.gitHubLink}
+          title={"GitHub"}
         />
         <IconLink
-          alt="Atom Feed"
           href={"feeds/atom.xml"}
           iconName={"rss_feed"}
+          title="Atom Feed"
           type={"application/atom+xml"}
         />
         <ThemeToggle className={e2eHooks.switch} />
       </div>
       <div
-        onClick={() => setIsOpen(false)}
         className={classNames(css.dismissBox, { [css.open]: isOpen })}
+        onClick={() => setIsOpen(false)}
       />
     </div>
   );

@@ -8,14 +8,14 @@ import css from "./icon-link.module.css";
 export type { IconName };
 
 export interface IconLinkProps {
-  alt: string;
+  title: string;
   href: string;
   iconName: IconName;
   type: string;
 }
 
 export const IconLink = ({
-  alt,
+  title,
   href,
   iconName,
   type
@@ -24,9 +24,10 @@ export const IconLink = ({
     className={css.componentRoot}
     href={href}
     type={type}
+    title={title}
   >
     <Icon
-      alt={alt}
+      title={title}
       name={iconName}
     />
   </a>
