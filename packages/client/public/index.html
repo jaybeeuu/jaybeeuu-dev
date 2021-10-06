@@ -55,9 +55,21 @@
     #theme-root {
       height: 100%;
       width: 100%;
-      background-color: var(--background-colour-document, #0d1014);
-      color: var(--colour-text-main, #96a4b8);
       transition: var(--transition-theme);
+    }
+
+    @media (prefers-color-scheme: light) {
+      #theme-root {
+        background-color: var(--background-colour-document, #eeeeee);
+        color: var(--colour-text-main, #343438);
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      #theme-root {
+        background-color: var(--background-colour-document, #0d1014);
+        color: var(--colour-text-main, #96a4b8);
+      }
     }
 
     .fade-in {

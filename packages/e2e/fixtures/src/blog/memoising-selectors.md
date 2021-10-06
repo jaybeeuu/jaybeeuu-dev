@@ -8,7 +8,7 @@ But it also helps to understand what you are trying to do:
 
 Memoising selectors is aimed at letting react know it doesn't have to rerender the component. Remember that Every time *any* part of the redux store changes all of your connected components will get a notification and will try to rerender. If you let it it can be quite costly. So it si a good idea to avoid it if possible.
 
-The easiest way to tell a component not to rerender when it's props (e.g. because of a store update) or state change do this is to use ([PureComponents](https://lucybain.com/blog/2018/react-js-pure-component/)) or [Pure](https://logrocket.com/blog/pure-functional-components/). This is so simple i would argue it doesn't count as premature optimisation and could be your default. These components look at the new Props and State and compare them to the last lot the only rerender if there is a difference. But the comparison they do is a simple instance comparison - partly because it is super quick. So:
+The easiest way to tell a component not to rerender when it's props (e.g. because of a store update) or state change do this is to use ([`PureComponents`](https://lucybain.com/blog/2018/react-js-pure-component/)) or [`Pure`](https://logrocket.com/blog/pure-functional-components/). This is so simple i would argue it doesn't count as premature optimisation and could be your default. These components look at the new Props and State and compare them to the last lot the only rerender if there is a difference. But the comparison they do is a simple instance comparison - partly because it is super quick. So:
 
 ```js
 const a = ['a'];
@@ -83,4 +83,4 @@ const getEnabledUsers = (state) => {
 
 Now react will only rerender if the users array has actually updated.
 
-But it is a bit complicated and a hassle to write that memoisation, and it has a nonzero memory footprint. So don't do it if you don't need to and when you do then it's best to use  a library like [reselect](https://github.com/reduxjs/reselect) and [rereselect](https://github.com/toomuchdesign/re-reselect) to avoid the boiler plate and keep you code expressive.
+But it is a bit complicated and a hassle to write that memoisation, and it has a nonzero memory footprint. So don't do it if you don't need to and when you do then it's best to use  a library like [`reselect`](https://github.com/reduxjs/reselect) and [`rereselect`](https://github.com/toomuchdesign/re-reselect) to avoid the boiler plate and keep you code expressive.
