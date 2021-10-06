@@ -13,11 +13,11 @@ interface ImageLinkProps {
   imageSrc: string | {
     [theme in Theme]: string;
   };
-  alt: string;
+  title: string;
 }
 
 export const ImageLink = ({
-  alt,
+  title,
   className,
   href,
   imageSrc,
@@ -31,8 +31,12 @@ export const ImageLink = ({
     <a
       className={classNames(css.componentRoot, className)}
       href={href}
+      title={title}
     >
-      <img src={imageSrcToUse} alt={alt} />
+      <img
+        alt={title}
+        src={imageSrcToUse}
+      />
     </a>
   );
 };

@@ -2,17 +2,17 @@
 .dark {
   --highlight-colour: #d6deeb;
   --highlight-background-colour: #00101d;
-  --highlight-line-number-colour: #637777;
+  --highlight-line-number-colour: #7c9797;
 
   --highlight-colour-atrule: #ffcb8b;
   --highlight-colour-attr-name: #addb67;
   --highlight-colour-attr-value: #ffcb8b;
   --highlight-colour-boolean: #ff5874;
   --highlight-colour-builtin: #82aaff;
-  --highlight-colour-cdata: #637777;
+  --highlight-colour-cdata: #7c9797;
   --highlight-colour-char: #82aaff;
   --highlight-colour-class-name: #ffcb8b;
-  --highlight-colour-comment: #637777;
+  --highlight-colour-comment: #7c9797;
   --highlight-colour-constant: #82aaff;
   --highlight-colour-css-string: #addb67;
   --highlight-colour-deleted: #ef5350;
@@ -26,7 +26,7 @@
   --highlight-colour-namespace: #b2ccd6;
   --highlight-colour-number: #f78c6c;
   --highlight-colour-operator: #7fdbca;
-  --highlight-colour-prolog: #637777;
+  --highlight-colour-prolog: #7c9797;
   --highlight-colour-property: #80cbc4;
   --highlight-colour-punctuation: #c792ea;
   --highlight-colour-regex: #d6deeb;

@@ -8,22 +8,28 @@ import css from "./icon-link.module.css";
 export type { IconName };
 
 export interface IconLinkProps {
-  name: IconName;
+  title: string;
   href: string;
+  iconName: IconName;
   type: string;
 }
 
 export const IconLink = ({
+  title,
   href,
-  name,
+  iconName,
   type
 }: IconLinkProps): JSX.Element => (
   <a
     className={css.componentRoot}
     href={href}
     type={type}
+    title={title}
   >
-    <Icon name={name} />
+    <Icon
+      title={title}
+      name={iconName}
+    />
   </a>
 );
 
