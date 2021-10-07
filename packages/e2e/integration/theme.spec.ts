@@ -14,4 +14,10 @@ context("Theme", (): void => {
     getThemeSwitch().click();
     getThemeRoot().should("have.class", "light");
   });
+
+  it("persists the user's theme across reloads.", (): void => {
+    getThemeSwitch().click();
+    cy.reload();
+    getThemeRoot().should("have.class", "light");
+  });
 });

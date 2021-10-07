@@ -2,7 +2,7 @@ import { useValue } from "@jaybeeuu/preact-recoilless";
 import classNames from "classnames";
 import type { VNode } from "preact";
 import { h } from "preact";
-import type { Theme } from "../state";
+import type { Theme } from "../services/theme";
 import { theme } from "../state";
 
 import css from "./image-link.module.css";

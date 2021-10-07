@@ -3,8 +3,8 @@ import type { JSX } from "preact";
 import { h } from "preact";
 import { useValue } from "@jaybeeuu/preact-recoilless";
 import classNames from "classnames";
+import type { Theme } from "../services/theme";
 import { Icon } from "../icon";
-import type { Theme } from "../state";
 import { theme } from "../state";
 
 import css from "./theme-toggle.module.css";
