@@ -1,8 +1,11 @@
 import type { ComponentChildren, JSX } from "preact";
 import { h } from "preact";
+import { useEffect } from "preact/hooks";
+import classNames from "classnames";
 import { theme as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import { useValue } from "@jaybeeuu/preact-recoilless";
-import classNames from "classnames";
+import type { Theme as Themes } from "../services/theme";
+import { listenToMediaTheme, persistedTheme } from "../services/theme";
 import { theme } from "../state";
 
 import "./base-styles.css";
@@ -16,8 +19,22 @@ export interface ThemeProps {
   className: string;
 }
 
+const useTheme = (): Themes => {
+  const [currentTheme, setStateTheme] = useValue(theme);
+
+  useEffect(() => {
+    return listenToMediaTheme(setStateTheme);
+  }, []);
+
+  useEffect(() => {
+    persistedTheme.set(currentTheme);
+  }, [currentTheme]);
+
+  return currentTheme;
+};
+
 export const Theme = ({ children, className }: ThemeProps): JSX.Element => {
-  const [currentTheme] = useValue(theme);
+  const currentTheme = useTheme();
 
   return (
     <div

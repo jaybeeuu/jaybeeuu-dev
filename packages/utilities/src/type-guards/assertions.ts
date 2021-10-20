@@ -1,26 +1,18 @@
-import type {
-  TypeString,
-  TypeStringPrimitiveTypeMap
-} from "./base";
-import {
-  is
-} from "./base";
+import type { TypePredicate } from "./base";
+import { is } from "./base";
 
-const assertIs = <Type extends TypeString | "null">(
-  typeString: Type
-): TypeAssertion<TypeStringPrimitiveTypeMap[Type]> => {
-  const checkIsType = is(typeString);
-  return (
-    candidate
-  ): asserts candidate is TypeStringPrimitiveTypeMap[Type] => {
-    if(!checkIsType(candidate)) {
-      throw new TypeError(`Expected ${typeString} but got ${typeof candidate}.`);
-    }
-  };
+export const assert = <Type>(
+  typePredicate: TypePredicate<Type>, typeDescription: string
+): TypeAssertion<Type> => (
+  candidate
+): asserts candidate is Type => {
+  if(!typePredicate(candidate)) {
+    throw new TypeError(`Expected ${typeDescription} but got ${typeof candidate}.`);
+  }
 };
 
 export type TypeAssertion<Type> = (candidate: unknown) => asserts candidate is Type;
-export const assertIsString: TypeAssertion<string> = assertIs("string");
+export const assertIsString: TypeAssertion<string> = assert(is("string"), "string");
 
 export const assertIsNotNullish: <Type>(
   candidate: Type
