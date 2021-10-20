@@ -7,7 +7,7 @@ import type {
   ActionContext
 } from "@jaybeeuu/recoilless";
 import type { Theme } from "./services/theme";
-import { initialMediaTheme } from "./services/theme";
+import { getMediaTheme, persistedTheme } from "./services/theme";
 
 export const postsManifest: DerivedValue<Promise<PostManifest>> = {
   name: "postManifest",
@@ -43,7 +43,7 @@ export const currentPostHtml: DerivedValue<Promise<string>> = {
 
 export const theme: PrimitiveValue<Theme> = {
   name: "theme",
-  initialValue: initialMediaTheme
+  initialValue: persistedTheme.get() ?? getMediaTheme()
 };
 
 export type Image =

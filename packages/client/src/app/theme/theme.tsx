@@ -1,9 +1,12 @@
 import type { ComponentChildren, JSX } from "preact";
 import { h } from "preact";
+import { useEffect } from "preact/hooks";
+import classNames from "classnames";
 import { theme as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import { useValue } from "@jaybeeuu/preact-recoilless";
-import classNames from "classnames";
-import { theme, themeMediaQuery } from "../state";
+import type { Theme as Themes } from "../services/theme";
+import { listenToMediaTheme, persistedTheme } from "../services/theme";
+import { theme } from "../state";
 
 import "./base-styles.css";
 import "./colours.css";
@@ -11,24 +14,27 @@ import "./colours.css";
 import "./code-highlight-colours.css";
 import "./code-highlight.css";
 import "./code.css";
-import { useEffect } from "packages/preact-recoilless/node_modules/preact/hooks/src";
 export interface ThemeProps {
   children: ComponentChildren;
   className: string;
 }
 
-const useUserPreferedTheme = (): void => {
-  useEffect(() => {
-    const handler = (event: MediaQueryListEvent): void => {
-      event.matches;
-    };
+const useTheme = (): Themes => {
+  const [currentTheme, setStateTheme] = useValue(theme);
 
-    themeMediaQuery.addEventListener("change", handler);
-  });
+  useEffect(() => {
+    return listenToMediaTheme(setStateTheme);
+  }, []);
+
+  useEffect(() => {
+    persistedTheme.set(currentTheme);
+  }, [currentTheme]);
+
+  return currentTheme;
 };
 
 export const Theme = ({ children, className }: ThemeProps): JSX.Element => {
-  const [currentTheme] = useValue(theme);
+  const currentTheme = useTheme();
 
   return (
     <div

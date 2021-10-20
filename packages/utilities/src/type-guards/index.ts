@@ -1,3 +1,6 @@
+export type {
+  TypePredicate
+} from "./base";
 export {
   hasBooleanProperty,
   hasFunctionProperty,
@@ -5,13 +8,17 @@ export {
   hasStringProperty,
   is,
   isArrayOf,
+  isInPrimitiveUnion,
   isNull,
   isObject,
   isRecord,
-  or,
-  TypePredicate
+  or
 } from "./base";
+export type {
+  TypeAssertion
+} from "./assertions";
 export {
+  assert,
   assertIsString,
   assertIsNotNullish
 } from "./assertions";

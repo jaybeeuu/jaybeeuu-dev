@@ -1,5 +1,5 @@
-import { useValue } from "@jaybeeuu/preact-recoilless";
 import classNames from "classnames";
+import { useValue } from "@jaybeeuu/preact-recoilless";
 import type { VNode } from "preact";
 import { h } from "preact";
 import type { Theme } from "../services/theme";

@@ -129,3 +129,22 @@ export const or = <T, U>(
 ): candidate is T | U => {
   return isT(candidate) || isU(candidate);
 };
+
+export const isInPrimitiveUnion = <UnionMembers extends readonly (string | number | boolean)[]>(
+  unionMembers: UnionMembers
+): TypePredicate<UnionMembers[number]> => {
+  const isPrimitive = or(
+    or(
+      is("boolean"),
+      is("string")
+    ),
+    is("number")
+  );
+
+  return (
+    candidate
+  ): candidate is UnionMembers[number] => {
+    return isPrimitive(candidate) && unionMembers.includes(candidate);
+  };
+};
+
