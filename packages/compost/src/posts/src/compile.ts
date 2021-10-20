@@ -80,7 +80,7 @@ class CustomRenderer extends marked.Renderer {
     const href = `#${headerSlug}`;
 
     return [
-      "",www
+      "",
       `<h${level} id="${headerSlug}">`,
       `  ${text}`,
       `  <a class="hash-link" title="${htmlContent}" href="${href}"></a>`,
