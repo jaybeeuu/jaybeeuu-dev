@@ -128,7 +128,7 @@ OK So... going back to the code... if you run it which version will be quicker; 
 
 On my machine this is the result (I'm using Node.js v14.15.1, but I tried it in Firefox and Chrome too):
 
-```txt
+```log
 Array: 14.028s
 Set: 16.240s
 ```
