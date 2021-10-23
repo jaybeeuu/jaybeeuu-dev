@@ -18,6 +18,7 @@ const { env, stringifiedEnv } = require("./config/env");
 const paths = require("./config/paths");
 
 const isProduction = env.NODE_ENV === "production";
+const mode = isProduction ? "production" : "development";
 const isWatching = process.argv.includes("serve");
 
 /** @type {import("@jaybeeuu/compost").PostManifest} */
@@ -34,9 +35,16 @@ const resolvedURLToSite = (...pathFragments) => {
   return path.posix.join(siteURL, ...pathFragments);
 };
 
+console.log("NODE_ENV", {
+  process: process.env.NODE_ENV,
+  env: env.NODE_ENV,
+  stringifiedEnv: stringifiedEnv,
+  mode
+});
+
 /** @type {import("webpack").Configuration} */
 module.exports = {
-  mode: isProduction ? "production" : "development",
+  mode,
   devtool: isProduction ? "source-map" : "source-map",
   devServer: isWatching ? {
     compress: true,
@@ -47,10 +55,18 @@ module.exports = {
       key: fs.readFileSync(paths.certs.key),
       cert: fs.readFileSync(paths.certs.certificate),
     },
-    overlay: true,
+    client: {
+      logging: "info",
+      overlay: true,
+      progress: true
+    },
     port: env.CLIENT_PORT,
-    watchContentBase: true,
-    stats: "normal"
+    static: {
+      watch: true
+    },
+    devMiddleware: {
+      stats: "normal"
+    }
   } : undefined,
   entry: [
     paths.srcIndex,

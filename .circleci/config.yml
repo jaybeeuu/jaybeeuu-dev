@@ -4,7 +4,7 @@ src-dir: &src-dir ~/src
 
 base: &base
   docker:
-    - image: circleci/node:14.17.4
+    - image: circleci/node:14.18.1
       auth:
         username: $DOCKERHUB_USERNAME
         password: $DOCKERHUB_PASSWORD
