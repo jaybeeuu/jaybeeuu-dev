@@ -35,13 +35,6 @@ const resolvedURLToSite = (...pathFragments) => {
   return path.posix.join(siteURL, ...pathFragments);
 };
 
-console.log("NODE_ENV", {
-  process: process.env.NODE_ENV,
-  env: env.NODE_ENV,
-  stringifiedEnv: stringifiedEnv,
-  mode
-});
-
 /** @type {import("webpack").Configuration} */
 module.exports = {
   mode,
