@@ -239,9 +239,11 @@ importers:
   packages/eslint-config:
     specifiers:
       '@typescript-eslint/parser': ^5.1.0
+      eslint-formatter-codeframe: ^7.32.1
       typescript: ^4.4.4
     dependencies:
       '@typescript-eslint/parser': 5.1.0_typescript@4.4.4
+      eslint-formatter-codeframe: 7.32.1
       typescript: 4.4.4
 
   packages/feed-webpack-plugin:
@@ -374,6 +376,12 @@ importers:
       typescript: 4.4.4
 
 packages:
+
+  /@babel/code-frame/7.12.11:
+    resolution: {integrity: sha512-Zt1yodBx1UcyiePMSkWnU4hPqhwq7hGi2nFL1LeA3EUl+q2LQx16MISgJ0+z7dnmgvP9QtIleuETGOiOH1RcIw==}
+    dependencies:
+      '@babel/highlight': 7.14.5
+    dev: false
 
   /@babel/code-frame/7.15.8:
     resolution: {integrity: sha512-2IAnmn8zbvC/jKYhq5Ki9I+DwjlrtMPUCH/CpHvqI4dNnlwHwsxoIhlc8WcYY5LSYknXQtAlFYuHfqAFCvQ4Wg==}
@@ -4438,6 +4446,14 @@ packages:
     optionalDependencies:
       source-map: 0.6.1
     dev: true
+
+  /eslint-formatter-codeframe/7.32.1:
+    resolution: {integrity: sha512-DK/3Q3+zVKq/7PdSYiCxPrsDF8H/TRMK5n8Hziwr4IMkMy+XiKSwbpj25AdajS63I/B61Snetq4uVvX9fOLyAg==}
+    engines: {node: ^10.12.0 || >=12.0.0}
+    dependencies:
+      '@babel/code-frame': 7.12.11
+      chalk: 4.1.2
+    dev: false
 
   /eslint-plugin-cypress/2.12.1_eslint@8.0.1:
     resolution: {integrity: sha512-c2W/uPADl5kospNDihgiLc7n87t5XhUbFDoTl6CfVkmG+kDAb5Ux10V9PoLPu9N+r7znpc+iQlcmAqT1A/89HA==}
