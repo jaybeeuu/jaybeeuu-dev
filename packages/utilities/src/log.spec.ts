@@ -79,12 +79,13 @@ describe("log", () => {
         expectedOutput: "undefined"
       }
     ];
-    samples.forEach(({ args, expectedOutput }) => {
-      it(`should return ${expectedOutput} when passed args: ${JSON.stringify(args, null, 2)}`, () => {
+    it.each(samples)(
+      "$#: should return $expectedOutput when passed args: $args",
+      ({ args, expectedOutput }) => {
         const result = log.getErrorMessage(...args);
 
         expect(result).toBe(expectedOutput);
-      });
-    });
+      }
+    );
   });
 });
