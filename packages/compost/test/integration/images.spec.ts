@@ -108,9 +108,9 @@ describe("images", () => {
       ]
     }, updateOptions);
 
-    expect(
-      await getOutputFile("some-image-j8Ri3I.jpg", updateOptions)
-    ).toBe(
+    await expect(
+      getOutputFile("some-image-j8Ri3I.jpg", updateOptions)
+    ).resolves.toBe(
       "this is an image, honest."
     );
   });

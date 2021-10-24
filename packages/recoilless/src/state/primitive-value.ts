@@ -16,7 +16,7 @@ export class PrimitiveValueState<Val> extends ValueState<Val> {
 
   public setValue: (newValue: Val) => void = (newValue) => {
     super.setValue(newValue);
-  }
+  };
 }
 
 export const isPrimitiveValue = <Val>(

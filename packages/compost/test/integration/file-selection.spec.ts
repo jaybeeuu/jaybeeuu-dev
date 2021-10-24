@@ -28,7 +28,7 @@ describe("file-selection", () => {
 
     const manifest = await getPostManifest();
 
-    expect(manifest[slug]).not.toBeDefined();
+    expect(manifest[slug]).toBeUndefined();
   });
 
   it("ignores markdown files with no .post.json.", async () => {
@@ -47,7 +47,7 @@ describe("file-selection", () => {
     await compilePosts();
 
     const manifest = await getPostManifest();
-    expect(manifest[slug]).not.toBeDefined();
+    expect(manifest[slug]).toBeUndefined();
   });
 
   it("ignores unpublished articles unless told to include them with the option.", async () => {
