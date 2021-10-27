@@ -76,7 +76,7 @@ describe("useValue", () => {
       const { result } = renderHook(
         () => useValue(holiday), { wrapper: Wrapper(store) }
       );
-      await act(() => firstStopState.setValue("Iceland"));
+      await act(() => firstStopState.set("Iceland"));
       expect(result.current).toBe("Iceland");
     });
 

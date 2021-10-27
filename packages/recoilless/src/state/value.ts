@@ -1,22 +1,5 @@
-import { hasFunctionProperty } from "@jaybeeuu/utilities";
-import type { PrimitiveValue } from "../state";
 import type { DerivedValue } from "./derived-value";
-import type { ValueState as ValueState } from "./value-state";
-
-type ValueType<Candidate extends ValueState<unknown>> = Candidate extends ValueState<infer Val>
-  ? Val
-  : never
+import type { PrimitiveValue } from "./primitive-value";
 
 export type Value<Val> = PrimitiveValue<Val> | DerivedValue<Val>;
-
 export type SettableValue<Val> = PrimitiveValue<Val>;
-
-export const assertIsSettableValueState: <Candidate extends ValueState<any>>(
-  candidate: Candidate
-) => asserts candidate is Candidate & { setValue: (value: ValueType<Candidate>) => void } = (
-  candidate
-) => {
-  if (!hasFunctionProperty(candidate, "setValue")) {
-    throw new TypeError(`Value ${candidate.name} is not primitive.`);
-  }
-};

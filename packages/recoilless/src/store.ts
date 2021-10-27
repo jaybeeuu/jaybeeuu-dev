@@ -14,11 +14,18 @@ import {
   PrimitiveValueState
 } from "./state/index";
 
-const createValue = <Val>(
-  value: Value<Val>,
+interface CreateValue {
+  <Val>(
+    value: Value<Val>,
+    removeFromStore: RemoveFromStore,
+    getDependency: GetDependency
+  ): ValueState<Val>;
+}
+const createValue: CreateValue = (
+  value,
   removeFromStore: RemoveFromStore,
   getDependency: GetDependency
-): ValueState<Val> => {
+) => {
   if (isDerivedValue(value)) {
     return new DerivedValueState(value, removeFromStore, getDependency);
   }
@@ -41,27 +48,27 @@ export interface ActionContext {
 export type Action<Args extends unknown[]> = (context: ActionContext, ...args: Args) => void
 
 export class Store {
-  private readonly values: { [name:string]: ValueState<any> } = {};
+  private readonly values: { [name:string]: ValueState<unknown> } = {};
 
-  private removeValue = <Val>(value: Value<Val>): void => {
+  #removeValue = <Val>(value: Value<Val>): void => {
     delete this.values[value.name];
   };
 
-  private getDependency: GetDependency = <Val>(
+  #getDependency: GetDependency = <Val>(
     value: Value<Val>
   ): ValueState<Val> => {
     if(!(value.name in this.values)) {
       this.values[value.name] = createValue(
         value,
-        () => this.removeValue(value),
-        this.getDependency
+        () => this.#removeValue(value),
+        this.#getDependency
       );
     }
 
     return this.values[value.name] as ValueState<Val>;
   };
 
-  public getValue: GetValue = this.getDependency as GetValue;
+  public getValue: GetValue = this.#getDependency as GetValue;
 
   public getActor<Args extends unknown[]>(
     action: Action<Args>
@@ -69,11 +76,11 @@ export class Store {
     return (...args: Args) => {
       action(
         {
-          get: <Val>(value: Value<Val>): Val => this.getDependency(value).current,
+          get: <Val>(value: Value<Val>): Val => this.#getDependency(value).current,
           set: (value, entry) => {
-            const valueState = this.getDependency(value);
+            const valueState = this.#getDependency(value);
             assertIsSettableValueState(valueState);
-            valueState.setValue(entry);
+            valueState.set(entry);
           }
         },
         ...args

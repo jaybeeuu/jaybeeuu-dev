@@ -14,13 +14,15 @@ export {
 } from "./primitive-value";
 
 export {
+  assertIsSettableValueState,
+  Listener,
   RemoveFromStore,
+  SettableValueState,
   Unsubscribe,
   ValueState
 } from "./value-state";
 
 export {
-  assertIsSettableValueState,
   Value,
   SettableValue
 } from "./value";

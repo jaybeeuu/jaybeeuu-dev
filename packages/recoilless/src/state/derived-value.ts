@@ -1,6 +1,6 @@
+import type { Listener, Unsubscribe, ValueState } from "./value-state";
+import { WatchableValue } from "./watchable-value";
 import type { Value } from "./value";
-import type { Unsubscribe} from "./value-state";
-import { ValueState } from "./value-state";
 
 export interface DerivedValue<Val> {
   name: string;
@@ -15,41 +15,51 @@ export type DerivationContext<Val> = {
 export type Derive<Val> = (context: DerivationContext<Val>) => Val;
 export type GetDependency = <Val>(value: Value<Val>) => ValueState<Val>;
 
-export class DerivedValueState<Val> extends ValueState<Val> {
-  private readonly derive: Derive<Val>;
-  private readonly getDependency: GetDependency;
-  private readonly registeredDependencies = new Set<ValueState<any>>();
-  private readonly unsubscribes: Unsubscribe[] = [];
+export class DerivedValueState<Val> implements ValueState<Val> {
+  readonly #dependencyUnsubscribes: Unsubscribe[] = [];
+  readonly #derive: Derive<Val>;
+  readonly #getDependency: GetDependency;
+  readonly #registeredDependencies = new Set<ValueState<any>>();
+  readonly #value: WatchableValue<Val>;
+  readonly #name: string;
 
   constructor(
     { name, derive }: DerivedValue<Val>,
     removeFromStore: () => void,
     getDependency: GetDependency,
   ) {
-    // TODO: This speaks to a mistake. THe values should have a watchable value, not extend them.
-    // For example - derived value has no initial value (it can't)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    super(name, undefined as any, removeFromStore);
-    this.getDependency = getDependency;
-    this.derive = derive;
-    this.deriveAgain();
+    this.#derive = derive;
+    this.#getDependency = getDependency;
+    this.#name = name;
+
+    const firstValue = this.#derive({
+      get: (...args) => this.#getDependencyValue(...args),
+      previousValue: undefined
+    });
+
+    this.#value = new WatchableValue(firstValue, () => {
+      removeFromStore();
+      this.#dependencyUnsubscribes.forEach(
+        (unsubscribeDependency) => unsubscribeDependency()
+      );
+    });
   }
 
-  private deriveAgain(): void {
-    this.setValue(this.derive({
-      get: (...args) => this.getDependencyValue(...args),
+  #deriveAgain(): void {
+    this.#value.set(this.#derive({
+      get: (...args) => this.#getDependencyValue(...args),
       previousValue: this.current
     }));
   }
 
-  private getDependencyValue<Dependency>(dependency: Value<Dependency>): Dependency {
-    const dependencyState = this.getDependency(dependency);
+  #getDependencyValue<Dependency>(dependency: Value<Dependency>): Dependency {
+    const dependencyState = this.#getDependency(dependency);
 
-    if(!this.registeredDependencies.has(dependencyState)) {
-      this.registeredDependencies.add(dependencyState);
-      this.unsubscribes.push(
+    if(!this.#registeredDependencies.has(dependencyState)) {
+      this.#registeredDependencies.add(dependencyState);
+      this.#dependencyUnsubscribes.push(
         dependencyState.subscribe(
-          () => this.deriveAgain()
+          () => this.#deriveAgain()
         )
       );
     }
@@ -57,15 +67,16 @@ export class DerivedValueState<Val> extends ValueState<Val> {
     return dependencyState.current;
   }
 
-  public subscribe(listener: (value: Val) => void): Unsubscribe {
-    const unsubscribe = super.subscribe(listener);
+  public get current(): Val {
+    return this.#value.current;
+  }
 
-    return () => {
-      unsubscribe();
-      if (this.subscriptionCount === 0) {
-        this.unsubscribes.forEach((unsubscribeDependency) => unsubscribeDependency());
-      }
-    };
+  public get name(): string {
+    return this.#name;
+  }
+
+  public subscribe(listener: Listener<Val>): Unsubscribe {
+    return this.#value.subscribe(listener);
   }
 }
 
