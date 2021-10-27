@@ -129,10 +129,11 @@ describe("combinePromises", () => {
       }
     }
   ];
-  samples.forEach(({ description, values, expected }) => {
-    it(`${description}`, () => {
+  it.each(samples)(
+    "$description",
+    ({ values, expected }) => {
       const combined = combinePromises(values);
       expect(combined).toStrictEqual(expected);
-    });
-  });
+    }
+  );
 });

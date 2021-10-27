@@ -56,7 +56,7 @@ describe("recoilless store", () => {
           setTimeout(() => resolve(`${get(firstName)} ${get(surname)}`), 0);
         })
       });
-      expect((await state.current)).toBe(
+      await expect(state.current).resolves.toBe(
         `${firstName.initialValue} ${surname.initialValue}`
       );
     });

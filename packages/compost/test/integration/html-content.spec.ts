@@ -119,45 +119,48 @@ describe("compile", () => {
       { level: 5 },
       { level: 6 }
     ];
-    headingSamples.forEach(({ level }) => {
-      it(`compiles subheading ${level} correctly.`, async () => {
-        const hrefRoot = "posts";
-        const slug = "{slug}";
-        const post = await getCompiledPostWithContent({
-          slug,
-          content: [
-            `${"".padEnd(level, "#")} This is the first post`,
-          ]
-        }, { hrefRoot });
+    describe.each(headingSamples)(
+      "$#: Heading $level",
+      ({ level }) => {
+        it(`compiles subheading ${level} correctly.`, async () => {
+          const hrefRoot = "posts";
+          const slug = "{slug}";
+          const post = await getCompiledPostWithContent({
+            slug,
+            content: [
+              `${"".padEnd(level, "#")} This is the first post`,
+            ]
+          }, { hrefRoot });
 
-        expect(post).toBe([
-          "",
-          `<h${level} id="this-is-the-first-post">`,
-          "  This is the first post",
-          "  <a class=\"hash-link\" title=\"This is the first post\" href=\"#this-is-the-first-post\"></a>",
-          `</h${level}>`
-        ].join("\n"));
-      });
+          expect(post).toBe([
+            "",
+            `<h${level} id="this-is-the-first-post">`,
+            "  This is the first post",
+            "  <a class=\"hash-link\" title=\"This is the first post\" href=\"#this-is-the-first-post\"></a>",
+            `</h${level}>`
+          ].join("\n"));
+        });
 
-      it("compiles a heading link to contain a link which only includes the text - not the rest of the link.", async () => {
-        const hrefRoot = "posts";
-        const slug = "{slug}";
-        const post = await getCompiledPostWithContent({
-          slug,
-          content: [
-            `${"".padEnd(level, "#")} [This is the #1 post](www.example.com)`
-          ]
-        }, { hrefRoot });
+        it("compiles a heading link to contain a link which only includes the text - not the rest of the link.", async () => {
+          const hrefRoot = "posts";
+          const slug = "{slug}";
+          const post = await getCompiledPostWithContent({
+            slug,
+            content: [
+              `${"".padEnd(level, "#")} [This is the #1 post](www.example.com)`
+            ]
+          }, { hrefRoot });
 
-        expect(post).toBe([
-          "",
-          `<h${level} id="this-is-the-1-post">`,
-          "  <a href=\"www.example.com\">This is the #1 post</a>",
-          "  <a class=\"hash-link\" title=\"This is the #1 post\" href=\"#this-is-the-1-post\"></a>",
-          `</h${level}>`
-        ].join("\n"));
-      });
-    });
+          expect(post).toBe([
+            "",
+            `<h${level} id="this-is-the-1-post">`,
+            "  <a href=\"www.example.com\">This is the #1 post</a>",
+            "  <a class=\"hash-link\" title=\"This is the #1 post\" href=\"#this-is-the-1-post\"></a>",
+            `</h${level}>`
+          ].join("\n"));
+        });
+      }
+    );
 
     it("removes the first h1's if the remove-h1 flag is passed true.", async () => {
       const post = await getCompiledPostWithContent({

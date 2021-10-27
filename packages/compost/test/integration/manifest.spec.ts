@@ -263,8 +263,8 @@ describe("manifest", () => {
 
     const manifest = await getPostManifest();
 
-    expect(manifest[slug].lastUpdateDate).toStrictEqual("2021-07-30T20:18:43.000Z");
-    expect(manifest[slug].publishDate).toStrictEqual("2021-06-06T22:08:34.000Z");
+    expect(manifest[slug].lastUpdateDate).toBe("2021-07-30T20:18:43.000Z");
+    expect(manifest[slug].publishDate).toBe("2021-06-06T22:08:34.000Z");
   });
 
   it("updates the lastUpdatedDate when the manifest needs to be fetched.", async () => {

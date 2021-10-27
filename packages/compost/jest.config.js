@@ -18,6 +18,7 @@ const config = {
     "<rootDir>/lib/"
   ],
   moduleNameMapper: {
+    "node-fetch": "<rootDir>/test/mocks/node-fetch.ts",
     "(\\.\\.?/.*)\\.js$": "$1"
   },
 };

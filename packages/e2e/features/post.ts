@@ -70,6 +70,7 @@ export const getArticle = (): ArticleChainable => {
       return article;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     originalShould.apply(this, args as any);
 
     return article;

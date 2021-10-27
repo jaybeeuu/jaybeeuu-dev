@@ -2,8 +2,13 @@ import path from "path";
 // import highlight from "highlight.js";
 import Prism from "prismjs";
 import loadLanguages from "prismjs/components/index.js";
-import type { MarkedOptions, Slugger } from "marked";
-import marked  from "marked";
+import type {
+  MarkedOptions,
+  Renderer,
+  RendererThis,
+  Slugger
+} from "marked";
+import marked from "marked";
 import type { IOptions } from "sanitize-html";
 import sanitizeHtml from "sanitize-html";
 import { assertIsNotNullish } from "@jaybeeuu/utilities";
@@ -36,8 +41,11 @@ const escapeText = (text: string): string => {
 };
 
 class CustomRenderer extends marked.Renderer {
-  #renderContext: RenderContext;
-  #assets: Assets[] = [];
+  readonly #assets: Assets[] = [];
+  readonly #renderContext: RenderContext;
+
+  public readonly code: Renderer["code"];
+  public readonly image: Renderer["image"];
 
   public get assets(): Assets[] {
     return this.#assets;
@@ -46,10 +54,30 @@ class CustomRenderer extends marked.Renderer {
   constructor(renderContext: RenderContext, markedOptions?: MarkedOptions) {
     super(markedOptions);
     this.#renderContext = renderContext;
+
+    const that: CustomRenderer = this;
+
+    this.code = function (this: RendererThis, ...args) {
+      return that.innerCode(this, ...args);
+    };
+    this.image = function (this: RendererThis, ...args) {
+      return that.innerImage(this, ...args);
+    };
   }
 
-  code(code: string, language: string | undefined, isEscaped: any): string {
-    const rendered = super.code(code, language, isEscaped);
+  private innerCode(
+    rendererThis: RendererThis,
+    code: string,
+    language: string | undefined,
+    isEscaped: boolean
+  ): string {
+    const rendered = super.code.call(
+      rendererThis,
+      code,
+      language,
+      isEscaped
+    );
+
     const preClasses = [
       `language-${language || "none"}`,
       this.#renderContext.codeLineNumbers && "line-numbers"
@@ -70,29 +98,22 @@ class CustomRenderer extends marked.Renderer {
     return adjusted;
   }
 
-  heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6, raw: string, slugger: Slugger): string {
-    if (level === 1 && this.#renderContext.removeH1) {
-      return "";
-    }
-    const htmlContent = innerHTML(text);
-    const escapedText = escapeText(htmlContent);
-    const headerSlug = slugger.slug(escapedText);
-    const href = `#${headerSlug}`;
-
-    return [
-      "",
-      `<h${level} id="${headerSlug}">`,
-      `  ${text}`,
-      `  <a class="hash-link" title="${htmlContent}" href="${href}"></a>`,
-      `</h${level}>`
-    ].join("\n");
-  }
-
-  image(href: string | null, title: string | null, text: string): string {
+  private innerImage(
+    rendererThis: RendererThis,
+    href: string | null,
+    title: string | null,
+    text: string
+  ): string {
     assertIsNotNullish(href);
 
     if (href.startsWith("https:") || href.startsWith("http:")) {
-      return super.image(href, title, text);
+      return super.image.call(
+        rendererThis,
+        href,
+        title,
+        text
+      );
+
     }
 
     const resolvedImagePath = path.resolve(
@@ -115,7 +136,30 @@ class CustomRenderer extends marked.Renderer {
       sourcePath: resolvedImagePath,
       destinationPath: hashedFileName
     });
-    return super.image(transformedHref, title, text);
+    return super.image.call(
+      rendererThis,
+      transformedHref,
+      title,
+      text
+    );
+  }
+
+  heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6, raw: string, slugger: Slugger): string {
+    if (level === 1 && this.#renderContext.removeH1) {
+      return "";
+    }
+    const htmlContent = innerHTML(text);
+    const escapedText = escapeText(htmlContent);
+    const headerSlug = slugger.slug(escapedText);
+    const href = `#${headerSlug}`;
+
+    return [
+      "",
+      `<h${level} id="${headerSlug}">`,
+      `  ${text}`,
+      `  <a class="hash-link" title="${htmlContent}" href="${href}"></a>`,
+      `</h${level}>`
+    ].join("\n");
   }
 }
 

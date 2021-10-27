@@ -59,7 +59,7 @@ export class Store {
     }
 
     return this.values[value.name] as ValueState<Val>;
-  }
+  };
 
   public getValue: GetValue = this.getDependency as GetValue;
 

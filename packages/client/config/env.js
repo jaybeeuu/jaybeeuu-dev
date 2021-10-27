@@ -5,17 +5,17 @@ dotenv.config();
 const envVars = {
   "CLIENT_HOST_NAME": "0.0.0.0",
   "CLIENT_PORT": "3443",
-  "NODE_ENV": "devlopment"
+  "NODE_ENV": "development"
 };
+
+process.env.NODE_ENV = process.env.NODE_ENV ?? envVars.NODE_ENV;
 
 const env = {
   ...envVars,
-  ...Object.entries(process.env)
-    .filter(([key]) => Object.keys(envVars).includes(key))
-    .reduce((acc, [key, value]) => {
-      acc[key] = value;
-      return acc;
-    }, {})
+  ...Object.fromEntries(
+    Object.entries(process.env)
+      .filter(([key]) => Object.keys(envVars).includes(key))
+  )
 };
 
 const stringifiedEnv = {

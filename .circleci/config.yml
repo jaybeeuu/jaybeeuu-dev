@@ -4,7 +4,7 @@ src-dir: &src-dir ~/src
 
 base: &base
   docker:
-    - image: circleci/node:14.17.4
+    - image: circleci/node:14.18.1
       auth:
         username: $DOCKERHUB_USERNAME
         password: $DOCKERHUB_PASSWORD
@@ -19,7 +19,11 @@ jobs:
       - checkout:
           path: *src-dir
 
-      - run: sudo npm i -g pnpm@6.11.5
+      # Dep for image-webpack-loader
+      # - run: sudo apt-get install libpng16-dev
+      - run: sudo apt-get update && sudo apt-get install nasm
+
+      - run: sudo npm i -g pnpm@6.19.0
       - run: pnpm install
       - run: pnpm build
       - run: pnpm gen-certs
@@ -37,7 +41,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: sudo npm i -g pnpm@6.11.5
+      - run: sudo npm i -g pnpm@6.19.0
       - run: pnpm lint
 
   spellcheck:
@@ -46,7 +50,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: sudo npm i -g pnpm@6.11.5
+      - run: sudo npm i -g pnpm@6.19.0
       - run: pnpm spellcheck
 
   type-check:
@@ -55,7 +59,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: sudo npm i -g pnpm@6.11.5
+      - run: sudo npm i -g pnpm@6.19.0
       - run: pnpm type-check
 
   test:
@@ -64,13 +68,13 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: sudo npm i -g pnpm@6.11.5
+      - run: sudo npm i -g pnpm@6.19.0
       - run: pnpm test
 
   e2e:
     <<: *base
     docker:
-      - image: cypress/included:8.1.0
+      - image: cypress/included:8.6.0
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
@@ -80,7 +84,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: npm i -g pnpm@6.11.5 wait-on
+      - run: npm i -g pnpm@6.19.0 wait-on
       - run: pnpm e2e-ci
       - store_artifacts:
           path: ./packages/e2e/.screenshots

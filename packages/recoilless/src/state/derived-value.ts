@@ -26,6 +26,9 @@ export class DerivedValueState<Val> extends ValueState<Val> {
     removeFromStore: () => void,
     getDependency: GetDependency,
   ) {
+    // TODO: This speaks to a mistake. THe values should have a watchable value, not extend them.
+    // For example - derived value has no initial value (it can't)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     super(name, undefined as any, removeFromStore);
     this.getDependency = getDependency;
     this.derive = derive;
