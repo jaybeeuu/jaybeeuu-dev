@@ -1,6 +1,10 @@
 module.exports = {
   extends: ["./base.js"],
   env: {
+    browser: false,
     node: true
+  },
+  parserOptions: {
+    ecmaVersion: 2020
   }
 };

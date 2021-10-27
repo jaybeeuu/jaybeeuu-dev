@@ -1,3 +1,10 @@
+const jestRules = {
+  "jest/prefer-expect-assertions": "off",
+  "jest/valid-describe": "off",
+  "jest/valid-title": ["error", { "ignoreTypeOfDescribeName": false }],
+  "react/display-name": "off"
+};
+
 module.exports = {
   env: {
     es6: true
@@ -5,24 +12,30 @@ module.exports = {
   plugins: [
     "jest"
   ],
-  extends: [
-    "plugin:jest/all"
-  ],
-  rules: {
-    "jest/prefer-expect-assertions": "off",
-    "jest/valid-describe": "off",
-    "jest/valid-title": ["error", { "ignoreTypeOfDescribeName": false }]
-  },
   overrides: [
     {
       files: [
         "test/**/*.ts",
         "test/**/*.tsx",
+      ],
+      extends: [
+        "plugin:jest/all"
+      ],
+      rules: {
+        ...jestRules,
+        "jest/require-hook": "off",
+      }
+    },
+    {
+      files: [
         "**/*.spec.ts",
         "**/*.spec.tsx"
       ],
+      extends: [
+        "plugin:jest/all"
+      ],
       rules: {
-        "react/display-name": "off"
+        ...jestRules
       }
     }
   ]
