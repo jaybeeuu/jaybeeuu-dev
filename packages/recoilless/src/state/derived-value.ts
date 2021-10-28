@@ -55,7 +55,7 @@ export class DerivedValueState<Val> implements ValueState<Val> {
   #getDependencyValue<Dependency>(dependency: Value<Dependency>): Dependency {
     const dependencyState = this.#getDependency(dependency);
 
-    if(!this.#registeredDependencies.has(dependencyState)) {
+    if (!this.#registeredDependencies.has(dependencyState)) {
       this.#registeredDependencies.add(dependencyState);
       this.#dependencyUnsubscribes.push(
         dependencyState.subscribe(

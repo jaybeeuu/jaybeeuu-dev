@@ -6,7 +6,7 @@ export const assert = <Type>(
 ): TypeAssertion<Type> => (
   candidate
 ): asserts candidate is Type => {
-  if(!typePredicate(candidate)) {
+  if (!typePredicate(candidate)) {
     throw new TypeError(`Expected ${typeDescription} but got ${typeof candidate}.`);
   }
 };

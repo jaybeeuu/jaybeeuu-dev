@@ -1,5 +1,5 @@
 import path from "path";
-import { joinUrlPath, log } from"@jaybeeuu/utilities";
+import { joinUrlPath, log } from "@jaybeeuu/utilities";
 import {
   recurseDirectory,
   writeJsonFile,

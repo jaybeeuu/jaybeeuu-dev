@@ -22,6 +22,7 @@ export class PrimitiveValueState<Val>  implements SettableValueState<Val>{
     this.#value = new WatchableValue(initialValue, removeFromStore);
     this.#name = name;
   }
+
   public get current(): Val {
     return this.#value.current;
   }

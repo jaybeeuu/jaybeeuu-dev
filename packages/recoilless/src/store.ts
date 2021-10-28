@@ -41,27 +41,27 @@ export interface ActionContext {
 export type Action<Args extends unknown[]> = (context: ActionContext, ...args: Args) => void
 
 export class Store {
-  private readonly values: { [name:string]: ValueState<unknown> } = {};
+  readonly #values: { [name:string]: ValueState<unknown> } = {};
 
-  #removeValue = <Val>(value: Value<Val>): void => {
-    delete this.values[value.name];
+  readonly #removeValue = <Val>(value: Value<Val>): void => {
+    delete this.#values[value.name];
   };
 
-  #getDependency: GetDependency = <Val>(
+  readonly #getDependency: GetDependency = <Val>(
     value: Value<Val>
   ): ValueState<Val> => {
-    if(!(value.name in this.values)) {
-      this.values[value.name] = createValue(
+    if (!(value.name in this.#values)) {
+      this.#values[value.name] = createValue(
         value,
         () => this.#removeValue(value),
         this.#getDependency
       );
     }
 
-    return this.values[value.name] as ValueState<Val>;
+    return this.#values[value.name] as ValueState<Val>;
   };
 
-  public getValue: GetValue = this.#getDependency as GetValue;
+  public readonly getValue: GetValue = this.#getDependency as GetValue;
 
   public getActor<Args extends unknown[]>(
     action: Action<Args>
@@ -82,6 +82,6 @@ export class Store {
   }
 
   public hasValue<Val>(value: Value<Val>): boolean {
-    return value.name in this.values;
+    return value.name in this.#values;
   }
 }
