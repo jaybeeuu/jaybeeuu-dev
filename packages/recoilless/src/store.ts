@@ -14,18 +14,11 @@ import {
   PrimitiveValueState
 } from "./state/index";
 
-interface CreateValue {
-  <Val>(
-    value: Value<Val>,
-    removeFromStore: RemoveFromStore,
-    getDependency: GetDependency
-  ): ValueState<Val>;
-}
-const createValue: CreateValue = (
-  value,
+const createValue = <Val>(
+  value: Value<Val>,
   removeFromStore: RemoveFromStore,
   getDependency: GetDependency
-) => {
+): ValueState<Val> => {
   if (isDerivedValue(value)) {
     return new DerivedValueState(value, removeFromStore, getDependency);
   }
