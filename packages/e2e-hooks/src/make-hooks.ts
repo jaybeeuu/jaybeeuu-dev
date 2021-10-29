@@ -70,7 +70,7 @@ export const makeClassSelectors = <Hooks extends HookMap>(hooks: Hooks): ClassSe
     acc,
     [name, hook]
   ) => {
-    switch(typeof hook) {
+    switch (typeof hook) {
       case "function": {
         acc[name] = (identifier: string) => asClassSelector(hook(identifier));
         break;

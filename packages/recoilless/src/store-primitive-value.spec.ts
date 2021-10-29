@@ -40,7 +40,7 @@ describe("recoilless store", () => {
       const state = store.getValue(firstName);
       const newName = "{newName}";
 
-      state.setValue(newName);
+      state.set(newName);
 
       expect(state.current).toBe(newName);
     });
@@ -54,7 +54,7 @@ describe("recoilless store", () => {
       state.subscribe(secondListener);
       const newName = "{newName}";
 
-      state.setValue(newName);
+      state.set(newName);
 
       expect(firstListener).toHaveBeenCalledWith(newName);
       expect(secondListener).toHaveBeenCalledWith(newName);
@@ -68,7 +68,7 @@ describe("recoilless store", () => {
       state.subscribe(listener);
       const firstNameState = store.getValue(firstName);
 
-      firstNameState.setValue("Isaac");
+      firstNameState.set("Isaac");
 
       expect(listener).toHaveBeenCalledTimes(1);
     });
@@ -79,7 +79,7 @@ describe("recoilless store", () => {
       const listener = jest.fn();
       state.subscribe(listener);
 
-      state.setValue(firstName.initialValue);
+      state.set(firstName.initialValue);
 
       expect(listener).toHaveBeenCalledWith(firstName.initialValue);
     });
@@ -115,7 +115,7 @@ describe("recoilless store", () => {
       const state = store.getValue(firstName);
       const firstUnsubscribe = state.subscribe(() => {});
       const secondUnsubscribe = state.subscribe(() => {});
-      state.setValue("Isaac");
+      state.set("Isaac");
 
       firstUnsubscribe();
       secondUnsubscribe();

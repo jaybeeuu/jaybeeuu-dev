@@ -35,7 +35,7 @@ const usePrimitiveValue = <Val>(
   const valueState = useStore().getValue(value);
   useValueStateSubscription(valueState);
 
-  return [valueState.current, valueState.setValue];
+  return [valueState.current, valueState.set];
 };
 
 const useDerivedValue = <Val>(

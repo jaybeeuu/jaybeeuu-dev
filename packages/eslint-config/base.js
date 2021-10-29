@@ -18,7 +18,8 @@ module.exports = {
     "no-unused-vars": "off",
     "operator-linebreak": ["error", "before"],
     "quotes": ["error", "double"],
-    "semi": ["error", "always"]
+    "semi": ["error", "always"],
+    "keyword-spacing": ["error", { before: true, after: true }]
   },
   parserOptions: {
     sourceType: "module"
