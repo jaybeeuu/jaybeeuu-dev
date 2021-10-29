@@ -10,7 +10,7 @@
     "Site"
   ],
   "engines": {
-    "node": ">=14.18.1",
+    "node": ">=16.13.0",
     "pnpm": ">=6.19.0"
   },
   "repository": {
@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/jaybeeuu/jaybeeuu-dev/issues"
   },
-  "homepage": "https://github.com/jaybeeuu/jaybeeuu-devreadme",
+  "homepage": "https://github.com/jaybeeuu/jaybeeuu-dev#readme",
   "scripts": {
     "build": "pnpm run -r --stream build --filter {packages}",
     "build-changes": "pnpm run -r --stream build --filter {packages}[main]",
