@@ -23,8 +23,8 @@ jobs:
       # - run: sudo apt-get update && sudo apt-get install nasm libjpeg-dev
 
       - run: npm i -g pnpm@6.19.0
-      - run: pnpm install --filter \"!@jaybeeuu/e2e\"
-      - run: pnpm build
+      - run: pnpm install --filter "!@jaybeeuu/e2e"
+      - run: pnpm build --filter "!@jaybeeuu/e2e"
       - run: pnpm gen-certs
       - store_artifacts:
           path: ./packages/site/dist
@@ -84,6 +84,8 @@ jobs:
       - attach_workspace:
           at: *src-dir
       - run: npm i -g pnpm@6.19.0 wait-on
+      - run: pnpm install --filter @jaybeeuu/e2e
+      - run: pnpm build --filter @jaybeeuu/e2e
       - run: pnpm e2e-ci
       - store_artifacts:
           path: ./packages/e2e/.screenshots
