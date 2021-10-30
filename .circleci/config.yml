@@ -15,6 +15,9 @@ jobs:
   checkout-install-build:
     <<: *base
 
+    environment:
+      CYPRESS_INSTALL_BINARY: 0
+
     steps:
       - checkout:
           path: *src-dir
