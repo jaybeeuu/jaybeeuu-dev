@@ -19,8 +19,8 @@ jobs:
       - checkout:
           path: *src-dir
 
-      # Deps for image-webpack-loader
-      - run: sudo apt-get update && sudo apt-get install nasm libjpeg-dev
+      # # Deps for image-webpack-loader
+      # - run: sudo apt-get update && sudo apt-get install nasm libjpeg-dev
 
       - run: sudo npm i -g pnpm@6.19.0
       - run: pnpm install
