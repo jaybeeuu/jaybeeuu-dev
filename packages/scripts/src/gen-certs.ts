@@ -47,7 +47,9 @@ void (async () => {
       fs.promises.writeFile(keyFilePath, ssl.key),
       fs.promises.writeFile(caFilePath, ssl.ca)
     ]);
+    process.exit(0);
   } catch (err) {
     console.error(err);
+    process.exit(1);
   }
 })();
