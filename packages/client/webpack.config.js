@@ -290,10 +290,11 @@ module.exports = {
     isProduction ? new CleanWebpackPlugin() : null,
     !isProduction ? new webpack.HotModuleReplacementPlugin() : null,
     !isProduction ? new PreactRefreshPlugin() : null,
-    isProduction && !isWatching ? new BundleAnalyzerPlugin({
+    new BundleAnalyzerPlugin({
       analyzerMode: "static",
-      reportFilename: "bundle-report.html"
-    }) : null,
+      reportFilename: "bundle-report.html",
+      openAnalyzer: isProduction && !isWatching
+    }),
     isProduction ? new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css"
     }) : null

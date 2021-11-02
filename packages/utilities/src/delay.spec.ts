@@ -1,4 +1,4 @@
-import { echo, delay, clearableEcho } from "./delay";
+import { echo, delay } from "./delay";
 
 const setupMockTimers = (): void => {
   jest.useFakeTimers();
@@ -42,32 +42,42 @@ describe("echo", () => {
     const result = await promise;
     expect(result).toBe("{result}");
   });
-});
 
-describe("clearableEcho", () => {
-  it("returns a promise which resolves, after the delay, to the supplied value.", async () => {
+  it("resolves first in a race.", async () => {
     setupMockTimers();
-    const { promise } = clearableEcho("{result}", 100);
-    expect(promise).toBeInstanceOf(Promise);
+    const promise = echo("{value}", 100);
+    const timeout = new Promise((resolve) => setTimeout(
+      () => resolve("{NOT Value}"),
+      110
+    ));
 
-    jest.advanceTimersByTime(100);
+    jest.advanceTimersByTime(110);
 
-    const result = await promise;
-    expect(result).toBe("{result}");
+    const result = await Promise.race([
+      promise,
+      timeout
+    ]);
+
+    expect(result).toBe("{value}");
   });
 
-  it.todo("can i test the clear without mocking setTimeout?");
-
-  it("returns the result of the supplied factory after the given time.", async () => {
+  it("does not resolve first if the clear function it called.", async () => {
     setupMockTimers();
-    const factory = jest.fn<string, []>().mockReturnValue("{result}");
-    const { promise } = clearableEcho(factory, 100);
+    const promise = echo("{value}", 100);
+    const timeout = new Promise((resolve) => setTimeout(
+      () => resolve("{NOT value}"),
+      110
+    ));
 
-    jest.advanceTimersByTime(99);
-    expect(factory).not.toHaveBeenCalled();
-    jest.advanceTimersByTime(1);
+    promise.clear();
 
-    const result = await promise;
-    expect(result).toBe("{result}");
+    jest.advanceTimersByTime(110);
+
+    const result = await Promise.race([
+      promise,
+      timeout
+    ]);
+
+    expect(result).toBe("{NOT value}");
   });
 });
