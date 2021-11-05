@@ -2,8 +2,7 @@ import { log } from "@jaybeeuu/utilities";
 import type { VNode } from "preact";
 import { h } from "preact";
 import { useEffect } from "preact/hooks";
-
-import css from "./error.module.css";
+import { ErrorMessage } from "./error-message";
 
 export interface ErrorProps {
   error: Error | { [value: string]: Error };
@@ -26,23 +25,16 @@ const ErrorComponent = ({
   }, [error]);
 
   return (
-    <div>
-      <h1 className={css.heading}>Whoops! Sorry about this, something&apos;s gone wrong...</h1>
-      {
+    <ErrorMessage
+      heading={"Whoops! Sorry about this, something's gone wrong..."}
+      message={
         error instanceof Error
-          ? <p className={css.paragraph}>{error.message}</p>
-          : (
-            Object.entries(error).map(([source, err]) => (
-              <p
-                className={css.paragraph}
-                key={source}
-              >
-                {source}: {err.message}
-              </p>
-            ))
+          ? error.message
+          : Object.entries(error).map(
+            ([source, err]) => `${source}: ${err.message}`
           )
       }
-    </div>
+    />
   );
 };
 ErrorComponent.displayName = "Error";
