@@ -15,12 +15,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jaybeeuu/bickleywallace-site.git"
+    "url": "git+https://github.com/jaybeeuu/jaybeeuu-dev.git"
   },
   "bugs": {
-    "url": "https://github.com/jaybeeuu/bickleywallace-site/issues"
+    "url": "https://github.com/jaybeeuu/jaybeeuu-dev/issues"
   },
-  "homepage": "https://github.com/jaybeeuu/bickleywallace-site#readme",
+  "homepage": "https://github.com/jaybeeuu/jaybeeuu-devreadme",
   "scripts": {
     "build": "pnpm run -r --stream build --filter {packages}",
     "build-changes": "pnpm run -r --stream build --filter {packages}[main]",
