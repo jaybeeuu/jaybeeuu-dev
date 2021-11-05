@@ -1,7 +1,8 @@
-import type { ComponentType, FunctionComponent } from "preact";
-import type { MaybePromises } from "@jaybeeuu/preact-recoilless";
+import { h } from "preact";
+import type { ComponentType, FunctionComponent, VNode } from "preact";
+import type { FailedProps, MaybePromises } from "@jaybeeuu/preact-recoilless";
 import { withPromise as baseWithPromise } from "@jaybeeuu/preact-recoilless";
-import { FailedPromise } from "./failed-promise";
+import { Error } from "./error/index";
 import { LoadingSpinner } from "./loading-spinner";
 
 export const withPromise = <ContentProps extends object>(
@@ -11,6 +12,8 @@ export const withPromise = <ContentProps extends object>(
     Pending: LoadingSpinner,
     Slow: LoadingSpinner,
     Content,
-    Failed: FailedPromise
+    Failed: ({ error }: FailedProps): VNode<any> => {
+      return <Error error={error} message="Promise Rejected" />;
+    }
   });
 };
