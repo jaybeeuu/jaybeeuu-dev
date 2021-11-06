@@ -12,7 +12,7 @@ export const withPromise = <ContentProps extends object>(
     Pending: LoadingSpinner,
     Slow: LoadingSpinner,
     Content,
-    Failed: ({ error }: FailedProps): VNode<any> => {
+    Failed: ({ error }: FailedProps): VNode => {
       return <Error error={error} message="Promise Rejected" />;
     }
   });

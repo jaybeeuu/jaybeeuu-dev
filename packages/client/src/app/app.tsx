@@ -1,6 +1,6 @@
 import { main as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import classNames from "classnames";
-import type { FunctionComponent } from "preact";
+import type { VNode } from "preact";
 import { h } from "preact";
 import Router from "preact-router";
 import { FouOhFour } from "./404";
@@ -12,7 +12,7 @@ import { PostsRoute } from "./posts";
 import { TitleBar } from "./title-bar";
 import { Theme } from "./theme";
 
-export const App: FunctionComponent = () => (
+export const App = (): VNode => (
   <Theme className={css.componentRoot}>
     <Background className={classNames(css.main, e2eHooks.root)}>
       <TitleBar className={css.static} />

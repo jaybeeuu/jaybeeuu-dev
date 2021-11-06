@@ -27,7 +27,7 @@ export const useTitleBarRef = (): Ref<HTMLDivElement | null> => {
   return titleRef;
 };
 
-export const TitleBar = ({ className }: NavBarProps): VNode<any> => {
+export const TitleBar = ({ className }: NavBarProps): VNode => {
   const titleRef = useTitleBarRef();
   const style = useValue(titleBarStyle);
 

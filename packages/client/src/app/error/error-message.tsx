@@ -11,7 +11,7 @@ export interface ErrorComponentProps {
 export const ErrorMessage = ({
   heading,
   message
-}: ErrorComponentProps): VNode<any> => {
+}: ErrorComponentProps): VNode => {
   return (
     <div className={css.componentRoot} role="alert">
       <h1>{heading}</h1>

@@ -12,7 +12,7 @@ export interface ErrorProps {
 const ErrorComponent = ({
   error,
   message
-}: ErrorProps): VNode<any> => {
+}: ErrorProps): VNode => {
   useEffect(() => {
     log.error(message);
     if (error instanceof Error) {
