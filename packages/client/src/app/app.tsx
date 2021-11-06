@@ -1,4 +1,4 @@
-import type { FunctionComponent } from "preact";
+import type { VNode } from "preact";
 import { h } from "preact";
 import { main as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import classNames from "classnames";
@@ -12,7 +12,7 @@ import { HomeRoute } from "./home";
 
 import css from "./app.module.css";
 
-export const App: FunctionComponent = () => (
+export const App = (): VNode => (
   <Theme className={css.componentRoot}>
     <Background className={classNames(css.main, e2eHooks.root)}>
       <TitleBar className={css.static} />

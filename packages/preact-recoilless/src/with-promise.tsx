@@ -23,7 +23,7 @@ export const withPromise = <ContentProps extends object>(
 ): FunctionComponent<MaybePromises<ContentProps>> => {
   const FetchCompleteComponent = (
     ownProps: MaybePromises<ContentProps>
-  ): VNode<any> | null => {
+  ): VNode | null => {
     const promise = combinePromises(ownProps);
     switch (promise.status)
     {

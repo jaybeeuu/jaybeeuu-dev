@@ -5,7 +5,7 @@ import { useBackgrounds } from "../use-background";
 
 import css from "./home.module.css";
 
-const Home = (): VNode<any> => {
+const Home = (): VNode => {
   useBackgrounds({ dark: "bath", light: "englishBayPark" });
   return (
     <div className={css.componentRoot}>

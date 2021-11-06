@@ -4,7 +4,7 @@ import type { VNode } from "preact";
 import { h } from "preact";
 import { useEffect } from "preact/hooks";
 
-export const FailedPromise = ({ error }: FailedProps): VNode<any> => {
+export const FailedPromise = ({ error }: FailedProps): VNode => {
   useEffect(() => {
     log.error("Request failed");
     if (error instanceof Error) {

@@ -19,7 +19,7 @@ export interface NavBarProps {
   className?: string;
 }
 
-export const NavBar = ({ className }: NavBarProps): VNode<any> => {
+export const NavBar = ({ className }: NavBarProps): VNode => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
