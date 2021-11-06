@@ -50,7 +50,7 @@ const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
 });
 PostList.displayName = "PostList";
 
-export const PostsRoute = asRoute((): VNode<any> => {
+export const PostsRoute = asRoute((): VNode => {
   useBackgrounds({ dark: "greatNorthernHighway", light: "kew" });
   const manifest = useValue(postsManifest);
   return <PostList manifest={manifest} />;

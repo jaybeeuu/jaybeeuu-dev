@@ -63,11 +63,11 @@ export async function* monitorPromise<Value> (
 
   yield nextResult;
 
-  if (nextResult.status === "complete") {
-    return;
+  if (nextResult.status === "slow") {
+    yield await Promise.race([value, timeout]);
   }
-
-  yield await Promise.race([value, timeout]);
+  slowPromise.clear();
+  timeout.clear();
 }
 
 const isPromiseStateEntry = <Status extends PromiseStatus>(
