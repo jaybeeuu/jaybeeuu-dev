@@ -55,6 +55,12 @@ TS
 intellisense
 params
 heist
+Preact
+homegrown
+plugin
+marked.js.
+CircleCI
+Cloudflare
  - src/premature-optimisation.md
 v14.15.1
 Hrn
