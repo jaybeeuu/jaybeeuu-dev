@@ -1,0 +1,36 @@
+.component-root {
+  position: relative;
+}
+
+.content {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  z-index: var(--z-index-content);
+  position: relative;
+}
+
+.background-image {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: cover;
+  transition: var(--transition-theme), opacity var(--transition-theme-timing);
+}
+
+.appear,
+.enter,
+.exit.exit-active,
+.exit-done {
+  opacity: 0;
+}
+
+.appear.appear-active,
+.appear-done,
+.enter.enter-active,
+.enter-done,
+.exit {
+  opacity: 1;
+}

@@ -1,0 +1,119 @@
+:root {
+  --transition-simple: 100ms ease-in-out;
+  --transition-average: 200ms ease-in-out;
+  --transition-complex: 500ms ease-in-out;
+  --transition-slow: 1s ease-in-out;
+  --transition-theme-timing: var(--transition-complex);
+  --transition-theme: border-color var(--transition-slow), color var(--transition-theme-timing), fill var(--transition-theme-timing), background-color var(--transition-theme-timing);
+
+  --margin-content-width: 3.6rem;
+  --margin-content: var(--margin-content-width) auto var(--margin-content-width) auto;
+  --padding-content-width: 2.4rem;
+  --padding-content: var(--padding-content-width);
+  --border-radius-content: 0.5rem;
+  --width-content: 80rem;
+
+  --z-index-content: 10;
+}
+
+a {
+  color: var(--colour-text-main);
+  border-bottom: solid 0.2rem var(--colour-link-border);
+  text-decoration: none;
+  transition: var(--transition-theme), color var(--transition-average);
+}
+
+a:hover {
+  color: var(--colour-link-hover);
+}
+
+a.hash-link {
+  border-bottom: none;
+  line-height: 2.4rem;
+  padding: 1rem;
+  margin: 0 0.5rem;
+}
+
+a.hash-link svg {
+  fill: transparent;
+  transition: var(--transition-theme), fill var(--transition-average);
+}
+
+/* for-phone-only */
+@media only screen and (max-width: 599px) {
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-heading);
+  transition: var(--transition-theme);
+  border-bottom: 0.2rem solid var(--border-code-heading);
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+  color: var(--colour-link-border);
+  border-bottom: none;
+}
+
+h1 {
+  margin-top: 6rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 0.4rem solid var(--border-code-heading);
+}
+
+h2 {
+  margin-top: 5rem;
+}
+
+h3 {
+  margin-top: 4rem;
+}
+
+article {
+  font-size: 2rem;
+}
+
+article > :first-child {
+  margin-top: 0;
+}
+
+article > :last-child {
+  margin-bottom: 0;
+}
+
+article h1 code,
+article h2 code,
+article h3 code,
+article h4 code,
+article h5 code,
+article h6 code {
+  font-size: 0.9em;
+}
+
+article h1:hover a.hash-link svg,
+article h2:hover a.hash-link svg,
+article h3:hover a.hash-link svg,
+article h4:hover a.hash-link svg,
+article h5:hover a.hash-link svg,
+article h6:hover a.hash-link svg {
+  fill: var(--fill-icon);
+}
+
+article p {
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+/* for-phone-only */
+@media only screen and (max-width: 599px) {
+  a.hash-link svg {
+    fill: var(--fill-icon);
+  }
+
+  article {
+    font-size: 1.8rem;
+  }
+
+  ul, ol {
+    padding-left: 2.5rem;
+  }
+}
