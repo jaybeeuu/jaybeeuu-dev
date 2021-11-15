@@ -1,0 +1,41 @@
+.component-root {
+  margin: 0;
+  padding: var(--padding-content);
+  border-radius: var(--border-radius-content);
+  color: var(--colour-text-main);
+  max-width: var(--width-content);
+  background-color: var(--background-colour-content);
+  transition: var(--transition-theme);
+  margin: var(--margin-content);
+}
+
+.post {
+  display: block;
+  color: var(--colour-text-main);
+  border: 0.2rem solid transparent;
+  border-radius: var(--border-radius-content);
+  margin: 4rem 0;
+  padding: 1rem;
+  transition: var(--transition-theme), border-color var(--transition-average);
+}
+
+.post:hover {
+  color: var(--colour-text-main);
+  border-color: var(--colour-link-border);
+}
+
+.post:first-child {
+  margin-top: 0;
+}
+
+.post:last-child {
+  margin-bottom: 0;
+}
+
+.title {
+  margin: 0;
+}
+
+.date {
+  font-size: 1.5rem;
+}

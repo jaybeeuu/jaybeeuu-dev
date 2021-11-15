@@ -1,0 +1,39 @@
+
+.component-root {
+  cursor: pointer;
+  font-size: 3rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.track {
+  border: 0.1em solid var(--toggle-secondary);
+  background-color: var(--toggle-secondary);
+  transition: var(--transition-theme);
+  border-radius: 0.1em;
+  width: 1em;
+  position: relative;
+  height: 0;
+  margin: 0 0.15em;
+}
+
+.switch {
+  border: 0.2em solid var(--toggle-main);
+  background-color: var(--toggle-main);
+  border-radius: 50%;
+  position: absolute;
+  left: -0.1em;
+  top: -0.2em;
+  transition: var(--transition-theme), left var(--transition-average);
+}
+
+.right {
+  left: 0.7em;
+}
+
+.icon {
+  width: 0.8em;
+  height: 0.8em;
+}

@@ -28,8 +28,8 @@ jobs:
       - run: pnpm build
       - run: pnpm gen-certs
       - store_artifacts:
-          path: ./packages/client/dist
-          destination: client-dist
+          path: ./packages/site/dist
+          destination: site-dist
       - persist_to_workspace:
           root: *src-dir
           paths:
