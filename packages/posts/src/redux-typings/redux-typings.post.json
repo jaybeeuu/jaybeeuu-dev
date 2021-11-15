@@ -1,0 +1,5 @@
+{
+  "title": "Redux Slice Types",
+  "abstract": "After some time working with redux I have settled on a pattern for the types which I find works pretty well.",
+  "publish": true
+}
