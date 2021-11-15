@@ -19,7 +19,7 @@ pnpm install
 pnpm build
 pnpm test
 pnpm gen-certs
-pnpm start --filter @jaybeeuu/client
+pnpm start --filter @jaybeeuu/site
 ```
 
 That will install pnpm, install the dependencies for the packages, build and test the packages,
@@ -34,7 +34,7 @@ settings and extension recommendations to help setup and get going.
 
 | Name                                                                   | Path                          | Description                                                                                    |
 | ---------------------------------------------------------------------- | ----------------------------- | ---------------------------------------------------------------------------------------------- |
-| [@jaybeeuu/client](./packages/client#readme)                           | /packages/client              | The main [site](https://jaybeeuu.dev).                                                         |
+| [@jaybeeuu/site](./packages/site#readme)                           | /packages/site              | The main [site](https://jaybeeuu.dev).                                                         |
 | [@jaybeeuu/compost](./packages/compost#readme)                         | /packages/compost             | A CLI tool used to compile markdown posts into HTML.                                           |
 | [@jaybeeuu/e2e](./packages/e2e#readme)                                 | /packages/e2e                 | [Cypress](https://www.cypress.io/) end to end tests for the blog.                              |
 | [@jaybeeuu/e2e-hooks](./packages/e2e-hooks#readme)                     | /packages/e2e-hooks           | A collection of css classes used to hook into the application for e2e tets.                    |

@@ -1,5 +1,4 @@
 packages:
-  - 'packages/client'
   - 'packages/compost'
   - 'packages/e2e-hooks'
   - 'packages/e2e'
@@ -9,4 +8,5 @@ packages:
   - 'packages/preact-recoilless'
   - 'packages/recoilless'
   - 'packages/scripts'
+  - 'packages/site'
   - 'packages/utilities'

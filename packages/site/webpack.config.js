@@ -48,7 +48,7 @@ module.exports = {
       key: fs.readFileSync(paths.certs.key),
       cert: fs.readFileSync(paths.certs.certificate),
     },
-    site: {
+    client: {
       logging: "info",
       overlay: true,
       progress: true

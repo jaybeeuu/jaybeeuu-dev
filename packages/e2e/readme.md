@@ -1,6 +1,6 @@
 # e2e
 
-End to end tests which exercise [the client](../client/readme.md).
+End to end tests which exercise [the site](../site/readme.md).
 These are written using [cypress](https://www.cypress.io/),
 an e2e framework with a pretty fantastic devx.
 
@@ -8,7 +8,7 @@ an e2e framework with a pretty fantastic devx.
 
 You can run these tests with a simple command.
 
-First makesure you have the [client](../client/readme.md) running, then run the following:
+First makesure you have the [site](../site/readme.md) running, then run the following:
 
 ```sh
 pnpm e2e run
