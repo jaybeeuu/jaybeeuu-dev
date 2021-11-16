@@ -28,7 +28,7 @@ jobs:
       - run: npm i -g pnpm@6.19.0
       - run: pnpm install
       - run: pnpm build
-      - run: pnpm gen-certs
+      # - run: pnpm gen-certs
       - store_artifacts:
           path: ./packages/site/dist
           destination: site-dist
