@@ -87,7 +87,7 @@ jobs:
           at: *src-dir
       - run: npm i -g pnpm@6.19.0 wait-on
       - run: pnpm gen-certs
-      - run: pnpm e2e-ci
+      - run: pnpx wait-on --timeout=300000 https://$CIRCLE_BRANCH.jaybeeuu-dev.pages.dev/ && pnpm run e2e run
       - store_artifacts:
           path: ./packages/e2e/.screenshots
           destination: e2e-screenshots
