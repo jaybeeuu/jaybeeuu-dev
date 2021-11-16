@@ -8,135 +8,6 @@ importers:
     devDependencies:
       jest: 27.3.1
 
-  packages/site:
-    specifiers:
-      '@babel/core': ^7.15.8
-      '@babel/plugin-proposal-class-properties': ^7.14.5
-      '@babel/plugin-transform-react-jsx': ^7.14.9
-      '@babel/preset-env': ^7.15.8
-      '@babel/preset-typescript': ^7.15.0
-      '@jaybeeuu/compost': workspace:*
-      '@jaybeeuu/e2e-hooks': workspace:*
-      '@jaybeeuu/eslint-config': workspace:*
-      '@jaybeeuu/feed-webpack-plugin': workspace:*
-      '@jaybeeuu/posts': workspace:*
-      '@jaybeeuu/preact-recoilless': workspace:*
-      '@jaybeeuu/recoilless': workspace:*
-      '@jaybeeuu/scripts': workspace:*
-      '@jaybeeuu/utilities': workspace:*
-      '@prefresh/babel-plugin': ^0.4.1
-      '@prefresh/core': ^1.3.2
-      '@prefresh/webpack': ^3.3.2
-      '@types/case-sensitive-paths-webpack-plugin': ^2.1.6
-      '@types/copy-webpack-plugin': ^8.0.1
-      '@types/css-minimizer-webpack-plugin': ^3.0.2
-      '@types/mini-css-extract-plugin': ^2.4.0
-      '@types/node': ^14.17.27
-      '@types/terser-webpack-plugin': ^5.2.0
-      '@types/webpack-bundle-analyzer': ^4.4.1
-      '@typescript-eslint/eslint-plugin': ^5.1.0
-      '@typescript-eslint/parser': ^5.1.0
-      babel-loader: ^8.2.3
-      case-sensitive-paths-webpack-plugin: ^2.4.0
-      classnames: ^2.3.1
-      clean-webpack-plugin: ^4.0.0
-      copy-webpack-plugin: ^9.0.1
-      core-js: ^3.18.3
-      cross-env: ^7.0.3
-      css-loader: ^6.4.0
-      css-minimizer-webpack-plugin: ^3.1.1
-      css-modules-typescript-loader: ^4.0.1
-      dotenv: ^10.0.0
-      eslint: ^8.0.1
-      eslint-plugin-react: ^7.26.1
-      feed: ^4.2.2
-      file-loader: ^6.2.0
-      html-webpack-plugin: ^5.4.0
-      image-webpack-loader: ^8.0.1
-      mini-css-extract-plugin: ^2.4.3
-      preact: ^10.5.15
-      preact-router: ^3.2.1
-      preact-transitioning: ^1.3.1
-      prism-theme-night-owl: ^1.4.0
-      prism-theme-one-light-dark: ^1.0.4
-      prism-theme-vars: ^0.2.2
-      regenerator-runtime: ^0.13.9
-      sitemap-webpack-plugin: ^1.1.1
-      style-loader: ^3.3.1
-      svgo-loader: ^3.0.0
-      terser-webpack-plugin: ^5.2.4
-      ts-node: ^10.3.1
-      typescript: ^4.4.4
-      url-loader: ^4.1.1
-      webpack: ^5.59.1
-      webpack-bundle-analyzer: ^4.5.0
-      webpack-cli: ^4.9.1
-      webpack-dev-server: ^4.3.1
-    dependencies:
-      '@jaybeeuu/e2e-hooks': link:../e2e-hooks
-      '@jaybeeuu/posts': link:../posts
-      '@jaybeeuu/preact-recoilless': link:../preact-recoilless
-      '@jaybeeuu/recoilless': link:../recoilless
-      '@jaybeeuu/utilities': link:../utilities
-      '@typescript-eslint/parser': 5.1.0_eslint@8.0.1+typescript@4.4.4
-      classnames: 2.3.1
-      core-js: 3.18.3
-      preact: 10.5.15
-      preact-router: 3.2.1_preact@10.5.15
-      preact-transitioning: 1.3.1_preact@10.5.15
-      prism-theme-night-owl: 1.4.0
-      prism-theme-one-light-dark: 1.0.4
-      prism-theme-vars: 0.2.2
-      regenerator-runtime: 0.13.9
-    devDependencies:
-      '@babel/core': 7.15.8
-      '@babel/plugin-proposal-class-properties': 7.14.5_@babel+core@7.15.8
-      '@babel/plugin-transform-react-jsx': 7.14.9_@babel+core@7.15.8
-      '@babel/preset-env': 7.15.8_@babel+core@7.15.8
-      '@babel/preset-typescript': 7.15.0_@babel+core@7.15.8
-      '@jaybeeuu/compost': link:../compost
-      '@jaybeeuu/eslint-config': link:../eslint-config
-      '@jaybeeuu/feed-webpack-plugin': link:../feed-webpack-plugin
-      '@jaybeeuu/scripts': link:../scripts
-      '@prefresh/babel-plugin': 0.4.1
-      '@prefresh/core': 1.3.2_preact@10.5.15
-      '@prefresh/webpack': 3.3.2_01b48469999fc89b83232b42de71bd20
-      '@types/case-sensitive-paths-webpack-plugin': 2.1.6
-      '@types/copy-webpack-plugin': 8.0.1_webpack-cli@4.9.1
-      '@types/css-minimizer-webpack-plugin': 3.0.2_webpack-cli@4.9.1
-      '@types/mini-css-extract-plugin': 2.4.0_webpack-cli@4.9.1
-      '@types/node': 14.17.27
-      '@types/terser-webpack-plugin': 5.2.0_webpack@5.59.1
-      '@types/webpack-bundle-analyzer': 4.4.1_webpack-cli@4.9.1
-      '@typescript-eslint/eslint-plugin': 5.1.0_5c3e9dad3ab5199adbc8541e4d2d5a4f
-      babel-loader: 8.2.3_c444cf13e6678c57cc8afd2aacdd011d
-      case-sensitive-paths-webpack-plugin: 2.4.0
-      clean-webpack-plugin: 4.0.0_webpack@5.59.1
-      copy-webpack-plugin: 9.0.1_webpack@5.59.1
-      cross-env: 7.0.3
-      css-loader: 6.4.0_webpack@5.59.1
-      css-minimizer-webpack-plugin: 3.1.1_webpack@5.59.1
-      css-modules-typescript-loader: 4.0.1
-      dotenv: 10.0.0
-      eslint: 8.0.1
-      eslint-plugin-react: 7.26.1_eslint@8.0.1
-      feed: 4.2.2
-      file-loader: 6.2.0_webpack@5.59.1
-      html-webpack-plugin: 5.4.0_webpack@5.59.1
-      image-webpack-loader: 8.0.1
-      mini-css-extract-plugin: 2.4.3_webpack@5.59.1
-      sitemap-webpack-plugin: 1.1.1
-      style-loader: 3.3.1_webpack@5.59.1
-      svgo-loader: 3.0.0
-      terser-webpack-plugin: 5.2.4_webpack@5.59.1
-      ts-node: 10.3.1_64c822b0f0ef3f125d8d3681dcee4e14
-      typescript: 4.4.4
-      url-loader: 4.1.1_file-loader@6.2.0+webpack@5.59.1
-      webpack: 5.59.1_webpack-cli@4.9.1
-      webpack-bundle-analyzer: 4.5.0
-      webpack-cli: 4.9.1_44d56c10867e22fe396bf566bf3c863e
-      webpack-dev-server: 4.3.1_webpack-cli@4.9.1+webpack@5.59.1
-
   packages/compost:
     specifiers:
       '@jaybeeuu/eslint-config': workspace:*
@@ -205,7 +76,7 @@ importers:
       '@types/node': ^14.17.27
       '@typescript-eslint/eslint-plugin': ^5.1.0
       core-js: 3.18.3
-      cypress: 8.6.0
+      cypress: 9.0.0
       eslint: ^8.0.1
       eslint-plugin-cypress: ^2.12.1
       typescript: ^4.4.4
@@ -219,7 +90,7 @@ importers:
       '@types/node': 14.17.27
       '@typescript-eslint/eslint-plugin': 5.1.0_eslint@8.0.1+typescript@4.4.4
       core-js: 3.18.3
-      cypress: 8.6.0
+      cypress: 9.0.0
       eslint: 8.0.1
       eslint-plugin-cypress: 2.12.1_eslint@8.0.1
       typescript: 4.4.4
@@ -351,6 +222,135 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.1.0_eslint@8.0.1+typescript@4.4.4
       eslint: 8.0.1
       typescript: 4.4.4
+
+  packages/site:
+    specifiers:
+      '@babel/core': ^7.15.8
+      '@babel/plugin-proposal-class-properties': ^7.14.5
+      '@babel/plugin-transform-react-jsx': ^7.14.9
+      '@babel/preset-env': ^7.15.8
+      '@babel/preset-typescript': ^7.15.0
+      '@jaybeeuu/compost': workspace:*
+      '@jaybeeuu/e2e-hooks': workspace:*
+      '@jaybeeuu/eslint-config': workspace:*
+      '@jaybeeuu/feed-webpack-plugin': workspace:*
+      '@jaybeeuu/posts': workspace:*
+      '@jaybeeuu/preact-recoilless': workspace:*
+      '@jaybeeuu/recoilless': workspace:*
+      '@jaybeeuu/scripts': workspace:*
+      '@jaybeeuu/utilities': workspace:*
+      '@prefresh/babel-plugin': ^0.4.1
+      '@prefresh/core': ^1.3.2
+      '@prefresh/webpack': ^3.3.2
+      '@types/case-sensitive-paths-webpack-plugin': ^2.1.6
+      '@types/copy-webpack-plugin': ^8.0.1
+      '@types/css-minimizer-webpack-plugin': ^3.0.2
+      '@types/mini-css-extract-plugin': ^2.4.0
+      '@types/node': ^14.17.27
+      '@types/terser-webpack-plugin': ^5.2.0
+      '@types/webpack-bundle-analyzer': ^4.4.1
+      '@typescript-eslint/eslint-plugin': ^5.1.0
+      '@typescript-eslint/parser': ^5.1.0
+      babel-loader: ^8.2.3
+      case-sensitive-paths-webpack-plugin: ^2.4.0
+      classnames: ^2.3.1
+      clean-webpack-plugin: ^4.0.0
+      copy-webpack-plugin: ^9.0.1
+      core-js: ^3.18.3
+      cross-env: ^7.0.3
+      css-loader: ^6.4.0
+      css-minimizer-webpack-plugin: ^3.1.1
+      css-modules-typescript-loader: ^4.0.1
+      dotenv: ^10.0.0
+      eslint: ^8.0.1
+      eslint-plugin-react: ^7.26.1
+      feed: ^4.2.2
+      file-loader: ^6.2.0
+      html-webpack-plugin: ^5.4.0
+      image-webpack-loader: ^8.0.1
+      mini-css-extract-plugin: ^2.4.3
+      preact: ^10.5.15
+      preact-router: ^3.2.1
+      preact-transitioning: ^1.3.1
+      prism-theme-night-owl: ^1.4.0
+      prism-theme-one-light-dark: ^1.0.4
+      prism-theme-vars: ^0.2.2
+      regenerator-runtime: ^0.13.9
+      sitemap-webpack-plugin: ^1.1.1
+      style-loader: ^3.3.1
+      svgo-loader: ^3.0.0
+      terser-webpack-plugin: ^5.2.4
+      ts-node: ^10.3.1
+      typescript: ^4.4.4
+      url-loader: ^4.1.1
+      webpack: ^5.59.1
+      webpack-bundle-analyzer: ^4.5.0
+      webpack-cli: ^4.9.1
+      webpack-dev-server: ^4.3.1
+    dependencies:
+      '@jaybeeuu/e2e-hooks': link:../e2e-hooks
+      '@jaybeeuu/posts': link:../posts
+      '@jaybeeuu/preact-recoilless': link:../preact-recoilless
+      '@jaybeeuu/recoilless': link:../recoilless
+      '@jaybeeuu/utilities': link:../utilities
+      '@typescript-eslint/parser': 5.1.0_eslint@8.0.1+typescript@4.4.4
+      classnames: 2.3.1
+      core-js: 3.18.3
+      preact: 10.5.15
+      preact-router: 3.2.1_preact@10.5.15
+      preact-transitioning: 1.3.1_preact@10.5.15
+      prism-theme-night-owl: 1.4.0
+      prism-theme-one-light-dark: 1.0.4
+      prism-theme-vars: 0.2.2
+      regenerator-runtime: 0.13.9
+    devDependencies:
+      '@babel/core': 7.15.8
+      '@babel/plugin-proposal-class-properties': 7.14.5_@babel+core@7.15.8
+      '@babel/plugin-transform-react-jsx': 7.14.9_@babel+core@7.15.8
+      '@babel/preset-env': 7.15.8_@babel+core@7.15.8
+      '@babel/preset-typescript': 7.15.0_@babel+core@7.15.8
+      '@jaybeeuu/compost': link:../compost
+      '@jaybeeuu/eslint-config': link:../eslint-config
+      '@jaybeeuu/feed-webpack-plugin': link:../feed-webpack-plugin
+      '@jaybeeuu/scripts': link:../scripts
+      '@prefresh/babel-plugin': 0.4.1
+      '@prefresh/core': 1.3.2_preact@10.5.15
+      '@prefresh/webpack': 3.3.2_01b48469999fc89b83232b42de71bd20
+      '@types/case-sensitive-paths-webpack-plugin': 2.1.6
+      '@types/copy-webpack-plugin': 8.0.1_webpack-cli@4.9.1
+      '@types/css-minimizer-webpack-plugin': 3.0.2_webpack-cli@4.9.1
+      '@types/mini-css-extract-plugin': 2.4.0_webpack-cli@4.9.1
+      '@types/node': 14.17.27
+      '@types/terser-webpack-plugin': 5.2.0_webpack@5.59.1
+      '@types/webpack-bundle-analyzer': 4.4.1_webpack-cli@4.9.1
+      '@typescript-eslint/eslint-plugin': 5.1.0_5c3e9dad3ab5199adbc8541e4d2d5a4f
+      babel-loader: 8.2.3_c444cf13e6678c57cc8afd2aacdd011d
+      case-sensitive-paths-webpack-plugin: 2.4.0
+      clean-webpack-plugin: 4.0.0_webpack@5.59.1
+      copy-webpack-plugin: 9.0.1_webpack@5.59.1
+      cross-env: 7.0.3
+      css-loader: 6.4.0_webpack@5.59.1
+      css-minimizer-webpack-plugin: 3.1.1_webpack@5.59.1
+      css-modules-typescript-loader: 4.0.1
+      dotenv: 10.0.0
+      eslint: 8.0.1
+      eslint-plugin-react: 7.26.1_eslint@8.0.1
+      feed: 4.2.2
+      file-loader: 6.2.0_webpack@5.59.1
+      html-webpack-plugin: 5.4.0_webpack@5.59.1
+      image-webpack-loader: 8.0.1
+      mini-css-extract-plugin: 2.4.3_webpack@5.59.1
+      sitemap-webpack-plugin: 1.1.1
+      style-loader: 3.3.1_webpack@5.59.1
+      svgo-loader: 3.0.0
+      terser-webpack-plugin: 5.2.4_webpack@5.59.1
+      ts-node: 10.3.1_64c822b0f0ef3f125d8d3681dcee4e14
+      typescript: 4.4.4
+      url-loader: 4.1.1_file-loader@6.2.0+webpack@5.59.1
+      webpack: 5.59.1_webpack-cli@4.9.1
+      webpack-bundle-analyzer: 4.5.0
+      webpack-cli: 4.9.1_44d56c10867e22fe396bf566bf3c863e
+      webpack-dev-server: 4.3.1_webpack-cli@4.9.1+webpack@5.59.1
 
   packages/utilities:
     specifiers:
@@ -1491,8 +1491,8 @@ packages:
       '@cspotcode/source-map-consumer': 0.8.0
     dev: true
 
-  /@cypress/request/2.88.6:
-    resolution: {integrity: sha512-z0UxBE/+qaESAHY9p9sM2h8Y4XqtsbDCt0/DPOrqA/RZgKi4PkxdpXyK4wCCnSk1xHqWHZZAE+gV6aDAR6+caQ==}
+  /@cypress/request/2.88.7:
+    resolution: {integrity: sha512-FTULIP2rnDJvZDT9t6B4nSfYR40ue19tVmv3wUcY05R9/FPCoMl1nAPJkzWzBCo7ltVn5ThQTbxiMoGBN7k0ig==}
     engines: {node: '>= 6'}
     dependencies:
       aws-sign2: 0.7.0
@@ -2239,6 +2239,7 @@ packages:
 
   /@types/yauzl/2.9.2:
     resolution: {integrity: sha512-8uALY5LTvSuHgloDVUvWP3pIauILm+8/0pDMokuDYIoNsOkSwd5AiHBTSEJjKTDcZr5z8UpgOWZkxBF4iJftoA==}
+    requiresBuild: true
     dependencies:
       '@types/node': 16.11.2
     dev: false
@@ -3448,6 +3449,7 @@ packages:
   /colors/1.4.0:
     resolution: {integrity: sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==}
     engines: {node: '>=0.1.90'}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -3848,13 +3850,13 @@ packages:
     dev: true
     optional: true
 
-  /cypress/8.6.0:
-    resolution: {integrity: sha512-F7qEK/6Go5FsqTueR+0wEw2vOVKNgk5847Mys8vsWkzPoEKdxs+7N9Y1dit+zhaZCLtMPyrMwjfA53ZFy+lSww==}
+  /cypress/9.0.0:
+    resolution: {integrity: sha512-/93SWBZTw7BjFZ+I9S8SqkFYZx7VhedDjTtRBmXO0VzTeDbmxgK/snMJm/VFjrqk/caWbI+XY4Qr80myDMQvYg==}
     engines: {node: '>=12.0.0'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@cypress/request': 2.88.6
+      '@cypress/request': 2.88.7
       '@cypress/xvfb': 1.2.4
       '@types/node': 14.17.27
       '@types/sinonjs__fake-timers': 6.0.4
@@ -3889,7 +3891,6 @@ packages:
       ospath: 1.2.2
       pretty-bytes: 5.6.0
       proxy-from-env: 1.0.0
-      ramda: 0.27.1
       request-progress: 3.0.0
       supports-color: 8.1.1
       tmp: 0.2.1
@@ -5123,6 +5124,7 @@ packages:
     resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
+    requiresBuild: true
     optional: true
 
   /function-bind/1.1.1:
@@ -5676,6 +5678,7 @@ packages:
   /imagemin-gifsicle/7.0.0:
     resolution: {integrity: sha512-LaP38xhxAwS3W8PFh4y5iQ6feoTSF+dTAXFRUEYQWYst6Xd+9L/iPk34QGgK/VO/objmIlmq9TStGfVY2IcHIA==}
     engines: {node: '>=10'}
+    requiresBuild: true
     dependencies:
       execa: 1.0.0
       gifsicle: 5.2.1
@@ -5686,6 +5689,7 @@ packages:
   /imagemin-mozjpeg/9.0.0:
     resolution: {integrity: sha512-TwOjTzYqCFRgROTWpVSt5UTT0JeCuzF1jswPLKALDd89+PmrJ2PdMMYeDLYZ1fs9cTovI9GJd68mRSnuVt691w==}
     engines: {node: '>=10'}
+    requiresBuild: true
     dependencies:
       execa: 4.1.0
       is-jpg: 2.0.0
@@ -5696,6 +5700,7 @@ packages:
   /imagemin-optipng/8.0.0:
     resolution: {integrity: sha512-CUGfhfwqlPjAC0rm8Fy+R2DJDBGjzy2SkfyT09L8rasnF9jSoHFqJ1xxSZWK6HVPZBMhGPMxCTL70OgTHlLF5A==}
     engines: {node: '>=10'}
+    requiresBuild: true
     dependencies:
       exec-buffer: 3.2.0
       is-png: 2.0.0
@@ -5706,6 +5711,7 @@ packages:
   /imagemin-pngquant/9.0.2:
     resolution: {integrity: sha512-cj//bKo8+Frd/DM8l6Pg9pws1pnDUjgb7ae++sUX1kUVdv2nrngPykhiUOgFeE0LGY/LmUbCf4egCHC4YUcZSg==}
     engines: {node: '>=10'}
+    requiresBuild: true
     dependencies:
       execa: 4.1.0
       is-png: 2.0.0
@@ -5728,6 +5734,7 @@ packages:
   /imagemin-webp/6.0.0:
     resolution: {integrity: sha512-DmVCkI8H1csyqAExsk93LzC88gj2uKXaLLW5Ly+WYsvNx7xv5cJAlozXWIx9Z0kEQr9w98gphi5aP2b++iDH8g==}
     engines: {node: '>=10'}
+    requiresBuild: true
     dependencies:
       cwebp-bin: 5.1.0
       exec-buffer: 3.2.0
@@ -8545,10 +8552,6 @@ packages:
 
   /queue-microtask/1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
-
-  /ramda/0.27.1:
-    resolution: {integrity: sha512-PgIdVpn5y5Yns8vqb8FzBUEYn98V3xcPgawAkkgj0YJ0qDsnHCiNmZYfOGMgOvoB0eWFLpYbhxUR3mxfDIMvpw==}
-    dev: false
 
   /randombytes/2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
