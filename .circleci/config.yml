@@ -82,15 +82,17 @@ jobs:
 
     working_directory: *src-dir
 
+    environment:
 
     steps:
       - attach_workspace:
           at: *src-dir
       - run: npm i -g pnpm@6.19.0 wait-on
-      - run:
-          command: pnpx wait-on --timeout=300000 $CYPRESS_BASE_URL && pnpm run e2e run
-          environment:
-            CYPRESS_BASE_URL: https://$CIRCLE_BRANCH.jaybeeuu-dev.pages.dev/
+      - run: echo $CIRCLE_BRANCH
+      - run: export CYPRESS_BASE_URL=https://$CIRCLE_BRANCH.jaybeeuu-dev.pages.dev/
+      - run: echo $CYPRESS_BASE_URL
+      - run: curl $CYPRESS_BASE_URL
+      - run: pnpx wait-on --timeout=300000 $CYPRESS_BASE_URL && pnpm run e2e run
 
       - store_artifacts:
           path: ./packages/e2e/.screenshots
