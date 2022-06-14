@@ -3,12 +3,10 @@ import path from "path";
 import Prism from "prismjs";
 import loadLanguages from "prismjs/components/index.js";
 import type {
-  MarkedOptions,
   Renderer,
-  RendererThis,
   Slugger
 } from "marked";
-import marked from "marked";
+import { marked } from "marked";
 import type { IOptions } from "sanitize-html";
 import sanitizeHtml from "sanitize-html";
 import { assertIsNotNullish } from "@jaybeeuu/utilities";
@@ -51,22 +49,22 @@ class CustomRenderer extends marked.Renderer {
     return this.#assets;
   }
 
-  constructor(renderContext: RenderContext, markedOptions?: MarkedOptions) {
+  constructor(renderContext: RenderContext, markedOptions?: marked.MarkedOptions) {
     super(markedOptions);
     this.#renderContext = renderContext;
 
     const that: CustomRenderer = this;
 
-    this.code = function (this: RendererThis, ...args) {
+    this.code = function (this: marked.RendererThis, ...args) {
       return that.innerCode(this, ...args);
     };
-    this.image = function (this: RendererThis, ...args) {
+    this.image = function (this: marked.RendererThis, ...args) {
       return that.innerImage(this, ...args);
     };
   }
 
   private innerCode(
-    rendererThis: RendererThis,
+    rendererThis: marked.RendererThis,
     code: string,
     language: string | undefined,
     isEscaped: boolean
@@ -99,7 +97,7 @@ class CustomRenderer extends marked.Renderer {
   }
 
   private innerImage(
-    rendererThis: RendererThis,
+    rendererThis: marked.RendererThis,
     href: string | null,
     title: string | null,
     text: string

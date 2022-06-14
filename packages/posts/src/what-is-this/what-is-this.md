@@ -214,7 +214,7 @@ That's what is on the left of the `.` when we make our smoothie.
 So we get `"Banana Smoothie"` in the console. Yum.
 
 If you've worked with an OO language like C# or Java that is probably familiar.
-Less obvious is that this rule doesn't only _apply_ to classes.
+Less obvious is that this rule doesn't only *apply* to classes.
 It can mean anonymous objects:
 
 ```js

@@ -1,25 +1,16 @@
-const path = require("path");
-
-const makeTranformIgnorePatterns = () => {
-  const patternSeperator = path.sep === "\\" ? "\\\\" : "/";
-
-  return [
-    ["node_modules", "(?!(@bickley-wallace))"].join(patternSeperator)
-  ];
-};
-
-module.exports = {
+const config = {
   clearMocks: true,
   collectCoverageFrom: [
     "src/**/*",
-    "!**/*.d.ts",
+    "!**/*.d.ts"
   ],
-  // preset: "ts-jest",
   transform: {
-    "\\.[jt]sx?$": "ts-jest"
+    "^.+\\.(t|j)sx?$": ["ts-jest"]
   },
-  transformIgnorePatterns: makeTranformIgnorePatterns(),
-  testEnvironment: "node",
+  transformIgnorePatterns: [
+    "node_modules[\\\\/](?!(@jaybeeuu))"
+  ],
+  testEnvironment: "jsdom",
   testMatch: [
     "**/*.spec.ts",
     "**/*.spec.tsx"
@@ -30,5 +21,12 @@ module.exports = {
   ],
   watchPathIgnorePatterns: [
     "<rootDir>/lib"
-  ]
+  ],
+  moduleNameMapper: {
+    "(\\.\\.?/.*)\\.js$": "$1",
+    "^preact$": "<rootDir>/node_modules/preact/dist/preact.js",
+    "^preact/test-utils$": "<rootDir>/node_modules/preact/test-utils/dist/testUtils.js",
+    "^preact/([a-z-]*)$": "<rootDir>/node_modules/preact/$1/dist/$1.js"
+  }
 };
+export default config;

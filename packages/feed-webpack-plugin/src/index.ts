@@ -63,7 +63,7 @@ export class FeedWebpackPlugin {
       compilation.hooks.processAssets.tap(
         {
           name: pluginName,
-          stage: Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE,
+          stage: Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE
         },
         () => this.run(compilation)
       );

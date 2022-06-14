@@ -109,7 +109,7 @@ they are the classes that start `e2e__`.
 
 This is good.
 I am free to restyle components or elements or refactor the classes I apply without breaking my tests.
-Tests that don't need to change as a result of refactors bring more _value_.
+Tests that don't need to change as a result of refactors bring more *value*.
 
 The problem is that we need to have unique class names because CSS classes are globally scoped.
 For style classes I use CSS modules (which are fantastic) but that would be awkward as E2E hooks,
@@ -130,7 +130,7 @@ I don't want to get too deep but understanding BEM a little is important to grok
 BEM stands for Block Element Modifier.
 The idea is that your CSS classes will be made up of combinations of those three things.
 This does a couple of things.
-For one it's _a_ convention, so naming becomes more consistent.
+For one it's *a* convention, so naming becomes more consistent.
 Also it give you some concept of scoping and so helps to avoid the global CSS classes problem.
 
 Blocks are top level containers; "a stand alone entity that is meaningful on its own".

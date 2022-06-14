@@ -20,7 +20,7 @@ export const ImageLink = ({
   title,
   className,
   href,
-  imageSrc,
+  imageSrc
 }: ImageLinkProps): VNode => {
   const [currentTheme] = useValue(theme);
   const imageSrcToUse = typeof imageSrc === "string"

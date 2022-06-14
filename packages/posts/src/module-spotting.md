@@ -258,11 +258,11 @@ exports.e = 'An important message.';
 
 In this case any module importing `missing-module` will only be able to use `c` and `d`.
 `a`, `b` and (surprisingly?) `e`
-(remember `export` is the _starting_ value of `module.exports` but `module.exports` is what is actually used)
+(remember `export` is the *starting* value of `module.exports` but `module.exports` is what is actually used)
 were defined on an object which will have been tied up by the garbage collector...
 For this reason you should be cautious about mixing `module.exports` and `exports`
 and in general only use one or the other.
-You might also see this: `module.exports = exports = ...` which allows `exports` to be used _after_
+You might also see this: `module.exports = exports = ...` which allows `exports` to be used *after*
 `module.exports` has been set.
 Still anything written to it before will be lost.
 

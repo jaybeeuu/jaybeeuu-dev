@@ -1,6 +1,6 @@
 export type {
   TypePredicate
-} from "./base";
+} from "./base.js";
 export {
   hasBooleanProperty,
   hasFunctionProperty,
@@ -13,12 +13,12 @@ export {
   isObject,
   isRecord,
   or
-} from "./base";
+} from "./base.js";
 export type {
   TypeAssertion
-} from "./assertions";
+} from "./assertions.js";
 export {
   assert,
   assertIsString,
   assertIsNotNullish
-} from "./assertions";
+} from "./assertions.js";

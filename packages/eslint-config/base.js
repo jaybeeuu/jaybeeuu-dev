@@ -9,17 +9,18 @@ module.exports = {
     "eslint:recommended"
   ],
   rules: {
+    "comma-dangle": ["error", "never"],
     "eol-last": "error",
     "indent": ["error", 2, { SwitchCase: 1 }],
+    "keyword-spacing": ["error", { before: true, after: true }],
     "no-console": "error",
-    "no-multiple-empty-lines": ["error", { "max": 1 }],
+    "no-multiple-empty-lines": ["error", { max: 1 }],
     "no-shadow": "error",
     "no-trailing-spaces": "error",
     "no-unused-vars": "off",
     "operator-linebreak": ["error", "before"],
     "quotes": ["error", "double"],
-    "semi": ["error", "always"],
-    "keyword-spacing": ["error", { before: true, after: true }]
+    "semi": ["error", "always"]
   },
   parserOptions: {
     sourceType: "module"

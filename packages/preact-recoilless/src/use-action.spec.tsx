@@ -1,14 +1,14 @@
 /**
  * @jest-environment jsdom
  */
-import type { ComponentType} from "preact";
-import { h } from "preact";
 import type { Action, ActionContext, PrimitiveValue} from "@jaybeeuu/recoilless";
 import { Store } from "@jaybeeuu/recoilless";
 import { assertIsNotNullish } from "@jaybeeuu/utilities";
 import { renderHook } from "@testing-library/preact-hooks";
-import { StoreProvider } from "./store-provider";
-import { useAction } from "./use-action";
+import type { ComponentType} from "preact";
+import { h } from "preact";
+import { StoreProvider } from "./store-provider.js";
+import { useAction } from "./use-action.js";
 
 // eslint-disable-next-line react/display-name
 const Wrapper = (store?: Store): ComponentType => (

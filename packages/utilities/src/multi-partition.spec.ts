@@ -1,4 +1,4 @@
-import { multiPartition } from "./multi-partition";
+import { multiPartition } from "./multi-partition.js";
 
 describe("multi-partition", () => {
   it("partitions an array into 3 partitions.", () => {

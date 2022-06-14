@@ -1,5 +1,5 @@
 import {
-  getCompiledPostWithContent,
+  getCompiledPostWithContent
 } from "./helpers";
 
 describe("compile", () => {
@@ -128,7 +128,7 @@ describe("compile", () => {
           const post = await getCompiledPostWithContent({
             slug,
             content: [
-              `${"".padEnd(level, "#")} This is the first post`,
+              `${"".padEnd(level, "#")} This is the first post`
             ]
           }, { hrefRoot });
 

@@ -1,5 +1,5 @@
-import type { TypePredicate } from "./base";
-import { is } from "./base";
+import type { TypePredicate } from "./base.js";
+import { is } from "./base.js";
 
 export const assert = <Type>(
   typePredicate: TypePredicate<Type>, typeDescription: string

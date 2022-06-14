@@ -49,7 +49,7 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
         onScroll={(event) => {
           onScroll({
             x: event.currentTarget?.scrollLeft,
-            y: event.currentTarget?.scrollTop,
+            y: event.currentTarget?.scrollTop
           });
         }}
       >

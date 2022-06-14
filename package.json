@@ -22,20 +22,20 @@
   },
   "homepage": "https://github.com/jaybeeuu/jaybeeuu-devreadme",
   "scripts": {
-    "build": "pnpm run -r --stream build --filter {packages}",
-    "build-changes": "pnpm run -r --stream build --filter {packages}[main]",
+    "build": "pnpm run -r --stream build",
+    "build-changes": "pnpm run -r --stream --filter {packages/**}[main] build",
     "clean": "pnpx rimraf ./node_modules ./packages/*/node_modules & git clean -fdX",
-    "e2e": "pnpm run -r e2e --filter @jaybeeuu/e2e",
-    "e2e-ci": "pnpm run start --filter @jaybeeuu/site & pnpx wait-on --timeout=60000 https://localhost:3443/ && pnpm run e2e run",
-    "gen-certs": "pnpm run --no-bail --no-sort -r gen-certs --filter {packages}",
-    "lint": "pnpm run --no-bail --no-sort -r lint --filter {packages}",
-    "spellcheck": "pnpm run --no-bail --no-sort -r spellcheck --filter {packages}",
-    "start-all": "pnpm run -r start --no-sort --workspace-concurrency=Infinity --filter @jaybeeuu/site...",
+    "e2e": "pnpm run -r --filter @jaybeeuu/e2e e2e",
+    "e2e-ci": "pnpm run --filter @jaybeeuu/site start & pnpx wait-on --timeout=60000 https://localhost:3443/ && pnpm run e2e run",
+    "gen-certs": "pnpm run --no-bail --no-sort -r --filter {packages/**} gen-certs",
+    "lint": "pnpm run --no-bail --no-sort -r --filter {packages/**} lint",
+    "spellcheck": "pnpm run --no-bail --no-sort -r --filter {packages/**} spellcheck",
+    "start-all": "pnpm run -r --no-sort --workspace-concurrency=Infinity --filter @jaybeeuu/site... start",
     "test": "jest",
     "test-debug": "node --inspect node_modules/jest/bin/jest.js",
-    "type-check": "pnpm run --no-bail --no-sort -r type-check --filter {packages}"
+    "type-check": "pnpm run --no-bail --no-sort -r --filter {packages/**} type-check"
   },
   "devDependencies": {
-    "jest": "^27.3.1"
+    "jest": "^28.1.1"
   }
 }

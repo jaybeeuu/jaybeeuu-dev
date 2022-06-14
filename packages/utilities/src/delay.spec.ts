@@ -1,4 +1,4 @@
-import { echo, delay } from "./delay";
+import { echo, delay } from "./delay.js";
 
 const setupMockTimers = (): void => {
   jest.useFakeTimers();

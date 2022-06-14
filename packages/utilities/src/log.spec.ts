@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import "../../compost/test/custom-matchers";
-import * as log from "./log";
+import "../../compost/test/custom-matchers.js";
+import * as log from "./log.js";
 
 jest.spyOn(console, "log").mockImplementation(() => {});
 jest.spyOn(console, "error").mockImplementation(() => {});

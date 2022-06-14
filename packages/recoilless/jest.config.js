@@ -4,11 +4,8 @@ module.exports = {
     "src/**/*",
     "!**/*.d.ts"
   ],
-  preset: "ts-jest",
-  globals: {
-    "ts-jest": {
-      packageJson: "package.json",
-    },
+  transform: {
+    "^.+\\.(t|j)sx?$": ["ts-jest"]
   },
   testEnvironment: "node",
   testMatch: [

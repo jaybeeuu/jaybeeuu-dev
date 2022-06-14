@@ -1,8 +1,8 @@
-export { asError } from "./as-error";
-export { debounce } from "./debounce";
-export * from "./type-guards/index";
-export { getErrorMessage } from "./log";
-export * as log from "./log";
-export { delay, echo } from "./delay";
-export { joinUrlPath } from "./join-url-path";
-export { multiPartition } from "./multi-partition";
+export { asError } from "./as-error.js";
+export { debounce } from "./debounce.js";
+export * from "./type-guards/index.js";
+export { getErrorMessage } from "./log.js";
+export * as log from "./log.js";
+export { delay, echo } from "./delay.js";
+export { joinUrlPath } from "./join-url-path.js";
+export { multiPartition } from "./multi-partition.js";

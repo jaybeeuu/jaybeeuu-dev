@@ -28,10 +28,10 @@ export const postList = {
 
 const themeBlock = makeHookBlock("theme");
 export const theme = {
-  root: themeBlock.element("root"),
+  root: themeBlock.element("root")
 };
 
 const mainBlock = makeHookBlock("main");
 export const main = {
-  root: mainBlock.element("root"),
+  root: mainBlock.element("root")
 };

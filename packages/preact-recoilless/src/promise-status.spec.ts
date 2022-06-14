@@ -1,8 +1,8 @@
 import { asError, echo } from "@jaybeeuu/utilities";
-import { advanceByTimeThenAwait } from "../test/async-helpers";
-import { setupMockTimers } from "../test/time";
-import type { PromiseState} from "./promise-status";
-import { monitorPromise, combinePromises } from "./promise-status";
+import { advanceByTimeThenAwait } from "../test/async-helpers.js";
+import { setupMockTimers } from "../test/time.js";
+import type { PromiseState} from "./promise-status.js";
+import { monitorPromise, combinePromises } from "./promise-status.js";
 
 const getIterator = <Value>(promise: Promise<Value>): AsyncIterator<PromiseState<Value>> => {
   const request = monitorPromise(promise);
