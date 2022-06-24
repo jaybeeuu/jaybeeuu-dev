@@ -50,13 +50,23 @@ const transformManifest = async () => {
   const original = await readManifest();
 
   /** @type {PostManifest} */
-  const transformedManifest = Object.entries(original).reduce((transformed, [slug, meta]) => {
-    transformed[slug] = {
-      ...meta,
-      ...manifestTransformations[slug]
-    };
-    return transformed;
-  }, {});
+  const transformedManifest = Object.entries(original).reduce(
+    /**
+     *
+     * @param {PostManifest} transformed
+     * @param {[string, PostMetaData]} param1
+     * @returns
+     */
+    (transformed, [slug, meta]) => {
+      transformed[slug] = {
+        ...meta,
+        // @ts-expect-error
+        ...manifestTransformations[slug]
+      };
+      return transformed;
+    },
+    {}
+  );
 
   await writeManifest(transformedManifest);
 };

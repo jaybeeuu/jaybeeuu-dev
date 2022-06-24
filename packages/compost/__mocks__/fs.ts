@@ -617,13 +617,14 @@ mocked(fs.promises.rm).mockImplementation(async (path, options) => {
   delete parentDir.entries[fileOrDirName];
 });
 
-type ReaddirOptions
-  = fsModule.BaseEncodingOptions & { withFileTypes?: false }
-  | fsModule.BaseEncodingOptions & { withFileTypes: true }
+type ReaddirOptions =
+  | {
+    encoding: BufferEncoding | null;
+    withFileTypes?: false | undefined;
+  }
   | BufferEncoding
-  | null
-  | { encoding: "buffer"; withFileTypes?: false }
-  | "buffer";
+  | undefined
+  | null;
 
 type Readdir = (
   path: fsModule.PathLike,

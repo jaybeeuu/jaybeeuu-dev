@@ -5,5 +5,5 @@ export {
   Action,
   ActionContext,
   SetValue,
-  Store,
+  Store
 } from "./store";

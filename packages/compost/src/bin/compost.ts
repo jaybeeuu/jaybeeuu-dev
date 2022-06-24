@@ -120,7 +120,7 @@ yargs.command(
     const options: UpdateOptions = {
       ...rawOptions,
       oldManifestLocators: rawOptions.oldManifestLocator ?? [],
-      additionalWatchPaths: rawOptions.additionalWatchPaths ?? [],
+      additionalWatchPaths: rawOptions.additionalWatchPaths ?? []
     };
 
     if (options.watch) {

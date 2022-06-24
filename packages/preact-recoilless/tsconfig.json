@@ -4,6 +4,7 @@
     "outDir": "lib",
     "jsx": "react",
     "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
     "types": ["jest"]
   },
   "include": [

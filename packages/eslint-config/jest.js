@@ -16,14 +16,14 @@ module.exports = {
     {
       files: [
         "test/**/*.ts",
-        "test/**/*.tsx",
+        "test/**/*.tsx"
       ],
       extends: [
         "plugin:jest/all"
       ],
       rules: {
         ...jestRules,
-        "jest/require-hook": "off",
+        "jest/require-hook": "off"
       }
     },
     {

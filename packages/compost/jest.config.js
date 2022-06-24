@@ -5,7 +5,9 @@ const config = {
     "src/**",
     "!src/bin/**"
   ],
-  preset: "ts-jest",
+  transform: {
+    "^.+\\.(t|j)sx?$": ["ts-jest"]
+  },
   testMatch: [
     "**/*.spec.ts"
   ],
@@ -20,7 +22,7 @@ const config = {
   moduleNameMapper: {
     "node-fetch": "<rootDir>/test/mocks/node-fetch.ts",
     "(\\.\\.?/.*)\\.js$": "$1"
-  },
+  }
 };
 
 export default config;

@@ -10,7 +10,6 @@ import {
 import { advanceTo } from "jest-date-mock";
 import type { Response } from "node-fetch";
 import fetch from "node-fetch";
-import { mocked } from "ts-jest/utils";
 import type { PostMetaData } from "../../src/index";
 import type { PostMetaFileData } from "../../src/posts/src/metafile";
 
@@ -285,7 +284,7 @@ describe("manifest", () => {
     await compilePosts({ oldManifestLocators: [oldManifestLocator] });
     const manifest = await getPostManifest();
 
-    mocked(fetch).mockReturnValue(Promise.resolve<Response>({
+    jest.mocked(fetch).mockReturnValue(Promise.resolve<Response>({
       json: (): Promise<unknown> => {
         return Promise.resolve(manifest);
       }
@@ -329,7 +328,7 @@ describe("manifest", () => {
     await compilePosts({ oldManifestLocators });
     const manifest = await getPostManifest();
 
-    mocked(fetch).mockReturnValue(Promise.resolve<Response>({
+    jest.mocked(fetch).mockReturnValue(Promise.resolve<Response>({
       json: (): Promise<unknown> => {
         return Promise.resolve(manifest);
       }
@@ -373,7 +372,7 @@ describe("manifest", () => {
     await compilePosts({ oldManifestLocators });
     const manifest = await getPostManifest();
 
-    mocked(fetch)
+    jest.mocked(fetch)
       .mockReturnValueOnce(Promise.reject(new Error("Whoops")))
       .mockReturnValue(Promise.resolve<Response>({
         json: (): Promise<unknown> => {

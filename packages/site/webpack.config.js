@@ -1,6 +1,4 @@
 // @ts-check
-
-const PreactRefreshPlugin = require("@prefresh/webpack");
 const { FeedWebpackPlugin } = require("@jaybeeuu/feed-webpack-plugin");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
@@ -43,10 +41,9 @@ module.exports = {
     compress: true,
     historyApiFallback: true,
     host: env.CLIENT_HOST_NAME,
-    hot: true,
     https: {
       key: fs.readFileSync(paths.certs.key),
-      cert: fs.readFileSync(paths.certs.certificate),
+      cert: fs.readFileSync(paths.certs.certificate)
     },
     client: {
       logging: "info",
@@ -62,7 +59,7 @@ module.exports = {
     }
   } : undefined,
   entry: [
-    paths.srcIndex,
+    paths.srcIndex
   ],
   output: {
     assetModuleFilename: "static/[name].[contenthash][ext]",
@@ -73,7 +70,7 @@ module.exports = {
     publicPath: "/"
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".jsx"],
+    extensions: [".ts", ".tsx", ".js", ".jsx"]
   },
   module: {
     strictExportPresence: true,
@@ -82,7 +79,7 @@ module.exports = {
         oneOf: [
           {
             test: /\.(ts|tsx|js|jsx)$/,
-            include: [paths.src, /@jaybeeuu\/.*/],
+            include: [paths.src],
             use: "babel-loader"
           },
           {
@@ -137,14 +134,14 @@ module.exports = {
                     quality: 75
                   },
                   optipng: {
-                    enabled: false,
+                    enabled: false
                   },
                   pngquant: {
                     quality: [0.65, 0.90],
                     speed: 4
                   },
                   gifsicle: {
-                    interlaced: false,
+                    interlaced: false
                   },
                   webp: {
                     quality: 75
@@ -157,7 +154,7 @@ module.exports = {
             exclude: [/\.(ts|tsx|js|jsx)$/, /\.css$/, /\.html$/, /\.json$/, /\.(bmp|gif|jpe?g|png|svg)$/],
             loader: "file-loader",
             options: {
-              name: "static/[name].[contenthash].[ext]",
+              name: "static/[name].[contenthash].[ext]"
             }
           }
         ]
@@ -180,13 +177,13 @@ module.exports = {
           test: /[\\/]node_modules[\\/]/,
           chunks: "initial",
           filename: "slow-vendors.[contenthash].js",
-          priority: -10,
+          priority: -10
         },
         fastVendors: {
           test: /[\\/]lib[\\/]/,
           chunks: "initial",
           filename: "fast-vendors.[contenthash].js",
-          priority: -20,
+          priority: -20
         },
         default: {
           filename: "[name].[contenthash].js",
@@ -225,7 +222,7 @@ module.exports = {
         {
           path: "/",
           priority: 0.3,
-          changefreq: "yearly",
+          changefreq: "yearly"
         },
         {
           path: `/${postsRoot}`,
@@ -241,7 +238,7 @@ module.exports = {
             changefreq: "monthly"
           };
         })
-      ],
+      ]
     }),
     new FeedWebpackPlugin({
       atomFileName: "feeds/atom.xml",
@@ -288,8 +285,6 @@ module.exports = {
     new webpack.DefinePlugin(stringifiedEnv),
     new CaseSensitivePathsPlugin(),
     isProduction ? new CleanWebpackPlugin() : null,
-    !isProduction ? new webpack.HotModuleReplacementPlugin() : null,
-    !isProduction ? new PreactRefreshPlugin() : null,
     new BundleAnalyzerPlugin({
       analyzerMode: "static",
       reportFilename: "bundle-report.html",

@@ -13,10 +13,10 @@ import type {
 import {
   isPrimitiveValue
 } from "@jaybeeuu/recoilless";
-import { useAsyncGenerator } from "./async-hooks";
-import type { PromiseState } from "./promise-status";
-import { monitorPromise } from "./promise-status";
-import { useStore } from "./store-provider";
+import { useAsyncGenerator } from "./async-hooks.js";
+import type { PromiseState } from "./promise-status.js";
+import { monitorPromise } from "./promise-status.js";
+import { useStore } from "./store-provider.js";
 
 const useValueStateSubscription = <Val>(
   valueState: ValueState<Val>

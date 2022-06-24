@@ -6,10 +6,10 @@ import { h } from "preact";
 import type { DerivedValue} from "@jaybeeuu/recoilless";
 import { Store } from "@jaybeeuu/recoilless";
 import { act, renderHook } from "@testing-library/preact-hooks";
-import { StoreProvider } from "./store-provider";
-import { useValue } from "./use-value";
+import { StoreProvider } from "./store-provider.js";
+import { useValue } from "./use-value.js";
 import { echo } from "@jaybeeuu/utilities";
-import { setupMockTimers } from "../test/time";
+import { setupMockTimers } from "../test/time.js";
 
 // eslint-disable-next-line react/display-name
 const Wrapper = (store?: Store): ComponentType => (
