@@ -5,6 +5,7 @@
   "private": true,
   "license": "UNLICENSED",
   "description": "CLI tooks used wihin this repo.",
+  "type": "module",
   "keywords": [
     "CLI"
   ],
@@ -18,12 +19,14 @@
   "exports": {},
   "scripts": {
     "build": "tsc --pretty",
+    "watch": "tsc --pretty --watch",
     "lint": "eslint --ext .js,.ts --format codeframe .",
     "type-check": "tsc --noEmit --pretty"
   },
   "devDependencies": {
     "@jaybeeuu/eslint-config": "workspace:*",
     "@types/node": "^16.0.0",
+    "@types/yargs": "^17.0.10",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "eslint": "^8.18.0",
@@ -31,7 +34,6 @@
   },
   "dependencies": {
     "devcert": "^1.2.2",
-    "getopts": "^2.3.0",
-    "jsdom": "^20.0.0"
+    "yargs": "^17.5.1"
   }
 }

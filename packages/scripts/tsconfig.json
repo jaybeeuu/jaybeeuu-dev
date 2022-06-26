@@ -1,9 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "CommonJS",
+    "module": "ESNext",
     "outDir": "lib",
-    "types": ["node"]
+    "types": ["node"],
+    "esModuleInterop": true
   },
   "include": [
     "src"

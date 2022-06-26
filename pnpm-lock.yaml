@@ -232,20 +232,20 @@ importers:
     specifiers:
       '@jaybeeuu/eslint-config': workspace:*
       '@types/node': ^16.0.0
+      '@types/yargs': ^17.0.10
       '@typescript-eslint/eslint-plugin': ^5.29.0
       '@typescript-eslint/parser': ^5.29.0
       devcert: ^1.2.2
       eslint: ^8.18.0
-      getopts: ^2.3.0
-      jsdom: ^20.0.0
       typescript: ^4.7.4
+      yargs: ^17.5.1
     dependencies:
       devcert: 1.2.2
-      getopts: 2.3.0
-      jsdom: 20.0.0
+      yargs: 17.5.1
     devDependencies:
       '@jaybeeuu/eslint-config': link:../eslint-config
       '@types/node': 16.11.41
+      '@types/yargs': 17.0.10
       '@typescript-eslint/eslint-plugin': 5.29.0_qqmbkyiaixvppdwswpytuf2hgm
       '@typescript-eslint/parser': 5.29.0_b5e7v2qnwxfo6hmiq56u52mz3e
       eslint: 8.18.0
@@ -5259,10 +5259,6 @@ packages:
       call-bind: 1.0.2
       get-intrinsic: 1.1.2
     dev: true
-
-  /getopts/2.3.0:
-    resolution: {integrity: sha512-5eDf9fuSXwxBL6q5HX+dhDj+dslFGWzU5thZ9kNKUkcPtaPdatmUFKwHFrLb/uf/WpA4BHET+AX3Scl56cAjpA==}
-    dev: false
 
   /getos/3.2.1:
     resolution: {integrity: sha512-U56CfOK17OKgTVqozZjUKNdkfEv6jk5WISBJ8SHoagjE6L69zOwl3Z+O8myjY9MEW3i2HPWQBt/LTbCgcC973Q==}
