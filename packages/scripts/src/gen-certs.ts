@@ -1,35 +1,38 @@
+import yargs from "yargs/yargs";
 import path from "path";
 import * as fs from "fs";
 import { certificateFor } from "devcert";
-import getopts from "getopts";
 
-interface ProcessOptions {
-  domain: string;
+interface PathOptions {
   directory: string;
   certName: string;
   keyName: string;
   caName: string;
 }
 
-const processOptions = getopts(process.argv.slice(2), {
-  default: {
-    domain: "localhost",
-    directory: "./certs",
-    certName: "cert.crt",
-    keyName: "key.key",
-    caName: "ca.pem"
-  }
-}) as unknown as ProcessOptions;
+interface RunOptions extends PathOptions {
+  domain: string;
+}
 
-const resolveToOutDir = (...pathSegments: string[]): string => path.resolve(
-  process.cwd(),
-  processOptions.directory,
-  ...pathSegments
-);
+interface Paths {
+  certFilePath: string;
+  keyFilePath: string;
+  caFilePath: string;
+}
 
-const certFilePath = resolveToOutDir(processOptions.certName);
-const keyFilePath = resolveToOutDir(processOptions.keyName);
-const caFilePath = resolveToOutDir(processOptions.caName);
+const getPaths = (options: PathOptions): Paths => {
+  const resolveToOutDir = (...pathSegments: string[]): string => path.resolve(
+    process.cwd(),
+    options.directory,
+    ...pathSegments
+  );
+
+  return {
+    certFilePath: resolveToOutDir(options.certName),
+    keyFilePath: resolveToOutDir(options.keyName),
+    caFilePath: resolveToOutDir(options.caName)
+  };
+};
 
 const writePem = async (filePath: string, buffer: Buffer): Promise<void> => {
   const wholeCert = buffer.toString();
@@ -38,17 +41,55 @@ const writePem = async (filePath: string, buffer: Buffer): Promise<void> => {
   await fs.promises.writeFile(filePath, pemCert);
 };
 
-void (async () => {
-  try {
-    const ssl = await certificateFor(processOptions.domain, { getCaBuffer: true });
-    await fs.promises.mkdir(processOptions.directory, { recursive: true });
-    await Promise.all([
-      writePem(certFilePath, ssl.cert),
-      fs.promises.writeFile(keyFilePath, ssl.key),
-      fs.promises.writeFile(caFilePath, ssl.ca)
-    ]);
-  } catch (err) {
-    console.error(err);
-    process.exit(1);
-  }
-})();
+const run = async (options: RunOptions): Promise<void> => {
+  const ssl = await certificateFor(options.domain, { getCaBuffer: true });
+  await fs.promises.mkdir(options.directory, { recursive: true });
+  const paths = getPaths(options);
+  await Promise.all([
+    writePem(paths.certFilePath, ssl.cert),
+    fs.promises.writeFile(paths.keyFilePath, ssl.key),
+    fs.promises.writeFile(paths.caFilePath, ssl.ca)
+  ]);
+
+  console.log([
+    "Certificates generated at:",
+    "",
+    paths.caFilePath,
+    paths.certFilePath,
+    paths.keyFilePath
+  ].join("\n"));
+};
+
+export const main = (): void => {
+  void yargs()
+    .command("$0", "Generate SSL certificates.", {
+      domain: {
+        default: "localhost",
+        alias: "d",
+        type: "string"
+      },
+      directory: {
+        default: "./certs",
+        alias: "o",
+        type: "string"
+      },
+      certName: {
+        default: "cert.crt",
+        alias: "crt",
+        type: "string"
+      },
+      keyName: {
+        default: "key.key",
+        alias: "k",
+        type: "string"
+      },
+      caName: {
+        default: "ca.pem",
+        alias: "ca",
+        type: "string"
+      }
+    }, run)
+    .demandCommand()
+    .help()
+    .argv;
+};

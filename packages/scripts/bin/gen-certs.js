@@ -1,1 +1,3 @@
-require("../lib/gen-certs");
+import { main } from "../lib/gen-certs.js";
+
+main();
