@@ -88,14 +88,7 @@ export const main = (): void => {
         alias: "ca",
         type: "string"
       }
-    }, async (options) => {
-      try {
-        await run(options);
-      } catch (err) {
-        console.error(err);
-        process.exit(1);
-      }
-    })
+    }, run)
     .demandCommand()
     .help()
     .argv;
