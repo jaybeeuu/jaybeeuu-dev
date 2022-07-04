@@ -93,6 +93,22 @@ jobs:
           path: ./packages/e2e/.videos
           destination: e2e-videos
 
+  version:
+    <<: *base
+    when:
+      condition:
+        - equals: [main, << pipeline.git.branch >>]
+        - equals: [<< pipeline.git.tag >>, false]
+    steps:
+      - attach_workspace:
+          at: *src-dir
+      - run: npm i -g pnpm@7.0.0 wait-on
+      - run: git checkout -b next
+      - run: pnpm changeset version
+      - run: git add .
+      - run: git commit -m "Version packages"
+      - run: git push --force --set-upstream origin next
+
 workflows:
   version: 2
 
@@ -115,3 +131,10 @@ workflows:
       - e2e:
           requires:
             - checkout-install-build
+      - version:
+          requires:
+            - lint
+            - spellcheck
+            - type-check
+            - test
+            - e2e
