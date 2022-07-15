@@ -1,6 +1,6 @@
 {
   "name": "@jaybeeuu/e2e",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
   "description": "E2E tests for my blog.",

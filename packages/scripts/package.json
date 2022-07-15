@@ -1,6 +1,6 @@
 {
   "name": "@jaybeeuu/scripts",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "private": true,
   "license": "UNLICENSED",
@@ -33,7 +33,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@jaybeeuu/scripts": "workspace:^0.0.0",
+    "@jaybeeuu/scripts": "workspace:^0.1.0",
     "@octokit/rest": "^19.0.3",
     "chalk": "^5.0.1",
     "devcert": "^1.2.2",
