@@ -34,10 +34,10 @@ settings and extension recommendations to help setup and get going.
 
 | Name                                                                   | Path                          | Description                                                                                    |
 | ---------------------------------------------------------------------- | ----------------------------- | ---------------------------------------------------------------------------------------------- |
-| [@jaybeeuu/site](./packages/site#readme)                           | /packages/site              | The main [site](https://jaybeeuu.dev).                                                         |
+| [@jaybeeuu/site](./packages/site#readme)                               | /packages/site                | The main [site](https://jaybeeuu.dev).                                                         |
 | [@jaybeeuu/compost](./packages/compost#readme)                         | /packages/compost             | A CLI tool used to compile markdown posts into HTML.                                           |
 | [@jaybeeuu/e2e](./packages/e2e#readme)                                 | /packages/e2e                 | [Cypress](https://www.cypress.io/) end to end tests for the blog.                              |
-| [@jaybeeuu/e2e-hooks](./packages/e2e-hooks#readme)                     | /packages/e2e-hooks           | A collection of css classes used to hook into the application for e2e tets.                    |
+| [@jaybeeuu/e2e-hooks](./packages/e2e-hooks#readme)                     | /packages/e2e-hooks           | A collection of css classes used to hook into the application for e2e tests.                   |
 | [@jaybeeuu/eslint-config](./packages/eslint-config#readme)             | /packages/eslint-config       | The base [eslint](https://eslint.org/) configurations I use through out the repo.              |
 | [@jaybeeuu/feed-webpack-plugin](./packages/feed-webpack-plugin#readme) | /packages/feed-webpack-plugin | A webpack plugin wrapper for [feed](https://github.com/jpmonette/feed).                        |
 | [@jaybeeuu/posts](./packages/posts#readme)                             | /packages/posts               | The markdown source and metadata for posts on my blog.                                         |

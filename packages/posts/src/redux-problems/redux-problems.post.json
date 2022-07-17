@@ -1,0 +1,5 @@
+{
+  "title": "I don't like redux.",
+  "abstract": "I use redux a lot, but i've concluded it's not a suitable state management tool for React applications. Here's why.",
+  "publish": false
+}

@@ -24,10 +24,10 @@ components/classes/what have you to be exposed for this reason - let's do that..
 Once you have done that start applying it to every new feature you write - the rest is tech debt, i.e. you borrowed some
 time you will have to pay back at some point.
 
-It is your choice  how you deal with tech debt. Generally speaking it is better to tackle it as quickly as you can.
+It is your choice how you deal with tech debt. Generally speaking it is better to tackle it as quickly as you can.
 But as quick as you can has different definitions depending on the project. In some projects where time,
-money and people are infinite you could probably set to and just bosh it out. however - that is never the case.
-your PO will still want features developed. So the grand rewrite is impossible. Instead aim for the more pragmatic approach:
+money and people are infinite you could probably set to and just hammer it out. However - that is never the case.
+Your PO will still want features developed. So the grand rewrite is impossible. Instead aim for the more pragmatic approach:
 
 1. Be A Good Scout - leave things tidier than you found it. So anything you touch during your stories should move to
 Redux if it's relevant and doesn't take too long to do. If it would slow you down too much then make a story.
