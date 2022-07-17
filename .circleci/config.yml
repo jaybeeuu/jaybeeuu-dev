@@ -2,6 +2,8 @@ version: 2.1
 
 src-dir: &src-dir ~/src
 
+install-pnpm: &install-pnpm npm i -g pnpm@7.0.0
+
 base: &base
   docker:
     - image: cimg/node:16.15.1
@@ -19,11 +21,7 @@ jobs:
       - checkout:
           path: *src-dir
 
-      # Dep for image-webpack-loader
-      # - run: sudo apt-get install libpng16-dev
-      - run: sudo apt-get update && sudo apt-get install nasm
-
-      - run: npm i -g pnpm@7.0.0
+      - run: *install-pnpm
       - run: pnpm -r install
       - run: pnpm build
       - run: pnpm gen-certs
@@ -41,7 +39,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: npm i -g pnpm@7.0.0
+      - run: *install-pnpm
       - run: pnpm lint
 
   spellcheck:
@@ -50,7 +48,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: npm i -g pnpm@7.0.0
+      - run: *install-pnpm
       - run: pnpm spellcheck
 
   type-check:
@@ -59,7 +57,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: npm i -g pnpm@7.0.0
+      - run: *install-pnpm
       - run: pnpm type-check
 
   test:
@@ -68,7 +66,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: npm i -g pnpm@7.0.0
+      - run: *install-pnpm
       - run: pnpm test
 
   e2e:
@@ -84,7 +82,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
-      - run: npm i -g pnpm@7.0.0 wait-on
+      - run: *install-pnpm
       - run: pnpm e2e-ci
       - store_artifacts:
           path: ./packages/e2e/.screenshots
