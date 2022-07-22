@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
-  "description": "My blog",
+  "private": true,
+  "description": "My blog posts",
   "keywords": [
     "Bickley-Wallace",
     "Josh",

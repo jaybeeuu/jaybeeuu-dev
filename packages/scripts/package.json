@@ -2,15 +2,16 @@
   "name": "@jaybeeuu/scripts",
   "version": "0.0.0",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
-  "private": true,
   "license": "UNLICENSED",
+  "private": true,
   "description": "CLI tooks used wihin this repo.",
   "type": "module",
   "keywords": [
     "CLI"
   ],
   "bin": {
-    "gen-certs": "bin/gen-certs.js"
+    "gen-certs": "bin/gen-certs.js",
+    "sdlc": "bin/sdlc.js"
   },
   "files": [
     "bin",
@@ -25,15 +26,21 @@
   },
   "devDependencies": {
     "@jaybeeuu/eslint-config": "workspace:*",
-    "@types/node": "^16.0.0",
+    "@types/node": "^18.0.6",
     "@types/yargs": "^17.0.10",
-    "@typescript-eslint/eslint-plugin": "^5.29.0",
-    "@typescript-eslint/parser": "^5.29.0",
-    "eslint": "^8.18.0",
+    "@typescript-eslint/eslint-plugin": "^5.30.7",
+    "@typescript-eslint/parser": "^5.30.7",
+    "eslint": "^8.20.0",
     "typescript": "^4.7.4"
   },
   "dependencies": {
+    "@changesets/changelog-github": "^0.4.5",
+    "@changesets/cli": "^2.23.2",
+    "@jaybeeuu/scripts": "workspace:^0.0.0",
+    "@octokit/rest": "^19.0.3",
+    "chalk": "^5.0.1",
     "devcert": "^1.2.2",
+    "simple-git": "^3.10.0",
     "yargs": "^17.5.1"
   }
 }

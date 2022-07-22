@@ -1,3 +1,3 @@
-import { main } from "../lib/gen-certs.js";
+import { main } from "../lib/exec/gen-certs.js";
 
 main();

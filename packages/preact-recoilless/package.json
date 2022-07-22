@@ -3,11 +3,14 @@
   "version": "0.0.0",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
-  "description": "Rool you own state management... of course.",
+  "description": "Preact bindings for my home grown state management... of course.",
   "keywords": [
-    "Bickley-Wallace",
-    "Josh",
-    "Utilities"
+    "experimental",
+    "management",
+    "preact",
+    "recoil",
+    "recoilless",
+    "state"
   ],
   "type": "module",
   "main": "lib/index.js",

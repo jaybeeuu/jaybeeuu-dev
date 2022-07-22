@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
+  "private": true,
   "description": "UI for my blog.",
   "keywords": [
     "UI"
