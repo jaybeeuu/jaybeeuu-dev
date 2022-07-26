@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
-  "private": true,
   "description": "The utility functions used by my application",
   "keywords": [
     "Bickley-Wallace",
@@ -28,7 +27,6 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "jsdom": "^20.0.0",
     "tslib": "^2.4.0"
   },
   "devDependencies": {

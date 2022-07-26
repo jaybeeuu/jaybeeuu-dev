@@ -26,8 +26,7 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "feed": "^4.2.2",
-    "jsdom": "^20.0.0"
+    "feed": "^4.2.2"
   },
   "devDependencies": {
     "@jaybeeuu/eslint-config": "workspace:*",

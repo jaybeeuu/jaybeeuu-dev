@@ -19,21 +19,20 @@
   "scripts": {
     "lint": "eslint --ext .js,.ts --format codeframe -c ./base.js ."
   },
-  "devDdependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.19.0",
-    "@typescript-eslint/parser": "^5.27.1",
-    "eslint": "^7.22.0",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
     "eslint-plugin-jest": "^24.3.2",
-    "eslint-plugin-react": "^7.23.1"
+    "eslint-plugin-react": "^7.23.1",
+    "eslint": "^7.22.0"
   },
   "dependencies": {
     "eslint-formatter-codeframe": "^7.32.1",
-    "jsdom": "^20.0.0",
     "typescript": "^4.7.4"
   },
   "peerDdependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.19.0",
-    "@typescript-eslint/parser": "^5.27.1",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
     "eslint-plugin-jest": "^24.3.2",
     "eslint-plugin-react": "^7.23.1",
     "eslint": "^7.22.0"
