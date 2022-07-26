@@ -28,7 +28,6 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "jsdom": "^20.0.0",
     "tslib": "^2.4.0"
   },
   "devDependencies": {

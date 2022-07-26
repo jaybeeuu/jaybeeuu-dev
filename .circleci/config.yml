@@ -1,30 +1,68 @@
 version: 2.1
 
+resource_class: large
+
 src-dir: &src-dir ~/src
 
-install-pnpm: &install-pnpm npm i -g pnpm@7.0.0
-
-base: &base
+job-base: &job-base
   docker:
     - image: cimg/node:16.15.1
       auth:
         username: $DOCKERHUB_USERNAME
         password: $DOCKERHUB_PASSWORD
-
   working_directory: *src-dir
+
+commands:
+  install_pnpm:
+    steps:
+      - run:
+          name: Install pnpm
+          command: npm i -g pnpm@7.0.0
+  setup_workspace:
+    steps:
+      - attach_workspace:
+          at: *src-dir
+      - install_pnpm
+
+  setup_git:
+    parameters:
+      user_email:
+        type: string
+      user_name:
+        type: string
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - 8c:9c:d3:67:12:7a:9a:db:1c:fc:fb:b4:ca:72:40:f4
+      - run:
+          name: Set Git user config
+          command: |
+            git config --global user.email "<<parameters.user_email>>"
+            git config --global user.name "<<parameters.user_name>>"
+      - run:
+          name: Get to know GitHub's ssh host fingerprint
+          command: ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 
 jobs:
   checkout-install-build:
-    <<: *base
+    <<: *job-base
+
+    environment:
+      CYPRESS_INSTALL_BINARY: 0
 
     steps:
       - checkout:
           path: *src-dir
-
-      - run: *install-pnpm
-      - run: pnpm -r install
-      - run: pnpm build
-      - run: pnpm gen-certs
+      - install_pnpm
+      - run:
+          name: Install Dependencies
+          command: pnpm -r install
+      - run:
+          name: Build Packages
+          command: pnpm build
+      - run:
+          name: Generate Certificates
+          command: pnpm gen-certs
       - store_artifacts:
           path: ./packages/site/dist
           destination: site-dist
@@ -34,43 +72,43 @@ jobs:
             - ./*
 
   lint:
-    <<: *base
+    <<: *job-base
 
     steps:
-      - attach_workspace:
-          at: *src-dir
-      - run: *install-pnpm
-      - run: pnpm lint
+      - setup_workspace
+      - run:
+          name: Lint
+          command: pnpm lint
 
   spellcheck:
-    <<: *base
+    <<: *job-base
 
     steps:
-      - attach_workspace:
-          at: *src-dir
-      - run: *install-pnpm
-      - run: pnpm spellcheck
+      - setup_workspace
+      - run:
+          name: Spell Check
+          command: pnpm spellcheck
 
   type-check:
-    <<: *base
+    <<: *job-base
 
     steps:
-      - attach_workspace:
-          at: *src-dir
-      - run: *install-pnpm
-      - run: pnpm type-check
+      - setup_workspace
+      - run:
+          name: Type Check
+          command: pnpm type-check
 
   test:
-    <<: *base
+    <<: *job-base
 
     steps:
-      - attach_workspace:
-          at: *src-dir
-      - run: *install-pnpm
-      - run: pnpm test
+      - setup_workspace
+      - run:
+          name: Unit Tests
+          command: pnpm type-check
 
   e2e:
-    <<: *base
+    <<: *job-base
     docker:
       - image: cypress/included:10.3.0
         auth:
@@ -80,10 +118,10 @@ jobs:
     working_directory: *src-dir
 
     steps:
-      - attach_workspace:
-          at: *src-dir
-      - run: *install-pnpm
-      - run: pnpm e2e-ci
+      - setup_workspace
+      - run:
+          name: Run e2e Tests
+          command: pnpm e2e-ci
       - store_artifacts:
           path: ./packages/e2e/.screenshots
           destination: e2e-screenshots
@@ -92,66 +130,72 @@ jobs:
           destination: e2e-videos
 
   version:
-    <<: *base
+    <<: *job-base
     steps:
-      - when:
-          condition:
-            and:
-              - equals: [main, << pipeline.git.branch >>]
-              - equals: [false, << pipeline.git.tag >>]
-          steps:
-            - attach_workspace:
-                at: *src-dir
-            - run: *install-pnpm
-            - run: node .\packages\scripts\lib\sdlc.js version
+      - setup_workspace
+      - setup_git:
+          user_email: $GITHUB_USER_EMAIL
+          user_name: $GITHUB_USER_NAME
+      - run:
+          name: Version Packages
+          command: node ./packages/scripts/bin/sdlc.js version --gitHubToken $GITHUB_TOKEN
+      - run: git status
 
   publish:
-    <<: *base
+    <<: *job-base
     steps:
-      - when:
-          condition:
-            and:
-              - equals: [main, << pipeline.git.branch >>]
-              - equals: [false, << pipeline.git.tag >>]
-          steps:
-            - attach_workspace:
-                at: *src-dir
-            - run: *install-pnpm
-            - run: node .\packages\scripts\lib\sdlc.js publish
+      - setup_workspace
+      - setup_git:
+          user_email: $GITHUB_USER_EMAIL
+          user_name: $GITHUB_USER_NAME
+      - run:
+          name: Publish Packages
+          command: node ./packages/scripts/bin/sdlc.js publish
+
 
 workflows:
-  version: 2
-
-  install-build-test:
+  build:
     jobs:
       - checkout-install-build
-
-      - lint:
-          requires:
-            - checkout-install-build
-      - spellcheck:
-          requires:
-            - checkout-install-build
-      - type-check:
-          requires:
-            - checkout-install-build
-      - test:
-          requires:
-            - checkout-install-build
-      - e2e:
-          requires:
-            - checkout-install-build
+      # - lint:
+      #     requires:
+      #       - checkout-install-build
+      # - spellcheck:
+      #     requires:
+      #       - checkout-install-build
+      # - type-check:
+      #     requires:
+      #       - checkout-install-build
+      # - test:
+      #     requires:
+      #       - checkout-install-build
+      # - e2e:
+      #     requires:
+      #       - checkout-install-build
       - version:
+          # filters:
+          #   branches:
+          #     only: main
+          #   tags:
+          #     ignore: /.*/
           requires:
-            - lint
-            - spellcheck
-            - type-check
-            - test
-            - e2e
-      - publish:
-          requires:
-            - lint
-            - spellcheck
-            - type-check
-            - test
-            - e2e
+            - checkout-install-build
+            # - lint
+            # - spellcheck
+            # - type-check
+            # - test
+            # - e2e
+      # - publish:
+      # #     filters:
+      # #       branches:
+      # #         only: main
+      # #       tags:
+      # #         ignore: /.*/
+      #     requires:
+      #       - checkout-install-build
+
+      #       - lint
+      #       - spellcheck
+      #       - type-check
+      #       - test
+      #       - e2e

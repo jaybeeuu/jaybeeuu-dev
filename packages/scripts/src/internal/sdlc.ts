@@ -7,49 +7,72 @@ import type { SimpleGit } from "simple-git";
 import { simpleGit } from "simple-git";
 
 export interface GitHubClientOptions {
-  owner: string;
-  repo: string;
   base: string;
+  gitHubToken: string;
   head: string;
-  token: string;
+  owner: string;
+  remote: string;
+  repo: string;
+  user: string;
 }
 
-const makeGitHubClient = (options: GitHubClientOptions): {
-  getPullsForNext: () => Promise<RestEndpointMethodTypes["pulls"]["list"]["response"]>,
-  makePullForNext: () => Promise<RestEndpointMethodTypes["pulls"]["create"]["response"]>
-} => {
-  const octokit = new Octokit({ auth: options.token });
-  return {
-    getPullsForNext: () => {
-      console.log("Searching for PR.");
-      return octokit.pulls.list({
-        base: options.base,
-        head: options.head,
-        owner: options.owner,
-        repo: options.repo,
-        state: "open"
-      });
-    },
-    makePullForNext: () => {
-      console.log("Creating PR.");
-      return octokit.pulls.create({
-        base: options.base,
-        head: options.head,
-        owner: options.owner,
-        repo: options.repo,
-        title: "Version packages",
-        body: [
-          "***Do not edit this PR directly - it is automatically generated.***",
-          "",
-          "Versions the packages and creates the change log.",
-          "When you're ready ro release merge this PR.",
-          "",
-          "Each time a commit is made to master this PR will be updated."
-        ].join("\n")
-      });
-    }
-  };
+const log = (message: string, ...args: unknown[]): void => {
+  console.log(chalk.green(message), ...args);
 };
+
+class GitHubClient {
+  readonly #options: GitHubClientOptions;
+  readonly #octokit: Octokit;
+  constructor(options: GitHubClientOptions) {
+    this.#options = options;
+    this.#octokit = new Octokit({ auth: options.gitHubToken });
+  }
+
+  #getPullsForNext(): Promise<RestEndpointMethodTypes["pulls"]["list"]["response"]> {
+    const searchOptions: RestEndpointMethodTypes["pulls"]["list"]["parameters"] = {
+      base: this.#options.base,
+      head: `${this.#options.user}:${this.#options.head}`,
+      owner: this.#options.owner,
+      repo: this.#options.repo,
+      state: "open"
+    };
+    log("Searching for PR.", searchOptions);
+    return this.#octokit.pulls.list(searchOptions);
+  }
+  #makePullForNext(): Promise<RestEndpointMethodTypes["pulls"]["create"]["response"]> {
+    const createPrOptions: RestEndpointMethodTypes["pulls"]["create"]["parameters"] = {
+      base: this.#options.base,
+      head: this.#options.head,
+      owner: this.#options.owner,
+      repo: this.#options.repo,
+      title: "Version packages",
+      body: [
+        "***Do not edit this PR directly - it is automatically generated.***",
+        "",
+        `The packages have all been versioned and the change logs created for all unpublished the changes on ${this.#options.base}.`,
+        "When you're ready ro release merge this PR.",
+        "",
+        "Each time a commit is made to master this PR will be updated."
+      ].join("\n")
+    };
+    log("Creating PR.", createPrOptions);
+    const response = this.#octokit.pulls.create(createPrOptions);
+    return response;
+  }
+
+  async getOrCreatePullForNext(): Promise<{ html_url: string }> {
+    const pull = (await this.#getPullsForNext()).data[0];
+
+    if (pull) {
+      return pull;
+    }
+
+    log("None found.");
+    const createResponse = await this.#makePullForNext();
+
+    return createResponse.data;
+  }
+}
 
 const executeCommand = (
   command: string,
@@ -68,53 +91,45 @@ const executeCommand = (
   });
 };
 
-export interface VersionOptions extends GitHubClientOptions {
-  remote: string;
-}
-
-export const version = async (options: VersionOptions): Promise<void> => {
-  console.log(chalk.green("Version Packages."));
+export const version = async (options: GitHubClientOptions): Promise<void> => {
+  log(chalk.green("Version Packages."));
   const git: SimpleGit = simpleGit();
 
-  console.log(`Creating local branch ${chalk.blueBright(options.head)}.`);
+  log(`Creating local branch ${chalk.blueBright(options.head)}.`);
   await git.checkoutLocalBranch(options.head);
 
-  console.log(`Resetting to ${chalk.blueBright(`${options.remote}/${options.base}`)}.`);
-  await git.reset(["--hard", `${options.remote}/${options.base}` ]);
-
-  console.log("Versioning packages.");
+  log("Versioning packages.");
   await executeCommand(
     "pnpm changeset version",
     { shell: true, stdio: "inherit" }
   );
 
-  console.log("Stage all files.");
+  log("Update pnpm-lock.");
+  await executeCommand("pnpm -r --lockfile-only --no-frozen-lockfile install", { shell: true, stdio: "inherit" });
+
+  log("Stage all files.");
   await git.add(".");
 
-  console.log("Commit changes.");
+  log("Commit changes.");
   await git.commit("Version packages.");
 
-  console.log("Push to origin.");
-  await git.push("origin", options.head, ["--force", "--set-upstream"]);
+  log(`Push to ${chalk.blueBright(options.remote)}/${chalk.blueBright(options.head)}`);
+  await git.push(["--force", "--set-upstream", options.remote, options.head]);
 
-  const github = makeGitHubClient(options);
+  const github = new GitHubClient(options);
 
-  const pull = (await github.getPullsForNext()).data[0] ?? await (() => {
-    console.log("None found.");
-    return github.makePullForNext();
-  })();
+  const pull = await github.getOrCreatePullForNext();
 
-  console.log(`Checkout the pull request at ${chalk.green(pull.html_url)}`);
+  log(`Checkout the pull request at ${chalk.green(pull.html_url)}`);
 };
 
 export const publish = async (): Promise<void> => {
-  // Run Changesets Publish
+  const git: SimpleGit = simpleGit();
+
   await executeCommand(
     "pnpm changeset publish",
     { shell: true, stdio: "inherit" }
   );
 
-  // Push Tags
-  const git: SimpleGit = simpleGit();
   await git.pushTags();
 };
