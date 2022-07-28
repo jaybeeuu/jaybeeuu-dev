@@ -1,17 +1,12 @@
-import yargs from "yargs/yargs";
 import path from "path";
 import * as fs from "fs";
 import { certificateFor } from "devcert";
 
-interface PathOptions {
+export interface PathOptions {
   directory: string;
   certName: string;
   keyName: string;
   caName: string;
-}
-
-interface RunOptions extends PathOptions {
-  domain: string;
 }
 
 interface Paths {
@@ -41,7 +36,11 @@ const writePem = async (filePath: string, buffer: Buffer): Promise<void> => {
   await fs.promises.writeFile(filePath, pemCert);
 };
 
-const run = async (options: RunOptions): Promise<void> => {
+export interface GenCertsOptions extends PathOptions {
+  domain: string;
+}
+
+export const genCerts = async (options: GenCertsOptions): Promise<void> => {
   const ssl = await certificateFor(options.domain, { getCaBuffer: true });
   await fs.promises.mkdir(options.directory, { recursive: true });
   const paths = getPaths(options);
@@ -58,38 +57,4 @@ const run = async (options: RunOptions): Promise<void> => {
     paths.certFilePath,
     paths.keyFilePath
   ].join("\n"));
-};
-
-export const main = (): void => {
-  void yargs()
-    .command("$0", "Generate SSL certificates.", {
-      domain: {
-        default: "localhost",
-        alias: "d",
-        type: "string"
-      },
-      directory: {
-        default: "./certs",
-        alias: "o",
-        type: "string"
-      },
-      certName: {
-        default: "cert.crt",
-        alias: "crt",
-        type: "string"
-      },
-      keyName: {
-        default: "key.key",
-        alias: "k",
-        type: "string"
-      },
-      caName: {
-        default: "ca.pem",
-        alias: "ca",
-        type: "string"
-      }
-    }, run)
-    .demandCommand()
-    .help()
-    .argv;
 };

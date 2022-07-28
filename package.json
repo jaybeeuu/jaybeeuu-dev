@@ -15,27 +15,30 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jaybeeuu/jaybeeuu-dev.git"
+    "url": "https://github.com/jaybeeuu/jaybeeuu-dev"
   },
   "bugs": {
     "url": "https://github.com/jaybeeuu/jaybeeuu-dev/issues"
   },
   "homepage": "https://github.com/jaybeeuu/jaybeeuu-devreadme",
   "scripts": {
-    "build": "pnpm run -r --stream build",
-    "build-changes": "pnpm run -r --stream --filter {packages/**}[main] build",
+    "build": "pnpm -r --stream build",
+    "build-changes": "pnpm -r --stream --filter {packages/**}[main] build",
     "clean": "pnpx rimraf ./node_modules ./packages/*/node_modules & git clean -fdX",
-    "e2e": "pnpm run -r --filter @jaybeeuu/e2e e2e",
-    "e2e-ci": "pnpm run --filter @jaybeeuu/site start & pnpx wait-on --timeout=60000 https://localhost:3443/ && pnpm run e2e run",
-    "gen-certs": "pnpm run --no-bail --no-sort -r --filter {packages/**} gen-certs",
-    "lint": "pnpm run --no-bail --no-sort -r --filter {packages/**} lint",
-    "spellcheck": "pnpm run --no-bail --no-sort -r --filter {packages/**} spellcheck",
-    "start-all": "pnpm run -r --no-sort --workspace-concurrency=Infinity --filter @jaybeeuu/site... start",
+    "e2e": "pnpm -r --filter @jaybeeuu/e2e e2e",
+    "e2e-ci": "pnpm --filter @jaybeeuu/site start & pnpx wait-on --timeout=60000 https://localhost:3443/ && pnpm e2e run",
+    "gen-certs": "pnpm --no-bail --no-sort -r --filter {packages/**} gen-certs",
+    "lint": "pnpm --no-bail --no-sort -r --filter {packages/**} lint",
+    "spellcheck": "pnpm --no-bail --no-sort -r --filter {packages/**} spellcheck",
+    "start-all": "pnpm -r --no-sort --workspace-concurrency=Infinity --filter @jaybeeuu/site... start",
     "test": "jest",
     "test-debug": "node --inspect node_modules/jest/bin/jest.js",
-    "type-check": "pnpm run --no-bail --no-sort -r --filter {packages/**} type-check"
+    "type-check": "pnpm --no-bail --no-sort -r --filter {packages/**} type-check"
   },
   "devDependencies": {
-    "jest": "^28.1.1"
+    "@changesets/changelog-github": "^0.4.5",
+    "@changesets/cli": "^2.23.2",
+    "jest": "^28.1.3",
+    "wait-on": "^6.0.1"
   }
 }

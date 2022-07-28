@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
-  "description": "My blog",
+  "private": true,
+  "description": "My blog posts",
   "keywords": [
     "Bickley-Wallace",
     "Josh",
@@ -13,18 +14,15 @@
     "lib"
   ],
   "scripts": {
-    "start": "compost --watch --href-root blog --include-unpublished --remove-h1 --old-manifest-locator \"https://jaybeeuu.dev/posts/manifest.json\" --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\"",
+    "start": "compost --watch --href-root blog --include-unpublished --remove-h1 --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\"",
     "lint": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
     "spellcheck-interactive": "mdspell --en-GB --ignore-numbers \"**/*.md\" \"!**/node_modules/**/*.md\"",
     "spellcheck": "pnpm run spellcheck-interactive --report",
-    "build": "compost --href-root blog --code-line-numbers --remove-h1 --old-manifest-locator \"https://jaybeeuu.dev/posts/manifest.json\" --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\""
+    "build": "compost --href-root blog --code-line-numbers --remove-h1 --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\""
   },
   "devDependencies": {
     "@jaybeeuu/compost": "workspace:*",
     "markdown-spellcheck": "^1.3.1",
     "markdownlint-cli2": "^0.4.0"
-  },
-  "dependencies": {
-    "jsdom": "^20.0.0"
   }
 }

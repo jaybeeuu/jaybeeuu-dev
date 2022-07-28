@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
+  "private": true,
   "description": "E2E tests for my blog.",
   "keywords": [
     "Bickley-Wallace",
@@ -17,20 +18,19 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "@babel/core": "^7.18.5",
-    "@babel/preset-env": "^7.18.2",
+    "@babel/core": "^7.18.9",
+    "@babel/preset-env": "^7.18.9",
     "@jaybeeuu/compost": "workspace:*",
     "@jaybeeuu/e2e-hooks": "workspace:*",
     "@jaybeeuu/eslint-config": "workspace:*",
     "@jaybeeuu/utilities": "workspace:*",
-    "@types/node": "^16.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.29.0",
-    "@typescript-eslint/parser": "^5.29.0",
-    "core-js": "3.23.2",
-    "cypress": "10.2.0",
-    "eslint": "^8.18.0",
+    "@types/node": "^18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
+    "core-js": "3.23.5",
+    "cypress": "10.3.0",
     "eslint-plugin-cypress": "^2.12.1",
-    "jsdom": "^20.0.0",
+    "eslint": "^8.20.0",
     "typescript": "^4.7.4"
   }
 }
