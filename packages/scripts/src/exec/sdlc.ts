@@ -43,14 +43,9 @@ export const main = (): void => {
     .command(
       "publish",
       "Publish the packages whose versions have bumped & push tags to github.",
-      {
-        "npm-token": {
-          type: "string",
-          demand: true
-        }
-      },
-      async (options) => {
-        await publish(options);
+      {},
+      async () => {
+        await publish();
       }
     )
     .demandCommand()
