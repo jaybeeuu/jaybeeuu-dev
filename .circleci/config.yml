@@ -150,6 +150,9 @@ jobs:
           user_email: $GITHUB_USER_EMAIL
           user_name: $GITHUB_USER_NAME
       - run:
+          name: Login to npm
+          command: echo //registry.npmjs.org/:_authToken=$NPM_TOKEN >> ~/.npmrc
+      - run:
           name: Publish Packages
           command: node ./packages/scripts/bin/sdlc.js publish --npmToken $NPM_TOKEN
 

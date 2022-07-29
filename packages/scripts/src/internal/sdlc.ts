@@ -123,15 +123,11 @@ export const version = async (options: GitHubClientOptions): Promise<void> => {
   log(`Checkout the pull request at ${chalk.green(pull.html_url)}`);
 };
 
-export interface PublishOptions {
-  npmToken: string;
-}
-
-export const publish = async (options: PublishOptions): Promise<void> => {
+export const publish = async (): Promise<void> => {
   const git: SimpleGit = simpleGit();
 
   await executeCommand(
-    `pnpm changeset publish --otp=${options.npmToken}`,
+    "pnpm changeset publish",
     { shell: true, stdio: "inherit" }
   );
 
