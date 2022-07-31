@@ -31,15 +31,24 @@ commands:
         type: string
       user_name:
         type: string
+      gpg_key_id:
+        type: string
+      gpg_key:
+        type: string
     steps:
       - add_ssh_keys:
           fingerprints:
             - 8c:9c:d3:67:12:7a:9a:db:1c:fc:fb:b4:ca:72:40:f4
       - run:
+          name: Import GPG Key
+          command: echo -e $GITHUB_GPG_KEY | gpg --import
+      - run:
           name: Set Git user config
           command: |
             git config --global user.email "<<parameters.user_email>>"
             git config --global user.name "<<parameters.user_name>>"
+            git config --global user.signingkey "<<parameters.gpg_key_id>>"
+            git config --global commit.gpgsign true
       - run:
           name: Get to know GitHub's ssh host fingerprint
           command: ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
@@ -137,10 +146,11 @@ jobs:
       - setup_git:
           user_email: $GITHUB_USER_EMAIL
           user_name: $GITHUB_USER_NAME
+          gpg_key: $GITHUB_GPG_KEY
+          gpg_key_id: $GITHUB_GPG_KEY_ID
       - run:
           name: Version Packages
           command: node ./packages/scripts/bin/sdlc.js version --gitHubToken $GITHUB_TOKEN
-      - run: git status
 
   publish:
     <<: *job-base
@@ -149,13 +159,14 @@ jobs:
       - setup_git:
           user_email: $GITHUB_USER_EMAIL
           user_name: $GITHUB_USER_NAME
+          gpg_key: $GITHUB_GPG_KEY
+          gpg_key_id: $GITHUB_GPG_KEY_ID
       - run:
           name: Login to npm
           command: echo //registry.npmjs.org/:_authToken=$NPM_TOKEN >> ~/.npmrc
       - run:
           name: Publish Packages
           command: node ./packages/scripts/bin/sdlc.js publish --npmToken $NPM_TOKEN
-
 
 workflows:
   build:

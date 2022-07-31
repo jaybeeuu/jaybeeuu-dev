@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
-  "description": "A webpack simple wrapper for the feed library.",
+  "description": "A simple webpack wrapper for the feed library.",
   "keywords": [
     "Feed",
     "Plugin",
