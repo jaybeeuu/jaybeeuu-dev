@@ -50,9 +50,9 @@ class GitHubClient {
         "***Do not edit this PR directly - it is automatically generated.***",
         "",
         `The packages have all been versioned and the change logs created for all unpublished the changes on ${this.#options.base}.`,
-        "When you're ready ro release merge this PR.",
+        "When you're ready ro release, merge this PR.",
         "",
-        "Each time a commit is made to master this PR will be updated."
+        `Each time a commit is made to ${this.#options.base} this PR will be updated.`
       ].join("\n")
     };
     log("Creating PR.", createPrOptions);
