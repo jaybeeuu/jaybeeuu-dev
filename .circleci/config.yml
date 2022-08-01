@@ -38,7 +38,7 @@ commands:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - 8c:9c:d3:67:12:7a:9a:db:1c:fc:fb:b4:ca:72:40:f4
+            - 70:fc:ed:9a:8a:65:2a:2a:e2:0a:33:c4:a9:4b:e1:63
       - run:
           name: Import GPG Key
           command: echo -e $GITHUB_GPG_KEY | gpg --import
