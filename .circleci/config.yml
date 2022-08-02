@@ -172,43 +172,42 @@ workflows:
   build:
     jobs:
       - checkout-install-build
-      # - lint:
-      #     requires:
-      #       - checkout-install-build
-      # - spellcheck:
-      #     requires:
-      #       - checkout-install-build
-      # - type-check:
-      #     requires:
-      #       - checkout-install-build
-      # - test:
-      #     requires:
-      #       - checkout-install-build
-      # - e2e:
-      #     requires:
-      #       - checkout-install-build
-      - version:
-          # filters:
-          #   branches:
-          #     only: main
-          #   tags:
-          #     ignore: /.*/
+      - lint:
           requires:
-              - checkout-install-build
-          #   - lint
-          #   - spellcheck
-          #   - type-check
-          #   - test
-          #   - e2e
-      # - publish:
-      #     filters:
-      #       branches:
-      #         only: main
-      #       tags:
-      #         ignore: /.*/
-      #     requires:
-      #       - lint
-      #       - spellcheck
-      #       - type-check
-      #       - test
-      #       - e2e
+            - checkout-install-build
+      - spellcheck:
+          requires:
+            - checkout-install-build
+      - type-check:
+          requires:
+            - checkout-install-build
+      - test:
+          requires:
+            - checkout-install-build
+      - e2e:
+          requires:
+            - checkout-install-build
+      - version:
+          filters:
+            branches:
+              only: main
+            tags:
+              ignore: /.*/
+          requires:
+            - lint
+            - spellcheck
+            - type-check
+            - test
+            - e2e
+      - publish:
+          filters:
+            branches:
+              only: main
+            tags:
+              ignore: /.*/
+          requires:
+            - lint
+            - spellcheck
+            - type-check
+            - test
+            - e2e
