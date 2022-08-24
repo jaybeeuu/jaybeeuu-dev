@@ -162,7 +162,7 @@ module.exports = {
     ]
   },
   optimization: {
-    moduleIds: "deterministic",
+    moduleIds: isProduction ? "deterministic" : "named",
     minimizer: [
       "...",
       new CssMinimizerPlugin(),

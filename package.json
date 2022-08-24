@@ -36,8 +36,8 @@
     "type-check": "pnpm --no-bail --no-sort -r --filter {packages/**} type-check"
   },
   "devDependencies": {
-    "@changesets/changelog-github": "^0.4.5",
-    "@changesets/cli": "^2.23.2",
+    "@changesets/changelog-github": "^0.4.6",
+    "@changesets/cli": "^2.24.1",
     "jest": "^28.1.3",
     "wait-on": "^6.0.1"
   }
