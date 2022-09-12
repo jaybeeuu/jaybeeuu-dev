@@ -19,12 +19,9 @@ export const echo: Echo = <Value>(
   msDelay: number
 ): ClearablePromise<Value> => {
   let timeout: number | undefined;
-  console.log("Setting Timeout", (value as any).status ?? value, msDelay);
   const promise = Object.assign(
     new Promise<Value>((resolve) => {
-      console.log("Setting Timeout promise", (value as any).status ?? value, msDelay);
       timeout = setTimeout(() => {
-        console.log("Resolving Timeout", (value as any).status ?? value, msDelay);
         const returnValue = isFactory(value) ? value() : value;
         resolve(returnValue);
       }, msDelay);
