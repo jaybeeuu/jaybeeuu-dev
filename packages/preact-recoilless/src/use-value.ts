@@ -14,7 +14,7 @@ import {
   isPrimitiveValue
 } from "@jaybeeuu/recoilless";
 import { useAsyncGenerator } from "./async-hooks.js";
-import type { PromiseState } from "./promise-status.js";
+import type { MonitorPromiseOptions, PromiseState } from "./promise-status.js";
 import { monitorPromise } from "./promise-status.js";
 import { useStore } from "./store-provider.js";
 
@@ -39,14 +39,15 @@ const usePrimitiveValue = <Val>(
 };
 
 const useDerivedValue = <Val>(
-  value: DerivedValue<Val>
+  value: DerivedValue<Val>,
+  options?: Partial<MonitorPromiseOptions>
 ): Val | PromiseState<Val> => {
   const valueState = useStore().getValue(value);
   useValueStateSubscription(valueState);
   const current = valueState.current;
 
   if (current instanceof Promise) {
-    const promiseStatus = useMemo(() => monitorPromise(current), [current]);
+    const promiseStatus = useMemo(() => monitorPromise(current, options), [current]);
     return useAsyncGenerator<PromiseState<Val>>(promiseStatus, { status: "pending" });
   }
 
@@ -54,14 +55,18 @@ const useDerivedValue = <Val>(
 };
 
 export interface UseValue {
-  <Val>(value: DerivedValue<Promise<Val>>): PromiseState<Val>;
+  <Val>(
+    value: DerivedValue<Promise<Val>>,
+    options?: Partial<MonitorPromiseOptions>
+  ): PromiseState<Val>;
   <Val>(value: DerivedValue<Val>): Val;
   <Val>(value: PrimitiveValue<Val>): [Val, (newValue: Val) => void];
 }
 export const useValue: UseValue = <Val>(
-  value: Value<Val>
+  value: Value<Val>,
+  options?: Partial<MonitorPromiseOptions>
 ): Val | PromiseState<Val> | [Val, (newValue: Val) => void] => {
   return isPrimitiveValue(value)
     ? usePrimitiveValue(value)
-    : useDerivedValue(value);
+    : useDerivedValue(value, options);
 };

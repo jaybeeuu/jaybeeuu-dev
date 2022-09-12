@@ -1,23 +1,30 @@
+export type ValueOrFactory<Value> = (Value extends Function ? never : Value) | (() => Value);
+
+const isFactory = <Value>(value: ValueOrFactory<Value>): value is () => Value => typeof value === "function";
+
 export const delay = (msDelay: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(() => resolve(), msDelay));
 };
 
-const isFactory = <Value>(value: ValueOrFactory<Value>): value is () => Value => typeof value === "function";
+export interface ClearablePromise<Value> extends Promise<Value> {
+  clear: () => void;
+}
 
-export type ClearablePromise<Value> = Promise<Value> & { clear: () => void };
-
-export interface ClearableEcho {
+export interface Echo {
   <Value>(value: Exclude<Value, Function>, timeout: number): ClearablePromise<Value>;
   <Value>(valueFactory: () => Value, timeout: number): ClearablePromise<Value>;
 }
-export const echo: ClearableEcho = <Value>(
+export const echo: Echo = <Value>(
   value: ValueOrFactory<Value>,
   msDelay: number
 ): ClearablePromise<Value> => {
   let timeout: number | undefined;
+  console.log("Setting Timeout", (value as any).status ?? value, msDelay);
   const promise = Object.assign(
     new Promise<Value>((resolve) => {
+      console.log("Setting Timeout promise", (value as any).status ?? value, msDelay);
       timeout = setTimeout(() => {
+        console.log("Resolving Timeout", (value as any).status ?? value, msDelay);
         const returnValue = isFactory(value) ? value() : value;
         resolve(returnValue);
       }, msDelay);
