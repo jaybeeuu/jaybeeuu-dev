@@ -19,14 +19,28 @@ export const echo: Echo = <Value>(
   msDelay: number
 ): ClearablePromise<Value> => {
   let timeout: number | undefined;
+
   const promise = Object.assign(
     new Promise<Value>((resolve) => {
       timeout = setTimeout(() => {
-        const returnValue = isFactory(value) ? value() : value;
-        resolve(returnValue);
+        resolve(isFactory(value) ? value() : value);
       }, msDelay);
     }),
     { clear: () => clearTimeout(timeout) }
   );
   return promise;
+};
+
+export interface MicroEcho {
+  <Value>(value: Exclude<Value, Function>): Promise<Value>;
+  <Value>(valueFactory: () => Value): Promise<Value>;
+}
+export const microEcho = <Value>(
+  value: ValueOrFactory<Value>
+): Promise<Value> => {
+  return new Promise<Value>((resolve) => {
+    queueMicrotask(() => {
+      resolve(isFactory(value) ? value() : value);
+    });
+  });
 };

@@ -1,4 +1,4 @@
-import { asError, echo, multiPartition } from "@jaybeeuu/utilities";
+import { asError, echo, microEcho, multiPartition } from "@jaybeeuu/utilities";
 
 export const PromiseStatusTuple = ["pending", "slow", "failed", "complete"] as const;
 export const PromiseStatuses = PromiseStatusTuple as readonly string[];
@@ -65,25 +65,31 @@ export async function* monitorPromise<Value> (
     timeoutDelay: 5000,
     ...userOptions
   };
-
-  const slowPromise = echo(() => {
-    return slow();
-  }, options.slowDelay);
+  const slowPromise = echo(slow(), options.slowDelay);
   const timeout = echo(failed(new Error("Request timed out.")), options.timeoutDelay);
 
-  yield pending();
+  try {
+    const value = valueOrError(promise);
+    const firstResult = await Promise.race([value, microEcho(pending())]);
 
-  const value = valueOrError(promise);
+    yield firstResult;
 
-  const nextResult = await Promise.race([value, timeout, slowPromise]);
+    if (firstResult.status !== "pending") {
+      return;
+    }
 
-  yield nextResult;
+    const nextResult = await Promise.race([value, timeout, slowPromise]);
 
-  if (nextResult.status === "slow") {
-    yield await Promise.race([value, timeout]);
+    yield nextResult;
+
+    if (nextResult.status === "slow") {
+      yield await Promise.race([value, timeout]);
+    }
   }
-  slowPromise.clear();
-  timeout.clear();
+  finally {
+    slowPromise.clear();
+    timeout.clear();
+  }
 }
 
 const isPromiseStateEntry = <Status extends PromiseStatus>(

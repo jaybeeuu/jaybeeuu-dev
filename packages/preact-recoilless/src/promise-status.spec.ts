@@ -1,5 +1,5 @@
 import { asError, echo } from "@jaybeeuu/utilities";
-import { advanceByTimeThenAwait } from "../test/async-helpers.js";
+import { advanceByTimeThenAwait, advanceToNextThenAwait } from "../test/async-helpers.js";
 import { useFakeTimers } from "../test/time.js";
 import type { MonitorPromiseOptions, PromiseState} from "./promise-status.js";
 import { monitorPromise, combinePromises } from "./promise-status.js";
@@ -21,7 +21,9 @@ const getNextValue = async <Value>(asyncIterator: AsyncIterator<Value>): Promise
 };
 
 describe("monitorPromise", () => {
-  it("returns a pending request then the response.", async () => {
+  useFakeTimers();
+
+  it("returns the result immediately if the promise is resolved.", async () => {
     const requestIterator = getPromiseStatusIterator(Promise.resolve("Apples"));
 
     const firstResult = await getNextValue(requestIterator);
@@ -30,6 +32,26 @@ describe("monitorPromise", () => {
       value: "Apples"
     });
   });
+
+  it("returns the pending immediately if the promise is not resolved.", async () => {
+    const requestIterator = getPromiseStatusIterator(echo("bananas", 10));
+
+    const firstResult = await advanceToNextThenAwait(() => getNextValue(requestIterator));
+    expect(firstResult).toStrictEqual({
+      status: "pending"
+    });
+  });
+
+  it("returns a pending request then the response once it resolves.", async () => {
+    const requestIterator = getPromiseStatusIterator(echo("Carrots", 50));
+    await advanceToNextThenAwait(() => getNextValue(requestIterator));
+    jest.advanceTimersByTime(50);
+    const nextResult = await getNextValue(requestIterator);
+    expect(nextResult).toStrictEqual({
+      status: "complete",
+      value: "Carrots"
+    });
+  }, 500);
 
   it("once the response is returned the iterator terminates.", async () => {
     const requestIterator = getPromiseStatusIterator(Promise.resolve("Apples"));
@@ -40,24 +62,22 @@ describe("monitorPromise", () => {
     ).rejects.toStrictEqual(new Error("Iterator is done."));
   });
 
-  describe("slow", () => {
-    useFakeTimers();
+  it("returns a slow request status if the request takes longer than 500ms.", async () => {
+    const requestIterator = getPromiseStatusIterator(echo("Pears", 501), { slowDelay: 500 });
 
-    it("returns a slow request status if the request takes longer than 500ms.", async () => {
-      const requestIterator = getPromiseStatusIterator(echo("Pears", 501), { slowDelay: 500 });
+    await advanceToNextThenAwait(() => getNextValue(requestIterator));
 
-      const firstResult = await advanceByTimeThenAwait(500, () => getNextValue(requestIterator));
+    const firstResult = await advanceByTimeThenAwait(500, () => getNextValue(requestIterator));
 
-      expect(firstResult).toStrictEqual({
-        status: "slow"
-      });
+    expect(firstResult).toStrictEqual({
+      status: "slow"
+    });
 
-      const secondResult = await advanceByTimeThenAwait(1, () => getNextValue(requestIterator));
+    const secondResult = await advanceByTimeThenAwait(1, () => getNextValue(requestIterator));
 
-      expect(secondResult).toStrictEqual({
-        status: "complete",
-        value: "Pears"
-      });
+    expect(secondResult).toStrictEqual({
+      status: "complete",
+      value: "Pears"
     });
   });
 
@@ -73,23 +93,19 @@ describe("monitorPromise", () => {
     });
   });
 
-  describe("timeout", () => {
-    useFakeTimers();
+  it("returns an if the request takes longer than the timeout.", async () => {
+    const requestIterator = getPromiseStatusIterator(
+      echo("Pears", 501),
+      { timeoutDelay: 50 }
+    );
 
-    it("returns an if the request takes longer than the timeout.", async () => {
-      const requestIterator = getPromiseStatusIterator(
-        echo("Pears", 501),
-        { timeoutDelay: 50 }
-      );
-      const nextPromise = getNextValue(requestIterator);
+    await advanceToNextThenAwait(() => getNextValue(requestIterator));
 
-      jest.advanceTimersByTime(100);
+    const result = await advanceByTimeThenAwait(100, () => getNextValue(requestIterator));
 
-      const result = await nextPromise;
-      expect(result).toStrictEqual({
-        status: "failed",
-        error: new Error("Request timed out.")
-      });
+    expect(result).toStrictEqual({
+      status: "failed",
+      error: new Error("Request timed out.")
     });
   });
 });
