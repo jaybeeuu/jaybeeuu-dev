@@ -78,7 +78,7 @@ module.exports = {
       {
         oneOf: [
           {
-            test: /\.(ts|tsx|js|jsx)$/,
+            test: /\.(ts|tsx|js|jsx|mjs)$/,
             include: [paths.src],
             use: "babel-loader"
           },
@@ -151,7 +151,7 @@ module.exports = {
             ]
           },
           {
-            exclude: [/\.(ts|tsx|js|jsx)$/, /\.css$/, /\.html$/, /\.json$/, /\.(bmp|gif|jpe?g|png|svg)$/],
+            exclude: [/\.(ts|tsx|js|jsx|mjs)$/, /\.css$/, /\.html$/, /\.json$/, /\.(bmp|gif|jpe?g|png|svg)$/],
             loader: "file-loader",
             options: {
               name: "static/[name].[contenthash].[ext]"
@@ -163,6 +163,7 @@ module.exports = {
   },
   optimization: {
     moduleIds: isProduction ? "deterministic" : "named",
+    minimize: false,
     minimizer: [
       "...",
       new CssMinimizerPlugin(),
