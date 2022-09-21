@@ -284,11 +284,11 @@ describe("manifest", () => {
     await compilePosts({ oldManifestLocators: [oldManifestLocator] });
     const manifest = await getPostManifest();
 
-    jest.mocked(fetch).mockReturnValue(Promise.resolve<Response>({
+    jest.mocked(fetch).mockResolvedValue({
       json: (): Promise<unknown> => {
         return Promise.resolve(manifest);
       }
-    } as unknown as Response));
+    } as unknown as Response);
 
     await writePostFile({
       ...postFile,
@@ -328,11 +328,11 @@ describe("manifest", () => {
     await compilePosts({ oldManifestLocators });
     const manifest = await getPostManifest();
 
-    jest.mocked(fetch).mockReturnValue(Promise.resolve<Response>({
+    jest.mocked(fetch).mockResolvedValue({
       json: (): Promise<unknown> => {
         return Promise.resolve(manifest);
       }
-    } as unknown as Response)
+    } as unknown as Response
     );
 
     await writePostFile({
@@ -373,12 +373,12 @@ describe("manifest", () => {
     const manifest = await getPostManifest();
 
     jest.mocked(fetch)
-      .mockReturnValueOnce(Promise.reject(new Error("Whoops")))
-      .mockReturnValue(Promise.resolve<Response>({
+      .mockRejectedValueOnce(new Error("Whoops"))
+      .mockResolvedValue({
         json: (): Promise<unknown> => {
           return Promise.resolve(manifest);
         }
-      } as unknown as Response));
+      } as unknown as Response);
 
     await writePostFile({
       ...postFile,

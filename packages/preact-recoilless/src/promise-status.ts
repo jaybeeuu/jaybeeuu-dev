@@ -1,4 +1,4 @@
-import { asError, echo, multiPartition } from "@jaybeeuu/utilities";
+import { asError, echo, microEcho, multiPartition } from "@jaybeeuu/utilities";
 
 export const PromiseStatusTuple = ["pending", "slow", "failed", "complete"] as const;
 export const PromiseStatuses = PromiseStatusTuple as readonly string[];
@@ -51,23 +51,45 @@ const valueOrError = async <Value>(promise: Promise<Value>): Promise<Complete<Va
   }
 };
 
+export interface MonitorPromiseOptions {
+  timeoutDelay: number;
+  slowDelay: number;
+}
+
 export async function* monitorPromise<Value> (
-  promise: Promise<Value>
+  promise: Promise<Value>,
+  userOptions: Partial<MonitorPromiseOptions> = {}
 ): AsyncGenerator<PromiseState<Value>> {
-  const slowPromise = echo(slow(), 500);
-  const timeout = echo(failed(new Error("Request timed out.")), 5000);
+  const options: MonitorPromiseOptions = {
+    slowDelay: 500,
+    timeoutDelay: 5000,
+    ...userOptions
+  };
+  const slowPromise = echo(slow(), options.slowDelay);
+  const timeout = echo(failed(new Error("Request timed out.")), options.timeoutDelay);
 
-  const value = valueOrError(promise);
+  try {
+    const value = valueOrError(promise);
+    const firstResult = await Promise.race([value, microEcho(pending())]);
 
-  const nextResult = await Promise.race([value, timeout, slowPromise]);
+    yield firstResult;
 
-  yield nextResult;
+    if (firstResult.status !== "pending") {
+      return;
+    }
 
-  if (nextResult.status === "slow") {
-    yield await Promise.race([value, timeout]);
+    const nextResult = await Promise.race([value, timeout, slowPromise]);
+
+    yield nextResult;
+
+    if (nextResult.status === "slow") {
+      yield await Promise.race([value, timeout]);
+    }
   }
-  slowPromise.clear();
-  timeout.clear();
+  finally {
+    slowPromise.clear();
+    timeout.clear();
+  }
 }
 
 const isPromiseStateEntry = <Status extends PromiseStatus>(
