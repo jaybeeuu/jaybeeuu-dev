@@ -12,8 +12,6 @@ import { PostsRoute } from "./posts";
 import { TitleBar } from "./title-bar";
 import { Theme } from "./theme";
 
-const Route = ({ path }: { path: string }): VNode => <div>{path}</div>;
-
 export const App = (): VNode => (
   <Theme className={css.componentRoot}>
     <Background className={classNames(css.main, e2eHooks.root)}>
