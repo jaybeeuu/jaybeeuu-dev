@@ -234,7 +234,7 @@ importers:
       '@changesets/changelog-github': ^0.4.6
       '@changesets/cli': ^2.24.1
       '@jaybeeuu/eslint-config': workspace:*
-      '@jaybeeuu/scripts': workspace:^0.0.0
+      '@jaybeeuu/scripts': workspace:^0.0.1
       '@octokit/rest': ^19.0.3
       '@types/node': ^16.11.0
       '@types/yargs': ^17.0.10
