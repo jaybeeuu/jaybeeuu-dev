@@ -13,9 +13,9 @@ import type {
 import {
   isPrimitiveValue
 } from "@jaybeeuu/recoilless";
-import { useAsyncGenerator } from "./async-hooks.js";
-import type { MonitorPromiseOptions, PromiseState } from "./promise-status.js";
-import { monitorPromise } from "./promise-status.js";
+import { useAsyncGenerator } from "@jaybeeuu/preact-async";
+import type { MonitorPromiseOptions, PromiseState } from "@jaybeeuu/utilities";
+import { monitorPromise } from "@jaybeeuu/utilities";
 import { useStore } from "./store-provider.js";
 
 const useValueStateSubscription = <Val>(

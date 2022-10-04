@@ -1,12 +1,13 @@
-const config = {
+module.exports = {
   clearMocks: true,
-  testEnvironment: "node",
-  collectCoverageFrom : [
-    "src/**"
+  collectCoverageFrom: [
+    "src/**/*",
+    "!**/*.d.ts"
   ],
   transform: {
     "^.+\\.(t|j)sx?$": ["ts-jest"]
   },
+  testEnvironment: "node",
   testMatch: [
     "**/*.spec.ts"
   ],
@@ -14,9 +15,7 @@ const config = {
     "/node_modules/",
     "/lib/"
   ],
-  moduleNameMapper: {
-    "(\\.\\.?/.*)\\.js$": "$1"
-  }
+  watchPathIgnorePatterns: [
+    "<rootDir>/lib"
+  ]
 };
-
-export default config;
