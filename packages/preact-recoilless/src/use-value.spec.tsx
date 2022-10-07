@@ -5,6 +5,7 @@ import type { DerivedValue} from "@jaybeeuu/recoilless";
 import { Store } from "@jaybeeuu/recoilless";
 import utils from "@jaybeeuu/utilities";
 import type { ClearablePromise , ValueOrFactory } from "@jaybeeuu/utilities";
+import { EchoRegistry } from "@jaybeeuu/utilities/test";
 import { act, renderHook } from "@testing-library/preact-hooks";
 import type { ComponentType} from "preact";
 import { h } from "preact";
@@ -20,125 +21,6 @@ jest.mock("@jaybeeuu/utilities", () => {
     echo: jest.fn()
   };
 });
-
-type Executor<Value> = (
-  resolve: (value: Value | PromiseLike<Value>) => void,
-  reject: (reason?: any) => void
-) => void;
-
-class ControllablePromise<Value> extends Promise<Value> {
-  #resolvePromise?: (value: Value | PromiseLike<Value>) => void;
-  #rejectPromise?: (reason?: any) => void;
-
-  constructor(executor: Executor<Value> = () => {}) {
-    let resolvePromise: (value: Value | PromiseLike<Value>) => void;
-    let rejectPromise: (reason?: any) => void;
-    super((resolve, reject) => {
-      resolvePromise = resolve;
-      rejectPromise = reject;
-      executor(resolve, reject);
-    });
-    // @ts-expect-error
-    this.#resolvePromise = resolvePromise;
-
-    // @ts-expect-error
-    this.#rejectPromise = rejectPromise;
-  }
-
-  resolve(value: Value | PromiseLike<Value>): void {
-    this.#resolvePromise?.(value);
-  }
-
-  reject(reason?: any): void {
-    this.#rejectPromise?.(reason);
-  }
-}
-
-class DecoratedClearablePromise<Value> extends Promise<Value> {
-  #clear: () => void;
-
-  constructor(
-    promise: Promise<Value> | Executor<Value>,
-    clear: () => void = () => {}
-  ) {
-    const executor: Executor<Value> = typeof promise === "function"
-      ? promise
-      : (resolve) => resolve(promise);
-
-    super(executor);
-    this.#clear = clear;
-  }
-
-  clear(): void {
-    this.#clear();
-  }
-}
-
-interface Echo {
-  resolve: () => void;
-  resolveAt: number;
-  id: number;
-}
-
-const isFactory = <Value,>(value: ValueOrFactory<Value>): value is () => Value => typeof value === "function";
-
-class EchoRegistry {
-  #echos: Echo[] = [];
-  #currentTime = 0;
-  #nextId = 0;
-
-  set <Value,>(
-    valueOrFactory: ValueOrFactory<Value>,
-    delay: number = 0
-  ): ClearablePromise<Value> {
-    const promise = new ControllablePromise<Value>();
-    const id = this.#nextId++;
-    this.#echos = [
-      ...this.#echos,
-      {
-        id,
-        resolve: () => {
-          const value = isFactory(valueOrFactory) ? valueOrFactory() : valueOrFactory;
-          promise.resolve(value);
-        },
-        resolveAt: delay + this.#currentTime
-      }
-    ];
-
-    return new DecoratedClearablePromise(promise, () => this.clear(id));
-  }
-
-  clear(id: number): void {
-    this.#echos = this.#echos.filter((e) => e.id !== id);
-  }
-
-  advanceByTime(time: number): void {
-    this.#currentTime += time;
-    this.#runPendingEchos();
-  }
-
-  clearAllEchos(): void {
-    this.#echos = [];
-  }
-
-  runAllEchos(): void {
-    this.#currentTime = Math.max(...this.#echos.map((e) => e.resolveAt));
-    this.#runPendingEchos();
-  }
-
-  advanceToNextEcho(): void {
-    this.#currentTime = Math.min(...this.#echos.map((e) => e.resolveAt));
-    this.#runPendingEchos();
-  }
-
-  #runPendingEchos(): void {
-    this.#echos
-      .filter((e) => e.resolveAt <= this.#currentTime)
-      .forEach((e) => e.resolve());
-    this.#echos = this.#echos
-      .filter((e) => e.resolveAt > this.#currentTime);
-  }
-}
 
 const setupEcho = (): EchoRegistry => {
   const echoRegistry = new EchoRegistry();

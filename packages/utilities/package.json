@@ -10,14 +10,25 @@
     "Utilities"
   ],
   "type": "module",
-  "main": "lib/index.js",
+  "sideEffects": false,
   "files": [
     "lib"
   ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "exports": {
-    ".": "./lib/index.js"
+    "./test": {
+      "default": "./lib/test/index.js"
+    },
+    ".": {
+      "default": "./lib/index.js"
+    }
   },
-  "sideEffects": false,
+  "typesVersions": {
+    "*": {
+      "test": ["./lib/test"]
+    }
+  },
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json --pretty",
     "lint": "eslint --ext .js,.ts --format codeframe .",
