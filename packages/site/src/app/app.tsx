@@ -1,6 +1,6 @@
 import { main as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import classNames from "classnames";
-import type { VNode } from "preact";
+import type { JSX } from "preact";
 import { h } from "preact";
 import { Router } from "preact-router";
 import { FouOhFour } from "./404";
@@ -10,10 +10,10 @@ import { HomeRoute } from "./home";
 import { PostRoute } from "./post";
 import { PostsRoute } from "./posts";
 import { TitleBar } from "./title-bar";
-import { Theme } from "./theme";
+import { ThemeRoot } from "./theme";
 
-export const App = (): VNode => (
-  <Theme className={css.componentRoot}>
+export const App = (): JSX.Element => (
+  <ThemeRoot className={css.componentRoot}>
     <Background className={classNames(css.main, e2eHooks.root)}>
       <TitleBar className={css.static} />
       <Router >
@@ -23,5 +23,5 @@ export const App = (): VNode => (
         <FouOhFour default />
       </Router>
     </Background>
-  </Theme>
+  </ThemeRoot>
 );

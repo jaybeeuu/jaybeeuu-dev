@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { useValue } from "@jaybeeuu/preact-recoilless";
-import type { VNode } from "preact";
+import type { JSX } from "preact";
 import { h } from "preact";
 import type { Theme } from "../services/theme";
 import { theme } from "../state";
@@ -21,7 +21,7 @@ export const ImageLink = ({
   className,
   href,
   imageSrc
-}: ImageLinkProps): VNode => {
+}: ImageLinkProps): JSX.Element => {
   const [currentTheme] = useValue(theme);
   const imageSrcToUse = typeof imageSrc === "string"
     ? imageSrc

@@ -1,4 +1,4 @@
-import type { VNode } from "preact";
+import type { JSX } from "preact";
 import { h } from "preact";
 
 import css from "./error-message.module.css";
@@ -11,7 +11,7 @@ export interface ErrorComponentProps {
 export const ErrorMessage = ({
   heading,
   message
-}: ErrorComponentProps): VNode => {
+}: ErrorComponentProps): JSX.Element => {
   return (
     <div className={css.componentRoot} role="alert">
       <h1>{heading}</h1>
