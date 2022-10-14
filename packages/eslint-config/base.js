@@ -23,6 +23,7 @@ module.exports = {
     "semi": ["error", "always"]
   },
   parserOptions: {
+    ecmaVersion: "latest",
     sourceType: "module"
   },
   overrides: [
@@ -63,9 +64,6 @@ module.exports = {
       env: {
         browser: false,
         node: true
-      },
-      parserOptions: {
-        ecmaVersion: 2020
       },
       rules: {
         "no-console": "off"

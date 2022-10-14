@@ -20,17 +20,14 @@
   transition: var(--transition-theme), opacity var(--transition-theme-timing);
 }
 
-.appear,
-.enter,
-.exit.exit-active,
-.exit-done {
+.transparent-in {
   opacity: 0;
 }
 
-.appear.appear-active,
-.appear-done,
-.enter.enter-active,
-.enter-done,
-.exit {
+.opaque {
   opacity: 1;
+}
+
+.transparent-out {
+  opacity: 0;
 }

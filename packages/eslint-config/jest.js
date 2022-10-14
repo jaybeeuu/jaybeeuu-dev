@@ -6,15 +6,14 @@ const jestRules = {
 };
 
 module.exports = {
-  env: {
-    es6: true
-  },
   plugins: [
     "jest"
   ],
   overrides: [
     {
       files: [
+        "test/**/*.js",
+        "test/**/*.jsx",
         "test/**/*.ts",
         "test/**/*.tsx"
       ],
@@ -24,6 +23,10 @@ module.exports = {
       rules: {
         ...jestRules,
         "jest/require-hook": "off"
+      },
+      env: {
+        node: true,
+        "jest/globals": true
       }
     },
     {

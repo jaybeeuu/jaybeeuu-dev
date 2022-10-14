@@ -11,11 +11,13 @@ import { PostRoute } from "./post";
 import { PostsRoute } from "./posts";
 import { TitleBar } from "./title-bar";
 import { ThemeRoot } from "./theme";
+import { TransitionTest } from "../transition-test";
 
 export const App = (): JSX.Element => (
   <ThemeRoot className={css.componentRoot}>
     <Background className={classNames(css.main, e2eHooks.root)}>
       <TitleBar className={css.static} />
+      {/* <TransitionTest /> */}
       <Router >
         <HomeRoute path="/" />
         <PostsRoute path="/blog" />

@@ -1,19 +1,27 @@
 // @ts-check
-const { FeedWebpackPlugin } = require("@jaybeeuu/feed-webpack-plugin");
-const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const fs = require("fs");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const path = require("path");
-const SitemapPlugin = require("sitemap-webpack-plugin").default;
-const TerserPlugin = require("terser-webpack-plugin");
-const webpack = require("webpack");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
-const { env, stringifiedEnv } = require("./config/env");
-const paths = require("./config/paths");
+import { FeedWebpackPlugin } from "@jaybeeuu/feed-webpack-plugin";
+import { CleanWebpackPlugin } from "clean-webpack-plugin";
+import CopyWebpackPlugin from "copy-webpack-plugin";
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
+import fs from "fs";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import path from "path";
+import { default as CaseSensitivePathsPlugin } from "case-sensitive-paths-webpack-plugin";
+import SitemapPluginImport from "sitemap-webpack-plugin";
+import TerserPlugin from "terser-webpack-plugin";
+import webpack from "webpack";
+import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
+import { env, stringifiedEnv } from "./config/env.js";
+import { paths } from "./config/paths.js";
+
+/** @type {typeof SitemapPluginImport} */
+// @ts-expect-error
+const SitemapPlugin = SitemapPluginImport.default;
+
+/** @type {webpack.WebpackPluginInstance} */
+// @ts-expect-error
+const caseSensitivePathsPlugin = new CaseSensitivePathsPlugin();
 
 const isProduction = env.NODE_ENV === "production";
 const mode = isProduction ? "production" : "development";
@@ -25,6 +33,9 @@ const postManifest = JSON.parse(fs.readFileSync(paths.manifest, "utf8"));
 const siteURL = "https://jaybeeuu.dev";
 const postsRoot = "blog";
 
+/** @type {<Value>(candidate: Value) => candidate is Exclude<Value, null | undefined>} */
+const isNotNullish = (candidate) => !!candidate;
+
 /**
  * @param {string[]} pathFragments
  * @returns {string}
@@ -34,7 +45,7 @@ const resolvedURLToSite = (...pathFragments) => {
 };
 
 /** @type {import("webpack").Configuration} */
-module.exports = {
+const config = {
   mode,
   devtool: isProduction ? "source-map" : "source-map",
   devServer: isWatching ? {
@@ -284,7 +295,7 @@ module.exports = {
     }),
     new webpack.ProgressPlugin(),
     new webpack.DefinePlugin(stringifiedEnv),
-    new CaseSensitivePathsPlugin(),
+    caseSensitivePathsPlugin,
     isProduction ? new CleanWebpackPlugin() : null,
     new BundleAnalyzerPlugin({
       analyzerMode: "static",
@@ -294,5 +305,7 @@ module.exports = {
     isProduction ? new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css"
     }) : null
-  ].filter(Boolean)
+  ].filter(isNotNullish)
 };
+
+export default config;
