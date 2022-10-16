@@ -1,7 +1,6 @@
 import { usePromise } from "@jaybeeuu/preact-async";
 import { useAction, useValue } from "@jaybeeuu/preact-recoilless";
 import type { PromiseStatus} from "@jaybeeuu/utilities";
-import { PromiseStatusTuple } from "@jaybeeuu/utilities";
 import classNames from "classnames";
 import type { ComponentChildren, JSX } from "preact";
 import { CSSTransition } from "preact-transitioning";
@@ -45,7 +44,6 @@ const usePreload = (
   const effectiveStatus = hasBeenPending.current ? status : "pending";
 
   return effectiveStatus;
-
 };
 
 export interface ImageEntry {
