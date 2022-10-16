@@ -3,12 +3,12 @@ import { useAction, useValue } from "@jaybeeuu/preact-recoilless";
 import type { PromiseStatus } from "@jaybeeuu/utilities";
 import classNames from "classnames";
 import type { ComponentChildren, JSX } from "preact";
-import { CSSTransition, Transition } from "preact-transitioning";
+import { CSSTransition } from "preact-transitioning";
 import { h } from "preact";
 import { useRef } from "preact/hooks";
 import type { Theme } from "../services/theme";
-import type { BackgroundImages, Image } from "../state";
-import { backgroundImages, onMainContentScroll, theme } from "../state";
+import type { BackgroundImages , Image } from "../state";
+import { backgroundImages, onMainContentScroll, theme  } from "../state";
 import css from "./background.module.css";
 import { imageUrls } from "./images";
 
@@ -18,21 +18,16 @@ export interface BackgroundProps {
 }
 
 const usePreload = (
-  image: Image | null,
-  preloads: { [url: string]: PromiseStatus }
+  image: Image | null
 ): PromiseStatus => {
   const url = image ? imageUrls[image] : null;
 
   const status = usePromise(({ abortSignal }): Promise<unknown> => {
-    if (!url || preloads[url] === "complete") {
+    if (!url) {
       return Promise.resolve();
     }
     return fetch(url, { signal: abortSignal });
   }, [url]).promiseState.status;
-
-  if (url) {
-    preloads[url] = status;
-  }
 
   return status;
 };
@@ -44,10 +39,9 @@ export interface ImageEntry {
 }
 
 const useImage = (
-  image: Image | null,
-  preloads: { [url: string]: PromiseStatus }
+  image: Image | null
 ): ImageEntry | null => {
-  const loadStatus = usePreload(image, preloads);
+  const loadStatus = usePreload(image);
 
   return image ? {
     alt: image,
@@ -60,8 +54,7 @@ export const useImages = (
   images: BackgroundImages | null,
   currentTheme: Theme
 ): { current: ImageEntry | null, previous: ImageEntry | null } => {
-  const preloads = useRef({});
-  const current = useImage(images?.[currentTheme] ?? null, preloads.current);
+  const current = useImage(images?.[currentTheme] ?? null);
   const state = useRef<{ current: ImageEntry | null, previous: ImageEntry | null }>({
     current,
     previous: null
@@ -87,7 +80,7 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
 
   return (
     <div className={classNames(className, css.componentRoot)}>
-      <div className={css.backgroundContainer}>
+      <div>
         {current ? (
           <CSSTransition
             in={current.loaded}
@@ -102,16 +95,11 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
             appear
             duration={500}
             key={current.url}
-            >
+          >
             <div
               className={css.backgroundImage}
               style={{ backgroundImage: `url(${current.url})` }}
             />
-            {/* <img
-              alt={current.alt}
-              className={css.backgroundImage}
-              src={current.url}
-            /> */}
           </CSSTransition>
         ) : null}
         {previous ? (
@@ -127,12 +115,6 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
             in={!current?.loaded}
             key={previous.url}
           >
-            {/* <img
-              alt={previous.alt}
-              className={css.backgroundImage}
-              src={previous.url}
-              /> */}
-
             <div
               className={css.backgroundImage}
               style={{ backgroundImage: `url(${previous.url})` }}
