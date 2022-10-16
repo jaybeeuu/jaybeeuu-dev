@@ -96,6 +96,41 @@ describe("useImages", () => {
     });
   });
 
+  it("sets loaded to false for a new current image.", async () => {
+    const fetchPromise = new ControllablePromise<Response>();
+    jest.spyOn(global, "fetch").mockReturnValue(fetchPromise);
+
+    const { result, rerender, waitForNextUpdate } = renderHook(
+      ({ currentTheme, images }: {
+        images: BackgroundImages | null;
+        currentTheme: Theme;
+      } = {
+        images: {
+          dark: "bath",
+          light: "black-tusk"
+        },
+        currentTheme: "dark"
+      }) => useImages(images, currentTheme));
+
+    await act(() => fetchPromise.resolve({} as unknown as Response));
+
+    await waitForNextUpdate();
+
+    rerender({
+      images: {
+        dark: "bath",
+        light: "black-tusk"
+      },
+      currentTheme: "light"
+    });
+
+    expect(result.current).toStrictEqual(objectContaining({
+      current: objectContaining({
+        loaded: false
+      }) as ImageEntry
+    }));
+  });
+
   it("sets the previous and current images when the images change.", () => {
     const { result, rerender } = renderHook(({
       images,
