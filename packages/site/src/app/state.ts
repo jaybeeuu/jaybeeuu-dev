@@ -6,6 +6,7 @@ import type {
   PrimitiveValue,
   ActionContext
 } from "@jaybeeuu/recoilless";
+import type { Image } from "./images/index";
 import type { Theme } from "./services/theme";
 import { getMediaTheme, persistedTheme } from "./services/theme";
 
@@ -45,29 +46,6 @@ export const theme: PrimitiveValue<Theme> = {
   name: "theme",
   initialValue: persistedTheme.get() ?? getMediaTheme()
 };
-
-export type Image =
-  | "bath"
-  | "black-tusk"
-  | "christmas-trail"
-  | "crabapple-drive"
-  | "english-bay-park"
-  | "fagus"
-  | "galaxy"
-  | "great-northern-highway"
-  | "green-lake"
-  | "harmony-ridge"
-  | "jersey-cream"
-  | "kew"
-  | "lions-gate-bridge"
-  | "moon"
-  | "nullarbor"
-  | "rainbow-park"
-  | "royal-exhibition-hall"
-  | "ship"
-  | "sydney-harbour-bridge"
-  | "sydney"
-  | "tree";
 
 export type BackgroundImages = { light: Image, dark: Image };
 
@@ -134,7 +112,7 @@ export const onMainContentScroll = (
 };
 
 export const hideTitleBar = (
-  { get, set }: ActionContext,
+  { get, set }: ActionContext
 ): void => {
   const elementHeight = get(titleBarHeight);
   set(titleBarOffset, elementHeight + 500);

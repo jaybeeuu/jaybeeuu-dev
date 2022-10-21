@@ -1,86 +1,55 @@
-import { usePromise } from "@jaybeeuu/preact-async";
 import { useAction, useValue } from "@jaybeeuu/preact-recoilless";
-import type { PromiseStatus} from "@jaybeeuu/utilities";
 import classNames from "classnames";
 import type { ComponentChildren, JSX } from "preact";
 import { CSSTransition } from "preact-transitioning";
 import { h } from "preact";
-import { useRef } from "preact/hooks";
+import type { Inputs} from "preact/hooks";
+import { useCallback, useRef, useState } from "preact/hooks";
 import type { Theme } from "../services/theme";
-import type { BackgroundImages , Image } from "../state";
+import type { BackgroundImages } from "../state";
 import { backgroundImages, onMainContentScroll, theme  } from "../state";
 import css from "./background.module.css";
-import { imageUrls } from "./images";
+import type { ImageState } from "./image-preloader";
+import { ImagePreloader } from "./image-preloader";
 
 export interface BackgroundProps {
   children: ComponentChildren;
   className?: string;
 }
 
-const usePreload = (
-  image: Image | null
-): PromiseStatus => {
-  const url = image ? imageUrls[image] : null;
-
-  const status = usePromise(({ abortSignal }): Promise<unknown> => {
-    if (!url) {
-      return Promise.resolve();
-    }
-    return fetch(url, { signal: abortSignal });
-  }, [url]).promiseState.status;
-
-  const lastUrl = useRef(url);
-  const hasBeenPending = useRef(false);
-
-  if (status === "pending") {
-    hasBeenPending.current = true;
+const useSemanticMemo = <Value,>(factory: () => Value, inputs: Inputs): Value => {
+  const previousInputs = useRef(inputs);
+  const currentValue = useRef<Value | "__UNSET__">("__UNSET__");
+  if (
+    currentValue.current === "__UNSET__"
+    || inputs.length !== previousInputs.current.length
+    || inputs.some((input, index) => input !== previousInputs.current[index])
+  ) {
+    currentValue.current = factory();
   }
 
-  if (lastUrl.current !== url) {
-    hasBeenPending.current = false;
-    lastUrl.current = url;
-  }
+  previousInputs.current = inputs;
 
-  const effectiveStatus = hasBeenPending.current ? status : "pending";
-
-  return effectiveStatus;
+  return currentValue.current;
 };
 
-export interface ImageEntry {
-  alt: string;
-  loaded: boolean;
-  url: string;
-}
+const useRerender = (): () => void => {
+  const [, rerender] = useState({});
 
-const useImage = (
-  image: Image | null
-): ImageEntry | null => {
-  const loadStatus = usePreload(image);
-
-  return image ? {
-    alt: image,
-    loaded: loadStatus === "complete",
-    url: imageUrls[image]
-  } : null;
+  return useCallback(() => rerender({}), []);
 };
 
 export const useImages = (
   images: BackgroundImages | null,
   currentTheme: Theme
-): { current: ImageEntry | null, previous: ImageEntry | null } => {
-  const current = useImage(images?.[currentTheme] ?? null);
-  const state = useRef<{ current: ImageEntry | null, previous: ImageEntry | null }>({
-    current,
-    previous: null
-  });
-
-  if (state.current.current?.url !== current?.url) {
-    state.current.previous = state.current.current;
-  }
-
-  state.current.current = current;
-
-  return state.current;
+): ImageState => {
+  const current = images?.[currentTheme] ?? null;
+  const rerender = useRerender();
+  const imagePreloader = useSemanticMemo(
+    () => new ImagePreloader(rerender),
+    [rerender]
+  );
+  return imagePreloader.updateImage(current);
 };
 
 const QuasiImg = ({

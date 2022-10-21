@@ -2,11 +2,11 @@ import { ControllablePromise } from "@jaybeeuu/utilities/test";
 import { act, renderHook } from "@testing-library/preact-hooks";
 import type { Theme } from "../services/theme";
 import type { BackgroundImages } from "../state";
-import type { ImageEntry} from "./background";
+import type { ImageStateEntry } from "./image-preloader";
 import { useImages } from "./background";
-import { imageUrls } from "./images";
+import { imageUrls } from "../images";
 
-jest.mock("./images");
+jest.mock("../images");
 
 // eslint-disable-next-line jest/unbound-method, @typescript-eslint/unbound-method
 const { objectContaining } = expect;
@@ -31,7 +31,7 @@ describe("useImages", () => {
       current: objectContaining({
         alt: "black-tusk",
         url: imageUrls["black-tusk"]
-      }) as ImageEntry,
+      }) as ImageStateEntry,
       previous: null
     });
   });
@@ -49,7 +49,7 @@ describe("useImages", () => {
       current: objectContaining({
         alt: "bath",
         url: imageUrls["bath"]
-      }) as ImageEntry,
+      }) as ImageStateEntry,
       previous: null
     });
   });
@@ -67,7 +67,7 @@ describe("useImages", () => {
     expect(result.current).toStrictEqual({
       current: objectContaining({
         loaded: false
-      }) as ImageEntry,
+      }) as ImageStateEntry,
       previous: null
     });
   });
@@ -91,7 +91,7 @@ describe("useImages", () => {
     expect(result.current).toStrictEqual({
       current: objectContaining({
         loaded: true
-      }) as ImageEntry,
+      }) as ImageStateEntry,
       previous: null
     });
   });
@@ -127,7 +127,7 @@ describe("useImages", () => {
     expect(result.current).toStrictEqual(objectContaining({
       current: objectContaining({
         loaded: false
-      }) as ImageEntry
+      }) as ImageStateEntry
     }));
   });
 
@@ -154,10 +154,10 @@ describe("useImages", () => {
     expect(result.current).toStrictEqual({
       current: objectContaining({
         alt: "christmas-trail"
-      }) as ImageEntry,
+      }) as ImageStateEntry,
       previous: objectContaining({
         alt: "bath"
-      }) as ImageEntry
+      }) as ImageStateEntry
     });
   });
 
@@ -184,10 +184,10 @@ describe("useImages", () => {
     expect(result.current).toStrictEqual({
       current: objectContaining({
         alt: "black-tusk"
-      }) as ImageEntry,
+      }) as ImageStateEntry,
       previous: objectContaining({
         alt: "bath"
-      }) as ImageEntry
+      }) as ImageStateEntry
     });
   });
 });

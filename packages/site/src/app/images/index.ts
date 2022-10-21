@@ -1,4 +1,3 @@
-import type { Image } from "../../state";
 import bath from "./bath.jpg";
 import blackTusk from "./black-tusk.jpg";
 import christmasTrail from "./christmas-trail.jpg";
@@ -20,6 +19,29 @@ import ship from "./ship.jpg";
 import sydneyHarbourBridge from "./sydney-harbour-bridge.jpg";
 import sydney from "./sydney.jpg";
 import tree from "./tree.jpg";
+
+export type Image =
+  | "bath"
+  | "black-tusk"
+  | "christmas-trail"
+  | "crabapple-drive"
+  | "english-bay-park"
+  | "fagus"
+  | "galaxy"
+  | "great-northern-highway"
+  | "green-lake"
+  | "harmony-ridge"
+  | "jersey-cream"
+  | "kew"
+  | "lions-gate-bridge"
+  | "moon"
+  | "nullarbor"
+  | "rainbow-park"
+  | "royal-exhibition-hall"
+  | "ship"
+  | "sydney-harbour-bridge"
+  | "sydney"
+  | "tree";
 
 export const imageUrls: { [image in Image]: string } = {
   bath,
