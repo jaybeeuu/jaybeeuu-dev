@@ -22,15 +22,20 @@ export class ImagePreloader {
   };
   readonly #onImageStatusChanged: ImageUpdateCallback;
   #abort: () => void = () => {};
+  #preloads: Set<string> = new Set();
 
   public constructor(imageUpdateCallback: ImageUpdateCallback) {
     this.#onImageStatusChanged = imageUpdateCallback;
   }
 
-  public updateImage(image: Image | null): ImageState {
+  public setImage(image: Image | null): ImageState {
     if (image === this.#state.current?.name) {
       return this.#state;
     }
+
+    this.#abort();
+
+    const isPreloaded = !!image && this.#preloads.has(image);
 
     this.#state = {
       previous: this.#state.current,
@@ -38,11 +43,13 @@ export class ImagePreloader {
         name: image,
         alt: image,
         url: imageUrls[image],
-        loaded: false
+        loaded: isPreloaded
       }
     };
 
-    void this.#preloadCurrent();
+    if (!isPreloaded) {
+      void this.#preloadCurrent();
+    }
 
     return this.#state;
   }
@@ -55,15 +62,18 @@ export class ImagePreloader {
     if (!this.#state.current) {
       return;
     }
+    const { current } = this.#state;
 
     try {
       const abortController = new AbortController();
       this.#abort = () => abortController.abort();
-      await fetch(this.#state.current?.url, { signal: abortController.signal });
+      await fetch(current.url, { signal: abortController.signal });
       this.#state = {
         ...this.#state,
-        current: { ...this.#state.current, loaded: true }
+        current: { ...current, loaded: true }
       };
+
+      this.#preloads.add(current?.name);
       this.#emit();
     } catch (error){
       return;
