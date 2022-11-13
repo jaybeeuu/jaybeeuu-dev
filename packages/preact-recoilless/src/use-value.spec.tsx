@@ -3,39 +3,23 @@
  */
 import type { DerivedValue} from "@jaybeeuu/recoilless";
 import { Store } from "@jaybeeuu/recoilless";
-import utils from "@jaybeeuu/utilities";
-import type { ClearablePromise , ValueOrFactory } from "@jaybeeuu/utilities";
-import { EchoRegistry } from "@jaybeeuu/utilities/test";
+import { monitorPromise, pending } from "@jaybeeuu/utilities";
+import type { MonitorPromiseOptions , PromiseState} from "@jaybeeuu/utilities";
 import { act, renderHook } from "@testing-library/preact-hooks";
 import type { ComponentType} from "preact";
 import { h } from "preact";
 import { StoreProvider } from "./store-provider.js";
 import { useValue } from "./use-value.js";
 
-const { echo } = utils;
-
 jest.mock("@jaybeeuu/utilities", () => {
-  const actual = jest.requireActual<typeof utils>("@jaybeeuu/utilities");
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const actualUtilities = jest.requireActual("@jaybeeuu/utilities");
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return {
-    ...actual,
-    echo: jest.fn()
+    ...actualUtilities,
+    monitorPromise: jest.fn().mockImplementation(actualUtilities.monitorPromise)
   };
 });
-
-const setupEcho = (): EchoRegistry => {
-  const echoRegistry = new EchoRegistry();
-
-  jest.mocked(echo).mockImplementation(
-    <Value,>(
-      valueOrValueFactory: ValueOrFactory<Value>,
-      delay: number = 0
-    ): ClearablePromise<Value> => {
-      return echoRegistry.set(valueOrValueFactory, delay);
-    }
-  );
-
-  return echoRegistry;
-};
 
 // eslint-disable-next-line react/display-name
 const Wrapper = (store?: Store): ComponentType => (
@@ -131,69 +115,32 @@ describe("useValue", () => {
   });
 
   describe("derived - async", () => {
-    it("immediately returns pending.", () => {
-      setupEcho();
+    it("monitors the promise.", () => {
+      const promise = Promise.resolve("Whistler");
+
+      const options: Partial<MonitorPromiseOptions> = {};
+      renderHook(
+        () => useValue({ name: "holiday", derive: () => {
+          return promise;
+        } }, options),
+        { wrapper: Wrapper() }
+      );
+
+      expect(monitorPromise).toHaveBeenCalledWith(promise, options);
+    });
+
+    it("returns the monitored status of the promise.", () => {
+      const promise = Promise.resolve("Whistler");
+
+      const options: Partial<MonitorPromiseOptions> = {};
       const { result } = renderHook(
-        () => useValue({ name: "holiday", derive: () => Promise.resolve("Whistler") }),
+        () => useValue({ name: "holiday", derive: () => {
+          return promise;
+        } }, options),
         { wrapper: Wrapper() }
       );
 
-      expect(result.current).toStrictEqual({ status: "pending" });
-    });
-
-    it("returns the resolved value.", async () => {
-      setupEcho();
-      const { result, waitForNextUpdate } = renderHook(
-        () => useValue({ name: "holiday", derive: () => Promise.resolve("Whistler") }),
-        { wrapper: Wrapper() }
-      );
-      await waitForNextUpdate({ timeout: 100 }); // Complete
-      expect(result.current).toStrictEqual({ status: "complete", value: "Whistler" });
-    });
-
-    it("returns a slow status if the promise takes a while.", async () => {
-      const echoRegistry = setupEcho();
-      const { result, waitForNextUpdate } = renderHook(
-        () => useValue({
-          name: "holiday",
-          derive: () => echo("Whistler", 1000)
-        }, { slowDelay: 500 }),
-        { wrapper: Wrapper() }
-      );
-
-      await act(() => echoRegistry.advanceByTime(500));
-      await waitForNextUpdate(); // slow
-      expect(result.current).toStrictEqual({ status: "slow" });
-    });
-
-    it("resolves to the value after it was reported as slow.", async () => {
-      const echoRegistry = setupEcho();
-      const { result, waitForNextUpdate } = renderHook(
-        () => useValue({
-          name: "holiday",
-          derive: () => echo("Whistler", 15)
-        }, { slowDelay: 1 }),
-        { wrapper: Wrapper() }
-      );
-      await act(() => echoRegistry.advanceByTime(5));
-      await waitForNextUpdate(); // slow
-
-      await act(() => echoRegistry.advanceByTime(10));
-      await waitForNextUpdate(); // slow
-
-      expect(result.current).toStrictEqual({ status: "complete", value: "Whistler" });
-    });
-
-    it("returns the error if the promise fails.", async () => {
-      const rejectedPromise = Promise.reject(new Error("Whoops!"));
-      const { result, waitForNextUpdate } = renderHook(
-        () => useValue({ name: "holiday", derive: () => rejectedPromise }),
-        { wrapper: Wrapper() }
-      );
-
-      await waitForNextUpdate(); // Failed
-      expect(result.current).toStrictEqual({ status: "failed", error: new Error("Whoops!") });
+      expect(result.current).toStrictEqual(pending());
     });
   });
 });
-

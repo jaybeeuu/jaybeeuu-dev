@@ -1,8 +1,12 @@
-import { asError, echo } from "@jaybeeuu/utilities";
-import { advanceByTimeThenAwait, advanceToNextThenAwait } from "../test/async-helpers.js";
-import { useFakeTimers } from "../test/time.js";
+import { echo } from "./delay.js";
+import {
+  advanceByTimeThenAwait,
+  advanceToNextThenAwait,
+  withFakeTimers
+} from "./test/index.js";
 import type { MonitorPromiseOptions, PromiseState} from "./promise-status.js";
 import { monitorPromise, combinePromises } from "./promise-status.js";
+import { asError } from "./as-error";
 
 const getPromiseStatusIterator = <Value>(
   promise: Promise<Value>,
@@ -21,7 +25,7 @@ const getNextValue = async <Value>(asyncIterator: AsyncIterator<Value>): Promise
 };
 
 describe("monitorPromise", () => {
-  useFakeTimers();
+  withFakeTimers();
 
   it("returns the result immediately if the promise is resolved.", async () => {
     const requestIterator = getPromiseStatusIterator(Promise.resolve("Apples"));

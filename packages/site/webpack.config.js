@@ -52,6 +52,7 @@ const config = {
     compress: true,
     historyApiFallback: true,
     host: env.CLIENT_HOST_NAME,
+    // https: true,
     https: {
       key: fs.readFileSync(paths.certs.key),
       cert: fs.readFileSync(paths.certs.certificate)

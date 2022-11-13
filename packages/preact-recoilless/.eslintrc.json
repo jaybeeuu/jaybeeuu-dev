@@ -22,12 +22,6 @@
     }
   },
   "rules": {
-    "react/prop-types": "off",
-    "jest/require-hook": [
-      "error",
-      {
-        "allowedFunctionCalls": ["useFakeTimers"]
-      }
-    ]
+    "react/prop-types": "off"
   }
 }

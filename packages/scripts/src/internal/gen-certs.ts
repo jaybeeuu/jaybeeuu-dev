@@ -37,7 +37,7 @@ const writePem = async (filePath: string, buffer: Buffer): Promise<void> => {
 };
 
 export interface GenCertsOptions extends PathOptions {
-  domain: string;
+  domain: string[];
 }
 
 export const genCerts = async (options: GenCertsOptions): Promise<void> => {

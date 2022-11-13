@@ -72,15 +72,12 @@ describe("useImages", () => {
     });
   });
 
-  it("sets loaded to true once the image has loaded.", async () => {
+  it.only("sets loaded to true once the image has loaded.", async () => {
     const fetchPromise = new ControllablePromise<Response>();
     jest.spyOn(global, "fetch").mockReturnValue(fetchPromise);
 
     const { result, waitForNextUpdate } = renderHook(() => useImages(
-      {
-        dark: "bath",
-        light: "black-tusk"
-      },
+      { dark: "bath", light: "black-tusk" },
       "dark"
     ));
 

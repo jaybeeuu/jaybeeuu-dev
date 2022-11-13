@@ -67,7 +67,7 @@ export async function* monitorPromise<Value> (
     timeoutDelay: 5000,
     ...userOptions
   };
-  const slowPromise = echo(slow(), options.slowDelay);
+  const slowPromise = echo(() => slow(), options.slowDelay);
   const timeout = echo(failed(new Error("Request timed out.")), options.timeoutDelay);
 
   try {

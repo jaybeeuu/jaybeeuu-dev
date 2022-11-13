@@ -5,9 +5,9 @@ export const main = (): void => {
   void yargs()
     .command("$0", "Generate SSL certificates.", {
       domain: {
-        default: "localhost",
+        default: ["localhost", "0.0.0.0"],
         alias: "d",
-        type: "string"
+        type: "array"
       },
       directory: {
         default: "./certs",
