@@ -72,7 +72,7 @@ describe("useImages", () => {
     });
   });
 
-  it.only("sets loaded to true once the image has loaded.", async () => {
+  it("sets loaded to true once the image has loaded.", async () => {
     const fetchPromise = new ControllablePromise<Response>();
     jest.spyOn(global, "fetch").mockReturnValue(fetchPromise);
 
@@ -81,9 +81,9 @@ describe("useImages", () => {
       "dark"
     ));
 
-    await act(() => fetchPromise.resolve({} as unknown as Response));
-
-    await waitForNextUpdate();
+    const waitPromise = waitForNextUpdate();
+    fetchPromise.resolve({} as unknown as Response);
+    await waitPromise;
 
     expect(result.current).toStrictEqual({
       current: objectContaining({

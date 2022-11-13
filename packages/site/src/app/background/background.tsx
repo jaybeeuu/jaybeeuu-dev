@@ -34,8 +34,8 @@ const useSemanticMemo = <Value,>(factory: () => Value, inputs: Inputs): Value =>
 };
 
 const useRerender = (): () => void => {
-  const [, rerender] = useState(0);
-  return useCallback(() => rerender((prev) => prev++), []);
+  const [renderCount, rerender] = useState(0);
+  return useCallback(() => rerender(renderCount + 1), []);
 };
 
 export const useImages = (
@@ -44,11 +44,8 @@ export const useImages = (
 ): ImageState => {
   const current = images?.[currentTheme] ?? null;
   const rerender = useRerender();
-  const callback = useCallback(() => {
-    rerender();
-  }, []);
   const imagePreloader = useSemanticMemo(
-    () => new ImagePreloader(callback),
+    () => new ImagePreloader(rerender),
     [rerender]
   );
   return imagePreloader.setImage(current);

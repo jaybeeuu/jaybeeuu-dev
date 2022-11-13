@@ -1,3 +1,4 @@
+import { Console } from "console";
 import type { Image} from "../images/index";
 import { imageUrls } from "../images/index";
 
@@ -21,7 +22,6 @@ export class ImagePreloader {
     previous: null
   };
   readonly #onImageStatusChanged: ImageUpdateCallback;
-  #abort: () => void = () => {};
   #preloads: Set<string> = new Set();
 
   public constructor(imageUpdateCallback: ImageUpdateCallback) {
@@ -33,10 +33,7 @@ export class ImagePreloader {
       return this.#state;
     }
 
-    this.#abort();
-
     const isPreloaded = !!image && this.#preloads.has(image);
-
     this.#state = {
       previous: this.#state.current,
       current: image === null ? null : {
@@ -65,9 +62,7 @@ export class ImagePreloader {
     const { current } = this.#state;
 
     try {
-      const abortController = new AbortController();
-      this.#abort = () => abortController.abort();
-      await fetch(current.url, { signal: abortController.signal });
+      await fetch(current.url);
       this.#state = {
         ...this.#state,
         current: { ...current, loaded: true }
