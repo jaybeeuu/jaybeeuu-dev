@@ -274,7 +274,7 @@ const getEntry = (
 };
 
 const maybeGetEntry = (
-  path: string,
+  path: string
 ): GetEntryResult => {
   const resolvedPath = resolvePath(path);
   const directories = resolvedPath.split(pathUtils.sep);

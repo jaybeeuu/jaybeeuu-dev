@@ -1,4 +1,3 @@
-import { Console } from "console";
 import type { Image} from "../images/index";
 import { imageUrls } from "../images/index";
 

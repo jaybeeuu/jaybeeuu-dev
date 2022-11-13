@@ -127,7 +127,7 @@ describe("manifest", () => {
     const manifest = await getPostManifest();
 
     expect(manifest[slug]?.publishDate).toStrictEqual(
-      new Date(publishDate).toISOString(),
+      new Date(publishDate).toISOString()
     );
   });
 

@@ -26,7 +26,7 @@ export class DerivedValueState<Val> implements ValueState<Val> {
   constructor(
     { name, derive }: DerivedValue<Val>,
     removeFromStore: () => void,
-    getDependency: GetDependency,
+    getDependency: GetDependency
   ) {
     this.#derive = derive;
     this.#getDependency = getDependency;

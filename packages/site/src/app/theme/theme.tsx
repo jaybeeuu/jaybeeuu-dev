@@ -42,7 +42,7 @@ export const ThemeRoot = ({ children, className }: ThemeProps): JSX.Element => {
       className={classNames(
         currentTheme,
         className,
-        e2eHooks.root,
+        e2eHooks.root
       )}
     >
       {children}

@@ -39,7 +39,6 @@ export class EchoRegistry {
     valueOrFactory: ValueOrFactory<Value>,
     delay: number = 0
   ): ClearablePromise<Value> {
-    console.log("registering echo", delay);
     const promise = new ControllablePromise<Value>();
     const id = this.#nextId++;
     this.#echos = [
@@ -81,7 +80,6 @@ export class EchoRegistry {
   }
 
   #runPendingEchos(): void {
-    console.log("Running echos", this.#echos);
     this.#echos
       .filter((e) => e.resolveAt <= this.#currentTime)
       .forEach((e) => e.resolve());

@@ -4,7 +4,8 @@
 import type { DerivedValue} from "@jaybeeuu/recoilless";
 import { Store } from "@jaybeeuu/recoilless";
 import { monitorPromise, pending } from "@jaybeeuu/utilities";
-import type { MonitorPromiseOptions , PromiseState} from "@jaybeeuu/utilities";
+import type { MonitorPromiseOptions } from "@jaybeeuu/utilities";
+import type * as UtilitiesModule from "@jaybeeuu/utilities";
 import { act, renderHook } from "@testing-library/preact-hooks";
 import type { ComponentType} from "preact";
 import { h } from "preact";
@@ -12,9 +13,8 @@ import { StoreProvider } from "./store-provider.js";
 import { useValue } from "./use-value.js";
 
 jest.mock("@jaybeeuu/utilities", () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const actualUtilities = jest.requireActual("@jaybeeuu/utilities");
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  const actualUtilities = jest.requireActual<typeof UtilitiesModule>("@jaybeeuu/utilities");
+
   return {
     ...actualUtilities,
     monitorPromise: jest.fn().mockImplementation(actualUtilities.monitorPromise)
