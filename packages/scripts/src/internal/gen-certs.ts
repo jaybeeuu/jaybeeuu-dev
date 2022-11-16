@@ -1,6 +1,12 @@
 import path from "path";
 import * as fs from "fs";
-import { certificateFor } from "devcert";
+import { certificateFor, uninstall as baseUninstall } from "devcert";
+
+export const uninstall  = (): void => {
+  console.log("Uninstalling CA...");
+  baseUninstall();
+  console.log("Done.");
+};
 
 export interface PathOptions {
   directory: string;
