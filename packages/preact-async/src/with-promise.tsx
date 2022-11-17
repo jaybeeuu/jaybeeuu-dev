@@ -1,7 +1,7 @@
-import type { VNode, ComponentType, FunctionComponent } from "preact";
+import type { ComponentType, FunctionComponent, JSX } from "preact";
 import { h } from "preact";
-import type { PromiseState} from "./promise-status.js";
-import { combinePromises } from "./promise-status.js";
+import type { PromiseState } from "@jaybeeuu/utilities";
+import { combinePromises } from "@jaybeeuu/utilities";
 
 export type MaybePromises<ContentProps extends object> = {
   [Key in keyof ContentProps]: PromiseState<ContentProps[Key]> | ContentProps[Key];
@@ -11,11 +11,16 @@ export interface FailedProps {
   error: Error | { [value: string]: Error }
 }
 
+export type PendingComponent = ComponentType<{}>;
+export type SlowComponent = ComponentType<{}>;
+export type FailedComponent = ComponentType<FailedProps>;
+export type ContentComponent<ContentProps> = ComponentType<ContentProps>;
+
 export interface WithPromiseComponents<ContentProps> {
-  Pending: ComponentType<{}>;
-  Slow: ComponentType<{}>;
-  Failed: ComponentType<FailedProps>;
-  Content: ComponentType<ContentProps>;
+  Pending: PendingComponent;
+  Slow: SlowComponent;
+  Failed: FailedComponent;
+  Content: ContentComponent<ContentProps>;
 }
 
 export const withPromise = <ContentProps extends object>(
@@ -23,8 +28,9 @@ export const withPromise = <ContentProps extends object>(
 ): FunctionComponent<MaybePromises<ContentProps>> => {
   const FetchCompleteComponent = (
     ownProps: MaybePromises<ContentProps>
-  ): VNode | null => {
+  ): JSX.Element | null => {
     const promise = combinePromises(ownProps);
+
     switch (promise.status)
     {
       case "pending": return <Pending />;

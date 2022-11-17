@@ -1,35 +1,46 @@
-import yargs from "yargs/yargs";
-import { genCerts } from "../internal/gen-certs.js";
+import yargs from "yargs";
+import { genCerts, uninstall } from "../internal/gen-certs.js";
 
-export const main = (): void => {
-  void yargs()
-    .command("$0", "Generate SSL certificates.", {
-      domain: {
-        default: "localhost",
-        alias: "d",
-        type: "string"
+export const main = (argv: string[]): void => {
+  void yargs(argv)
+    .command(
+      ["$0", "make"],
+      "Generate SSL certificates.",
+      {
+        domain: {
+          default: ["localhost"],
+          alias: "d",
+          type: "array"
+        },
+        directory: {
+          default: "./certs",
+          alias: "o",
+          type: "string"
+        },
+        certName: {
+          default: "cert.crt",
+          alias: "crt",
+          type: "string"
+        },
+        keyName: {
+          default: "key.key",
+          alias: "k",
+          type: "string"
+        },
+        caName: {
+          default: "ca.pem",
+          alias: "ca",
+          type: "string"
+        }
       },
-      directory: {
-        default: "./certs",
-        alias: "o",
-        type: "string"
-      },
-      certName: {
-        default: "cert.crt",
-        alias: "crt",
-        type: "string"
-      },
-      keyName: {
-        default: "key.key",
-        alias: "k",
-        type: "string"
-      },
-      caName: {
-        default: "ca.pem",
-        alias: "ca",
-        type: "string"
-      }
-    }, genCerts)
+      genCerts
+    )
+    .command(
+      "uninstall",
+      "Uninstalls the CA.",
+      {},
+      uninstall
+    )
     .demandCommand()
     .help()
     .argv;

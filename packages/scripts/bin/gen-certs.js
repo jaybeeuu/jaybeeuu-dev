@@ -1,3 +1,3 @@
 import { main } from "../lib/exec/gen-certs.js";
 
-main();
+main(process.argv.slice(2));

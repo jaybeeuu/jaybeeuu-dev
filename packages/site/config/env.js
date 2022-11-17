@@ -1,4 +1,4 @@
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -10,7 +10,7 @@ const envVars = {
 
 process.env.NODE_ENV = process.env.NODE_ENV ?? envVars.NODE_ENV;
 
-const env = {
+export const env = {
   ...envVars,
   ...Object.fromEntries(
     Object.entries(process.env)
@@ -18,14 +18,10 @@ const env = {
   )
 };
 
-const stringifiedEnv = {
+export const stringifiedEnv = {
   "process.env": Object.entries(env)
     .reduce((newEnv, [key, value]) => {
       newEnv[key] = JSON.stringify(value);
       return newEnv;
     }, {})
-};
-
-module.exports = {
-  env, stringifiedEnv
 };

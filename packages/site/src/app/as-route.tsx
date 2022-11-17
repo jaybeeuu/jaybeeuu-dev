@@ -1,4 +1,4 @@
-import type { FunctionComponent, ComponentType, VNode } from "preact";
+import type { FunctionComponent, ComponentType, JSX } from "preact";
 import { h } from "preact";
 import { getDisplayName } from "../utils/component";
 
@@ -11,7 +11,9 @@ export type RouteProps = {
 export const asRoute = <PathParams extends string, WrappedComponentProps extends {}>(
   WrappedComponent: ComponentType<WrappedComponentProps>
 ): FunctionComponent<RouteProps & Omit<WrappedComponentProps, PathParams>> => {
-  const AsRoute = (props: RouteProps & Omit<WrappedComponentProps, PathParams>): VNode => (
+  const AsRoute = (
+    props: RouteProps & Omit<WrappedComponentProps, PathParams>
+  ): JSX.Element => (
     // @ts-expect-error
     <WrappedComponent {...props} />
   );

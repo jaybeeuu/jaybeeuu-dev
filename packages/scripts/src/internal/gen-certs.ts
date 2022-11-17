@@ -1,6 +1,12 @@
 import path from "path";
 import * as fs from "fs";
-import { certificateFor } from "devcert";
+import { certificateFor, uninstall as baseUninstall } from "devcert";
+
+export const uninstall  = (): void => {
+  console.log("Uninstalling CA...");
+  baseUninstall();
+  console.log("Done.");
+};
 
 export interface PathOptions {
   directory: string;
@@ -37,7 +43,7 @@ const writePem = async (filePath: string, buffer: Buffer): Promise<void> => {
 };
 
 export interface GenCertsOptions extends PathOptions {
-  domain: string;
+  domain: string[];
 }
 
 export const genCerts = async (options: GenCertsOptions): Promise<void> => {

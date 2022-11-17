@@ -7,9 +7,6 @@ const config = {
   transform: {
     "^.+\\.(t|j)sx?$": ["ts-jest"]
   },
-  transformIgnorePatterns: [
-    "node_modules[\\\\/](?!(@jaybeeuu))"
-  ],
   testEnvironment: "jsdom",
   testMatch: [
     "**/*.spec.ts",

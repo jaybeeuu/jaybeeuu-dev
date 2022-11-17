@@ -2,8 +2,7 @@ const config = {
   clearMocks: true,
   testEnvironment: "node",
   collectCoverageFrom : [
-    "src/**",
-    "!src/bin/**"
+    "src/**"
   ],
   transform: {
     "^.+\\.(t|j)sx?$": ["ts-jest"]

@@ -1,8 +1,10 @@
-import { asError, echo, microEcho, multiPartition } from "@jaybeeuu/utilities";
+import { echo, microEcho } from "./delay.js";
+import { multiPartition } from "./multi-partition.js";
+import { asError } from "./as-error.js";
 
 export const PromiseStatusTuple = ["pending", "slow", "failed", "complete"] as const;
 export const PromiseStatuses = PromiseStatusTuple as readonly string[];
-export type PromiseStatus = typeof PromiseStatuses[number];
+export type PromiseStatus = typeof PromiseStatusTuple[number];
 
 const pendingStatus = { status: "pending" } as const;
 export type Pending  = typeof pendingStatus;
@@ -20,13 +22,13 @@ export interface Complete<Value> {
   value: Value;
 }
 
-const pending = (): Pending => pendingStatus;
-const slow = (): Slow => slowStatus;
-const failed = (error: Error | { [value: string]: Error }): Failed => ({ status: "failed", error });
+export const pending = (): Pending => pendingStatus;
+export const slow = (): Slow => slowStatus;
+export const failed = (error: Error | { [value: string]: Error }): Failed => ({ status: "failed", error });
 
-function complete(): Complete<never>
-function complete<Value>(value: Value): Complete<Value>
-function complete<Value>(value?: Value): Complete<Value> {
+export function complete(): Complete<never>
+export function complete<Value>(value: Value): Complete<Value>
+export function complete<Value>(value?: Value): Complete<Value> {
   return { status: "complete", value: value as Value };
 }
 
@@ -65,7 +67,7 @@ export async function* monitorPromise<Value> (
     timeoutDelay: 5000,
     ...userOptions
   };
-  const slowPromise = echo(slow(), options.slowDelay);
+  const slowPromise = echo(() => slow(), options.slowDelay);
   const timeout = echo(failed(new Error("Request timed out.")), options.timeoutDelay);
 
   try {

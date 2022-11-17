@@ -4,7 +4,7 @@ import { useEffect } from "preact/hooks";
 import classNames from "classnames";
 import { theme as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import { useValue } from "@jaybeeuu/preact-recoilless";
-import type { Theme as Themes } from "../services/theme";
+import type { Theme } from "../services/theme";
 import { listenToMediaTheme, persistedTheme } from "../services/theme";
 import { theme } from "../state";
 
@@ -19,7 +19,7 @@ export interface ThemeProps {
   className: string;
 }
 
-const useTheme = (): Themes => {
+const useTheme = (): Theme => {
   const [currentTheme, setStateTheme] = useValue(theme);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const useTheme = (): Themes => {
   return currentTheme;
 };
 
-export const Theme = ({ children, className }: ThemeProps): JSX.Element => {
+export const ThemeRoot = ({ children, className }: ThemeProps): JSX.Element => {
   const currentTheme = useTheme();
 
   return (
@@ -42,11 +42,11 @@ export const Theme = ({ children, className }: ThemeProps): JSX.Element => {
       className={classNames(
         currentTheme,
         className,
-        e2eHooks.root,
+        e2eHooks.root
       )}
     >
       {children}
     </div>
   );
 };
-Theme.displayName = "Theme";
+ThemeRoot.displayName = "ThemeRoot";

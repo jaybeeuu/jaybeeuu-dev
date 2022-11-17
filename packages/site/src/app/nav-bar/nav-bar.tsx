@@ -1,4 +1,4 @@
-import type { VNode } from "preact";
+import type { JSX } from "preact";
 import { h } from "preact";
 import { useState } from "preact/hooks";
 import { navBar as e2eHooks } from "@jaybeeuu/e2e-hooks";
@@ -19,7 +19,7 @@ export interface NavBarProps {
   className?: string;
 }
 
-export const NavBar = ({ className }: NavBarProps): VNode => {
+export const NavBar = ({ className }: NavBarProps): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

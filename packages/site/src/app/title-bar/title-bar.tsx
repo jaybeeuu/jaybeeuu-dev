@@ -1,6 +1,6 @@
 import { useValue } from "@jaybeeuu/preact-recoilless";
 import classNames from "classnames";
-import type { VNode } from "preact";
+import type { JSX } from "preact";
 import { h } from "preact";
 import type { Ref} from "preact/hooks";
 import { useLayoutEffect, useRef } from "preact/hooks";
@@ -27,7 +27,7 @@ export const useTitleBarRef = (): Ref<HTMLDivElement | null> => {
   return titleRef;
 };
 
-export const TitleBar = ({ className }: NavBarProps): VNode => {
+export const TitleBar = ({ className }: NavBarProps): JSX.Element => {
   const titleRef = useTitleBarRef();
   const style = useValue(titleBarStyle);
 

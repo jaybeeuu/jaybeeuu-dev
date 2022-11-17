@@ -83,15 +83,15 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
   );
 });
 
-export type PostProps = { path: string, slug: string };
+export interface PostProps {
+  slug: string;
+}
 
 const Post: FunctionComponent<PostProps> = ({ slug }) => {
-  useBackgrounds({ dark: "moon", light: "blackTusk" });
+  useBackgrounds({ dark: "moon", light: "black-tusk" });
 
   const [selectedSlug, setSlug] = useValue(currentPostSlug);
-  useEffect(() => {
-    setSlug(slug);
-  }, [slug]);
+  useEffect(() => setSlug(slug), [slug]);
 
   if (!selectedSlug) {
     return null;
@@ -101,7 +101,7 @@ const Post: FunctionComponent<PostProps> = ({ slug }) => {
   const postHtml = useValue(currentPostHtml);
   return <PostComponent {...{ postMeta, postHtml }} />;
 };
-
 Post.displayName = "Post";
 
 export const PostRoute = asRoute(Post);
+

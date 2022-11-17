@@ -1,4 +1,4 @@
-import type { VNode } from "preact";
+import type { JSX } from "preact";
 import { h } from "preact";
 import type { PostManifest, PostMetaData } from "@jaybeeuu/compost";
 import { postList as e2eHooks } from "@jaybeeuu/e2e-hooks";
@@ -50,8 +50,8 @@ const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
 });
 PostList.displayName = "PostList";
 
-export const PostsRoute = asRoute((): VNode => {
-  useBackgrounds({ dark: "greatNorthernHighway", light: "kew" });
+export const PostsRoute = asRoute((): JSX.Element => {
+  useBackgrounds({ dark: "great-northern-highway", light: "kew" });
   const manifest = useValue(postsManifest);
   return <PostList manifest={manifest} />;
 });

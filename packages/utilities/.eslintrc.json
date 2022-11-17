@@ -5,5 +5,13 @@
   ],
     "env": {
     "browser": true
+  },
+  "rules": {
+    "jest/require-hook": [
+      "error",
+      {
+        "allowedFunctionCalls": ["withFakeTimers"]
+      }
+    ]
   }
 }

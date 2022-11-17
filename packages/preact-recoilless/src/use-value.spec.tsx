@@ -3,157 +3,23 @@
  */
 import type { DerivedValue} from "@jaybeeuu/recoilless";
 import { Store } from "@jaybeeuu/recoilless";
-import utils from "@jaybeeuu/utilities";
-import type { ClearablePromise , ValueOrFactory } from "@jaybeeuu/utilities";
+import { monitorPromise, pending } from "@jaybeeuu/utilities";
+import type { MonitorPromiseOptions } from "@jaybeeuu/utilities";
+import type * as UtilitiesModule from "@jaybeeuu/utilities";
 import { act, renderHook } from "@testing-library/preact-hooks";
 import type { ComponentType} from "preact";
 import { h } from "preact";
 import { StoreProvider } from "./store-provider.js";
 import { useValue } from "./use-value.js";
 
-const { echo } = utils;
-
 jest.mock("@jaybeeuu/utilities", () => {
-  const actual = jest.requireActual<typeof utils>("@jaybeeuu/utilities");
+  const actualUtilities = jest.requireActual<typeof UtilitiesModule>("@jaybeeuu/utilities");
+
   return {
-    ...actual,
-    echo: jest.fn()
+    ...actualUtilities,
+    monitorPromise: jest.fn().mockImplementation(actualUtilities.monitorPromise)
   };
 });
-
-type Executor<Value> = (
-  resolve: (value: Value | PromiseLike<Value>) => void,
-  reject: (reason?: any) => void
-) => void;
-
-class ControllablePromise<Value> extends Promise<Value> {
-  #resolvePromise?: (value: Value | PromiseLike<Value>) => void;
-  #rejectPromise?: (reason?: any) => void;
-
-  constructor(executor: Executor<Value> = () => {}) {
-    let resolvePromise: (value: Value | PromiseLike<Value>) => void;
-    let rejectPromise: (reason?: any) => void;
-    super((resolve, reject) => {
-      resolvePromise = resolve;
-      rejectPromise = reject;
-      executor(resolve, reject);
-    });
-    // @ts-expect-error
-    this.#resolvePromise = resolvePromise;
-
-    // @ts-expect-error
-    this.#rejectPromise = rejectPromise;
-  }
-
-  resolve(value: Value | PromiseLike<Value>): void {
-    this.#resolvePromise?.(value);
-  }
-
-  reject(reason?: any): void {
-    this.#rejectPromise?.(reason);
-  }
-}
-
-class DecoratedClearablePromise<Value> extends Promise<Value> {
-  #clear: () => void;
-
-  constructor(
-    promise: Promise<Value> | Executor<Value>,
-    clear: () => void = () => {}
-  ) {
-    const executor: Executor<Value> = typeof promise === "function"
-      ? promise
-      : (resolve) => resolve(promise);
-
-    super(executor);
-    this.#clear = clear;
-  }
-
-  clear(): void {
-    this.#clear();
-  }
-}
-
-interface Echo {
-  resolve: () => void;
-  resolveAt: number;
-  id: number;
-}
-
-const isFactory = <Value,>(value: ValueOrFactory<Value>): value is () => Value => typeof value === "function";
-
-class EchoRegistry {
-  #echos: Echo[] = [];
-  #currentTime = 0;
-  #nextId = 0;
-
-  set <Value,>(
-    valueOrFactory: ValueOrFactory<Value>,
-    delay: number = 0
-  ): ClearablePromise<Value> {
-    const promise = new ControllablePromise<Value>();
-    const id = this.#nextId++;
-    this.#echos = [
-      ...this.#echos,
-      {
-        id,
-        resolve: () => {
-          const value = isFactory(valueOrFactory) ? valueOrFactory() : valueOrFactory;
-          promise.resolve(value);
-        },
-        resolveAt: delay + this.#currentTime
-      }
-    ];
-
-    return new DecoratedClearablePromise(promise, () => this.clear(id));
-  }
-
-  clear(id: number): void {
-    this.#echos = this.#echos.filter((e) => e.id !== id);
-  }
-
-  advanceByTime(time: number): void {
-    this.#currentTime += time;
-    this.#runPendingEchos();
-  }
-
-  clearAllEchos(): void {
-    this.#echos = [];
-  }
-
-  runAllEchos(): void {
-    this.#currentTime = Math.max(...this.#echos.map((e) => e.resolveAt));
-    this.#runPendingEchos();
-  }
-
-  advanceToNextEcho(): void {
-    this.#currentTime = Math.min(...this.#echos.map((e) => e.resolveAt));
-    this.#runPendingEchos();
-  }
-
-  #runPendingEchos(): void {
-    this.#echos
-      .filter((e) => e.resolveAt <= this.#currentTime)
-      .forEach((e) => e.resolve());
-    this.#echos = this.#echos
-      .filter((e) => e.resolveAt > this.#currentTime);
-  }
-}
-
-const setupEcho = (): EchoRegistry => {
-  const echoRegistry = new EchoRegistry();
-
-  jest.mocked(echo).mockImplementation(
-    <Value,>(
-      valueOrValueFactory: ValueOrFactory<Value>,
-      delay: number = 0
-    ): ClearablePromise<Value> => {
-      return echoRegistry.set(valueOrValueFactory, delay);
-    }
-  );
-
-  return echoRegistry;
-};
 
 // eslint-disable-next-line react/display-name
 const Wrapper = (store?: Store): ComponentType => (
@@ -249,69 +115,32 @@ describe("useValue", () => {
   });
 
   describe("derived - async", () => {
-    it("immediately returns pending.", () => {
-      setupEcho();
+    it("monitors the promise.", () => {
+      const promise = Promise.resolve("Whistler");
+
+      const options: Partial<MonitorPromiseOptions> = {};
+      renderHook(
+        () => useValue({ name: "holiday", derive: () => {
+          return promise;
+        } }, options),
+        { wrapper: Wrapper() }
+      );
+
+      expect(monitorPromise).toHaveBeenCalledWith(promise, options);
+    });
+
+    it("returns the monitored status of the promise.", () => {
+      const promise = Promise.resolve("Whistler");
+
+      const options: Partial<MonitorPromiseOptions> = {};
       const { result } = renderHook(
-        () => useValue({ name: "holiday", derive: () => Promise.resolve("Whistler") }),
+        () => useValue({ name: "holiday", derive: () => {
+          return promise;
+        } }, options),
         { wrapper: Wrapper() }
       );
 
-      expect(result.current).toStrictEqual({ status: "pending" });
-    });
-
-    it("returns the resolved value.", async () => {
-      setupEcho();
-      const { result, waitForNextUpdate } = renderHook(
-        () => useValue({ name: "holiday", derive: () => Promise.resolve("Whistler") }),
-        { wrapper: Wrapper() }
-      );
-      await waitForNextUpdate({ timeout: 100 }); // Complete
-      expect(result.current).toStrictEqual({ status: "complete", value: "Whistler" });
-    });
-
-    it("returns a slow status if the promise takes a while.", async () => {
-      const echoRegistry = setupEcho();
-      const { result, waitForNextUpdate } = renderHook(
-        () => useValue({
-          name: "holiday",
-          derive: () => echo("Whistler", 1000)
-        }, { slowDelay: 500 }),
-        { wrapper: Wrapper() }
-      );
-
-      await act(() => echoRegistry.advanceByTime(500));
-      await waitForNextUpdate(); // slow
-      expect(result.current).toStrictEqual({ status: "slow" });
-    });
-
-    it("resolves to the value after it was reported as slow.", async () => {
-      const echoRegistry = setupEcho();
-      const { result, waitForNextUpdate } = renderHook(
-        () => useValue({
-          name: "holiday",
-          derive: () => echo("Whistler", 15)
-        }, { slowDelay: 1 }),
-        { wrapper: Wrapper() }
-      );
-      await act(() => echoRegistry.advanceByTime(5));
-      await waitForNextUpdate(); // slow
-
-      await act(() => echoRegistry.advanceByTime(10));
-      await waitForNextUpdate(); // slow
-
-      expect(result.current).toStrictEqual({ status: "complete", value: "Whistler" });
-    });
-
-    it("returns the error if the promise fails.", async () => {
-      const rejectedPromise = Promise.reject(new Error("Whoops!"));
-      const { result, waitForNextUpdate } = renderHook(
-        () => useValue({ name: "holiday", derive: () => rejectedPromise }),
-        { wrapper: Wrapper() }
-      );
-
-      await waitForNextUpdate(); // Failed
-      expect(result.current).toStrictEqual({ status: "failed", error: new Error("Whoops!") });
+      expect(result.current).toStrictEqual(pending());
     });
   });
 });
-

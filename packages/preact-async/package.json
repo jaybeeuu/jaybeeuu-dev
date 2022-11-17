@@ -1,0 +1,56 @@
+{
+  "name": "@jaybeeuu/preact-async",
+  "version": "0.0.0",
+  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
+  "license": "MIT",
+  "description": "Some async utilities for use with preact.",
+  "keywords": [
+    "preact",
+    "utilities",
+    "async",
+    "asynchronous",
+    "hooks",
+    "components"
+  ],
+  "type": "module",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "./lib"
+  ],
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc --project ./tsconfig.build.json --pretty",
+    "lint": "eslint --ext .js,.ts --format codeframe .",
+    "start": "tsc --project ./tsconfig.build.json --pretty --watch --incremental",
+    "test": "jest",
+    "test:watch": "jest --watch  --no-cache --runInBand",
+    "type-check": "tsc --noEmit --pretty"
+  },
+  "peerDependencies": {
+    "@jaybeeuu/utilities": "workspace:*",
+    "preact": "^10.10.0",
+    "tslib": "^2.4.0"
+  },
+  "devDependencies": {
+    "@jaybeeuu/eslint-config": "workspace:*",
+    "@jaybeeuu/utilities": "workspace:*",
+    "@types/jest": "^28.1.6",
+    "@types/node": "^16.11.0",
+    "@typescript-eslint/eslint-plugin": "^5.32.0",
+    "@typescript-eslint/parser": "^5.32.0",
+    "eslint-plugin-jest": "^26.7.0",
+    "eslint-plugin-react": "^7.30.1",
+    "eslint": "^8.21.0",
+    "jest": "^28.1.3",
+    "preact": "^10.10.0",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4"
+  }
+}

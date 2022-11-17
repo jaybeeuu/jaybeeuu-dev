@@ -1,12 +1,12 @@
-const path = require("path");
-const fs = require("fs");
+import path from "path";
+import fs from "fs";
 
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
 const certs = resolveApp("certs");
 
-module.exports = {
+export const paths = {
   dist: resolveApp("dist"),
   public: resolveApp("public"),
   indexHtml: resolveApp("public/index.html"),

@@ -1,11 +1,12 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "outDir": "lib",
     "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "jsx": "react",
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment",
-    "types": []
+    "types": ["jest"]
   },
   "include": [
     "src",

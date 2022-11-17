@@ -1,12 +1,12 @@
-import type { VNode } from "preact";
+import type { JSX } from "preact";
 import { h } from "preact";
 import { asRoute } from "../as-route";
 import { useBackgrounds } from "../use-background";
 
 import css from "./home.module.css";
 
-const Home = (): VNode => {
-  useBackgrounds({ dark: "bath", light: "englishBayPark" });
+const Home = (): JSX.Element => {
+  useBackgrounds({ dark: "bath", light: "english-bay-park" });
   return (
     <div className={css.componentRoot}>
       <p>

@@ -1,5 +1,5 @@
 import { log } from "@jaybeeuu/utilities";
-import type { VNode } from "preact";
+import type { JSX } from "preact";
 import { h } from "preact";
 import { useEffect } from "preact/hooks";
 import { ErrorMessage } from "./error-message";
@@ -12,7 +12,7 @@ export interface ErrorProps {
 const ErrorComponent = ({
   error,
   message
-}: ErrorProps): VNode => {
+}: ErrorProps): JSX.Element => {
   useEffect(() => {
     log.error(message);
     if (error instanceof Error) {

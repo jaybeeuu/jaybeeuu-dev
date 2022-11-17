@@ -1,6 +1,7 @@
 {
   "extends": [
     "@jaybeeuu/eslint-config/base",
+    "@jaybeeuu/eslint-config/jest",
     "plugin:react/recommended"
   ],
   "env": {
@@ -22,5 +23,13 @@
   },
   "rules": {
     "react/prop-types": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["babel.config.cjs"],
+      "env": {
+        "node": true
+      }
+    }
+  ]
 }
