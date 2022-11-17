@@ -34,8 +34,12 @@ const useSemanticMemo = <Value,>(factory: () => Value, inputs: Inputs): Value =>
 };
 
 const useRerender = (): () => void => {
-  const [renderCount, rerender] = useState(0);
-  return useCallback(() => rerender(renderCount + 1), []);
+  const renderCountRef = useRef(0);
+  const [, rerender] = useState(0);
+  return useCallback(
+    () => rerender(++renderCountRef.current),
+    []
+  );
 };
 
 export const useImages = (
