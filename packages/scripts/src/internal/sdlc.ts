@@ -93,12 +93,9 @@ const executeCommand = (
 
 export const version = async (options: GitHubClientOptions): Promise<void> => {
   log(chalk.green("Version Packages."));
-  const git: SimpleGit = simpleGit();
-
-  log(`Creating local branch ${chalk.blueBright(options.head)}.`);
-  await git.checkoutLocalBranch(options.head);
 
   log("Versioning packages.");
+
   await executeCommand(
     "pnpm changeset version",
     { shell: true, stdio: "inherit" }
@@ -107,11 +104,22 @@ export const version = async (options: GitHubClientOptions): Promise<void> => {
   log("Update pnpm-lock.");
   await executeCommand("pnpm -r --lockfile-only --no-frozen-lockfile install", { shell: true, stdio: "inherit" });
 
+  const git: SimpleGit = simpleGit();
+
+  const diffResult = await git.diff(["--name-only"]);
+
+  if (!diffResult) {
+    log("No files to commit, exiting.");
+    return;
+  }
+
+  log(`Files changed:\n${diffResult}`);
+
+  log(`Creating local branch ${chalk.blueBright(options.head)}.`);
+  await git.checkoutLocalBranch(options.head);
+
   log("Stage all files.");
   await git.add(".");
-
-  log("Commit changes.");
-  await git.commit("Version packages.");
 
   log(`Push to ${chalk.blueBright(options.remote)}/${chalk.blueBright(options.head)}`);
   await git.push(["--force", "--set-upstream", options.remote, options.head]);
