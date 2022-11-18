@@ -1,5 +1,15 @@
 # @jaybeeuu/e2e
 
+## 0.0.2
+
+### Patch Changes
+
+- Updated dependencies [[`768f58e`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/768f58e3a311e89fc2491029bcc2fd5c3e4af686)]:
+  - @jaybeeuu/utilities@0.1.0
+  - @jaybeeuu/eslint-config@0.0.2
+  - @jaybeeuu/compost@0.0.1
+  - @jaybeeuu/e2e-hooks@0.0.1
+
 ## 0.0.1
 
 ### Patch Changes
