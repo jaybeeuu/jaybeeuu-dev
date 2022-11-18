@@ -121,6 +121,9 @@ export const version = async (options: GitHubClientOptions): Promise<void> => {
   log("Stage all files.");
   await git.add(".");
 
+  log("Commit changes.");
+  await git.commit("Version packages.");
+
   log(`Push to ${chalk.blueBright(options.remote)}/${chalk.blueBright(options.head)}`);
   await git.push(["--force", "--set-upstream", options.remote, options.head]);
 
