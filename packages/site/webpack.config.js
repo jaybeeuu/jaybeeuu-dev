@@ -12,6 +12,7 @@ import SitemapPluginImport from "sitemap-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import webpack from "webpack";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
+import { config as babelConfig } from "./config/babel.js";
 import { env, stringifiedEnv } from "./config/env.js";
 import { paths } from "./config/paths.js";
 
@@ -45,18 +46,17 @@ const resolvedURLToSite = (...pathFragments) => {
 };
 
 /** @type {import("webpack").Configuration} */
-const config = {
+export default {
   mode,
   devtool: isProduction ? "source-map" : "source-map",
   devServer: isWatching ? {
     compress: true,
     historyApiFallback: true,
     host: env.CLIENT_HOST_NAME,
-    https: true,
-    // https: {
-    //   key: fs.readFileSync(paths.certs.key),
-    //   cert: fs.readFileSync(paths.certs.certificate)
-    // },
+    https: {
+      key: fs.readFileSync(paths.certs.key),
+      cert: fs.readFileSync(paths.certs.certificate)
+    },
     client: {
       logging: "info",
       overlay: true,
@@ -70,15 +70,14 @@ const config = {
       stats: "normal"
     }
   } : undefined,
-  entry: [
-    paths.srcIndex
-  ],
+  entry: {
+    main: paths.srcIndex
+  },
   output: {
     assetModuleFilename: "static/[name].[contenthash][ext]",
     clean: true,
     filename: "main.[contenthash].js",
     path: paths.dist,
-    pathinfo: true,
     publicPath: "/"
   },
   resolve: {
@@ -92,7 +91,13 @@ const config = {
           {
             test: /\.(ts|tsx|js|jsx|mjs)$/,
             include: [paths.src],
-            use: "babel-loader"
+            use: {
+              loader: "babel-loader",
+              options: {
+                cacheDirectory: true,
+                ...babelConfig
+              }
+            }
           },
           {
             test: /\.module\.css$/,
@@ -101,14 +106,17 @@ const config = {
               {
                 loader: "css-modules-typescript-loader",
                 options: {
-                  mode: isProduction ? "verify" : "emit"
+                  mode: isProduction ? "verify" : "emit",
+                  modules: true
                 }
               },
               {
                 loader: "css-loader",
                 options: {
                   modules: {
-                    localIdentName: isProduction ? "jbw-[hash:base64:5]" : "[name]__[local]--[hash:base64:5]",
+                    localIdentName: isProduction
+                      ? "jbw-[hash:base64:5]"
+                      : "[name]__[local]--[hash:base64:5]",
                     exportLocalsConvention: "camelCaseOnly"
                   },
                   sourceMap: true
@@ -175,7 +183,7 @@ const config = {
   },
   optimization: {
     moduleIds: isProduction ? "deterministic" : "named",
-    minimize: false,
+    minimize: isProduction,
     minimizer: [
       "...",
       new CssMinimizerPlugin(),
@@ -185,6 +193,7 @@ const config = {
     ],
     splitChunks: {
       maxInitialRequests: 6,
+      minSize: 10000,
       cacheGroups: {
         slowVendors: {
           test: /[\\/]node_modules[\\/]/,
@@ -220,7 +229,7 @@ const config = {
       ]
     }),
     new HtmlWebpackPlugin({
-      inject: true,
+      inject: "body",
       base: "/",
       template: paths.indexHtml
     }),
@@ -308,5 +317,3 @@ const config = {
     }) : null
   ].filter(isNotNullish)
 };
-
-export default config;

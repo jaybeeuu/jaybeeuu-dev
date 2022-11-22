@@ -5,9 +5,13 @@
   "license": "MIT",
   "description": "A simple webpack wrapper for the feed library.",
   "keywords": [
-    "Feed",
-    "Plugin",
-    "Webpack"
+    "atom",
+    "feed",
+    "plugin",
+    "rss",
+    "syndication",
+    "webpack",
+    "xml"
   ],
   "engines": {
     "node": ">=14.16.0"
