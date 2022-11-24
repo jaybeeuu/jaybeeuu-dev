@@ -2,7 +2,7 @@ import type { FunctionComponent, JSX, RefObject } from "preact";
 import { h, createRef, render } from "preact";
 import { useEffect, useLayoutEffect } from "preact/hooks";
 import classNames from "classnames";
-import type { PostMetaData } from "@jaybeeuu/compost";
+import type { PostMetaData } from "@jaybeeuu/posts";
 import { assertIsNotNullish, assertIsString } from "@jaybeeuu/utilities";
 import { post as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import { useAction, useValue } from "@jaybeeuu/preact-recoilless";

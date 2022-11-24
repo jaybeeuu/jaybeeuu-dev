@@ -1,6 +1,6 @@
 import type { JSX } from "preact";
 import { h } from "preact";
-import type { PostManifest, PostMetaData } from "@jaybeeuu/compost";
+import type { PostManifest, PostMetaData } from "@jaybeeuu/posts";
 import { postList as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import { useValue } from "@jaybeeuu/preact-recoilless";
 import classNames from "classnames";
