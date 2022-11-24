@@ -16,7 +16,7 @@ export const App = (): JSX.Element => (
   <ThemeRoot className={css.componentRoot}>
     <Background className={classNames(css.main, e2eHooks.root)}>
       <TitleBar className={css.static} />
-      <Router >
+      <Router>
         <HomeRoute path="/" />
         <PostsRoute path="/blog" />
         <PostRoute path="/blog/:slug" />

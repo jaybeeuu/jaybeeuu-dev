@@ -11,8 +11,19 @@
     "Posts"
   ],
   "files": [
-    "lib"
+    "./lib",
+    "./index.d.ts",
+    "./manifest.d.ts"
   ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts"
+    },
+    "./manifest": {
+      "types": "./manifest.d.ts",
+      "import": "./lib/manifest.json"
+    }
+  },
   "scripts": {
     "start": "compost --watch --href-root blog --include-unpublished --remove-h1 --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\"",
     "lint": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",

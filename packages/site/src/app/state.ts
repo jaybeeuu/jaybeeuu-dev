@@ -1,4 +1,4 @@
-import type { PostManifest, PostMetaData } from "@jaybeeuu/compost";
+import type { PostManifest, PostMetaData } from "@jaybeeuu/posts";
 import { fetchJson, fetchText } from "../utils/request";
 import type {
   DerivationContext,
@@ -10,10 +10,12 @@ import type { Image } from "./images/index";
 import type { Theme } from "./services/theme";
 import { getMediaTheme, persistedTheme } from "./services/theme";
 
+const manifestModule = fetchJson<PostManifest>("/blog/manifest.json");
+
 export const postsManifest: DerivedValue<Promise<PostManifest>> = {
   name: "postManifest",
   derive: async (): Promise<PostManifest> => {
-    return fetchJson<PostManifest>("/blog/manifest.json");
+    return await manifestModule;
   }
 };
 
