@@ -1,4 +1,5 @@
 import type { PostManifest, PostMetaData } from "@jaybeeuu/compost";
+import { assertIsNotNullish } from "@jaybeeuu/utilities";
 import { fetchJson, fetchText } from "../utils/request";
 import type {
   DerivationContext,
@@ -27,10 +28,12 @@ export const currentPostMeta: DerivedValue<Promise<PostMetaData>> = {
   derive: async ({ get }): Promise<PostMetaData> => {
     const manifest = await get(postsManifest);
     const slug = get(currentPostSlug);
-    if (slug && slug in manifest) {
-      return manifest[slug];
-    }
-    throw new Error(`Slug "${String(slug)}" does not exist in the manifest.`);
+
+    const entry = manifest[slug!];
+
+    assertIsNotNullish(entry, `Slug "${String(slug)}" does not exist in the manifest.`);
+
+    return entry;
   }
 };
 
@@ -47,7 +50,7 @@ export const theme: PrimitiveValue<Theme> = {
   initialValue: persistedTheme.get() ?? getMediaTheme()
 };
 
-export type BackgroundImages = { light: Image, dark: Image };
+export interface BackgroundImages { light: Image, dark: Image }
 
 export const backgroundImages: PrimitiveValue<BackgroundImages | null> = {
   name: "backgroundImage",

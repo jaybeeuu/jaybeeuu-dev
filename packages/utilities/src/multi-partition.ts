@@ -39,11 +39,11 @@ export function multiPartition(
   return array.reduce<any[][]>((acc, value) => {
     const index = predicates.findIndex((predicate) => predicate(value));
     if (index >= 0) {
-      acc[index].push(value);
+      acc[index]!.push(value);
     }
     return acc;
   }, Array.from(
-    new Array<any[]>(predicates.length),
+    { length: predicates.length },
     () => []
   ));
 }

@@ -25,12 +25,12 @@
     "@jaybeeuu/eslint-config": "workspace:*",
     "@jaybeeuu/utilities": "workspace:*",
     "@types/node": "^16.11.0",
-    "@typescript-eslint/eslint-plugin": "^5.32.0",
-    "@typescript-eslint/parser": "^5.32.0",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
     "core-js": "3.24.1",
     "cypress": "10.4.0",
     "eslint": "^8.21.0",
     "eslint-plugin-cypress": "^2.12.1",
-    "typescript": "^4.7.4"
+    "typescript": "^4.9.4"
   }
 }

@@ -23,10 +23,6 @@ class MockMediaQuery {
     type: K,
     listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => any
   ): void {
-    if (type !== "change") {
-      throw new Error(`Unable to add listener: Did not recognise type ${type}`);
-    }
-
     this.#changeListeners = [...this.#changeListeners, listener];
   }
 
@@ -34,14 +30,12 @@ class MockMediaQuery {
     type: K,
     listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => any
   ): void {
-    if (type !== "change") {
-      throw new Error(`Unable to remove listener: DDid not recognise type ${type}`);
-    }
-
     this.#changeListeners.filter((candidate) => candidate !== listener);
   }
 }
+
 let isDarkQuery = new MockMediaQuery();
+
 Cypress.on("window:before:load", window => {
   isDarkQuery = new MockMediaQuery();
   cy.stub(window, "matchMedia").withArgs("(prefers-color-scheme: dark)").returns(isDarkQuery);

@@ -1,4 +1,4 @@
-const handler: ProxyHandler<Record<string, string>> = {
+const handler: ProxyHandler<{ [key: string]: string }> = {
   get(target, prop) {
     return prop;
   }

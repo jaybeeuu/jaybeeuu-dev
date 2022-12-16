@@ -125,8 +125,8 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
         className={css.content}
         onScroll={(event) => {
           onScroll({
-            x: event.currentTarget?.scrollLeft,
-            y: event.currentTarget?.scrollTop
+            x: event.currentTarget.scrollLeft,
+            y: event.currentTarget.scrollTop
           });
         }}
       >

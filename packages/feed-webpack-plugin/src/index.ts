@@ -54,7 +54,7 @@ export class FeedWebpackPlugin {
   }
 
   apply(compiler: Compiler): void {
-    if (compiler?.webpack.version[0] !== "5") {
+    if (!compiler.webpack.version.startsWith("5")) {
       throw new Error("Unsupported webpack version; must be 5");
     }
     const pluginName = FeedWebpackPlugin.name;

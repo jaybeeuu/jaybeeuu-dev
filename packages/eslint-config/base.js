@@ -40,7 +40,8 @@ module.exports = {
       extends: [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:@typescript-eslint/strict"
       ],
       rules: {
         "@typescript-eslint/consistent-type-imports": ["error", { prefer: "type-imports" }],
@@ -50,6 +51,7 @@ module.exports = {
         "@typescript-eslint/no-shadow": "error",
         "@typescript-eslint/no-unused-vars": ["error", { ignoreRestSiblings: true }],
         "@typescript-eslint/switch-exhaustiveness-check": "error",
+        "@typescript-eslint/consistent-indexed-object-style": ["error", "index-signature"],
         "indent": "off",
         "no-shadow": "off",
         "no-unused-vars": "off"

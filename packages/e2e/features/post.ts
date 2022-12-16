@@ -5,23 +5,23 @@ import { getPostsAlias, withPostMetaData } from "../routes/blog";
 
 const mainPanelSelectors = makeClassSelectors(post);
 
-export const get = (): Cypress.Chainable<JQuery<HTMLElement>> => {
+export const get = (): Cypress.Chainable<JQuery> => {
   return cy.get(mainPanelSelectors.block);
 };
 
 export type ShouldContainPostParagraphsParameters = ["contain.post.paragraphs", PostSlug];
 export type ShouldContainPostTitleParameters = ["contain.post.title", PostSlug];
 
-export interface ArticleChainer extends Cypress.Chainer<JQuery<HTMLElement>> {
+export interface ArticleChainer extends Cypress.Chainer<JQuery> {
   (
     ...[chainer, slug]: ShouldContainPostTitleParameters
-  ): Cypress.Chainable<JQuery<HTMLElement>>;
+  ): Cypress.Chainable<JQuery>;
   (
     ...[chainer, slug]: ShouldContainPostParagraphsParameters
-  ): Cypress.Chainable<JQuery<HTMLElement>>;
+  ): Cypress.Chainable<JQuery>;
 }
 
-export type ArticleChainable = Cypress.Chainable<JQuery<HTMLElement>> & {
+export type ArticleChainable = Cypress.Chainable<JQuery> & {
   should: ArticleChainer
 };
 
@@ -29,7 +29,7 @@ const shouldContainPostParagraphs = (...[, slug]: ShouldContainPostParagraphsPar
   withPostMetaData(slug).then((meta) => {
     cy.fixture(`blog/${meta.fileName}`).then((postContent: string) => {
       const paragraphs = [...postContent.matchAll(/(<p>.*?<\/p>)/g)].flat();
-      if (!paragraphs) {
+      if (paragraphs.length === 0) {
         throw new Error("Post did not contain any paragraphs.");
       }
       paragraphs.forEach((paragraph) => {
@@ -58,9 +58,9 @@ export const getArticle = (): ArticleChainable => {
   const originalShould = article.should;
 
   function articleShould (
-    this: Cypress.Chainable<JQuery<HTMLElement>>,
+    this: Cypress.Chainable<JQuery>,
     ...args: any[]
-  ): Cypress.Chainable<JQuery<HTMLElement>> {
+  ): Cypress.Chainable<JQuery> {
     if (isChainer<ShouldContainPostParagraphsParameters>("contain.post.paragraphs", args)) {
       shouldContainPostParagraphs(...args);
       return article;
@@ -89,14 +89,14 @@ export const navigateToAnchor = (slug: PostSlug, hash: string): void => {
   cy.visit(`/blog/${slug}#${hash}`);
 };
 
-export const getAnchor = (slug: PostSlug, hash: string): Cypress.Chainable<JQuery<HTMLElement>> => {
+export const getAnchor = (slug: PostSlug, hash: string): Cypress.Chainable<JQuery> => {
   return getArticle().find(`.hash-link[href="/blog/${slug}#${hash}"]`);
 };
 
-export const getAnchorDestination = (hash: string): Cypress.Chainable<JQuery<HTMLElement>> => {
+export const getAnchorDestination = (hash: string): Cypress.Chainable<JQuery> => {
   return getArticle().find(`#${hash}`);
 };
 
-export const getInlineLink = (text: string): Cypress.Chainable<JQuery<HTMLElement>> => {
+export const getInlineLink = (text: string): Cypress.Chainable<JQuery> => {
   return getArticle().find(`p a:contains("${text}")`);
 };

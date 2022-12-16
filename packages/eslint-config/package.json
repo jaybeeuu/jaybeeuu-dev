@@ -20,15 +20,15 @@
     "lint": "eslint --ext .js,.ts --format codeframe -c ./base.js ."
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.32.0",
-    "@typescript-eslint/parser": "^5.32.0",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
     "eslint": "^8.21.0",
     "eslint-plugin-jest": "^26.7.0",
     "eslint-plugin-react": "^7.30.1"
   },
   "dependencies": {
     "eslint-formatter-codeframe": "^7.32.1",
-    "typescript": "^4.7.4"
+    "typescript": "^4.9.4"
   },
   "peerDdependencies": {
     "@typescript-eslint/eslint-plugin": "^5.31.0",

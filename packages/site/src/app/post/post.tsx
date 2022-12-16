@@ -23,7 +23,7 @@ const useHashLinks = (postHtml: string, articleRef: RefObject<HTMLElement>): voi
       return;
     }
     const links = currentArticle.querySelectorAll("a");
-    Array.from(links ?? [])
+    Array.from(links)
       .filter((link) => link.getAttribute("href")?.startsWith("#"))
       .forEach((link) => {
         link.addEventListener("click", (e) => {

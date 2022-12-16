@@ -2,15 +2,11 @@ import type fsModule from "fs";
 import type PathModule from "path";
 
 const mocked = <T extends (...args: any[]) => any>(fn: T): jest.MockInstance<ReturnType<T>, Parameters<T>> => {
-  const mockedFn = fn as unknown as jest.MockInstance<ReturnType<T>, Parameters<T>>;
-  if (!mockedFn.mock) {
+  if (!("mock" in fn)) {
     throw new Error(`Expected a mock function but ${fn.name || "{anonymous function}"} had no mock property.`);
   }
+  const mockedFn = fn as unknown as jest.MockInstance<ReturnType<T>, Parameters<T>>;
   return mockedFn;
-};
-
-const isEmptyObject = (obj: Record<PropertyKey, unknown>): obj is Record<PropertyKey, never> => {
-  return Object.keys(obj).length === 0;
 };
 
 const pathUtils = jest.requireActual<typeof PathModule>("path");
@@ -187,7 +183,7 @@ const makeFile = (
 interface Directory {
   type: "directory";
   path: string;
-  entries: { [name: string]: DirectoryEntry; };
+  entries: Map<string, DirectoryEntry>;
   stats: fsModule.Stats;
 }
 
@@ -223,24 +219,36 @@ const makeDirectory = (
 
 type DirectoryEntry = Directory | File;
 
-const root: Directory = makeDirectory(".", {});
+const root: Directory = makeDirectory(".", new Map());
 
 const resolvePath = (path: string): string => {
   return pathUtils.relative(process.cwd(), path);
 };
 
-type GetEntryFailed = {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const draw = (entry: Directory | File, indentation: number = 0): string => {
+  const spaces = Array.from({ length: indentation}).join("  ");
+
+  return [
+    `${spaces} L ${pathUtils.basename(entry.path)}`,
+    ...entry.type === "directory"
+      ? Array.from(entry.entries.values()).map((subEntry) => draw(subEntry, indentation + 1))
+      : []
+  ].join("\n");
+};
+
+interface GetEntryFailed {
   entry: File | undefined;
   existed: false;
   failedPath: string;
   parentDirectory: Directory;
-};
+}
 
-type GetEntrySuccess = {
+interface GetEntrySuccess {
   entry: DirectoryEntry;
   existed: true;
   parentDirectory: Directory;
-};
+}
 
 type GetEntryResult = GetEntryFailed | GetEntrySuccess;
 
@@ -249,11 +257,11 @@ const getEntry = (
   directory: Directory,
   pathToHere: string
 ): GetEntryResult => {
-  const [topPath, ...rest] = pathFragments;
+  const [topPath = "", ...rest] = pathFragments;
   const currentEntryPath = pathUtils.join(pathToHere, topPath);
   const currentEntry = topPath === "." || topPath === ""
     ? directory
-    : directory.entries[topPath];
+    : directory.entries.get(topPath);
 
   if (rest.length === 0 && currentEntry) {
     return {
@@ -281,19 +289,19 @@ const maybeGetEntry = (
   return getEntry(directories, root, "");
 };
 
-type MaybeGetDirectorySuccess = {
+interface MaybeGetDirectorySuccess {
   directory: Directory;
   existed: true;
   parentDirectory: Directory;
-};
+}
 
-type MaybeGetDirectoryFailure = {
+interface MaybeGetDirectoryFailure {
   entry: File | undefined;
   existed: false;
   failedPath: string;
   message: string;
   parentDirectory: Directory;
-};
+}
 
 type MaybeGetDirectoryResult = MaybeGetDirectorySuccess | MaybeGetDirectoryFailure;
 
@@ -304,7 +312,7 @@ const maybeGetDirectory = (
   const directories = resolvedPath.split(pathUtils.sep);
   const getEntryResult = getEntry(directories, root, "");
 
-  if (getEntryResult.existed === false) {
+  if (!getEntryResult.existed) {
     const wasAFile = getEntryResult.entry?.type === "file";
     return {
       ...getEntryResult,
@@ -333,7 +341,7 @@ const maybeGetDirectory = (
 const getDirectory = (path: string): Directory => {
   const maybeGetDirectoryResult = maybeGetDirectory(path);
 
-  if (maybeGetDirectoryResult.existed === true) {
+  if (maybeGetDirectoryResult.existed) {
     return maybeGetDirectoryResult.directory;
   }
 
@@ -350,7 +358,7 @@ const maybeGetFile = (
   const directories = resolvedPath.split(pathUtils.sep);
   const getEntryResult = getEntry(directories, root, "");
 
-  if (getEntryResult.existed === false) {
+  if (!getEntryResult.existed) {
     const wasAFile = getEntryResult.entry?.type === "file";
     return {
       ...getEntryResult,
@@ -376,7 +384,7 @@ const maybeGetFile = (
 
 const getFile = (path: string): File => {
   const maybeGetFileResult = maybeGetFile(path);
-  if (maybeGetFileResult.existed === true) {
+  if (maybeGetFileResult.existed) {
     return maybeGetFileResult.file;
   }
   throw new Error(maybeGetFileResult.message);
@@ -434,7 +442,7 @@ mocked(fs.promises.access).mockImplementation(async (...args): Promise<void> => 
   const parentDir = getDirectory(parentDirName);
   const fileOrDirName = pathUtils.basename(resolvedPath);
 
-  if (parentDir.entries[fileOrDirName]) {
+  if (parentDir.entries.has(fileOrDirName)) {
     return;
   }
 
@@ -449,7 +457,7 @@ mocked(fs.accessSync).mockImplementation((...args): void => {
   const parentDir = getDirectory(parentDirName);
   const fileOrDirName = pathUtils.basename(resolvedPath);
 
-  if (parentDir.entries[fileOrDirName]) {
+  if (parentDir.entries.has(fileOrDirName)) {
     return;
   }
 
@@ -484,7 +492,7 @@ mocked(fs.promises.lstat as Lstat).mockImplementation(async (
   const [path] = args;
   await Promise.resolve();
   const maybeGetEntryResult = maybeGetEntry(path);
-  if (maybeGetEntryResult.existed === false) {
+  if (!maybeGetEntryResult.existed) {
     throw new Error(`Could not lstat ${path}: Path ${maybeGetEntryResult.failedPath} ${maybeGetEntryResult.entry ? "was a file" : "did not exist"}.`);
   }
   return maybeGetEntryResult.entry.stats;
@@ -525,9 +533,9 @@ mocked(fs.promises.mkdir as Mkdir).mockImplementation(async (...args): Promise<s
 
   const targetDirName = pathUtils.basename(resolvedPath);
 
-  if (getParentDirResult.existed === true) {
+  if (getParentDirResult.existed) {
     const parentDir = getParentDirResult.directory;
-    const existingEntry = parentDir.entries[targetDirName];
+    const existingEntry = parentDir.entries.get(targetDirName);
 
     if (existingEntry) {
       if (options?.recursive) {
@@ -536,10 +544,10 @@ mocked(fs.promises.mkdir as Mkdir).mockImplementation(async (...args): Promise<s
       throw new Error(`Could not make dir ${path}: ${parentDirName} already contains a ${existingEntry.type} called ${targetDirName}.`);
     }
 
-    parentDir.entries[targetDirName] = makeDirectory(
+    parentDir.entries.set(targetDirName, makeDirectory(
       pathUtils.join(parentDir.path, targetDirName),
-      {}
-    );
+      new Map()
+    ));
 
     return parentDirName;
   }
@@ -558,10 +566,10 @@ mocked(fs.promises.mkdir as Mkdir).mockImplementation(async (...args): Promise<s
     (dir, segment) => {
       const newDir = makeDirectory(
         pathUtils.join(dir.path, segment),
-        {}
+        new Map()
       );
 
-      dir.entries[segment] = newDir;
+      dir.entries.set(segment, newDir);
 
       return newDir;
     },
@@ -577,13 +585,14 @@ mocked(fs.promises.rm).mockImplementation(async (path, options) => {
   const resolvedPath = resolvePath(path);
   const parentDirName = pathUtils.dirname(resolvedPath);
 
-  if (path === "/" && options?.recursive && options?.force) {
-    root.entries = {};
+  if (path === "/" && options?.recursive && options.force) {
+    root.entries = new Map();
+
     return;
   }
 
   const getParentDirResult = maybeGetDirectory(parentDirName);
-  if (getParentDirResult.existed === false) {
+  if (!getParentDirResult.existed) {
     if (!options?.force) {
       throw new Error(`Unable to rm ${path}: ${getParentDirResult.message}`);
     }
@@ -592,7 +601,7 @@ mocked(fs.promises.rm).mockImplementation(async (path, options) => {
 
   const parentDir = getParentDirResult.directory;
   const fileOrDirName = pathUtils.basename(resolvedPath);
-  const entry = parentDir.entries[fileOrDirName];
+  const entry = parentDir.entries.get(fileOrDirName);
 
   if (!entry && !options?.force) {
     throw new Error(`Unable to rm ${path}: that path did not exist.`);
@@ -603,18 +612,18 @@ mocked(fs.promises.rm).mockImplementation(async (path, options) => {
   }
 
   if (entry.type === "file") {
-    delete parentDir.entries[fileOrDirName];
+    parentDir.entries.delete(fileOrDirName);
     return;
   }
 
   if (
-    !isEmptyObject(entry.entries)
+    entry.entries.size
     && !options?.recursive
   ) {
     throw new Error(`Unable to rm ${path}: the directory was not empty. Did you mean to recurse?`);
   }
 
-  delete parentDir.entries[fileOrDirName];
+  parentDir.entries.delete(fileOrDirName);
 });
 
 type ReaddirOptions =
@@ -649,7 +658,7 @@ mocked<Readdir>(
     const resolvedPath = resolvePath(path);
     await Promise.resolve();
     const dir = getDirectory(resolvedPath);
-    return Object.keys(dir.entries);
+    return Array.from(dir.entries.keys());
   }
 );
 
@@ -678,6 +687,7 @@ mocked(fs.promises.readFile).mockImplementation(async (...args) => {
   await Promise.resolve();
   const file = getFile(path);
   file.logAccess();
+
   return file.content;
 });
 
@@ -700,13 +710,14 @@ mocked(fs.promises.writeFile).mockImplementation(async (...args) => {
   const fileName = pathUtils.basename(resolvedPath);
   const parentDirName = pathUtils.dirname(resolvedPath);
   const directory = getDirectory(parentDirName);
-  const file = directory.entries[fileName];
+  const file = directory.entries.get(fileName);
 
   if (!file) {
-    directory.entries[fileName] = makeFile(
+    directory.entries.set(fileName, makeFile(
       resolvedPath,
       data
-    );
+    ));
+
     return;
   }
 

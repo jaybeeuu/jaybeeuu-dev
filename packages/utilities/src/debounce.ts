@@ -16,17 +16,7 @@ const normalisedOptions = (optionsOrDelay: number | UserDebounceOptions): Deboun
   };
 };
 
-export type Debounce = {
-  <Args extends unknown[]>(
-    actor: (...args: Args) => void,
-    delay: number
-  ): (...args: Args) => void;
-  <Args extends unknown[]>(
-    actor: (...args: Args) => void,
-    options: UserDebounceOptions
-  ): (...args: Args) => void
-};
-export const debounce: Debounce = <Args extends unknown[]>(
+export const debounce = <Args extends unknown[]>(
   actor: (...args: Args) => void,
   optionsOrDelay: number | UserDebounceOptions
 ): (...args: Args) => void => {

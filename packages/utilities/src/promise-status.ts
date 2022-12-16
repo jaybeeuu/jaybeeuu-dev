@@ -109,14 +109,14 @@ type ResolvedValues<Values extends object> = {
 }
 
 export const combinePromises = <Values extends object>(values: Values): PromiseState<ResolvedValues<Values>> => {
-  const [simpleValues, promiseStates] = Object.entries(values).reduce(([simple, prom], [key, value]) => {
+  const [simpleValues, promiseStates] = Object.entries(values).reduce<[[string, unknown][], [string, PromiseState][]]>(([simple, prom], [key, value]) => {
     if (isAnyPromiseState(value)) {
       prom.push(([key, value]));
     } else {
       simple.push([key, value]);
     }
     return [simple, prom];
-  }, [[], []] as [[string, unknown][], [string, PromiseState][]]);
+  }, [[], []]);
 
   const [
     failedPromises,

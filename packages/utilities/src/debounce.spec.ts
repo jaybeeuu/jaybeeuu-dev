@@ -26,7 +26,7 @@ describe("debounce", () => {
 
   it("executes the actor with the supplied arguments.", () => {
     const args: Args =  [1, "2", { id: 3 }];
-    const actor = jest.fn<void, Args>();
+    const actor = jest.fn<never, Args>();
     const delay = 500;
 
     debounce(actor, delay)(...args);
@@ -49,7 +49,7 @@ describe("debounce", () => {
   });
 
   it("executes the actor with the most recent arguments.", () => {
-    const actor = jest.fn<void, Args>();
+    const actor = jest.fn<never, Args>();
     const delay = 500;
 
     const debounced = debounce(actor, delay);

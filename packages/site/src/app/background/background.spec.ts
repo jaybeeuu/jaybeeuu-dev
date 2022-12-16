@@ -48,7 +48,7 @@ describe("useImages", () => {
     expect(result.current).toStrictEqual({
       current: objectContaining({
         alt: "bath",
-        url: imageUrls["bath"]
+        url: imageUrls.bath
       }) as ImageStateEntry,
       previous: null
     });

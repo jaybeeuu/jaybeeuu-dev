@@ -1,9 +1,9 @@
 export type TypePredicate<T> = (candidate: unknown) => candidate is T;
 
-export const hasOwnProperty = <Obj extends {}, Property extends PropertyKey>(
+export const hasOwnProperty = <Obj extends object, Property extends PropertyKey>(
   obj: Obj,
   prop: Property
-): obj is Obj & Record<Property, unknown> => {
+): obj is Obj & { [key in Property]: unknown } => {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 };
 
@@ -78,11 +78,11 @@ export const isArrayOf = <Arr extends []>(
     && candidate.every((element) => isElement(element));
 };
 
-export type RecordValue<Rec> = Rec extends Record<string, infer Value>
+export type RecordValue<Rec> = Rec extends { [key: string]: infer Value }
   ? Value
   : never;
 
-export const isRecord = <Rec extends Record<string, unknown>>(
+export const isRecord = <Rec extends { [key: string]: unknown }>(
   isValue: TypePredicate<RecordValue<Rec>>
 ): TypePredicate<Rec> => (
   candidate: unknown

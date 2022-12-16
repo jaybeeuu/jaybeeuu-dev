@@ -21,7 +21,7 @@ export class ImagePreloader {
     previous: null
   };
   readonly #onImageStatusChanged: ImageUpdateCallback;
-  #preloads: Set<string> = new Set();
+  #preloads = new Set<string>();
 
   public constructor(imageUpdateCallback: ImageUpdateCallback) {
     this.#onImageStatusChanged = imageUpdateCallback;
@@ -67,7 +67,7 @@ export class ImagePreloader {
         current: { ...current, loaded: true }
       };
 
-      this.#preloads.add(current?.name);
+      this.#preloads.add(current.name);
       this.#emit();
     } catch (error){
       return;
