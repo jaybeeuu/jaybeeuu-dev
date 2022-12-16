@@ -1,6 +1,6 @@
 {
   "name": "@jaybeeuu/e2e",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
   "private": true,
@@ -17,20 +17,22 @@
     "lint": "eslint --ext .js,.ts --format codeframe .",
     "type-check": "tsc --noEmit --pretty"
   },
+  "devDependencies": {
+    "@jaybeeuu/eslint-config": "workspace:*",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
+    "eslint-plugin-cypress": "^2.12.1",
+    "eslint": "^8.21.0"
+  },
   "dependencies": {
     "@babel/core": "^7.18.10",
     "@babel/preset-env": "^7.18.10",
     "@jaybeeuu/compost": "workspace:*",
     "@jaybeeuu/e2e-hooks": "workspace:*",
-    "@jaybeeuu/eslint-config": "workspace:*",
     "@jaybeeuu/utilities": "workspace:*",
     "@types/node": "^16.11.0",
-    "@typescript-eslint/eslint-plugin": "^5.46.0",
-    "@typescript-eslint/parser": "^5.46.0",
     "core-js": "3.24.1",
     "cypress": "10.4.0",
-    "eslint": "^8.21.0",
-    "eslint-plugin-cypress": "^2.12.1",
     "typescript": "^4.9.4"
   }
 }
