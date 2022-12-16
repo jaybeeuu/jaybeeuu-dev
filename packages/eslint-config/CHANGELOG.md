@@ -1,5 +1,15 @@
 # @jaybeeuu/eslint-config
 
+## 1.0.0
+
+### Major Changes
+
+- [#101](https://github.com/jaybeeuu/jaybeeuu-dev/pull/101) [`3e20adf`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/3e20adf5282f2013df42d568f7c862f43940bb1a) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Add plugin:@typescript-eslint/strict rules to base set for typescript.
+
+  The rules are stricter, but encourage greater correctness in your typescript code.
+
+  You will likely hit errors from the additional rules; when you upgrade you should follow the recommendations for each failing rule to fix the errors.
+
 ## 0.0.2
 
 ### Patch Changes
