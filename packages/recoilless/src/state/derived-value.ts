@@ -7,7 +7,7 @@ export interface DerivedValue<Val> {
   derive: Derive<Val>;
 }
 
-export type DerivationContext<Val> = {
+export interface DerivationContext<Val> {
   get: <DependencyValue>(dependency: Value<DependencyValue>) => DependencyValue;
   previousValue: Val | undefined;
 }

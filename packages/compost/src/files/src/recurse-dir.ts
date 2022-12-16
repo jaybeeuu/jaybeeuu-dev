@@ -48,7 +48,8 @@ const innerRecurseDir = async function* (
 
   const fileNames = await fs.promises.readdir(absolutePath);
   const excludeFile = (fileName: string): boolean => {
-    if (include && !include.some((includeEntry) => includeEntry.exec(fileName))) {
+
+    if (!(include.length && include.some((includeEntry) => includeEntry.exec(fileName)))) {
       return true;
     }
 
@@ -58,6 +59,7 @@ const innerRecurseDir = async function* (
   for (const fileName of fileNames) {
     const filePath =  path.join(absolutePath, fileName);
     const stats = await fs.promises.lstat(filePath);
+
     if (stats.isDirectory()) {
       yield* innerRecurseDir(filePath, path.join(relativePath, fileName), options);
       continue;

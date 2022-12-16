@@ -10,11 +10,7 @@ export interface ClearablePromise<Value> extends Promise<Value> {
   clear: () => void;
 }
 
-export interface Echo {
-  <Value>(value: Exclude<Value, Function>, timeout: number): ClearablePromise<Value>;
-  <Value>(valueFactory: () => Value, timeout: number): ClearablePromise<Value>;
-}
-export const echo: Echo = <Value>(
+export const echo = <Value>(
   value: ValueOrFactory<Value>,
   msDelay: number
 ): ClearablePromise<Value> => {
@@ -31,10 +27,6 @@ export const echo: Echo = <Value>(
   return promise;
 };
 
-export interface MicroEcho {
-  <Value>(value: Exclude<Value, Function>): Promise<Value>;
-  <Value>(valueFactory: () => Value): Promise<Value>;
-}
 export const microEcho = <Value>(
   value: ValueOrFactory<Value>
 ): Promise<Value> => {

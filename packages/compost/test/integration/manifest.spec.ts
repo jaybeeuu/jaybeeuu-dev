@@ -146,10 +146,12 @@ describe("manifest", () => {
         "It has some content."
       ]
     };
+
     await writePostFile(postFile);
 
     const publishDate = "2020-03-11";
     advanceTo(publishDate);
+
     await compilePosts();
 
     await writePostFile({
@@ -162,6 +164,7 @@ describe("manifest", () => {
 
     const updatedDate = "2020-03-12";
     advanceTo(updatedDate);
+
     await compilePosts();
 
     const manifest = await getPostManifest();
@@ -262,8 +265,8 @@ describe("manifest", () => {
 
     const manifest = await getPostManifest();
 
-    expect(manifest[slug].lastUpdateDate).toBe("2021-07-30T20:18:43.000Z");
-    expect(manifest[slug].publishDate).toBe("2021-06-06T22:08:34.000Z");
+    expect(manifest[slug]?.lastUpdateDate).toBe("2021-07-30T20:18:43.000Z");
+    expect(manifest[slug]?.publishDate).toBe("2021-06-06T22:08:34.000Z");
   });
 
   it("updates the lastUpdatedDate when the manifest needs to be fetched.", async () => {

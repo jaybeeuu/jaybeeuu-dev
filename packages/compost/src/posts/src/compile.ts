@@ -10,7 +10,7 @@ import { marked } from "marked";
 import type { IOptions } from "sanitize-html";
 import sanitizeHtml from "sanitize-html";
 import { assertIsNotNullish } from "@jaybeeuu/utilities";
-import { canAccessSync, Mode, readTextFile, readTextFileSync } from "../../files/index.js";
+import { canAccessSync, readTextFile, readTextFileSync } from "../../files/index.js";
 import { getHash } from "../../hash.js";
 import type { Result } from "../../results.js";
 import { success, failure } from "../../results.js";
@@ -77,6 +77,7 @@ class CustomRenderer extends marked.Renderer {
     );
 
     const preClasses = [
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       `language-${language || "none"}`,
       this.#renderContext.codeLineNumbers && "line-numbers"
     ].filter(Boolean).join(" ");
@@ -119,13 +120,13 @@ class CustomRenderer extends marked.Renderer {
       href
     );
 
-    if (!canAccessSync(resolvedImagePath, Mode.read)) {
+    if (!canAccessSync(resolvedImagePath, "read")) {
       throw new Error(`Unable to access image file: ${resolvedImagePath}`);
     }
     const imageFileContent = readTextFileSync(resolvedImagePath);
     const imageHash = getHash(imageFileContent);
-    const [imageFileName, imageFileExtension] = path.basename(resolvedImagePath).split(".");
-    const hashedFileName = `${imageFileName}-${imageHash}.${imageFileExtension}`;
+    const { name: imageFileName, ext: imageFileExtension } = path.parse(resolvedImagePath);
+    const hashedFileName = `${imageFileName}-${imageHash}${imageFileExtension}`;
     const transformedHref = path.posix.join(
       this.#renderContext.hrefRoot,
       hashedFileName
@@ -163,11 +164,14 @@ class CustomRenderer extends marked.Renderer {
 
 const markedOptions = {
   highlight: (code: string, language: string): string => {
-    if (!language) {
+
+    if (!language ) {
       return code;
     }
     loadLanguages(language);
-    const highlighted = Prism.highlight(code, Prism.languages[language], "language");
+    const prismLanguage = Prism.languages[language];
+    assertIsNotNullish(prismLanguage);
+    const highlighted = Prism.highlight(code, prismLanguage, "language");
     return highlighted;
   },
   gfm: true,
@@ -183,14 +187,14 @@ const sanitizeOptions: IOptions = {
   allowedTags: [ ...sanitizeHtml.defaults.allowedTags, "img", "h1", "h2", "span", "del" ],
   allowedAttributes: {
     ...sanitizeHtml.defaults.allowedAttributes,
-    a: ["class", "title", ...sanitizeHtml.defaults.allowedAttributes.a],
+    a: ["class", "title", ...sanitizeHtml.defaults.allowedAttributes.a ?? []],
     h1: ["id"],
     h2: ["id"],
     h3: ["id"],
     h4: ["id"],
     h5: ["id"],
     h6: ["id"],
-    img: ["alt", ...sanitizeHtml.defaults.allowedAttributes.img],
+    img: ["alt", ...sanitizeHtml.defaults.allowedAttributes.img ?? []],
     pre: ["class"],
     span: ["class", "aria-hidden"]
   }

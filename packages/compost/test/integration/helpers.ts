@@ -40,13 +40,13 @@ export interface PostFile {
 const getDefaultedUpdateOptions = (
   options: Partial<UpdateOptions> = {}
 ): UpdateOptions => {
-  const defaultedHrefRoot = options?.hrefRoot ?? "posts";
+  const defaultedHrefRoot = options.hrefRoot ?? "posts";
   return {
     additionalWatchPaths: [],
     codeLineNumbers: false,
     hrefRoot: defaultedHrefRoot,
     includeUnpublished: false,
-    manifestFileName: "manifest.post.json",
+    manifestFileName: "manifest.json",
     oldManifestLocators:[],
     outputDir: path.join("out", defaultedHrefRoot),
     removeH1: false,
@@ -114,6 +114,7 @@ export const getOutputFile = async (
     defaultedUpdateOptions.outputDir,
     filePath
   );
+
   return readTextFile(resolvedFilePath);
 };
 
@@ -121,6 +122,7 @@ export const getPostManifest = async (
   options: Partial<UpdateOptions> = {}
 ): Promise<PostManifest> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
+
   const fileContent = await getOutputFile(
     defaultedUpdateOptions.manifestFileName,
     defaultedUpdateOptions

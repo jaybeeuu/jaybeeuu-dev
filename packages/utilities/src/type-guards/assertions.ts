@@ -15,11 +15,13 @@ export type TypeAssertion<Type> = (candidate: unknown) => asserts candidate is T
 export const assertIsString: TypeAssertion<string> = assert(is("string"), "string");
 
 export const assertIsNotNullish: <Type>(
-  candidate: Type
+  candidate: Type,
+  message?: string
 ) => asserts candidate is Exclude<Type, null | undefined> = (
-  candidate
+  candidate,
+  message
 ) => {
   if (candidate === null || candidate === undefined) {
-    throw new TypeError(`Encountered unexpected ${String(candidate)}.`);
+    throw new TypeError(message ?? `Encountered unexpected ${String(candidate)}.`);
   }
 };

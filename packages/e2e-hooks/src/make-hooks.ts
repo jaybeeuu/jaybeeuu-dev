@@ -1,7 +1,7 @@
 export type ElementIdentifier<Block extends string, Element extends string> = `${Block}__${Element}`
 export type ModifierIdentifier<Block extends string, Modifier extends string> = `${Block}--${Modifier}`
 
-export type HookBlock<Prefix extends string, Block extends string> = {
+export interface HookBlock<Prefix extends string, Block extends string> {
   (): ElementIdentifier<Prefix, Block>;
   element: <Element extends string>(element: Element) => ElementIdentifier<ElementIdentifier<Prefix, Block>, Element>;
   childBlock: <NewBlock extends string>(block: NewBlock) => HookBlock<ElementIdentifier<Prefix, Block>, NewBlock>
@@ -53,9 +53,9 @@ const asClassSelector = <Identifier extends string>(
 
 export type Hook = string | ((identifier: string) => string) | HookMap;
 
-export type HookMap = {
+export interface HookMap {
   [element: string]: Hook;
-};
+}
 
 type ClassSelectors<Hooks extends HookMap> = {
   [Key in keyof Hooks]: Hooks[Key] extends string
@@ -66,7 +66,7 @@ type ClassSelectors<Hooks extends HookMap> = {
 }
 
 export const makeClassSelectors = <Hooks extends HookMap>(hooks: Hooks): ClassSelectors<Hooks> => {
-  return Object.entries(hooks).reduce<Record<string, unknown>>((
+  return Object.entries(hooks).reduce<{ [key: string]: unknown }>((
     acc,
     [name, hook]
   ) => {

@@ -19,6 +19,7 @@ export const getMetaFileContent = async (
   metaFileInfo: FileInfo
 ): Promise<Result<PostMetaFileData, "read metadata failed">> => {
   const { relativeFilePath, filePath } = metaFileInfo;
+
   return repackError(
     await readJsonFile(filePath, isPostMetaFile),
     "read metadata failed",

@@ -1,5 +1,5 @@
 import path from "path";
-import { joinUrlPath, log } from "@jaybeeuu/utilities";
+import { assertIsNotNullish, joinUrlPath, log } from "@jaybeeuu/utilities";
 import {
   recurseDirectory,
   writeJsonFile,
@@ -58,6 +58,7 @@ export const update = async (
     { include: [/.post.json$/] })
   ) {
     const slug = metadataFileInfo.fileName.split(".")[0];
+    assertIsNotNullish(slug);
     const slugValidation = validateSlug(slug);
 
     if (!slugValidation.success) {
@@ -118,6 +119,7 @@ export const update = async (
       href
     };
   }
+
   await writeJsonFile(
     path.resolve(options.outputDir, options.manifestFileName),
     newManifest

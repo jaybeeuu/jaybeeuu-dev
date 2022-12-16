@@ -5,7 +5,7 @@ import { getPostListLink } from "./nav-bar";
 
 const postListSelectors = makeClassSelectors(postList);
 
-export const get = (): Cypress.Chainable<JQuery<HTMLElement>> => {
+export const get = (): Cypress.Chainable<JQuery> => {
   return cy.get(postListSelectors.block);
 };
 
@@ -15,13 +15,13 @@ export const openList = (): void => {
 };
 
 export const getPostLinkSlugs = (): Cypress.Chainable<string[]> => {
-  return cy.get<HTMLElement>(postListSelectors.link).then(($links): string[] => {
+  return cy.get(postListSelectors.link).then(($links): string[] => {
     return $links.map((index, link) => link.getAttribute("data-slug")).get();
   });
 };
 
-const getPostLink = (slug: PostSlug): Cypress.Chainable<JQuery<HTMLElement>> => {
-  return cy.get<HTMLElement>(postListSelectors.sluggedLink(slug));
+const getPostLink = (slug: PostSlug): Cypress.Chainable<JQuery> => {
+  return cy.get(postListSelectors.sluggedLink(slug));
 };
 
 export const hasLinkToPost = (slug: PostSlug): void => {
