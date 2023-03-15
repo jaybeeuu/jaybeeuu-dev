@@ -8,7 +8,7 @@ expect.extend({
       : [];
     const pass = receivedString
       ? missingSubstrings.length === 0
-      : this.isNot;
+      : this.isNot ?? false;
 
     return {
       pass,

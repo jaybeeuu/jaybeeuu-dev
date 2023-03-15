@@ -20,8 +20,12 @@ export const env = {
 
 export const stringifiedEnv = {
   "process.env": Object.entries(env)
-    .reduce((newEnv, [key, value]) => {
-      newEnv[key] = JSON.stringify(value);
-      return newEnv;
-    }, {})
+    .reduce(
+      /** @param {{ [key: string]: string }} newEnv*/
+      (newEnv, [key, value]) => {
+        newEnv[key] = JSON.stringify(value);
+        return newEnv;
+      },
+      {}
+    )
 };

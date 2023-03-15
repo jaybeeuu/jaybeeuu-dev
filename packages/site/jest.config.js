@@ -1,14 +1,19 @@
+// @ts-check
+
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 const config = {
   clearMocks: true,
+  preset: "ts-jest",
   testEnvironment: "jsdom",
   setupFiles: [
     "./test/setup-jest.js"
   ],
-  collectCoverageFrom : [
-    "src/**"
-  ],
+  // collectCoverageFrom : [
+  //   "src/**"
+  // ],
   transform: {
-    "^.+\\.(t|j)sx?$": ["ts-jest"]
+    "\\.(ts|tsx)$": "ts-jest",
+    "\\.(mjs|js|jsx)$": "babel-jest"
   },
   testMatch: [
     "**/*.spec.ts"
@@ -17,14 +22,13 @@ const config = {
     "/node_modules/",
     "/lib/"
   ],
+  transformIgnorePatterns: [
+    "node_modules/(?!(\\.pnpm|@testing-library/preact|preact/|preact-transitioning|preact-merge-refs))"
+  ],
   moduleNameMapper: {
     "(\\.\\.?/.*)\\.js$": "$1",
     "(\\.\\.?/.*)\\.css$": "<rootDir>/test/mock/css.js",
-    "(\\.\\.?/.*)\\.(jpg|png)$": "<rootDir>/test/mock/file.js",
-    "^preact$": "<rootDir>/node_modules/preact/dist/preact.js",
-    "^preact/test-utils$": "<rootDir>/node_modules/preact/test-utils/dist/testUtils.js",
-    "^preact/([a-z-]*)$": "<rootDir>/node_modules/preact/$1/dist/$1.js",
-    "^preact-transitioning$": "<rootDir>/node_modules/preact-transitioning/lib/preact-transitioning.js"
+    "(\\.\\.?/.*)\\.(jpg|png)$": "<rootDir>/test/mock/file.js"
   }
 };
 

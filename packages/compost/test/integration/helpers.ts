@@ -11,7 +11,7 @@ import type { PostMetaFileData } from "packages/compost/src/posts/src/metafile";
 import { assertIsNotNullish } from "@jaybeeuu/utilities";
 
 jest.mock("fs");
-jest.mock("@jaybeeuu/utilities", () => {
+jest.mock<typeof Utilities>("@jaybeeuu/utilities", () => {
   const utils = jest.requireActual<typeof Utilities>("@jaybeeuu/utilities");
   utils.log = {
     error: jest.fn(),

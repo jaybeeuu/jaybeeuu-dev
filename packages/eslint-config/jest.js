@@ -9,6 +9,11 @@ module.exports = {
   plugins: [
     "jest"
   ],
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    project: true,
+    sourceType: "module"
+  },
   overrides: [
     {
       files: [

@@ -36,17 +36,14 @@ export const main = (): void => {
           default: "jaybeeuu",
           type: "string"
         }
-      }, async (options) => {
-        await version(options);
-      }
+      },
+      (options) => version(options)
     )
     .command(
       "publish",
       "Publish the packages whose versions have bumped & push tags to github.",
       {},
-      async () => {
-        await publish();
-      }
+      () => publish()
     )
     .demandCommand()
     .help()

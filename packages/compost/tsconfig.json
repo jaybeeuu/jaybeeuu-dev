@@ -8,13 +8,8 @@
       "jest"
     ]
   },
-  "include": [
-    "src",
-    "test",
-    "__mocks__"
-  , "types"
-  ],
   "exclude": [
+    "lib",
     "node_modules"
   ]
 }

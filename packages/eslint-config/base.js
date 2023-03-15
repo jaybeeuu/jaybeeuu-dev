@@ -8,6 +8,12 @@ module.exports = {
   extends: [
     "eslint:recommended"
   ],
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    project: true,
+    ecmaVersion: "latest",
+    sourceType: "module"
+  },
   rules: {
     "comma-dangle": ["error", "never"],
     "eol-last": "error",
@@ -22,21 +28,12 @@ module.exports = {
     "quotes": ["error", "double"],
     "semi": ["error", "always"]
   },
-  parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module"
-  },
   overrides: [
     {
       files: [
         "*.ts",
         "*.tsx"
       ],
-      parser: "@typescript-eslint/parser",
-      parserOptions: {
-        project: "./tsconfig.json",
-        sourceType: "module"
-      },
       extends: [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
@@ -56,6 +53,14 @@ module.exports = {
         "indent": "off",
         "no-shadow": "off",
         "no-unused-vars": "off"
+      }
+    },
+    {
+      files: [
+        "*.cjs"
+      ],
+      env: {
+        node: true
       }
     },
     {
