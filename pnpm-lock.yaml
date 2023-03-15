@@ -6,7 +6,7 @@ importers:
     specifiers:
       '@changesets/changelog-github': ^0.4.8
       '@changesets/cli': ^2.26.0
-      jest: ^29.4.3
+      jest: ^29.5.0
       wait-on: ^7.0.1
     devDependencies:
       '@changesets/changelog-github': 0.4.8
@@ -18,31 +18,31 @@ importers:
     specifiers:
       '@jaybeeuu/eslint-config': workspace:*
       '@jaybeeuu/utilities': workspace:*
-      '@types/jest': ^29.4.0
+      '@types/jest': ^29.4.2
       '@types/marked': ^4.0.8
-      '@types/node': ^18.13.0
+      '@types/node': ^18.15.3
       '@types/node-fetch': ^2.6.2
       '@types/prismjs': ^1.26.0
-      '@types/sanitize-html': ^2.8.0
+      '@types/sanitize-html': ^2.9.0
       '@types/yargs': ^17.0.22
-      '@typescript-eslint/eslint-plugin': ^5.52.0
-      '@typescript-eslint/parser': ^5.52.0
+      '@typescript-eslint/eslint-plugin': ^5.55.0
+      '@typescript-eslint/parser': ^5.55.0
       chalk: ^5.2.0
       chokidar: ^3.5.3
-      eslint: ^8.34.0
+      eslint: ^8.36.0
       eslint-plugin-jest: ^27.2.1
       highlight.js: ^11.7.0
-      jest: ^29.4.3
+      jest: ^29.5.0
       jest-date-mock: ^1.0.8
-      jest-matcher-utils: ^29.4.3
+      jest-matcher-utils: ^29.5.0
       marked: ^4.2.12
-      node-fetch: ^3.3.0
+      node-fetch: ^3.3.1
       prismjs: ^1.29.0
       sanitize-html: ^2.10.0
       ts-jest: ^29.0.5
       tslib: ^2.5.0
       typescript: ^4.9.5
-      yargs: ^17.7.0
+      yargs: ^17.7.1
     dependencies:
       chalk: 5.2.0
       chokidar: 3.5.3
@@ -75,18 +75,18 @@ importers:
 
   packages/e2e:
     specifiers:
-      '@babel/core': ^7.20.12
+      '@babel/core': ^7.21.3
       '@babel/preset-env': ^7.20.2
       '@jaybeeuu/compost': workspace:*
       '@jaybeeuu/e2e-hooks': workspace:*
       '@jaybeeuu/eslint-config': workspace:*
       '@jaybeeuu/utilities': workspace:*
-      '@types/node': ^18.13.0
-      '@typescript-eslint/eslint-plugin': ^5.52.0
-      '@typescript-eslint/parser': ^5.52.0
-      core-js: 3.28.0
-      cypress: 12.6.0
-      eslint: ^8.34.0
+      '@types/node': ^18.15.3
+      '@typescript-eslint/eslint-plugin': ^5.55.0
+      '@typescript-eslint/parser': ^5.55.0
+      core-js: 3.29.1
+      cypress: 12.8.0
+      eslint: ^8.36.0
       eslint-plugin-cypress: ^2.12.1
       typescript: ^4.9.5
     dependencies:
@@ -96,8 +96,8 @@ importers:
       '@jaybeeuu/e2e-hooks': link:../e2e-hooks
       '@jaybeeuu/utilities': link:../utilities
       '@types/node': 18.15.3
-      core-js: 3.28.0
-      cypress: 12.6.0
+      core-js: 3.29.1
+      cypress: 12.8.0
       typescript: 4.9.5
     devDependencies:
       '@jaybeeuu/eslint-config': link:../eslint-config
@@ -109,9 +109,9 @@ importers:
   packages/e2e-hooks:
     specifiers:
       '@jaybeeuu/eslint-config': workspace:*
-      '@typescript-eslint/eslint-plugin': ^5.52.0
-      '@typescript-eslint/parser': ^5.52.0
-      eslint: ^8.34.0
+      '@typescript-eslint/eslint-plugin': ^5.55.0
+      '@typescript-eslint/parser': ^5.55.0
+      eslint: ^8.36.0
       typescript: ^4.9.5
     devDependencies:
       '@jaybeeuu/eslint-config': link:../eslint-config
@@ -122,9 +122,9 @@ importers:
 
   packages/eslint-config:
     specifiers:
-      '@typescript-eslint/eslint-plugin': ^5.52.0
-      '@typescript-eslint/parser': ^5.52.0
-      eslint: ^8.34.0
+      '@typescript-eslint/eslint-plugin': ^5.55.0
+      '@typescript-eslint/parser': ^5.55.0
+      eslint: ^8.36.0
       eslint-formatter-codeframe: ^7.32.1
       eslint-plugin-jest: ^27.2.1
       eslint-plugin-react: ^7.32.2
@@ -142,11 +142,11 @@ importers:
   packages/feed-webpack-plugin:
     specifiers:
       '@jaybeeuu/eslint-config': workspace:*
-      '@types/node': ^18.13.0
-      eslint: ^8.34.0
+      '@types/node': ^18.15.3
+      eslint: ^8.36.0
       feed: ^4.2.2
       typescript: ^4.9.5
-      webpack: ^5.75.0
+      webpack: ^5.76.1
     dependencies:
       feed: 4.2.2
     devDependencies:
@@ -170,15 +170,15 @@ importers:
     specifiers:
       '@jaybeeuu/eslint-config': workspace:*
       '@jaybeeuu/utilities': workspace:*
-      '@types/jest': ^29.4.0
-      '@types/node': ^18.13.0
-      '@typescript-eslint/eslint-plugin': ^5.52.0
-      '@typescript-eslint/parser': ^5.52.0
-      eslint: ^8.34.0
+      '@types/jest': ^29.4.2
+      '@types/node': ^18.15.3
+      '@typescript-eslint/eslint-plugin': ^5.55.0
+      '@typescript-eslint/parser': ^5.55.0
+      eslint: ^8.36.0
       eslint-plugin-jest: ^27.2.1
       eslint-plugin-react: ^7.32.2
-      jest: ^29.4.3
-      preact: ^10.12.1
+      jest: ^29.5.0
+      preact: ^10.13.1
       tslib: ^2.5.0
       typescript: ^4.9.5
     devDependencies:
@@ -198,21 +198,21 @@ importers:
 
   packages/preact-recoilless:
     specifiers:
-      '@babel/core': ^7.20.12
+      '@babel/core': ^7.21.3
       '@babel/preset-env': ^7.20.2
       '@jaybeeuu/eslint-config': workspace:*
       '@jaybeeuu/preact-async': workspace:*
       '@jaybeeuu/recoilless': workspace:*
       '@jaybeeuu/utilities': workspace:*
       '@testing-library/preact': ^3.2.3
-      '@types/jest': ^29.4.0
-      '@typescript-eslint/eslint-plugin': ^5.52.0
-      '@typescript-eslint/parser': ^5.52.0
-      babel-jest: ^29.4.3
-      eslint: ^8.34.0
+      '@types/jest': ^29.4.2
+      '@typescript-eslint/eslint-plugin': ^5.55.0
+      '@typescript-eslint/parser': ^5.55.0
+      babel-jest: ^29.5.0
+      eslint: ^8.36.0
       eslint-plugin-jest: ^27.2.1
-      jest: ^29.4.3
-      preact: 10.12.1
+      jest: ^29.5.0
+      preact: 10.13.1
       ts-jest: ^29.0.5
       tslib: ^2.5.0
       typescript: ^4.9.5
@@ -223,7 +223,7 @@ importers:
       '@jaybeeuu/preact-async': link:../preact-async
       '@jaybeeuu/recoilless': link:../recoilless
       '@jaybeeuu/utilities': link:../utilities
-      '@testing-library/preact': 3.2.3_preact@10.12.1
+      '@testing-library/preact': 3.2.3_preact@10.13.1
       '@types/jest': 29.4.2
       '@typescript-eslint/eslint-plugin': 5.55.0_342y7v4tc7ytrrysmit6jo4wri
       '@typescript-eslint/parser': 5.55.0_vgl77cfdswitgr47lm5swmv43m
@@ -231,7 +231,7 @@ importers:
       eslint: 8.36.0
       eslint-plugin-jest: 27.2.1_c5np4xxgeczfzqnstagjdh5md4
       jest: 29.5.0
-      preact: 10.12.1
+      preact: 10.13.1
       ts-jest: 29.0.5_gpn3p7ciwiqu2bahghwriq5pqe
       tslib: 2.5.0
       typescript: 4.9.5
@@ -240,14 +240,14 @@ importers:
     specifiers:
       '@jaybeeuu/eslint-config': workspace:*
       '@jaybeeuu/utilities': workspace:*
-      '@types/jest': ^29.4.0
-      '@types/node': ^18.13.0
-      '@typescript-eslint/eslint-plugin': ^5.52.0
-      '@typescript-eslint/parser': ^5.52.0
-      eslint: ^8.34.0
+      '@types/jest': ^29.4.2
+      '@types/node': ^18.15.3
+      '@typescript-eslint/eslint-plugin': ^5.55.0
+      '@typescript-eslint/parser': ^5.55.0
+      eslint: ^8.36.0
       eslint-plugin-jest: ^27.2.1
       eslint-plugin-react: ^7.32.2
-      jest: ^29.4.3
+      jest: ^29.5.0
       tslib: ^2.5.0
       typescript: ^4.9.5
     devDependencies:
@@ -271,16 +271,16 @@ importers:
       '@jaybeeuu/eslint-config': workspace:*
       '@jaybeeuu/scripts': workspace:^0.1.0
       '@octokit/rest': ^19.0.7
-      '@types/node': ^18.13.0
+      '@types/node': ^18.15.3
       '@types/yargs': ^17.0.22
-      '@typescript-eslint/eslint-plugin': ^5.52.0
-      '@typescript-eslint/parser': ^5.52.0
+      '@typescript-eslint/eslint-plugin': ^5.55.0
+      '@typescript-eslint/parser': ^5.55.0
       chalk: ^5.2.0
       devcert: ^1.2.2
-      eslint: ^8.34.0
-      simple-git: ^3.16.1
+      eslint: ^8.36.0
+      simple-git: ^3.17.0
       typescript: ^4.9.5
-      yargs: ^17.7.0
+      yargs: ^17.7.1
     dependencies:
       '@changesets/changelog-github': 0.4.8
       '@changesets/cli': 2.26.0
@@ -301,12 +301,12 @@ importers:
 
   packages/site:
     specifiers:
-      '@babel/core': ^7.20.12
-      '@babel/plugin-transform-react-jsx': ^7.20.13
-      '@babel/plugin-transform-runtime': ^7.19.6
+      '@babel/core': ^7.21.3
+      '@babel/plugin-transform-react-jsx': ^7.21.0
+      '@babel/plugin-transform-runtime': ^7.21.0
       '@babel/preset-env': ^7.20.2
-      '@babel/preset-typescript': ^7.18.6
-      '@babel/runtime': ^7.20.13
+      '@babel/preset-typescript': ^7.21.0
+      '@babel/runtime': ^7.21.0
       '@jaybeeuu/compost': workspace:*
       '@jaybeeuu/e2e-hooks': workspace:*
       '@jaybeeuu/eslint-config': workspace:*
@@ -319,34 +319,34 @@ importers:
       '@jaybeeuu/utilities': workspace:*
       '@testing-library/preact': ^3.2.3
       '@types/case-sensitive-paths-webpack-plugin': ^2.1.6
-      '@types/jest': ^29.4.0
-      '@types/node': ^18.13.0
+      '@types/jest': ^29.4.2
+      '@types/node': ^18.15.3
       '@types/webpack-bundle-analyzer': ^4.6.0
-      '@typescript-eslint/eslint-plugin': ^5.52.0
-      '@typescript-eslint/parser': ^5.52.0
-      babel-jest: ^29.4.3
+      '@typescript-eslint/eslint-plugin': ^5.55.0
+      '@typescript-eslint/parser': ^5.55.0
+      babel-jest: ^29.5.0
       babel-loader: ^9.1.2
       case-sensitive-paths-webpack-plugin: ^2.4.0
       classnames: ^2.3.2
       clean-webpack-plugin: ^4.0.0
       copy-webpack-plugin: ^11.0.0
-      core-js: ^3.28.0
+      core-js: ^3.29.1
       cross-env: ^7.0.3
       css-loader: ^6.7.3
       css-minimizer-webpack-plugin: ^4.2.2
       css-modules-typescript-loader: ^4.0.1
       dotenv: ^16.0.3
-      eslint: ^8.34.0
+      eslint: ^8.36.0
       eslint-plugin-jest: ^27.2.1
       eslint-plugin-react: ^7.32.2
       feed: ^4.2.2
       file-loader: ^6.2.0
       html-webpack-plugin: ^5.5.0
       image-webpack-loader: ^8.1.0
-      jest: ^29.4.3
-      jest-environment-jsdom: ^29.4.3
-      mini-css-extract-plugin: ^2.7.2
-      preact: ^10.12.1
+      jest: ^29.5.0
+      jest-environment-jsdom: ^29.5.0
+      mini-css-extract-plugin: ^2.7.3
+      preact: ^10.13.1
       preact-router: ^4.1.0
       preact-transitioning: ^1.4.0
       prism-theme-night-owl: ^1.4.0
@@ -354,17 +354,17 @@ importers:
       prism-theme-vars: ^0.2.4
       regenerator-runtime: ^0.13.11
       sitemap-webpack-plugin: ^1.1.1
-      style-loader: ^3.3.1
+      style-loader: ^3.3.2
       svgo-loader: ^4.0.0
-      terser-webpack-plugin: ^5.3.6
+      terser-webpack-plugin: ^5.3.7
       ts-jest: ^29.0.5
       ts-node: ^10.9.1
       typescript: ^4.9.5
       url-loader: ^4.1.1
-      webpack: ^5.75.0
+      webpack: ^5.76.1
       webpack-bundle-analyzer: ^4.8.0
       webpack-cli: ^5.0.1
-      webpack-dev-server: ^4.11.1
+      webpack-dev-server: ^4.12.0
     dependencies:
       '@babel/runtime': 7.21.0
       '@jaybeeuu/e2e-hooks': link:../e2e-hooks
@@ -435,12 +435,12 @@ importers:
   packages/utilities:
     specifiers:
       '@jaybeeuu/eslint-config': workspace:*
-      '@types/jest': ^29.4.0
-      '@typescript-eslint/eslint-plugin': ^5.52.0
-      '@typescript-eslint/parser': ^5.52.0
-      eslint: ^8.34.0
+      '@types/jest': ^29.4.2
+      '@typescript-eslint/eslint-plugin': ^5.55.0
+      '@typescript-eslint/parser': ^5.55.0
+      eslint: ^8.36.0
       eslint-plugin-jest: ^27.2.1
-      jest: ^29.4.3
+      jest: ^29.5.0
       ts-jest: ^29.0.5
       tslib: ^2.5.0
       typescript: ^4.9.5
@@ -2460,16 +2460,6 @@ packages:
       pretty-format: 27.5.1
     dev: true
 
-  /@testing-library/preact/3.2.3_preact@10.12.1:
-    resolution: {integrity: sha512-y6Kklp1XK3f1X2fWCbujmJyzkf+1BgLYXNgAx21j9+D4CoqMTz5qC4SQufb1L6q/jxLGACzrQ90ewVOTBvHOfg==}
-    engines: {node: '>= 12'}
-    peerDependencies:
-      preact: '>=10 || ^10.0.0-alpha.0 || ^10.0.0-beta.0'
-    dependencies:
-      '@testing-library/dom': 8.20.0
-      preact: 10.12.1
-    dev: true
-
   /@testing-library/preact/3.2.3_preact@10.13.1:
     resolution: {integrity: sha512-y6Kklp1XK3f1X2fWCbujmJyzkf+1BgLYXNgAx21j9+D4CoqMTz5qC4SQufb1L6q/jxLGACzrQ90ewVOTBvHOfg==}
     engines: {node: '>= 12'}
@@ -4288,11 +4278,6 @@ packages:
     dependencies:
       browserslist: 4.21.5
 
-  /core-js/3.28.0:
-    resolution: {integrity: sha512-GiZn9D4Z/rSYvTeg1ljAIsEqFm0LaN9gVtwDCrKL80zHtS31p9BAjmTxVqTQDMpwlMolJZOFntUG2uwyj7DAqw==}
-    requiresBuild: true
-    dev: false
-
   /core-js/3.29.1:
     resolution: {integrity: sha512-+jwgnhg6cQxKYIIjGtAHq2nwUOolo9eoFZ4sHfUH09BLXBgxnH4gA0zEd+t+BO2cNB8idaBtZFcFTRjQJRJmAw==}
     requiresBuild: true
@@ -4582,8 +4567,8 @@ packages:
     dev: true
     optional: true
 
-  /cypress/12.6.0:
-    resolution: {integrity: sha512-WdHSVaS1lumSd5XpVTslZd8ui9GIGphrzvXq9+3DtVhqjRZC5M70gu5SW/Y/SLPq3D1wiXGZoHC6HJ7ESVE2lw==}
+  /cypress/12.8.0:
+    resolution: {integrity: sha512-+zblUeRIesOwpZ/E0HT0YE19STwbZy/ySJZIW6BHxX/eVX258gs4t9hP3sE4Opw9y0RfhJeoE8oa1wF/WhIb0A==}
     engines: {node: ^14.0.0 || ^16.0.0 || >=18.0.0}
     hasBin: true
     requiresBuild: true
@@ -9441,10 +9426,6 @@ packages:
       preact: 10.13.1
       preact-merge-refs: 1.0.2_preact@10.13.1
     dev: false
-
-  /preact/10.12.1:
-    resolution: {integrity: sha512-l8386ixSsBdbreOAkqtrwqHwdvR35ID8c3rKPa8lCWuO86dBi32QWHV4vfsZK1utLLFMvw+Z5Ad4XLkZzchscg==}
-    dev: true
 
   /preact/10.13.1:
     resolution: {integrity: sha512-KyoXVDU5OqTpG9LXlB3+y639JAGzl8JSBXLn1J9HTSB3gbKcuInga7bZnXLlxmK94ntTs1EFeZp0lrja2AuBYQ==}

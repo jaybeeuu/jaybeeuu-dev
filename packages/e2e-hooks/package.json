@@ -26,9 +26,9 @@
   },
   "devDependencies": {
     "@jaybeeuu/eslint-config": "workspace:*",
-    "@typescript-eslint/eslint-plugin": "^5.52.0",
-    "@typescript-eslint/parser": "^5.52.0",
-    "eslint": "^8.34.0",
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
+    "eslint": "^8.36.0",
     "typescript": "^4.9.5"
   }
 }
