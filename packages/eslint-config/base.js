@@ -44,14 +44,15 @@ module.exports = {
         "plugin:@typescript-eslint/strict"
       ],
       rules: {
+        "@typescript-eslint/consistent-indexed-object-style": ["error", "index-signature"],
         "@typescript-eslint/consistent-type-imports": ["error", { prefer: "type-imports" }],
         "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }],
         "@typescript-eslint/indent": ["error", 2, { SwitchCase: 1 }],
         "@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: false }],
         "@typescript-eslint/no-shadow": "error",
+        "@typescript-eslint/no-unnecessary-condition": ["error", { allowConstantLoopConditions: true }],
         "@typescript-eslint/no-unused-vars": ["error", { ignoreRestSiblings: true }],
         "@typescript-eslint/switch-exhaustiveness-check": "error",
-        "@typescript-eslint/consistent-indexed-object-style": ["error", "index-signature"],
         "indent": "off",
         "no-shadow": "off",
         "no-unused-vars": "off"
