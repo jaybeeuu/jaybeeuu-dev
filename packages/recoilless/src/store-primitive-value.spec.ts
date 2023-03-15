@@ -1,6 +1,6 @@
-import type { PrimitiveValue} from "./state/index";
-import { PrimitiveValueState } from "./state/index";
-import { Store } from "./store";
+import type { PrimitiveValue} from "./state/index.js";
+import { PrimitiveValueState } from "./state/index.js";
+import { Store } from "./store.js";
 
 const firstName: PrimitiveValue<string> = {
   name: "firstName",
