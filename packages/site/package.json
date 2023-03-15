@@ -20,7 +20,7 @@
     "start-prod": "cross-env NODE_ENV=production webpack serve",
     "start": "webpack serve",
     "test": "jest",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit --pretty"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
