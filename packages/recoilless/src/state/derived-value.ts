@@ -1,6 +1,6 @@
-import type { Listener, Unsubscribe, ValueState } from "./value-state";
-import { WatchableValue } from "./watchable-value";
-import type { Value } from "./value";
+import type { Listener, Unsubscribe, ValueState } from "./value-state.js";
+import { WatchableValue } from "./watchable-value.js";
+import type { Value } from "./value.js";
 
 export interface DerivedValue<Val> {
   name: string;

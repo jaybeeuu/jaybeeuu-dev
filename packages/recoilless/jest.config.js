@@ -16,7 +16,10 @@ const config = {
   ],
   watchPathIgnorePatterns: [
     "<rootDir>/lib"
-  ]
+  ],
+  moduleNameMapper: {
+    "(\\.\\.?/.*)\\.js$": "$1"
+  }
 };
 
-module.exports = config;
+export default config;

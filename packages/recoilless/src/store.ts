@@ -6,13 +6,13 @@ import type {
   SettableValue,
   Value,
   ValueState
-} from "./state/index";
+} from "./state/index.js";
 import {
   assertIsSettableValueState,
   DerivedValueState,
   isDerivedValue,
   PrimitiveValueState
-} from "./state/index";
+} from "./state/index.js";
 
 const createValue = <Val>(
   value: Value<Val>,

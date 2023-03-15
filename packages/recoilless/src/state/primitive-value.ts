@@ -1,10 +1,10 @@
-import type { Value } from "./value";
+import type { Value } from "./value.js";
 import type {
   Listener,
   SettableValueState,
   Unsubscribe
-} from "./value-state";
-import { WatchableValue } from "./watchable-value";
+} from "./value-state.js";
+import { WatchableValue } from "./watchable-value.js";
 
 export interface PrimitiveValue<Val> {
   name: string;

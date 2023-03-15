@@ -1,4 +1,4 @@
-export * from "./state/index";
+export * from "./state/index.js";
 
 export {
   GetValue,
@@ -6,4 +6,4 @@ export {
   ActionContext,
   SetValue,
   Store
-} from "./store";
+} from "./store.js";

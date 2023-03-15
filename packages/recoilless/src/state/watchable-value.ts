@@ -1,4 +1,4 @@
-import type { Listener, Unsubscribe } from "./value-state";
+import type { Listener, Unsubscribe } from "./value-state.js";
 
 export type RemoveFromStore = () => void;
 
