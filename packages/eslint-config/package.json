@@ -1,6 +1,6 @@
 {
   "name": "@jaybeeuu/eslint-config",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
   "description": "The shared eslint config for my packages.",
