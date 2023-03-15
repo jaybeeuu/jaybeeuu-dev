@@ -115,7 +115,7 @@ jobs:
       - setup_workspace
       - run:
           name: Unit Tests
-          command: pnpm type-check
+          command: pnpm test
 
   e2e:
     <<: *job-base
