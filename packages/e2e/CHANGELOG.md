@@ -1,5 +1,14 @@
 # @jaybeeuu/e2e
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`11144cb`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/11144cbe8a0b3eb65f0549a082f2d7668a10fe75)]:
+  - @jaybeeuu/utilities@0.1.1
+  - @jaybeeuu/compost@0.0.2
+  - @jaybeeuu/e2e-hooks@0.0.1
+
 ## 0.0.2
 
 ### Patch Changes

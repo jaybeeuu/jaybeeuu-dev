@@ -1,5 +1,13 @@
 # @jaybeeuu/eslint-config
 
+## 1.0.1
+
+### Patch Changes
+
+- [#103](https://github.com/jaybeeuu/jaybeeuu-dev/pull/103) [`2fd66bd`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/2fd66bd70818acd719b1ee22dc23c4ce329f30e1) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Reconfigure no-unnecessary-condition to allow loop's to use constant expressions (e.g. while (true)
+
+- [#104](https://github.com/jaybeeuu/jaybeeuu-dev/pull/104) [`11144cb`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/11144cbe8a0b3eb65f0549a082f2d7668a10fe75) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Update dependencies
+
 ## 1.0.0
 
 ### Major Changes

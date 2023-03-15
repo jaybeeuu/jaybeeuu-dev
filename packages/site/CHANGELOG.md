@@ -1,5 +1,19 @@
 # @jaybeeuu/site
 
+## 0.0.3
+
+### Patch Changes
+
+- [#104](https://github.com/jaybeeuu/jaybeeuu-dev/pull/104) [`11144cb`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/11144cbe8a0b3eb65f0549a082f2d7668a10fe75) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Update dependencies
+
+- Updated dependencies [[`11144cb`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/11144cbe8a0b3eb65f0549a082f2d7668a10fe75)]:
+  - @jaybeeuu/utilities@0.1.1
+  - @jaybeeuu/e2e-hooks@0.0.1
+  - @jaybeeuu/preact-async@1.0.1
+  - @jaybeeuu/preact-recoilless@1.0.1
+  - @jaybeeuu/recoilless@1.0.1
+  - @jaybeeuu/posts@0.0.0
+
 ## 0.0.2
 
 ### Patch Changes
