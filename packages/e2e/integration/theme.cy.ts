@@ -4,6 +4,8 @@ import { getThemeSwitch } from "../features/nav-bar";
 class MockMediaQuery {
   #matches = true;
   #changeListeners: ((ev: MediaQueryListEventMap["change"]) => any)[] = [];
+  #resolveHasListeners = (): void => {};
+  #hasListenersPromise = new Promise<true>((resolve) => this.#resolveHasListeners = () => resolve(true));
 
   set matches (
     newMatches: boolean
@@ -19,11 +21,16 @@ class MockMediaQuery {
     return this.#matches;
   }
 
+  get hasListeners(): Promise<true> {
+    return this.#hasListenersPromise;
+  }
+
   addEventListener<K extends keyof MediaQueryListEventMap>(
     type: K,
     listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => any
   ): void {
     this.#changeListeners = [...this.#changeListeners, listener];
+    this.#resolveHasListeners();
   }
 
   removeEventListener<K extends keyof MediaQueryListEventMap>(
@@ -41,9 +48,22 @@ Cypress.on("window:before:load", window => {
   cy.stub(window, "matchMedia").withArgs("(prefers-color-scheme: dark)").returns(isDarkQuery);
 });
 
+const setPrefersColorScheme = (colorScheme: "light" | "dark"): void => {
+  cy.log("setPrefersColorScheme", colorScheme);
+  cy.then(() => {
+    isDarkQuery.matches = colorScheme === "dark";
+  });
+};
+
+const waitForMediaListeners = (): void => {
+  cy.log("waitForMediaListeners");
+  cy.then(() => isDarkQuery.hasListeners);
+};
+
 context("Theme", (): void => {
-  before(() => {
+  beforeEach(() => {
     cy.visit("/");
+    waitForMediaListeners();
   });
 
   it("defaults to the dark theme.", (): void => {
@@ -52,13 +72,9 @@ context("Theme", (): void => {
 
   it("changes to the light theme and back when the user toggles the OS theme.", (): void => {
     getThemeRoot().should("have.class", "dark");
-    cy.then(() => {
-      isDarkQuery.matches = false;
-    });
+    setPrefersColorScheme("light");
     getThemeRoot().should("have.class", "light");
-    cy.then(() => {
-      isDarkQuery.matches = true;
-    });
+    setPrefersColorScheme("dark");
     getThemeRoot().should("have.class", "dark");
   });
 
@@ -71,13 +87,12 @@ context("Theme", (): void => {
   });
 
   it("changes to the light theme and back even after the switch has been toggled.", (): void => {
-    cy.then(() => {
-      isDarkQuery.matches = false;
-    });
+    getThemeRoot().should("have.class", "dark");
+    getThemeSwitch().click();
     getThemeRoot().should("have.class", "light");
-    cy.then(() => {
-      isDarkQuery.matches = true;
-    });
+    setPrefersColorScheme("light");
+    getThemeRoot().should("have.class", "light");
+    setPrefersColorScheme("dark");
     getThemeRoot().should("have.class", "dark");
   });
 });

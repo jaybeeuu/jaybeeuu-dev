@@ -3,11 +3,8 @@ import * as postList from "../features/post-list";
 import * as post from "../features/post";
 
 context("Post navigation", (): void => {
-  before(() => {
-    cy.visit("/");
-  });
-
   beforeEach(() => {
+    cy.visit("/");
     registerRoutes();
   });
 
