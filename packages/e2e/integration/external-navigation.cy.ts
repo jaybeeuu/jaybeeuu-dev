@@ -1,7 +1,7 @@
 import * as navBar from "../features/nav-bar";
 
 context("external nav links", () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit("/");
   });
 

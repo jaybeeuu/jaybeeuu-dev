@@ -1,11 +1,10 @@
-module.exports = {
+// @ts-check
+
+/** @type {import('jest').Config} */
+const config = {
   clearMocks: true,
-  collectCoverageFrom: [
-    "src/**/*",
-    "!**/*.d.ts"
-  ],
   transform: {
-    "^.+\\.(t|j)sx?$": ["ts-jest"]
+    "^.+\\.(t|j)sx?$": "ts-jest"
   },
   testEnvironment: "node",
   testMatch: [
@@ -19,3 +18,5 @@ module.exports = {
     "<rootDir>/lib"
   ]
 };
+
+module.exports = config;

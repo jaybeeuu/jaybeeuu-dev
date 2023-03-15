@@ -6,13 +6,13 @@ import { Store } from "@jaybeeuu/recoilless";
 import { monitorPromise, pending } from "@jaybeeuu/utilities";
 import type { MonitorPromiseOptions } from "@jaybeeuu/utilities";
 import type * as UtilitiesModule from "@jaybeeuu/utilities";
-import { act, renderHook } from "@testing-library/preact-hooks";
-import type { ComponentType} from "preact";
+import { act, renderHook } from "@testing-library/preact";
+import type { ComponentType } from "preact";
 import { h } from "preact";
 import { StoreProvider } from "./store-provider.js";
 import { useValue } from "./use-value.js";
 
-jest.mock("@jaybeeuu/utilities", () => {
+jest.mock<typeof UtilitiesModule>("@jaybeeuu/utilities", () => {
   const actualUtilities = jest.requireActual<typeof UtilitiesModule>("@jaybeeuu/utilities");
 
   return {
@@ -22,7 +22,7 @@ jest.mock("@jaybeeuu/utilities", () => {
 });
 
 // eslint-disable-next-line react/display-name
-const Wrapper = (store?: Store): ComponentType => (
+const Wrapper = (store?: Store): ComponentType<{ children: Element }> => (
   { children }
 ) => <StoreProvider store={store}>{children}</StoreProvider>;
 
@@ -44,7 +44,7 @@ describe("useValue", () => {
         { wrapper: Wrapper() }
       );
 
-      await act(() => result.current?.[1]("Iceland"));
+      await act(() => result.current[1]("Iceland"));
 
       expect(result.current).toStrictEqual(["Iceland", expect.any(Function)]);
     });
@@ -55,7 +55,7 @@ describe("useValue", () => {
       const { result } = renderHook(() => useValue(value), { wrapper: Wrapper(store) });
       const { result: otherResult } = renderHook(() => useValue(value), { wrapper: Wrapper(store) });
 
-      await act(() => otherResult.current?.[1]("Iceland"));
+      await act(() => otherResult.current[1]("Iceland"));
 
       expect(result.current).toStrictEqual(["Iceland", expect.any(Function)]);
     });

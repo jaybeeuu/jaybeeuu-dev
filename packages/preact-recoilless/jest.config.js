@@ -1,11 +1,12 @@
+// @ts-check
+
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 const config = {
   clearMocks: true,
-  collectCoverageFrom: [
-    "src/**/*",
-    "!**/*.d.ts"
-  ],
+  preset: "ts-jest",
   transform: {
-    "^.+\\.(t|j)sx?$": ["ts-jest"]
+    "\\.(ts|tsx)$": "ts-jest",
+    "\\.(mjs|js|jsx)$": "babel-jest"
   },
   testEnvironment: "jsdom",
   testMatch: [
@@ -19,11 +20,12 @@ const config = {
   watchPathIgnorePatterns: [
     "<rootDir>/lib"
   ],
+  transformIgnorePatterns: [
+    "/node_modules/(?!(\\.pnpm|@testing-library/preact|preact/))"
+  ],
   moduleNameMapper: {
-    "(\\.\\.?/.*)\\.js$": "$1",
-    "^preact$": "<rootDir>/node_modules/preact/dist/preact.js",
-    "^preact/test-utils$": "<rootDir>/node_modules/preact/test-utils/dist/testUtils.js",
-    "^preact/([a-z-]*)$": "<rootDir>/node_modules/preact/$1/dist/$1.js"
+    "(\\.\\.?/.*)\\.js$": "$1"
   }
 };
+
 export default config;

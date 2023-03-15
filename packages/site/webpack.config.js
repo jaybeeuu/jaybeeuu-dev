@@ -1,4 +1,5 @@
 // @ts-check
+
 import { FeedWebpackPlugin } from "@jaybeeuu/feed-webpack-plugin";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import CopyWebpackPlugin from "copy-webpack-plugin";
@@ -25,6 +26,7 @@ const SitemapPlugin = SitemapPluginImport.default;
 const caseSensitivePathsPlugin = new CaseSensitivePathsPlugin();
 
 const isProduction = env.NODE_ENV === "production";
+/** @type {"production" | "development"} */
 const mode = isProduction ? "production" : "development";
 const isWatching = process.argv.includes("serve");
 
@@ -45,6 +47,7 @@ const resolvedURLToSite = (...pathFragments) => {
   return path.posix.join(siteURL, ...pathFragments);
 };
 
+/** @typedef {import('webpack-dev-server')} */
 /** @type {import("webpack").Configuration} */
 export default {
   mode,

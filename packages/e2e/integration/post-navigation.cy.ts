@@ -9,7 +9,7 @@ import * as post from "../features/post";
 import * as postList from "../features/post-list";
 
 context("Empty Post List", () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit("/");
   });
 
@@ -22,28 +22,25 @@ context("Empty Post List", () => {
 });
 
 context("Post navigation", (): void => {
-  before(() => {
-    cy.visit("/");
-  });
-
   beforeEach(() => {
+    cy.visit("/");
     registerRoutes();
   });
 
   it("the post list link in the nav bar opens a list of the posts.", () => {
-    navBar.getHomeLink().click();
     postList.openList();
-    cy.wait(getPostsAlias("manifest"));
     postList.get().should("be.visible");
   });
 
   it("displays the posts in the manifest.", (): void => {
+    postList.openList();
     postList.hasLinkToPost("memoising-selectors");
     postList.hasLinkToPost("module-spotting");
     postList.hasLinkToPost("the-rewrite");
   });
 
   it("sorts the posts in ascending age order.", (): void => {
+    postList.openList();
     postList.getPostLinkSlugs().then((slugs) => {
       expect(slugs).to.deep.equal([
         "the-rewrite",

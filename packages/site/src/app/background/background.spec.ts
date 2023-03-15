@@ -1,5 +1,5 @@
 import { ControllablePromise } from "@jaybeeuu/utilities/test";
-import { act, renderHook } from "@testing-library/preact-hooks";
+import { act, renderHook, waitFor } from "@testing-library/preact";
 import type { Theme } from "../services/theme";
 import type { BackgroundImages } from "../state";
 import type { ImageStateEntry } from "./image-preloader";
@@ -76,28 +76,26 @@ describe("useImages", () => {
     const fetchPromise = new ControllablePromise<Response>();
     jest.spyOn(global, "fetch").mockReturnValue(fetchPromise);
 
-    const { result, waitForNextUpdate } = renderHook(() => useImages(
+    const { result } = renderHook(() => useImages(
       { dark: "bath", light: "black-tusk" },
       "dark"
     ));
 
-    const waitPromise = waitForNextUpdate();
-    fetchPromise.resolve({} as unknown as Response);
-    await waitPromise;
+    await act(() => fetchPromise.resolve({} as unknown as Response));
 
-    expect(result.current).toStrictEqual({
+    await waitFor(() => expect(result.current).toStrictEqual({
       current: objectContaining({
         loaded: true
       }) as ImageStateEntry,
       previous: null
-    });
+    }));
   });
 
   it("sets loaded to false for a new current image.", async () => {
     const fetchPromise = new ControllablePromise<Response>();
     jest.spyOn(global, "fetch").mockReturnValue(fetchPromise);
 
-    const { result, rerender, waitForNextUpdate } = renderHook(
+    const { result, rerender } = renderHook(
       ({ currentTheme, images }: {
         images: BackgroundImages | null;
         currentTheme: Theme;
@@ -111,7 +109,7 @@ describe("useImages", () => {
 
     await act(() => fetchPromise.resolve({} as unknown as Response));
 
-    await waitForNextUpdate();
+    await waitFor(() => result.current.current);
 
     rerender({
       images: {

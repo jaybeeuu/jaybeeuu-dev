@@ -14,7 +14,7 @@ export const echo = <Value>(
   value: ValueOrFactory<Value>,
   msDelay: number
 ): ClearablePromise<Value> => {
-  let timeout: number | undefined;
+  let timeout: ReturnType<typeof setTimeout>;
 
   const promise = Object.assign(
     new Promise<Value>((resolve) => {

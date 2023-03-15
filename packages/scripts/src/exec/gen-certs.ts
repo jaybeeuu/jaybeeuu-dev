@@ -10,7 +10,8 @@ export const main = (argv: string[]): void => {
         domain: {
           default: ["localhost"],
           alias: "d",
-          type: "array"
+          type: "string",
+          array: true
         },
         directory: {
           default: "./certs",
@@ -33,7 +34,9 @@ export const main = (argv: string[]): void => {
           type: "string"
         }
       },
-      genCerts
+      async (args) => {
+        await genCerts(args);
+      }
     )
     .command(
       "uninstall",

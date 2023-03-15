@@ -1,8 +1,12 @@
+// @ts-check
+
 import path from "path";
 import fs from "fs";
 
 const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+
+/** @param {string} relativePath */
+const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
 
 const certs = resolveApp("certs");
 

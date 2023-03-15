@@ -62,12 +62,14 @@ export class ImagePreloader {
 
     try {
       await fetch(current.url);
+
       this.#state = {
         ...this.#state,
         current: { ...current, loaded: true }
       };
 
       this.#preloads.add(current.name);
+
       this.#emit();
     } catch (error){
       return;
