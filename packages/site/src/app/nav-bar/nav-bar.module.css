@@ -16,7 +16,7 @@
 
 .link:hover, .link.active {
   color: var(--colour-text-main);
-  border-color: var(--colour-link-border);
+  border-color: var(--colour-link-decoration);
 }
 
 .options-list {

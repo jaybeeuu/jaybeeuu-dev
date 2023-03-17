@@ -18,8 +18,7 @@
 
 a {
   color: var(--colour-text-main);
-  border-bottom: solid 0.2rem var(--colour-link-border);
-  text-decoration: none;
+  text-decoration-color: var(--colour-link-decoration);
   transition: var(--transition-theme), color var(--transition-average);
 }
 
@@ -50,7 +49,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
-  color: var(--colour-link-border);
+  color: var(--colour-link-decoration);
   border-bottom: none;
 }
 

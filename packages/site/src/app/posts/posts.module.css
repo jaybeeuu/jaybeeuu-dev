@@ -9,6 +9,10 @@
   margin: var(--margin-content);
 }
 
+.component-root a {
+  text-decoration-line: none;
+}
+
 .post {
   display: block;
   color: var(--colour-text-main);
@@ -21,7 +25,7 @@
 
 .post:hover {
   color: var(--colour-text-main);
-  border-color: var(--colour-link-border);
+  border-color: var(--colour-link-decoration);
 }
 
 .post:first-child {

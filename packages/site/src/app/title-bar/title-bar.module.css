@@ -19,6 +19,10 @@
   transition: var(--transition-theme);
 }
 
+.component-root a {
+  text-decoration-line: none;
+}
+
 .title {
   color: var(--colour-text);
   margin: 0;
