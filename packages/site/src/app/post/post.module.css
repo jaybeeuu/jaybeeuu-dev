@@ -9,6 +9,7 @@
   padding: var(--padding-content);
   transition: var(--transition-theme);
 }
+
 .article-content > :first-child {
   margin-top: 0;
 }
