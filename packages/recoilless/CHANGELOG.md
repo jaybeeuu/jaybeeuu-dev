@@ -1,5 +1,15 @@
 # @jaybeeuu/recoilless
 
+## 2.0.0
+
+### Major Changes
+
+- [#106](https://github.com/jaybeeuu/jaybeeuu-dev/pull/106) [`b863629`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/b8636297cc71379e7610c9bb8699d2fba6678fa8) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Publish only as an ES module.
+
+### Minor Changes
+
+- [#109](https://github.com/jaybeeuu/jaybeeuu-dev/pull/109) [`ed65a4f`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/ed65a4f6d343a4eedcb250437709c82103e1d195) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Recoilless store and values allow a removal schedule to be configured.
+
 ## 1.0.1
 
 ### Patch Changes
