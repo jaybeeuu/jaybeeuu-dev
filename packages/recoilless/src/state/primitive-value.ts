@@ -1,4 +1,5 @@
-import type { Value } from "./value.js";
+import type { StoreRemovalSchedule, UnscheduleRemoval } from "./store-removal-strategies.js";
+import { makeScheduler } from "./store-removal-strategies.js";
 import type {
   Listener,
   SettableValueState,
@@ -9,18 +10,33 @@ import { WatchableValue } from "./watchable-value.js";
 export interface PrimitiveValue<Val> {
   name: string;
   initialValue: Val;
+  removalSchedule?: StoreRemovalSchedule;
 }
 
 export class PrimitiveValueState<Val>  implements SettableValueState<Val>{
   readonly #name: string;
   readonly #value: WatchableValue<Val>;
+  readonly #unscheduleRemoval: UnscheduleRemoval = () => {};
 
   constructor(
-    { name, initialValue }: PrimitiveValue<Val>,
-    removeFromStore: () => void
+    { name, initialValue, removalSchedule }: PrimitiveValue<Val>,
+    removeFromStore: () => void,
+    defaultRemovalSchedule: StoreRemovalSchedule
   ) {
-    this.#value = new WatchableValue(initialValue, removeFromStore);
     this.#name = name;
+    const {
+      schedule: scheduleRemoval,
+      unschedule: unscheduleRemoval
+    } = makeScheduler(
+      removalSchedule ?? defaultRemovalSchedule,
+      () => removeFromStore()
+    );
+
+    this.#value = new WatchableValue(
+      initialValue,
+      () => scheduleRemoval()
+    );
+    this.#unscheduleRemoval = unscheduleRemoval;
   }
 
   public get current(): Val {
@@ -36,12 +52,7 @@ export class PrimitiveValueState<Val>  implements SettableValueState<Val>{
   };
 
   public subscribe(listener: Listener<Val>): Unsubscribe {
+    this.#unscheduleRemoval();
     return this.#value.subscribe(listener);
   }
 }
-
-export const isPrimitiveValue = <Val>(
-  value: Value<Val>
-): value is PrimitiveValue<Val> => {
-  return "initialValue" in value;
-};

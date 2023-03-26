@@ -1,4 +1,5 @@
-import type { PrimitiveValue} from "./state/index.js";
+import { withFakeTimers } from "@jaybeeuu/utilities/test";
+import type { PrimitiveValue } from "./state/index.js";
 import { PrimitiveValueState } from "./state/index.js";
 import { Store } from "./store.js";
 
@@ -123,6 +124,71 @@ describe("recoilless store", () => {
       const newState = store.getValue(firstName);
 
       expect(newState.current).toBe(firstName.initialValue);
+    });
+  });
+
+  describe("delayed store removal", () => {
+    withFakeTimers();
+
+    const delayedRemovalValue: PrimitiveValue<number> = {
+      name: "delayedRemoval",
+      initialValue: 0,
+      removalSchedule: { delay: 500, schedule: "delayed" }
+    };
+
+    it("does not recalculate the value if something resubscribes within the delay.", () => {
+      const store = new Store();
+
+      const firstValueState = store.getValue(delayedRemovalValue);
+      const unsubscribe = firstValueState.subscribe(() => {});
+      firstValueState.set(1);
+      unsubscribe();
+
+      jest.advanceTimersByTime(499);
+
+      const secondValueState = store.getValue(delayedRemovalValue);
+      const second = secondValueState.current;
+      secondValueState.subscribe(() => {});
+
+      expect(second).toBe(1);
+    });
+
+    it("recalculates the value if something resubscribes after the delay lapses.", () => {
+      const store = new Store();
+
+      const firstValueState = store.getValue(delayedRemovalValue);
+      const unsubscribe = firstValueState.subscribe(() => {});
+      firstValueState.set(1);
+      unsubscribe();
+
+      jest.advanceTimersByTime(500);
+
+      const secondValueState = store.getValue(delayedRemovalValue);
+      const second = secondValueState.current;
+      secondValueState.subscribe(() => {});
+
+      expect(second).toBe(0);
+    });
+
+    it("delays removal if the default schedule is delayed, and there is no schedule supplied via the value.", () => {
+      const store = new Store({
+        defaultRemovalSchedule: { delay: 500, schedule: "delayed" }
+      });
+
+      const value = { name: "number", initialValue: 0 };
+
+      const firstValueState = store.getValue(value);
+      const unsubscribe = firstValueState.subscribe(() => {});
+      firstValueState.set(1);
+      unsubscribe();
+
+      jest.advanceTimersByTime(499);
+
+      const secondValueState = store.getValue(value);
+      const second = secondValueState.current;
+      secondValueState.subscribe(() => {});
+
+      expect(second).toBe(1);
     });
   });
 });

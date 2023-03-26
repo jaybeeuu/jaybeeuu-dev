@@ -2,6 +2,17 @@ import type { Listener, Unsubscribe } from "./value-state.js";
 
 export type RemoveFromStore = () => void;
 
+export interface DelayedRemovalLifecyclePolicy {
+  policy: "delayedRemoval";
+  delay: number;
+}
+
+export interface ImmediateRemovalLifecyclePolicy {
+  policy: "immediateRemoval";
+}
+
+export type RemovalPolicy = DelayedRemovalLifecyclePolicy | ImmediateRemovalLifecyclePolicy;
+
 export class WatchableValue<Val> {
   readonly #listeners = new Set<Listener<Val>>();
   readonly #onLastUnsubscribe: () => void;

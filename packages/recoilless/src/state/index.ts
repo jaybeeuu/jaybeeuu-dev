@@ -3,12 +3,10 @@ export {
   Derive,
   DerivedValue,
   DerivedValueState,
-  GetDependency,
-  isDerivedValue
+  GetDependency
 } from "./derived-value.js";
 
 export {
-  isPrimitiveValue,
   PrimitiveValue,
   PrimitiveValueState
 } from "./primitive-value.js";
@@ -23,6 +21,8 @@ export {
 } from "./value-state.js";
 
 export {
-  Value,
-  SettableValue
+  isDerivedValue,
+  isPrimitiveValue,
+  SettableValue,
+  Value
 } from "./value.js";
