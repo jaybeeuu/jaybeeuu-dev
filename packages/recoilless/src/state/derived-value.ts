@@ -1,10 +1,13 @@
 import type { Listener, Unsubscribe, ValueState } from "./value-state.js";
 import { WatchableValue } from "./watchable-value.js";
 import type { Value } from "./value.js";
+import type { StoreRemovalSchedule, UnscheduleRemoval } from "./store-removal-strategies.js";
+import { makeScheduler } from "./store-removal-strategies.js";
 
 export interface DerivedValue<Val> {
   name: string;
   derive: Derive<Val>;
+  removalSchedule?: StoreRemovalSchedule;
 }
 
 export interface DerivationContext<Val> {
@@ -23,10 +26,13 @@ export class DerivedValueState<Val> implements ValueState<Val> {
   readonly #value: WatchableValue<Val>;
   readonly #name: string;
 
+  readonly #unscheduleRemoval: UnscheduleRemoval = () => {};
+
   constructor(
-    { name, derive }: DerivedValue<Val>,
+    { derive, removalSchedule, name }: DerivedValue<Val>,
     removeFromStore: () => void,
-    getDependency: GetDependency
+    getDependency: GetDependency,
+    defaultRemovalSchedule: StoreRemovalSchedule
   ) {
     this.#derive = derive;
     this.#getDependency = getDependency;
@@ -37,12 +43,20 @@ export class DerivedValueState<Val> implements ValueState<Val> {
       previousValue: undefined
     });
 
-    this.#value = new WatchableValue(firstValue, () => {
-      removeFromStore();
-      this.#dependencyUnsubscribes.forEach(
-        (unsubscribeDependency) => unsubscribeDependency()
-      );
-    });
+    const {
+      schedule: scheduleRemoval,
+      unschedule: unscheduleRemoval
+    } = makeScheduler(
+      removalSchedule ?? defaultRemovalSchedule,
+      () => {
+        removeFromStore();
+        this.#dependencyUnsubscribes.forEach(
+          (unsubscribeDependency) => unsubscribeDependency()
+        );
+      }
+    );
+    this.#unscheduleRemoval = unscheduleRemoval;
+    this.#value = new WatchableValue(firstValue, () => scheduleRemoval());
   }
 
   #deriveAgain(): void {
@@ -76,12 +90,7 @@ export class DerivedValueState<Val> implements ValueState<Val> {
   }
 
   public subscribe(listener: Listener<Val>): Unsubscribe {
+    this.#unscheduleRemoval();
     return this.#value.subscribe(listener);
   }
 }
-
-export const isDerivedValue = <Val>(
-  value: Value<Val>
-): value is DerivedValue<Val> => {
-  return "derive" in value && typeof value.derive === "function";
-};

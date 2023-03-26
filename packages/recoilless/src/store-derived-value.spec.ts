@@ -1,3 +1,4 @@
+import { withFakeTimers }  from "@jaybeeuu/utilities/test";
 import type { DerivationContext, DerivedValue, PrimitiveValue } from "./state/index.js";
 import { DerivedValueState } from "./state/index.js";
 import { Store } from "./store.js";
@@ -176,7 +177,7 @@ describe("recoilless store", () => {
     };
 
     const counter: DerivedValue<number> = {
-      name: "runningTotal",
+      name: "counter",
       derive: ({ get, previousValue = 0 }: DerivationContext<number>): number => {
         const change = get(counterChange);
         const newValue = previousValue + change;
@@ -205,6 +206,77 @@ describe("recoilless store", () => {
 
       change.set(1);
       expect(counterValueState.current).toBe(2);
+    });
+
+    describe("delayed store removal", () => {
+      withFakeTimers();
+
+      const delayedRemovalValue: DerivedValue<object> = {
+        name: "delayedGCValue",
+        derive: ({ previousValue = {} }: DerivationContext<object>): object => {
+          return previousValue;
+        },
+        removalSchedule: { delay: 500, schedule: "delayed" }
+      };
+
+      it("does not recalculate the value if something resubscribes within the delay.", () => {
+        const store = new Store();
+
+        const firstValueState = store.getValue(delayedRemovalValue);
+        const unsubscribe = firstValueState.subscribe(() => {});
+        const first = firstValueState.current;
+        unsubscribe();
+
+        jest.advanceTimersByTime(499);
+
+        const secondValueState = store.getValue(delayedRemovalValue);
+        const second = secondValueState.current;
+        secondValueState.subscribe(() => {});
+
+        expect(first).toBe(second);
+      });
+
+      it("recalculates the value if something resubscribes after the delay lapses.", () => {
+        const store = new Store();
+
+        const firstValueState = store.getValue(delayedRemovalValue);
+        const unsubscribe = firstValueState.subscribe(() => {});
+        const first = firstValueState.current;
+        unsubscribe();
+
+        jest.advanceTimersByTime(500);
+
+        const secondValueState = store.getValue(delayedRemovalValue);
+        const second = secondValueState.current;
+        secondValueState.subscribe(() => {});
+
+        expect(first).not.toBe(second);
+      });
+
+      it("does not recalculate the value if the delay comes from the store options.", () => {
+        const store = new Store({
+          defaultRemovalSchedule: { delay: 500, schedule: "delayed" }
+        });
+
+        const value = {
+          name: "delayedGCValue",
+          derive: ({ previousValue = {} }: DerivationContext<object>): object => {
+            return previousValue;
+          }
+        };
+        const firstValueState = store.getValue(value);
+        const unsubscribe = firstValueState.subscribe(() => {});
+        const first = firstValueState.current;
+        unsubscribe();
+
+        jest.advanceTimersByTime(499);
+
+        const secondValueState = store.getValue(value);
+        const second = secondValueState.current;
+        secondValueState.subscribe(() => {});
+
+        expect(first).toBe(second);
+      });
     });
   });
 });
