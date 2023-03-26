@@ -1,5 +1,15 @@
 # @jaybeeuu/site
 
+## 0.0.4
+
+### Patch Changes
+
+- [#110](https://github.com/jaybeeuu/jaybeeuu-dev/pull/110) [`3624a32`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/3624a32b95fb53989f1675f9e996434680586287) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Fix link underlining
+
+- Updated dependencies [[`b863629`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/b8636297cc71379e7610c9bb8699d2fba6678fa8), [`ed65a4f`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/ed65a4f6d343a4eedcb250437709c82103e1d195)]:
+  - @jaybeeuu/recoilless@2.0.0
+  - @jaybeeuu/preact-recoilless@2.0.0
+
 ## 0.0.3
 
 ### Patch Changes

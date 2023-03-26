@@ -1,5 +1,12 @@
 # @jaybeeuu/preact-recoilless
 
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies [[`b863629`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/b8636297cc71379e7610c9bb8699d2fba6678fa8), [`ed65a4f`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/ed65a4f6d343a4eedcb250437709c82103e1d195)]:
+  - @jaybeeuu/recoilless@2.0.0
+
 ## 1.0.1
 
 ### Patch Changes
