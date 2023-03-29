@@ -1,12 +1,11 @@
 version: 2.1
 
-
 src-dir: &src-dir ~/src
 
 job-base: &job-base
   resource_class: large
   docker:
-    - image: cimg/node:18.11.0
+    - image: cimg/node:18.14.2
       auth:
         username: $DOCKERHUB_USERNAME
         password: $DOCKERHUB_PASSWORD
@@ -17,7 +16,7 @@ commands:
     steps:
       - run:
           name: Install pnpm
-          command: npm i -g pnpm@7.0.0
+          command: npm i -g pnpm@8.0.0
 
   setup_workspace:
     steps:

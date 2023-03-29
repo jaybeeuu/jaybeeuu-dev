@@ -10,8 +10,8 @@
     "Site"
   ],
   "engines": {
-    "node": ">=14.18.1",
-    "pnpm": ">=6.19.0"
+    "node": ">=18.14.2",
+    "pnpm": ">=8.0.0"
   },
   "repository": {
     "type": "git",
