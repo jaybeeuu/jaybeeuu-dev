@@ -1,4 +1,4 @@
-# Jest and PNPM
+# Jest and pnpm
 
 [pnpm](https://pnpm.io)
 is my package manager of choice.
@@ -7,7 +7,7 @@ But mostly because it's approach to dependency management completely prevents
 [phantom dependencies](https://rushjs.io/pages/advanced/phantom_deps/)
 .
 
-Recently it's file structure caused some problems with my favorite testing library (
+Recently it's file structure caused some problems with my favourite testing library (
 [jest](https://jestjs.io/)
 ).
 FIguring out the cause and the solution lead me to dig a bit deeper in to both tools.
@@ -23,7 +23,7 @@ Among other things, pnpm creates a directory structure for `node_modules` which 
 
 This is a good thing.
 Because of the way node resolves imported packages,
-a flat `node_modules`, allows your code to import those transient ddependencies of your dependencies,
+a flat `node_modules`, allows your code to import those transient dependencies of your dependencies,
 as if they were your own.
 These are known as
 ["phantom dependencies"](https://rushjs.io/pages/advanced/phantom_deps/)
@@ -41,7 +41,7 @@ and
 are catching on.
 Recently though pnpm's file structure caused me some headaches while updating my dependencies.
 
-I regularly run `pnpm update --latest` and rely on my e2e and unit tests to catch problems caused by the upgrades.
+I regularly run `pnpm update --latest` and rely on my E2E and unit tests to catch problems caused by the upgrades.
 Nearly all packages are fine,
 occasionally there's a problem with a missing or incorrect dependency declaration,
 easily solved with a
@@ -77,7 +77,7 @@ there are some
 , but Jest needs for features like mocking.
 
 But Jest transpiles or at least can transpile ESM to CommonJS right?
-So whats the problem?
+So what's the problem?
 Well... `node_modules`.
 By default Jest makes no effort to transpile code in `node_modules`,  it would be expensive,
 and shouldn't be needed,
@@ -106,7 +106,7 @@ For example `node_modules/foo` does match (`(?!` is a negative look ahead), and 
 
 But that didn't work.
 Frustrating.
-Stack overflow didn't help, nothing in github issues, blog posts and gists.... no dice.
+Stack overflow didn't help, nothing in GitHub issues, blog posts and gists.... no dice.
 This should _just_ work.
 But it didn't.
 
@@ -116,7 +116,7 @@ That led me to instrument `ScriptTransformer.js`.
 
 It's pnpm's fault.
 
-Lets think through a bit of wha is happening here.
+Lets think through a bit of what is happening here.
 WHen you import something, for example:
 
 ```ts
@@ -125,7 +125,7 @@ import chalk from "chalk";
 
 The runtime takes the string,
 `"chalk"`,
-and applies a module resolution algorithm to it to discover the javascript file it relates to.
+and applies a module resolution algorithm to it to discover the JavaScript file it relates to.
 In this case the algorithm is node's, so in npmland `"chalk"` get's resolved to something like this:
 
 ```txt
@@ -133,9 +133,9 @@ path/to/your/project/node_modules/chalk/source/index.js
 ```
 
 and that's what is used to compare with the regexp.
-This doesn't match so jest doesn't ignore it... and... passes it to babel to transform into commonJS (not confusing at all).
+This doesn't match so jest doesn't ignore it... and... passes it to babel to transform into CommonJS (not confusing at all).
 
-Except I'm using pnpm so thats not what `"chalk"` resolves to.
+Except I'm using pnpm so that's not what `"chalk"` resolves to.
 Instead I get this:
 
 ```txt
@@ -151,7 +151,7 @@ If there's a lot of dependencies, really big.
 [Pnpm's strategy of linking packages save disk space](https://pnpm.io/motivation#saving-disk-space).
 
 But that breaks our regexp.
-Even though that file path still has `node_modules/chalk` init, the string matches the regexp (
+Even though that file path still has `node_modules/chalk` in it, the string matches the regexp (
 and so does not get transformed
 ) since it also contains `node_modules/.pnpm`.
 

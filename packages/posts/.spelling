@@ -62,6 +62,13 @@ marked.js.
 CircleCI
 Cloudflare
 linted
+pnpm
+node_modules
+npm
+preact
+ESM
+regexp
+gists
  - src/premature-optimisation.md
 v14.15.1
 Hrn
@@ -87,3 +94,6 @@ o
 o
  - src/over-engineered/over-engineered.md
 _is_
+ - src/jest-transforms/jest-transforms.md
+v18
+npmland
