@@ -17,7 +17,9 @@ It's all just JavaScript.
 
 ## The problem
 
-Among other things, pnpm creates a directory structure for `node_modules` which is [nested as opposed to the flat structure used by npm and yarn classic.](https://pnpm.io/motivation#creating-a-non-flat-node_modules-directory).
+Among other things, pnpm creates a directory structure for `node_modules` which is
+[nested as opposed to the flat structure used by npm and yarn classic.](https://pnpm.io/motivation#creating-a-non-flat-node_modules-directory)
+.
 
 This is a good thing.
 Because of the way node resolves imported packages,
