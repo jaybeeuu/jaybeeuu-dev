@@ -2,24 +2,22 @@
 
 [pnpm](https://pnpm.io)
 is my package manager of choice.
-I like pnpm because it's quick, feature rich and doesn't turn my node_modules directory into a black hole.
+I like pnpm because it's quick, feature rich and doesn't turn my `node_modules` directory into a black hole.
 But mostly because it's approach to dependency management completely prevents
 [phantom dependencies](https://rushjs.io/pages/advanced/phantom_deps/)
 .
 
-Recently it's file structure caused some problems with my favourite testing library (
-[jest](https://jestjs.io/)
-).
+Recently it's file structure caused some problems with my favourite testing library
+([jest](https://jestjs.io/))
+.
 FIguring out the cause and the solution lead me to dig a bit deeper in to both tools.
-I think the main take away for me here is read the docs...
-I also learned some interesting techniques to debug 3rd party libraries.
-It's all just JavaScript.
+I think the main take away for me here is read the docs,
+but I also learned some interesting stuff about the tools.
 
 ## The problem
 
 Among other things, pnpm creates a directory structure for `node_modules` which is
-[nested as opposed to the flat structure used by npm and yarn classic.](https://pnpm.io/motivation#creating-a-non-flat-node_modules-directory)
-.
+[nested as opposed to the flat structure used by npm and yarn classic.](https://pnpm.io/motivation#creating-a-non-flat-node_modules-directory).
 
 This is a good thing.
 Because of the way node resolves imported packages,
@@ -66,22 +64,22 @@ That should be fine though shouldn't it?
 I'm running node v18 which supports native ESM.
 
 No such luck. At the time of writing
-[Jest only has experimental support for ESM](https://jestjs.io/docs/ecmascript-modules)
-.
+[Jest only has experimental support for ESM](https://jestjs.io/docs/ecmascript-modules).
 There's a lot of magic hat Jest does when it runs your tests,
 but one of the things is to orchestrate transpiling the ESM you write to CommonJS modules,
 which is what it passes on to node to execute.
 My understanding is that, while Node does support ESM,
 there are some
-[API's which aren't yet stable for ESM](https://nodejs.org/api/vm.html#vm_class_vm_module)
-, but Jest needs for features like mocking.
+[API's which aren't yet stable for ESM](https://nodejs.org/api/vm.html#vm_class_vm_module),
+but Jest needs for features like mocking.
 
 But Jest transpiles or at least can transpile ESM to CommonJS right?
 So what's the problem?
 Well... `node_modules`.
-By default Jest makes no effort to transpile code in `node_modules`,  it would be expensive,
-and shouldn't be needed,
-since package authors are expected to publish code compatible with the node versions declared via `engines`.
+By default Jest makes no effort to transpile code in `node_modules`,
+it would be expensive,
+and shouldn't be needed;
+package authors are expected to publish code compatible with the node versions declared via `engines`.
 That assumption saves countless CPU cycles and hours of your time.
 Be grateful.
 But in this case causes the tests to fail without prejudice.
@@ -133,7 +131,8 @@ path/to/your/project/node_modules/chalk/source/index.js
 ```
 
 and that's what is used to compare with the regexp.
-This doesn't match so jest doesn't ignore it... and... passes it to babel to transform into CommonJS (not confusing at all).
+This doesn't match so jest... doesn't... ignore it... and...
+passes it to babel to transform into CommonJS (not confusing at all).
 
 Except I'm using pnpm so that's not what `"chalk"` resolves to.
 Instead I get this:
@@ -144,16 +143,16 @@ path/to/your/project/node_modules/.pnpm/chalk@5.2.0/node_modules/chalk/source/in
 
 This is because of another awesome feature on pnpm.
 One of it's optimizations is that you only get one copy of any one version of a package on disk.
-That copy is linked to the right place so that node can find it using symlinks.
+That copy is symlinked to the right place so that node can find it.
 This is good.
-A common problem developers using npm face is that node_modules can get big.
+A common problem developers using npm face is that `node_modules` can get big.
 If there's a lot of dependencies, really big.
-[Pnpm's strategy of linking packages save disk space](https://pnpm.io/motivation#saving-disk-space).
+[Pnpm's strategy of linking packages allows nodes recommended structure and saves disk space](https://pnpm.io/motivation#saving-disk-space).
 
 But that breaks our regexp.
-Even though that file path still has `node_modules/chalk` in it, the string matches the regexp (
-and so does not get transformed
-) since it also contains `node_modules/.pnpm`.
+Even though that file path still has `node_modules/chalk` in it, the string matches the regexp
+(and so does not get transformed)
+since it also contains `node_modules/.pnpm`.
 
 Let's change the regexp:
 
@@ -168,4 +167,4 @@ Finally!
 That was hard work.
 And to make it worse,
 [should have read the docs](https://jestjs.io/docs/configuration#transformignorepatterns-arraystring).
-Well... at least I learnt a thing or two.
+At least I learnt a thing or two.
