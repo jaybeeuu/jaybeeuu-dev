@@ -5,16 +5,16 @@ There are various tools in here, this readme will get you started and describe t
 
 ## Getting Started
 
-You will need node.js. I use [nvm for windows](https://github.com/coreybutler/nvm-windows) (since I dev on a windows machine atm). [.nvmrc](./.nvmrc) has the version of node.js you need.
+You will need node.js. I use [nvm for windows](https://github.com/coreybutler/nvm-windows) (since I dev on a windows machine atm). I'm using node v18.15.0:
 
 ```sh
-nvm install
+nvm install 18.15.0
 ```
 
 Once you have node.js then you will able to run the following:
 
 ```sh
-npm i -g pnpm
+npm i -g "pnpm@^7.0.0"
 pnpm install
 pnpm build
 pnpm test
