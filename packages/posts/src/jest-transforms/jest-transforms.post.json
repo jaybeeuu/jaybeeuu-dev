@@ -1,0 +1,5 @@
+{
+  "title": "Jest Transforms With PNPM",
+  "abstract": "I use PNPM for my package management. It's great but it caused an unexpected problem with Jest. Should have read the docs, but it was interesting debugging the problem.",
+  "publish": true
+}
