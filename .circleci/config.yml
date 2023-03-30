@@ -5,7 +5,7 @@ src-dir: &src-dir ~/src
 job-base: &job-base
   resource_class: large
   docker:
-    - image: cimg/node:18.14.2
+    - image: cimg/node:18.15.0
       auth:
         username: $DOCKERHUB_USERNAME
         password: $DOCKERHUB_PASSWORD
@@ -16,7 +16,7 @@ commands:
     steps:
       - run:
           name: Install pnpm
-          command: npm i -g pnpm@8.0.0
+          command: sudo npm i -g pnpm@8.0.0
 
   setup_workspace:
     steps:
@@ -127,7 +127,11 @@ jobs:
     working_directory: *src-dir
 
     steps:
-      - setup_workspace
+      - attach_workspace:
+          at: *src-dir
+      - run:
+          name: Install pnpm
+          command: npm i -g pnpm@8.0.0
       - run:
           name: Run e2e Tests
           command: pnpm e2e-ci
