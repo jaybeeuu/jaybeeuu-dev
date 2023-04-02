@@ -11,8 +11,8 @@ export interface FailedProps {
   error: Error | { [value: string]: Error }
 }
 
-export type PendingComponent = ComponentType<{}>;
-export type SlowComponent = ComponentType<{}>;
+export type PendingComponent = ComponentType;
+export type SlowComponent = ComponentType;
 export type FailedComponent = ComponentType<FailedProps>;
 export type ContentComponent<ContentProps> = ComponentType<ContentProps>;
 
