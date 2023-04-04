@@ -16,7 +16,7 @@ commands:
     steps:
       - run:
           name: Install pnpm
-          command: sudo npm i -g pnpm@8.0.0
+          command: sudo npm i -g "pnpm@*7.0.0"
 
   setup_workspace:
     steps:
@@ -131,7 +131,7 @@ jobs:
           at: *src-dir
       - run:
           name: Install pnpm
-          command: npm i -g pnpm@8.0.0
+          command: npm i -g "pnpm@^7.0.0"
       - run:
           name: Run e2e Tests
           command: pnpm e2e-ci
