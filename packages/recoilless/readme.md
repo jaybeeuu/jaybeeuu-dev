@@ -1,5 +1,7 @@
 # recoilless
 
+[![npm](https://img.shields.io/npm/v/@jaybeeuu/recoilless.svg)](https://www.npmjs.com/package/@jaybeeuu/recoilless)
+
 A slightly too fully fledged state management library based loosely on concepts found in [recoil](https://recoiljs.org/).
 
 The basic idea is to have small blocks of state,
