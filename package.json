@@ -9,10 +9,7 @@
     "Josh",
     "Site"
   ],
-  "engines": {
-    "node": ">=18.0.0",
-    "pnpm": ">=8.0.0"
-  },
+  "homepage": "https://github.com/jaybeeuu/jaybeeuu-dev#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/jaybeeuu/jaybeeuu-dev"
@@ -20,7 +17,10 @@
   "bugs": {
     "url": "https://github.com/jaybeeuu/jaybeeuu-dev/issues"
   },
-  "homepage": "https://github.com/jaybeeuu/jaybeeuu-devreadme",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=7.0.0 <8.0.0"
+  },
   "scripts": {
     "build": "pnpm -r --stream build",
     "build-changes": "pnpm -r --stream --filter {packages/**}[main] build",
