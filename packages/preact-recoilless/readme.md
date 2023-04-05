@@ -1,5 +1,7 @@
 # preact-recoilless
 
+[![npm](https://img.shields.io/npm/v/@jaybeeuu/preact-recoilless.svg)](https://www.npmjs.com/package/@jaybeeuu/preact-recoilless)
+
 Provides hook bindings to allow
 [recoilless](../recoilless/readme.md)
 to be used in a

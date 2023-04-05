@@ -9,6 +9,14 @@
     "Josh",
     "Utilities"
   ],
+  "homepage": "https://github.com/jaybeeuu/jaybeeuu-dev/tree/main/packages/utilities#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaybeeuu/jaybeeuu-dev.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jaybeeuu/jaybeeuu-dev/issues"
+  },
   "type": "module",
   "sideEffects": false,
   "files": [

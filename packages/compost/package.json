@@ -9,6 +9,14 @@
     "markdown",
     "posts"
   ],
+  "homepage": "https://github.com/jaybeeuu/jaybeeuu-dev/tree/main/packages/compost#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaybeeuu/jaybeeuu-dev.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jaybeeuu/jaybeeuu-dev/issues"
+  },
   "type": "module",
   "engines": {
     "node": ">=14.16.0"

@@ -22,9 +22,9 @@ jest.mock<typeof UtilitiesModule>("@jaybeeuu/utilities", () => {
 });
 
 // eslint-disable-next-line react/display-name
-const Wrapper = (store?: Store): ComponentType<{ children: Element }> => (
-  { children }
-) => <StoreProvider store={store}>{children}</StoreProvider>;
+const Wrapper = (store?: Store): ComponentType<{ children: Element }> => ({
+  children
+}) => <StoreProvider store={store}>{children}</StoreProvider>;
 
 describe("useValue", () => {
 

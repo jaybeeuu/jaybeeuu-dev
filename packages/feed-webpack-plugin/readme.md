@@ -1,5 +1,7 @@
 # feed-webpack-plugin
 
+[![npm](https://img.shields.io/npm/v/@jaybeeuu/feed-webpack-plugin.svg)](https://www.npmjs.com/package/@jaybeeuu/feed-webpack-plugin)
+
 Wraps
 [feed](https://github.com/jpmonette/feed#readme)
 in a webpack plugin so it can be used to generate and feeds and inject them into the webpack output.

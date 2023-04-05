@@ -13,6 +13,14 @@
     "webpack",
     "xml"
   ],
+  "homepage": "https://github.com/jaybeeuu/jaybeeuu-dev/tree/main/packages/feed-webpack-plugin#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaybeeuu/jaybeeuu-dev.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jaybeeuu/jaybeeuu-dev/issues"
+  },
   "engines": {
     "node": ">=14.16.0"
   },

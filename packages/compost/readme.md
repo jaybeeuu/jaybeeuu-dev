@@ -1,4 +1,6 @@
-****# compost
+# compost
+
+[![npm](https://img.shields.io/npm/v/@jaybeeuu/compost.svg)](https://www.npmjs.com/package/@jaybeeuu/compost)
 
 A CLI took that compiles markdown files and metadata json into HTML and a manifest of posts.
 
