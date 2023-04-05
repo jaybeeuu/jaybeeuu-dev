@@ -1,6 +1,5 @@
 version: 2.1
 
-
 src-dir: &src-dir ~/src
 
 job-base: &job-base
@@ -120,7 +119,7 @@ jobs:
   e2e:
     <<: *job-base
     docker:
-      - image: cypress/included:12.8.0
+      - image: cypress/included:12.9.0
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
