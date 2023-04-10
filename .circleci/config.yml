@@ -130,7 +130,7 @@ jobs:
       - setup_workspace
       - run:
           name: Run e2e Tests
-          command: wait-up --url "https://$CIRCLE_BRANCH.jaybeeuu-dev.pages.dev" --commit-hash $CIRCLE_SHA1 && pnpm e2e run
+          command: pnpm exec wait-up --url "https://$CIRCLE_BRANCH.jaybeeuu-dev.pages.dev" --commit-hash $CIRCLE_SHA1 && pnpm e2e run -- --baseURL "https://$CIRCLE_BRANCH.jaybeeuu-dev.pages.dev"
       - store_artifacts:
           path: ./packages/e2e/.screenshots
           destination: e2e-screenshots
@@ -149,7 +149,7 @@ jobs:
           gpg_key_id: $GITHUB_GPG_KEY_ID
       - run:
           name: Version Packages
-          command: pnpm sdlc version --gitHubToken $GITHUB_TOKEN
+          command: pnpm exec sdlc version --gitHubToken $GITHUB_TOKEN
 
   publish:
     <<: *job-base
@@ -165,7 +165,7 @@ jobs:
           command: echo //registry.npmjs.org/:_authToken=$NPM_TOKEN >> ~/.npmrc
       - run:
           name: Publish Packages
-          command: pnpm sdlc publish --npmToken $NPM_TOKEN
+          command: pnpm exec sdlc publish --npmToken $NPM_TOKEN
 
 workflows:
   build:

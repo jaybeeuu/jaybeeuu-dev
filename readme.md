@@ -55,7 +55,6 @@ settings and extension recommendations to help setup and get going.
 | build-changes | Builds all the packages that have changed since main.                                                                                               |
 | clean         | Cleans the repo. All untracked files and directories are removed.                                                                                   |
 | e2e           | Runs the e2e tests. Add `run` to ru them headless or `open` to open the cypress UI.                                                                 |
-| e2e-ci        | The command used to run the e2e tests in CI. Uses an `&` command to run the dev server and wait-on for it to be available before running the tests. |
 | gen-certs     | Generates the SSL certificates in all the packages which need them.                                                                                 |
 | lint          | Lints the packages with markdown-lint or eslint.                                                                                                    |
 | spellcheck    | Spell checks markdown in the application.                                                                                                           |
