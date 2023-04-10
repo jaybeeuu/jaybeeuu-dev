@@ -11,20 +11,18 @@ export interface FailedProps {
   error: Error | { [value: string]: Error }
 }
 
-export type PendingComponent = ComponentType<{}>;
-export type SlowComponent = ComponentType<{}>;
+export type PendingComponent = ComponentType;
 export type FailedComponent = ComponentType<FailedProps>;
 export type ContentComponent<ContentProps> = ComponentType<ContentProps>;
 
 export interface WithPromiseComponents<ContentProps> {
   Pending: PendingComponent;
-  Slow: SlowComponent;
   Failed: FailedComponent;
   Content: ContentComponent<ContentProps>;
 }
 
 export const withPromise = <ContentProps extends object>(
-  { Pending, Slow, Failed, Content }: WithPromiseComponents<ContentProps>
+  { Pending, Failed, Content }: WithPromiseComponents<ContentProps>
 ): FunctionComponent<MaybePromises<ContentProps>> => {
   const FetchCompleteComponent = (
     ownProps: MaybePromises<ContentProps>
@@ -34,7 +32,6 @@ export const withPromise = <ContentProps extends object>(
     switch (promise.status)
     {
       case "pending": return <Pending />;
-      case "slow": return <Slow />;
       case "complete": {
         // @ts-expect-error
         return <Content {...promise.value}/>;

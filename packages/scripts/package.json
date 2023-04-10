@@ -11,7 +11,8 @@
   ],
   "bin": {
     "gen-certs": "bin/gen-certs.js",
-    "sdlc": "bin/sdlc.js"
+    "sdlc": "bin/sdlc.js",
+    "wait-up": "bin/wait-up.js"
   },
   "files": [
     "bin",
@@ -20,7 +21,7 @@
   "exports": {},
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json --pretty",
-    "watch": "tsc --project ./tsconfig.build.json --pretty --watch",
+    "start": "tsc --project ./tsconfig.build.json --pretty --watch",
     "lint": "eslint --ext .js,.ts --format codeframe .",
     "type-check": "tsc --noEmit --pretty"
   },
@@ -36,10 +37,11 @@
   "dependencies": {
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.0",
-    "@jaybeeuu/scripts": "workspace:^0.1.1",
+    "@jaybeeuu/utilities": "workspace:*",
     "@octokit/rest": "^19.0.7",
     "chalk": "^5.2.0",
     "devcert": "^1.2.2",
+    "node-fetch": "^3.3.1",
     "simple-git": "^3.17.0",
     "yargs": "^17.7.1"
   }
