@@ -1,5 +1,7 @@
 # Jaybeeuu
 
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/jaybeeuu/jaybeeuu-dev/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/jaybeeuu/jaybeeuu-dev/tree/main)
+
 Welcome to my monorepo! The code in here is used to build and run my blog.
 There are various tools in here, this readme will get you started and describe the structure of the packages.
 

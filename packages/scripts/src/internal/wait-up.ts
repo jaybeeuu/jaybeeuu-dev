@@ -20,6 +20,9 @@ const isVersion = isObject<Version>({
 
 const assertIsVersion: TypeAssertion<Version> = assert(isVersion, "Version");
 
+const assertValueURL = (url: string): void => {
+  new URL(url);
+};
 export interface WaitUpOptions {
   url: string;
   commitHash: string;
@@ -96,6 +99,7 @@ export const waitUp = async ({
       insecureSSL
     }
   );
+  assertValueURL(url);
   const abortController = new AbortController();
   const pollPromise = pollForCommitHash(
     url,
@@ -104,6 +108,8 @@ export const waitUp = async ({
     abortController.signal,
     insecureSSL
   );
+
+  const startTime = Date.now();
 
   for await (const promise of monitorPromise(pollPromise, { timeoutDelay: timeoutDelay })) {
     switch (promise.status) {
@@ -114,7 +120,7 @@ export const waitUp = async ({
       case "complete": {
         const { branch, commit, commitDateTime, env } = promise.value;
         console.log([
-          "Found Version:\n",
+          `Found expected version in ${Date.now() - startTime}ms.\n`,
           `Branch: ${branch}`,
           `Commit: ${commit}`,
           `Commit time: ${commitDateTime}`,
@@ -123,7 +129,6 @@ export const waitUp = async ({
         return;
       }
       case "failed": {
-        abortController.abort();
         throw new Error(
           typeof promise.error.message === "string"
             ? promise.error.message
@@ -132,3 +137,4 @@ export const waitUp = async ({
     }
   }
 };
+

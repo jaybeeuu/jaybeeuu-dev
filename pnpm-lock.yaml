@@ -85,7 +85,7 @@ importers:
       '@typescript-eslint/eslint-plugin': ^5.55.0
       '@typescript-eslint/parser': ^5.55.0
       core-js: 3.29.1
-      cypress: 12.8.0
+      cypress: 12.9.0
       eslint: ^8.36.0
       eslint-plugin-cypress: ^2.12.1
       typescript: ^4.9.5
@@ -97,7 +97,7 @@ importers:
       '@jaybeeuu/utilities': link:../utilities
       '@types/node': 18.15.3
       core-js: 3.29.1
-      cypress: 12.8.0
+      cypress: 12.9.0
       typescript: 4.9.5
     devDependencies:
       '@jaybeeuu/eslint-config': link:../eslint-config
@@ -4538,8 +4538,8 @@ packages:
     dev: true
     optional: true
 
-  /cypress/12.8.0:
-    resolution: {integrity: sha512-+zblUeRIesOwpZ/E0HT0YE19STwbZy/ySJZIW6BHxX/eVX258gs4t9hP3sE4Opw9y0RfhJeoE8oa1wF/WhIb0A==}
+  /cypress/12.9.0:
+    resolution: {integrity: sha512-Ofe09LbHKgSqX89Iy1xen2WvpgbvNxDzsWx3mgU1mfILouELeXYGwIib3ItCwoRrRifoQwcBFmY54Vs0zw7QCg==}
     engines: {node: ^14.0.0 || ^16.0.0 || >=18.0.0}
     hasBin: true
     requiresBuild: true
