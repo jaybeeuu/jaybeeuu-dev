@@ -25,7 +25,9 @@ const SitemapPlugin = SitemapPluginImport.default;
 /** @type {webpack.WebpackPluginInstance} */
 // @ts-expect-error
 const caseSensitivePathsPlugin = new CaseSensitivePathsPlugin();
-const gitRevisionPlugin = new GitRevisionPlugin({ branch: true });
+const gitRevisionPlugin = new GitRevisionPlugin({
+  branch: true
+});
 
 const isProduction = env.NODE_ENV === "production";
 /** @type {"production" | "development"} */
@@ -222,6 +224,7 @@ export default {
     }
   },
   plugins: [
+    gitRevisionPlugin,
     new CopyWebpackPlugin({
       patterns: [
         {
@@ -240,7 +243,7 @@ export default {
               branch: gitRevisionPlugin.branch(),
               commit: gitRevisionPlugin.commithash(),
               commitDateTime: gitRevisionPlugin.lastcommitdatetime(),
-              env: mode
+              buildMode: mode
             });
           }
         }

@@ -8,14 +8,14 @@ export interface Version {
   commit: string;
   branch: string;
   commitDateTime: string;
-  env: string;
+  buildMode: string;
 }
 
 const isVersion = isObject<Version>({
   commit: is("string"),
   branch: is("string"),
   commitDateTime: is("string"),
-  env: is("string")
+  buildMode: is("string")
 });
 
 const assertIsVersion: TypeAssertion<Version> = assert(isVersion, "Version");
@@ -118,14 +118,10 @@ export const waitUp = async ({
         break;
       }
       case "complete": {
-        const { branch, commit, commitDateTime, env } = promise.value;
-        console.log([
+        console.log(
           `Found expected version in ${Date.now() - startTime}ms.\n`,
-          `Branch: ${branch}`,
-          `Commit: ${commit}`,
-          `Commit time: ${commitDateTime}`,
-          `Env: ${env}`
-        ].join("\n"));
+          promise.value
+        );
         return;
       }
       case "failed": {
