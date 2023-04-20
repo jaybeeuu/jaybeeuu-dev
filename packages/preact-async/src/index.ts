@@ -10,7 +10,6 @@ export {
   FailedProps,
   MaybePromises,
   PendingComponent,
-  SlowComponent,
   withPromise,
   WithPromiseComponents
 } from "./with-promise.js";

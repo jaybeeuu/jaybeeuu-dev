@@ -2,15 +2,12 @@ import { echo, microEcho } from "./delay.js";
 import { multiPartition } from "./multi-partition.js";
 import { asError } from "./as-error.js";
 
-export const PromiseStatusTuple = ["pending", "slow", "failed", "complete"] as const;
+export const PromiseStatusTuple = ["pending", "failed", "complete"] as const;
 export const PromiseStatuses = PromiseStatusTuple as readonly string[];
 export type PromiseStatus = typeof PromiseStatusTuple[number];
 
 const pendingStatus = { status: "pending" } as const;
 export type Pending  = typeof pendingStatus;
-
-const slowStatus = { status: "slow" } as const;
-export type Slow = typeof slowStatus
 
 export interface Failed {
   status: "failed";
@@ -23,7 +20,6 @@ export interface Complete<Value> {
 }
 
 export const pending = (): Pending => pendingStatus;
-export const slow = (): Slow => slowStatus;
 export const failed = (error: Error | { [value: string]: Error }): Failed => ({ status: "failed", error });
 
 export function complete(): Complete<never>
@@ -32,7 +28,7 @@ export function complete<Value>(value?: Value): Complete<Value> {
   return { status: "complete", value: value as Value };
 }
 
-export type PromiseState<Response = unknown> = Pending | Slow | Failed | Complete<Response>;
+export type PromiseState<Response = unknown> = Pending | Failed | Complete<Response>;
 
 const isObjectWithProp = <Prop extends string>(candidate: unknown, prop: Prop): candidate is { [key in Prop]: unknown } => {
   return typeof candidate === "object" && candidate !== null && prop in candidate;
@@ -55,7 +51,6 @@ const valueOrError = async <Value>(promise: Promise<Value>): Promise<Complete<Va
 
 export interface MonitorPromiseOptions {
   timeoutDelay: number;
-  slowDelay: number;
 }
 
 export async function* monitorPromise<Value> (
@@ -63,11 +58,9 @@ export async function* monitorPromise<Value> (
   userOptions: Partial<MonitorPromiseOptions> = {}
 ): AsyncGenerator<PromiseState<Value>> {
   const options: MonitorPromiseOptions = {
-    slowDelay: 500,
     timeoutDelay: 5000,
     ...userOptions
   };
-  const slowPromise = echo(() => slow(), options.slowDelay);
   const timeout = echo(failed(new Error("Request timed out.")), options.timeoutDelay);
 
   try {
@@ -80,16 +73,11 @@ export async function* monitorPromise<Value> (
       return;
     }
 
-    const nextResult = await Promise.race([value, timeout, slowPromise]);
+    const nextResult = await Promise.race([value, timeout]);
 
     yield nextResult;
-
-    if (nextResult.status === "slow") {
-      yield await Promise.race([value, timeout]);
-    }
   }
   finally {
-    slowPromise.clear();
     timeout.clear();
   }
 }
@@ -120,13 +108,11 @@ export const combinePromises = <Values extends object>(values: Values): PromiseS
 
   const [
     failedPromises,
-    slowPromises,
     pendingPromises,
     completePromises
   ] = multiPartition(
     promiseStates,
     isPromiseStateEntry("failed"),
-    isPromiseStateEntry("slow"),
     isPromiseStateEntry("pending"),
     isPromiseStateEntry("complete")
   );
@@ -140,10 +126,6 @@ export const combinePromises = <Values extends object>(values: Values): PromiseS
       }
     }));
     return failed(errors);
-  }
-
-  if (slowPromises.length > 0) {
-    return slow();
   }
 
   if (pendingPromises.length > 0) {

@@ -16,6 +16,7 @@ import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import { config as babelConfig } from "./config/babel.js";
 import { env, stringifiedEnv } from "./config/env.js";
 import { paths } from "./config/paths.js";
+import { GitRevisionPlugin } from "git-revision-webpack-plugin";
 
 /** @type {typeof SitemapPluginImport} */
 // @ts-expect-error
@@ -24,6 +25,9 @@ const SitemapPlugin = SitemapPluginImport.default;
 /** @type {webpack.WebpackPluginInstance} */
 // @ts-expect-error
 const caseSensitivePathsPlugin = new CaseSensitivePathsPlugin();
+const gitRevisionPlugin = new GitRevisionPlugin({
+  branch: true
+});
 
 const isProduction = env.NODE_ENV === "production";
 /** @type {"production" | "development"} */
@@ -220,6 +224,7 @@ export default {
     }
   },
   plugins: [
+    gitRevisionPlugin,
     new CopyWebpackPlugin({
       patterns: [
         {
@@ -227,7 +232,20 @@ export default {
           to: `${postsRoot}/[name][ext]`
         },
         {
-          from: "public/robots.txt", to: "robots.txt"
+          from: "public/robots.txt",
+          to: "robots.txt"
+        },
+        {
+          from: "public/version.json",
+          to: "version.json",
+          transform: () => {
+            return JSON.stringify({
+              branch: gitRevisionPlugin.branch(),
+              commit: gitRevisionPlugin.commithash(),
+              commitDateTime: gitRevisionPlugin.lastcommitdatetime(),
+              buildMode: mode
+            });
+          }
         }
       ]
     }),

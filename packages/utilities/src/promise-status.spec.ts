@@ -66,25 +66,6 @@ describe("monitorPromise", () => {
     ).rejects.toStrictEqual(new Error("Iterator is done."));
   });
 
-  it("returns a slow request status if the request takes longer than 500ms.", async () => {
-    const requestIterator = getPromiseStatusIterator(echo("Pears", 501), { slowDelay: 500 });
-
-    await advanceToNextThenAwait(() => getNextValue(requestIterator));
-
-    const firstResult = await advanceByTimeThenAwait(500, () => getNextValue(requestIterator));
-
-    expect(firstResult).toStrictEqual({
-      status: "slow"
-    });
-
-    const secondResult = await advanceByTimeThenAwait(1, () => getNextValue(requestIterator));
-
-    expect(secondResult).toStrictEqual({
-      status: "complete",
-      value: "Pears"
-    });
-  });
-
   it("returns an error if the request fails.", async () => {
     const errorResponse = { message: "Whoops!" };
 
@@ -140,11 +121,6 @@ describe("combinePromises", () => {
       description: "returns a pending promise if one of the promises is pending.",
       values: { first: { status: "pending" }, second: { status: "complete", value: 2 } },
       expected: { status: "pending" }
-    },
-    {
-      description: "returns a slow promise if one of the promises is slow.",
-      values: { first: { status: "slow" }, second: { status: "pending" } },
-      expected: { status: "slow" }
     },
     {
       description: "returns a failed if one of the promises has failed.",

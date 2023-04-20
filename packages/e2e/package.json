@@ -32,7 +32,7 @@
     "@jaybeeuu/utilities": "workspace:*",
     "@types/node": "^18.15.3",
     "core-js": "3.29.1",
-    "cypress": "12.8.0",
+    "cypress": "12.9.0",
     "typescript": "^4.9.5"
   }
 }
