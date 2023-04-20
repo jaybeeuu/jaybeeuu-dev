@@ -136,7 +136,7 @@ jobs:
             echo 'export RENDER_URL="https://jaybeeuu-dev-pr-$(echo $CIRCLE_PULL_REQUEST | rev | cut -d"/" -f1 | rev).onrender.com"' >> "$BASH_ENV"
       - run:
           name: Run e2e Tests
-          command: pnpm exec wait-up --url "$RENDER_URL/version.json" --commit-hash $CIRCLE_SHA1 && pnpm e2e run --config "baseUrl=$RENDER_URL"
+          command: node ./packages/scripts/bin/wait-up.js --url "$RENDER_URL/version.json" --commit-hash $CIRCLE_SHA1 && pnpm e2e run --config "baseUrl=$RENDER_URL"
       - store_artifacts:
           path: ./packages/e2e/.screenshots
           destination: e2e-screenshots
@@ -155,7 +155,7 @@ jobs:
           gpg_key_id: $GITHUB_GPG_KEY_ID
       - run:
           name: Version Packages
-          command: pnpm exec sdlc version --gitHubToken $GITHUB_TOKEN
+          command: node ./packages/scripts/bin/sdlc.js version --gitHubToken $GITHUB_TOKEN
 
   publish:
     <<: *job-base
@@ -171,7 +171,7 @@ jobs:
           command: echo //registry.npmjs.org/:_authToken=$NPM_TOKEN >> ~/.npmrc
       - run:
           name: Publish Packages
-          command: pnpm exec sdlc publish --npmToken $NPM_TOKEN
+          command: node ./packages/scripts/bin/sdlc.js publish --npmToken $NPM_TOKEN
 
 workflows:
   build:
