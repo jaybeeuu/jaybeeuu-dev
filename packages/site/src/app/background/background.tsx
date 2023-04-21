@@ -78,7 +78,7 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
   const [currentTheme] = useValue(theme);
   const [images] = useValue(backgroundImages);
   const onScroll = useAction(onMainContentScroll);
-  const { current, previous} = useImages(
+  const { current, previous } = useImages(
     images,
     currentTheme
   );
