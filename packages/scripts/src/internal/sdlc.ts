@@ -61,7 +61,8 @@ class GitHubClient {
   }
 
   async getOrCreatePullForNext(): Promise<{ html_url: string }> {
-    const pull = (await this.#getPullsForNext()).data[0];
+    const response = await this.#getPullsForNext();
+    const pull = response.data[0];
 
     if (pull) {
       return pull;
