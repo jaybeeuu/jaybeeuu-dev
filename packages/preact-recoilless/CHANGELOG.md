@@ -1,5 +1,16 @@
 # @jaybeeuu/preact-recoilless
 
+## 3.0.0
+
+### Patch Changes
+
+- [#113](https://github.com/jaybeeuu/jaybeeuu-dev/pull/113) [`c1db6aa`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/c1db6aa956a8ee8a1eb6384587e56166a24cf909) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Add homepage, bugs and repository to package.json
+
+- Updated dependencies [[`c1db6aa`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/c1db6aa956a8ee8a1eb6384587e56166a24cf909), [`e572ff4`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/e572ff48b30395d00d747bd3a76a988f251c2786)]:
+  - @jaybeeuu/preact-async@2.0.0
+  - @jaybeeuu/recoilless@3.0.0
+  - @jaybeeuu/utilities@1.0.0
+
 ## 2.0.0
 
 ### Patch Changes
