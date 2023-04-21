@@ -129,11 +129,10 @@ jobs:
 
     steps:
       - setup_workspace
-      - run: echo "https://jaybeeuu-dev-pr-$(echo $CIRCLE_PULL_REQUEST | rev | cut -d"/" -f1 | rev).onrender.com"
       - run:
           name: Derive Deployment URL
           command: |
-            if [ $CIRCLE_BRANCH -eq "main" ]
+            if [ $CIRCLE_BRANCH = "main" ];
             then
               echo 'export DEPLOYMENT_URL="https://jaybeeuu.dev"' >> "$BASH_ENV"
             else
