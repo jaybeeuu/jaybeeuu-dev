@@ -1,5 +1,4 @@
 import yargs from "yargs";
-import { waitUp } from "../internal/wait-up.js";
 
 export const main = (argv: string[]): void => {
   void yargs(argv)
@@ -38,6 +37,7 @@ export const main = (argv: string[]): void => {
         }
       },
       async (args) => {
+        const { waitUp } = await import("../internal/wait-up.js");
         await waitUp(args);
       }
     )

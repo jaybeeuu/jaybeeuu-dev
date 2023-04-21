@@ -1,6 +1,5 @@
 
 import yargs from "yargs/yargs";
-import { publish, version } from "../internal/sdlc.js";
 
 export const main = (): void => {
   void yargs(process.argv.slice(2))
@@ -37,13 +36,19 @@ export const main = (): void => {
           type: "string"
         }
       },
-      (options) => version(options)
+      async (options) => {
+        const { version } = await import("../internal/sdlc.js");
+        await version(options);
+      }
     )
     .command(
       "publish",
       "Publish the packages whose versions have bumped & push tags to github.",
       {},
-      () => publish()
+      async () => {
+        const { publish } = await import("../internal/sdlc.js");
+        await publish();
+      }
     )
     .demandCommand()
     .help()

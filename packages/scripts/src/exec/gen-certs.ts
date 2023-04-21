@@ -1,5 +1,4 @@
 import yargs from "yargs";
-import { genCerts, uninstall } from "../internal/gen-certs.js";
 
 export const main = (argv: string[]): void => {
   void yargs(argv)
@@ -35,6 +34,7 @@ export const main = (argv: string[]): void => {
         }
       },
       async (args) => {
+        const { genCerts } = await import("../internal/gen-certs.js");
         await genCerts(args);
       }
     )
@@ -42,7 +42,10 @@ export const main = (argv: string[]): void => {
       "uninstall",
       "Uninstalls the CA.",
       {},
-      uninstall
+      async () => {
+        const { uninstall } = await import("../internal/gen-certs.js");
+        uninstall();
+      }
     )
     .demandCommand()
     .help()

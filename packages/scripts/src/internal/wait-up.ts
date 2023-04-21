@@ -4,6 +4,7 @@ import type { TypeAssertion} from "@jaybeeuu/utilities";
 import { monitorPromise} from "@jaybeeuu/utilities";
 import { delay } from "@jaybeeuu/utilities";
 import { assert, is, isObject } from "@jaybeeuu/utilities";
+
 export interface Version {
   commit: string;
   branch: string;
