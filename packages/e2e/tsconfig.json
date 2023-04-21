@@ -5,6 +5,8 @@
     "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "declaration": false,
     "declarationMap": false,
+    "inlineSourceMap": true,
+    "sourceMap": false,
     "types": ["cypress"],
   },
   "exclude": [
