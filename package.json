@@ -18,8 +18,8 @@
     "url": "https://github.com/jaybeeuu/jaybeeuu-dev/issues"
   },
   "engines": {
-    "node": ">=16.0.0",
-    "pnpm": ">=7.0.0 <8.0.0"
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
   },
   "scripts": {
     "build": "pnpm -r --stream build",
