@@ -1,9 +1,13 @@
 import fetch from "node-fetch";
 import { Agent } from "node:https";
 import type { TypeAssertion} from "@jaybeeuu/utilities";
-import { monitorPromise} from "@jaybeeuu/utilities";
-import { delay } from "@jaybeeuu/utilities";
-import { assert, is, isObject } from "@jaybeeuu/utilities";
+import {
+  assert,
+  delay,
+  is,
+  isObject,
+  monitorPromise
+} from "@jaybeeuu/utilities";
 
 export interface Version {
   commit: string;

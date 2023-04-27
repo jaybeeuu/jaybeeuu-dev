@@ -380,6 +380,9 @@ importers:
       devcert:
         specifier: ^1.2.2
         version: 1.2.2
+      fast-glob:
+        specifier: ^3.2.12
+        version: 3.2.12
       node-fetch:
         specifier: ^3.3.1
         version: 3.3.1

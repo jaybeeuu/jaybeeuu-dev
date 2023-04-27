@@ -12,7 +12,8 @@
   "bin": {
     "gen-certs": "bin/gen-certs.js",
     "sdlc": "bin/sdlc.js",
-    "wait-up": "bin/wait-up.js"
+    "wait-up": "bin/wait-up.js",
+    "image-transform": "bin/image-transform.js"
   },
   "files": [
     "bin",
@@ -41,6 +42,7 @@
     "@octokit/rest": "^19.0.7",
     "chalk": "^5.2.0",
     "devcert": "^1.2.2",
+    "fast-glob": "^3.2.12",
     "node-fetch": "^3.3.1",
     "sharp": "^0.32.0",
     "simple-git": "^3.17.0",

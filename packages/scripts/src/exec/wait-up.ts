@@ -12,13 +12,13 @@ export const main = (argv: string[]): void => {
           alias: "u",
           type: "string"
         },
-        commitHash: {
+        "commit-hash": {
           description: "The commit hash to wait for.",
           alias: "c",
           type: "string",
           required: true
         },
-        pollTime: {
+        "poll-time": {
           description: "Number of milliseconds between polls.",
           alias: "p",
           type: "number",

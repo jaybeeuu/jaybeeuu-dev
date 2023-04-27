@@ -17,17 +17,17 @@ export const main = (argv: string[]): void => {
           alias: "o",
           type: "string"
         },
-        certName: {
+        "cert-name": {
           default: "cert.crt",
           alias: "crt",
           type: "string"
         },
-        keyName: {
+        "key-name": {
           default: "key.key",
           alias: "k",
           type: "string"
         },
-        caName: {
+        "ca-name": {
           default: "ca.pem",
           alias: "ca",
           type: "string"
