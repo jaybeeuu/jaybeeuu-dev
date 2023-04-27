@@ -64,8 +64,10 @@ export const isObject = <Obj extends {}>(
   }
 
   return Object.entries(properties).every(([key, isCorrectType]) => {
-    return hasOwnProperty(candidate, key)
-      && (isCorrectType as (candidate: unknown) => boolean)(candidate[key]);
+    return (isCorrectType as (candidate: unknown) => boolean)(
+      // @ts-expect-error
+      candidate[key]
+    );
   });
 };
 
@@ -128,6 +130,12 @@ export const or = <T, U>(
   candidate: unknown
 ): candidate is T | U => {
   return isT(candidate) || isU(candidate);
+};
+
+export const optional = <T>(
+  typePredicate: TypePredicate<T>
+): TypePredicate<T | undefined> => {
+  return or(typePredicate, is("undefined"));
 };
 
 export const isInPrimitiveUnion = <UnionMembers extends readonly (string | number | boolean)[]>(

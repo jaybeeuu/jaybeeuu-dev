@@ -12,6 +12,7 @@ export {
   isNull,
   isObject,
   isRecord,
+  optional,
   or
 } from "./base.js";
 export type {
