@@ -28,6 +28,7 @@ const assertIsVersion: TypeAssertion<Version> = assert(isVersion, "Version");
 const assertValueURL = (url: string): void => {
   new URL(url);
 };
+
 export interface WaitUpOptions {
   url: string;
   commitHash: string;

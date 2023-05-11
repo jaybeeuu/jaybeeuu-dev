@@ -43,6 +43,7 @@ module.exports = {
         "plugin:jest/all"
       ],
       rules: {
+        "@typescript-eslint/no-unsafe-assignment": "off",
         ...jestRules
       }
     }

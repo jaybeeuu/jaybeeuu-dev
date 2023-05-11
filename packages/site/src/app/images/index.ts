@@ -1,24 +1,24 @@
-import bath from "./bath.jpg";
-import blackTusk from "./black-tusk.jpg";
-import christmasTrail from "./christmas-trail.jpg";
-import crabappleDrive from "./crabapple-drive.jpg";
-import englishBayPark from "./english-bay-park.jpg";
-import fagus from "./fagus.jpg";
-import galaxy from "./galaxy.jpg";
-import greatNorthernHighway from "./great-northern-highway.jpg";
-import greenLake from "./green-lake.jpg";
-import harmonyRidge from "./harmony-ridge.jpg";
-import jerseyCream from "./jersey-cream.jpg";
-import kew from "./kew.jpg";
-import lionsGateBridge from "./lions-gate-bridge.jpg";
-import moon from "./moon.jpg";
-import nullarbor from "./nullarbor.jpg";
-import rainbowPark from "./rainbow-park.jpg";
-import royalExhibitionHall from "./royal-exhibition-hall.jpg";
-import ship from "./ship.jpg";
-import sydneyHarbourBridge from "./sydney-harbour-bridge.jpg";
-import sydney from "./sydney.jpg";
-import tree from "./tree.jpg";
+import * as bath from "./gen/bath";
+import * as blackTusk from "./gen/black-tusk";
+import * as christmasTrail from "./gen/christmas-trail";
+import * as crabappleDrive from "./gen/crabapple-drive";
+import * as englishBayPark from "./gen/english-bay-park";
+import * as fagus from "./gen/fagus";
+import * as galaxy from "./gen/galaxy";
+import * as greatNorthernHighway from "./gen/great-northern-highway";
+import * as greenLake from "./gen/green-lake";
+import * as harmonyRidge from "./gen/harmony-ridge";
+import * as jerseyCream from "./gen/jersey-cream";
+import * as kew from "./gen/kew";
+import * as lionsGateBridge from "./gen/lions-gate-bridge";
+import * as moon from "./gen/moon";
+import * as nullarbor from "./gen/nullarbor";
+import * as rainbowPark from "./gen/rainbow-park";
+import * as royalExhibitionHall from "./gen/royal-exhibition-hall";
+import * as ship from "./gen/ship";
+import * as sydneyHarbourBridge from "./gen/sydney-harbour-bridge";
+import * as sydney from "./gen/sydney";
+import * as tree from "./gen/tree";
 
 export type Image =
   | "bath"
@@ -43,7 +43,25 @@ export type Image =
   | "sydney"
   | "tree";
 
-export const imageUrls: { [image in Image]: string } = {
+export type ImageVersion =
+  | "fullRes"
+  | "lowRes"
+  | "blurred";
+
+export type ImageVersionUrls<
+  Version extends string
+> = {
+  [version in Version]: string;
+};
+
+export type ImageUrls<
+  ImageName extends string,
+  Version extends string
+> = {
+  [image in ImageName]: ImageVersionUrls<Version>;
+};
+
+export const imageUrls: ImageUrls<Image, ImageVersion> = {
   bath,
   "black-tusk": blackTusk,
   "christmas-trail": christmasTrail,

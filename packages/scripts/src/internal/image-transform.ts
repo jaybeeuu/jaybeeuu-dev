@@ -1,42 +1,116 @@
 import fastGlob from "fast-glob";
+import fs from "node:fs";
 import path from "node:path";
-import type { OutputInfo } from "sharp";
 import sharp from "sharp";
 
-export type OutFileSize = { height: number; width: number; } | { height: number; } | { width: number; };
+export type TransformSize = { height: number; width: number; } | { height: number; } | { width: number; };
 
-export interface OutFile {
+export interface Transform {
   fileName: string;
   blur?: number;
-  size?: OutFileSize;
+  size?: TransformSize;
+  variableName?: string;
 }
 
 export interface ImageTransformOptions {
-  clean: boolean;
   outDir: string;
   source: string;
-  outFiles: OutFile[];
+  transforms: Transform[];
+  writeTs: boolean;
 }
 
 const resolveCwd = (...paths: string[]): string => path.resolve(process.cwd(), ...paths);
 
-const getFileName = (filePath: string): string => {
-  const baseName = path.basename(filePath);
+const getFileNameFromBaseName = (baseName: string): string => {
   return baseName.split(".")[0] ?? baseName;
 };
 
-const processFile = (filePath: string, outDir: string, outFiles: OutFile[]): Promise<OutputInfo>[] => {
-  console.log("Transforming", filePath);
-  const fileName = getFileName(filePath);
+const getFileNameFromPath = (filePath: string): string => {
+  const baseName = path.basename(filePath);
+  return getFileNameFromBaseName(baseName);
+};
 
-  return outFiles.map((outFile) => {
+type PascalCase<Kebab extends string> = Kebab extends `${infer First}-${infer Rest}`
+  ? `${First}${PascalCase<Capitalize<Rest>>}`
+  : Kebab;
+
+const kebabToPascalCase = <Kebab extends string>(
+  kebab: Kebab
+): PascalCase<Kebab> => {
+  const [first, ...rest] = kebab.split("-");
+  return `${
+    first ?? ""
+  }${
+    rest.flatMap(([firstChar, ...word]) => [firstChar?.toUpperCase(), ...word]).join("")
+  }` as PascalCase<Kebab>;
+};
+
+const writeTypeScriptFile = async (
+  outDir: string,
+  imageName: string,
+  transformedNames: { fileName: string; variableName: string; }[]
+): Promise<void> => {
+  const fileContent = [
+    "// This is an auto-generated file. Do not edit manually",
+    ...transformedNames.map(({ variableName, fileName }) => {
+      return `import ${variableName} from "./${fileName}";`;
+    }),
+    "",
+    "export {",
+    transformedNames.map(({ variableName }) => {
+      return `  ${variableName}`;
+    }).join(",\n"),
+    "};",
+    ""
+  ].join("\n");
+
+  const tsFileName = resolveCwd(outDir, `${imageName}.ts`);
+  console.log("  Writing to", tsFileName);
+  await fs.promises.writeFile(
+    tsFileName,
+    fileContent,
+    "utf8"
+  );
+  console.log("  Written to", tsFileName);
+};
+
+const processFile = ({
+  filePath,
+  outDir,
+  transforms,
+  writeTs
+}: { filePath: string; } & ImageTransformOptions): Promise<void>[] => {
+  console.log("Transforming", filePath);
+  const fileName = getFileNameFromPath(filePath);
+
+  const transformers = transforms.map((transform) => {
     const image = sharp(filePath);
-    const blurred = outFile.blur ? image.blur(outFile.blur) : image;
-    const resized = outFile.size ? blurred.resize(outFile.size) : blurred;
-    const fileOut = resolveCwd(path.join(outDir, outFile.fileName.replace("{}", fileName)));
-    console.log("  Writing to", fileOut);
-    return resized.toFile(fileOut);
+    const blurred = transform.blur ? image.blur(transform.blur) : image;
+    const resized = transform.size ? blurred.resize(transform.size) : blurred;
+    const transformFileName = transform.fileName.replace("{}", fileName);
+    const outFilePath = resolveCwd(outDir, transformFileName);
+
+    return {
+      fileName: transformFileName,
+      variableName: transform.variableName ?? kebabToPascalCase(fileName),
+      write: async (): Promise<void> => {
+        console.log("  Writing to", transformFileName);
+        const outFileInfo = await resized.toFile(outFilePath);
+        console.log(`  Written to ${transformFileName}, ${outFileInfo.size}`);
+      }
+    };
   });
+
+  return {
+    ...writeTs
+      ? [writeTypeScriptFile(
+        outDir,
+        fileName,
+        transformers
+      )]
+      : [],
+    ...transformers.map((transformer) => transformer.write())
+  };
 };
 
 export const imageTransform = async (options: ImageTransformOptions): Promise<void> => {
@@ -48,11 +122,8 @@ export const imageTransform = async (options: ImageTransformOptions): Promise<vo
   console.log(`Searching ${searchPath}`);
   const filePaths = await fastGlob(searchPath);
   console.log(`Found ${filePaths.length} files.`);
+  await fs.promises.mkdir(options.outDir, { recursive: true });
   await Promise.all(
-    filePaths.flatMap((filePath) => processFile(
-      filePath,
-      options.outDir,
-      options.outFiles
-    ))
+    filePaths.flatMap((filePath) => processFile({ filePath, ...options }))
   );
 };

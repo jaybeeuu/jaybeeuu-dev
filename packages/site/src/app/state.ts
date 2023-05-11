@@ -50,9 +50,14 @@ export const theme: PrimitiveValue<Theme> = {
   initialValue: persistedTheme.get() ?? getMediaTheme()
 };
 
-export interface BackgroundImages { light: Image, dark: Image }
+export type ThemedImages<
+  Theem extends string,
+  ImageName extends string
+> = {
+  [theme in Theem]: ImageName;
+}
 
-export const backgroundImages: PrimitiveValue<BackgroundImages | null> = {
+export const backgroundImages: PrimitiveValue<ThemedImages<Theme, Image> | null> = {
   name: "backgroundImage",
   initialValue: null
 };

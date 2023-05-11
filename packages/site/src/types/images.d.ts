@@ -6,3 +6,7 @@ declare module "*.png" {
   const pngUrl: string;
   export default pngUrl;
 }
+declare module "*.webp" {
+  const pngUrl: string;
+  export default pngUrl;
+}

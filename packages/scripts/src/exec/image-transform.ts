@@ -1,10 +1,11 @@
 import yargs from "yargs";
 import type { TypeAssertion} from "@jaybeeuu/utilities";
 import { assert, is, isObject, optional, or } from "@jaybeeuu/utilities";
-import type { OutFile } from "../internal/image-transform.js";
+import type { Transform } from "../internal/image-transform.js";
 
-const assetIsOutFile: TypeAssertion<OutFile> = assert(isObject<OutFile>({
+const assetIsTransform: TypeAssertion<Transform> = assert(isObject<Transform>({
   blur: optional(is("number")),
+  variableName: optional(is("string")),
   fileName: is("string"),
   size: optional(or(
     isObject<{ height: number; width: number; }>({
@@ -22,13 +23,19 @@ const assetIsOutFile: TypeAssertion<OutFile> = assert(isObject<OutFile>({
   ))
 }), "OutFile");
 
-const parsedOutFile = (stingOrArray: string | string[]): OutFile[] => {
-  const outFilesJson = Array.isArray(stingOrArray) ? stingOrArray : [stingOrArray];
-  return outFilesJson.map((outFileJson) => {
-    console.log(`\noutfile: ${outFileJson}\n`);
-    const parsed = JSON.parse(outFileJson) as unknown;
-    assetIsOutFile(parsed);
-    return parsed;
+const parsedTransforms = (stingOrArray: string | string[]): Transform[] => {
+  const transformsJson = Array.isArray(stingOrArray) ? stingOrArray : [stingOrArray];
+  return transformsJson.map((transformJson) => {
+    try {
+      console.log(`\transform: ${transformJson}\n`);
+      const parsed = JSON.parse(transformJson) as unknown;
+      assetIsTransform(parsed);
+      return parsed;
+    } catch (error) {
+      throw new Error(
+        `Error while parsing transform: ${String(error)} \n${transformJson}`
+      );
+    }
   });
 };
 
@@ -50,27 +57,26 @@ export const main = (argv: string[]): void => {
           alias: ["s"],
           type: "string"
         },
-        clean: {
-          description: "When set to true the out dir is cleaned before the images are written.",
-          default: false,
-          alias: "c",
-          type: "boolean"
-        },
-        "out-file": {
-          description: "The output image output.",
+        "transform": {
+          description: "The transforms applied to each image.",
           default: "{ \"fileName\": \"{name}-blurred.webp\", \"blur\": 109 }",
           alias: ["outFile"],
           type: "string",
           array: true
+        },
+        writeTs: {
+          description: "When set TypeScript files are written, which export the transforms of each image.",
+          default: false,
+          alias: "w",
+          type: "boolean"
         }
       },
       async (args) => {
         const { imageTransform } = await import("../internal/image-transform.js");
-        const outFiles= parsedOutFile(args.outFile);
-        console.log(args, imageTransform, outFiles);
+        const transforms = parsedTransforms(args.transform);
         await imageTransform({
           ...args,
-          outFiles
+          transforms
         });
       }
     )

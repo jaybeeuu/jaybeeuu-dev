@@ -28,6 +28,7 @@
     "e2e": "pnpm -r --filter @jaybeeuu/e2e e2e",
     "gen-certs": "pnpm --no-bail --no-sort -r --filter {packages/**} gen-certs",
     "lint": "pnpm --no-bail --no-sort -r --filter {packages/**} lint",
+    "image-transform": "pnpm -r --stream image-transform",
     "spellcheck": "pnpm --no-bail --no-sort -r --filter {packages/**} spellcheck",
     "start-all": "pnpm -r --no-sort --workspace-concurrency=Infinity --filter @jaybeeuu/site... start",
     "test": "jest",

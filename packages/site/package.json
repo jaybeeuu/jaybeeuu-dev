@@ -9,11 +9,14 @@
     "UI"
   ],
   "sideEffects": [
-    "*.css"
+    "*.css",
+    "*.webp"
   ],
   "type": "module",
   "scripts": {
+    "image-transform": "image-transform --source \"./src/app/images/src/*.jpg\" --out-dir \"./src/app/images/gen\" --write--ts --transform \"{ \\\"fileName\\\": \\\"{}-low-res.webp\\\", \\\"variableName\\\": \\\"lowRes\\\", \\\"size\\\": { \\\"height\\\": 400 } }\" --transform \"{ \\\"fileName\\\": \\\"{}-blurred.webp\\\", \\\"variableName\\\": \\\"blurred\\\", \\\"size\\\": { \\\"height\\\": 400 }, \\\"blur\\\": 30 }\" --transform \"{ \\\"fileName\\\": \\\"{}.webp\\\", \\\"variableName\\\": \\\"fullRes\\\" }\"",
     "build:debug": "cross-env NODE_ENV=devlopment webpack",
+    "prebuild": "pnpm images",
     "build": "cross-env NODE_ENV=production webpack",
     "gen-certs": "gen-certs",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx --format codeframe .",
