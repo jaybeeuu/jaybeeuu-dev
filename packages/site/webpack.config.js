@@ -1,14 +1,16 @@
 // @ts-check
 
 import { FeedWebpackPlugin } from "@jaybeeuu/feed-webpack-plugin";
+import { default as CaseSensitivePathsPlugin } from "case-sensitive-paths-webpack-plugin";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import fs from "fs";
+import { GitRevisionPlugin } from "git-revision-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
+import ImageMinimizerPlugin from "image-minimizer-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import path from "path";
-import { default as CaseSensitivePathsPlugin } from "case-sensitive-paths-webpack-plugin";
 import SitemapPluginImport from "sitemap-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import webpack from "webpack";
@@ -16,7 +18,6 @@ import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import { config as babelConfig } from "./config/babel.js";
 import { env, stringifiedEnv } from "./config/env.js";
 import { paths } from "./config/paths.js";
-import { GitRevisionPlugin } from "git-revision-webpack-plugin";
 
 /** @type {typeof SitemapPluginImport} */
 // @ts-expect-error
@@ -144,38 +145,8 @@ export default {
             ]
           },
           {
-            test: [/\.sprite.svg$/],
-            type: "asset"
-          },
-          {
             test: [/\.(bmp|gif|jpe?g|png|svg)$/],
-            type: "asset",
-            use: [
-              {
-                loader: "image-webpack-loader",
-                options: {
-                  enforce: "pre",
-                  bypassOnDebug: true,
-                  mozjpeg: {
-                    progressive: true,
-                    quality: 75
-                  },
-                  optipng: {
-                    enabled: false
-                  },
-                  pngquant: {
-                    quality: [0.65, 0.90],
-                    speed: 4
-                  },
-                  gifsicle: {
-                    interlaced: false
-                  },
-                  webp: {
-                    quality: 75
-                  }
-                }
-              }
-            ]
+            type: "asset"
           },
           {
             exclude: [/\.(ts|tsx|js|jsx|mjs)$/, /\.css$/, /\.html$/, /\.json$/, /\.(bmp|gif|jpe?g|png|svg)$/],
@@ -190,12 +161,43 @@ export default {
   },
   optimization: {
     moduleIds: isProduction ? "deterministic" : "named",
-    minimize: isProduction,
+    minimize: true,
     minimizer: [
       "...",
       new CssMinimizerPlugin(),
       new TerserPlugin({
         parallel: isProduction ? 2 : true
+      }),
+      new ImageMinimizerPlugin({
+        minimizer: [
+          {
+            implementation: ImageMinimizerPlugin.sharpMinify,
+            options: {
+              // https://sharp.pixelplumbing.com/api-output
+              encodeOptions: {
+                jpeg: {
+                  progressive: true,
+                  optimiseScans: true
+                },
+                png: {
+                  progressive: true
+                }
+              }
+            }
+          },
+          {
+            implementation: ImageMinimizerPlugin.svgoMinify,
+            filter: (source, sourcePath) => !(/\.sprite\.svg$/i.test(sourcePath)),
+            options: {
+              encodeOptions: {
+                multipass: true,
+                plugins: [
+                  "preset-default"
+                ]
+              }
+            }
+          }
+        ]
       })
     ],
     splitChunks: {
