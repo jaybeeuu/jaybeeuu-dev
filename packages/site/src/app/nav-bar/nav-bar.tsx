@@ -1,18 +1,16 @@
-import type { JSX } from "preact";
-import { h } from "preact";
-import { useState } from "preact/hooks";
 import { navBar as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import classNames from "classnames";
+import type { JSX } from "preact";
+import { h } from "preact";
 import { Link } from "preact-router/match";
-import { Icon } from "../icon/index";
-import { ThemeToggle } from "../theme-toggle/index";
-import { ImageLink } from "../image-link/index";
+import { useState } from "preact/hooks";
 import { IconLink } from "../icon-link/index";
-import linkedInLogo from "./in-blue-logo.png";
-
-import githubLight from "./github-light.png";
+import { Icon } from "../icon/index";
+import { ImageLink } from "../image-link/index";
+import { ThemeToggle } from "../theme-toggle/index";
 import githubDark from "./github-dark.png";
-
+import githubLight from "./github-light.png";
+import linkedInLogo from "./in-blue-logo.png";
 import css from "./nav-bar.module.css";
 
 export interface NavBarProps {

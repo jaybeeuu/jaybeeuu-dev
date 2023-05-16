@@ -18,6 +18,8 @@ import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import { config as babelConfig } from "./config/babel.js";
 import { env, stringifiedEnv } from "./config/env.js";
 import { paths } from "./config/paths.js";
+// @ts-expect-error
+import sharpAdapter from "responsive-loader/sharp.js";
 
 /** @type {typeof SitemapPluginImport} */
 // @ts-expect-error
@@ -140,6 +142,20 @@ export default {
                 loader: "css-loader",
                 options: {
                   sourceMap: true
+                }
+              }
+            ]
+          },
+          {
+            test: /\.jpg$/i,
+            use: [
+              {
+                loader: "responsive-loader",
+                options: {
+                  adapter: sharpAdapter,
+                  sizes: [600, 900, 1200, 1800],
+                  placeholder: true,
+                  placeholderSize: 20
                 }
               }
             ]

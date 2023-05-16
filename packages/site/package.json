@@ -91,6 +91,7 @@
     "prism-theme-one-light-dark": "^1.0.4",
     "prism-theme-vars": "^0.2.4",
     "regenerator-runtime": "^0.13.11",
+    "responsive-loader": "^3.1.2",
     "sharp": "^0.32.1"
   }
 }

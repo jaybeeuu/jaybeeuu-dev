@@ -465,6 +465,9 @@ importers:
       regenerator-runtime:
         specifier: ^0.13.11
         version: 0.13.11
+      responsive-loader:
+        specifier: ^3.1.2
+        version: 3.1.2(sharp@0.32.1)(webpack@5.80.0)
       sharp:
         specifier: ^0.32.1
         version: 0.32.1
@@ -4265,7 +4268,6 @@ packages:
 
   /commondir@1.0.1:
     resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
-    dev: true
 
   /compressible@2.0.18:
     resolution: {integrity: sha512-AF3r7P5dWxL8MxyITRMlORQNaOA2IkAFaTr4k7BUumjPtRpGDTZpl0Pb1XCO6JeDCBdp126Cgs9sMxqSjgYyRg==}
@@ -5907,7 +5909,6 @@ packages:
       commondir: 1.0.1
       make-dir: 3.1.0
       pkg-dir: 4.2.0
-    dev: true
 
   /find-up@4.1.0:
     resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==}
@@ -7946,6 +7947,11 @@ packages:
       json5: 2.2.3
     dev: true
 
+  /loader-utils@3.2.1:
+    resolution: {integrity: sha512-ZvFw1KWS3GVyYBYb7qkmRM/WwL2TQQBxgCK62rlvm4WpVQ23Nb4tYjApUlfjrEGvOs7KHEsmyUn75OHZrJMWPw==}
+    engines: {node: '>= 12.13.0'}
+    dev: false
+
   /locate-path@5.0.0:
     resolution: {integrity: sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==}
     engines: {node: '>=8'}
@@ -8061,7 +8067,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       semver: 6.3.0
-    dev: true
 
   /make-error@1.3.6:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
@@ -9703,6 +9708,29 @@ packages:
       lowercase-keys: 1.0.1
     dev: true
     optional: true
+
+  /responsive-loader@3.1.2(sharp@0.32.1)(webpack@5.80.0):
+    resolution: {integrity: sha512-6UOrSdEkifzxnQPnUFwa3HqXlnHmYEWBIg3zRveuk7VbLhnuNCiKbx0jGs7071Gm10rhSb6seEC+bApSjkX3wA==}
+    engines: {node: '>= 12.22.1'}
+    peerDependencies:
+      jimp: '*'
+      sharp: '*'
+      webpack: ^5.73.0
+    peerDependenciesMeta:
+      jimp:
+        optional: true
+      sharp:
+        optional: true
+    dependencies:
+      '@types/node': 18.15.13
+      find-cache-dir: 3.3.2
+      json5: 2.2.3
+      loader-utils: 3.2.1
+      make-dir: 3.1.0
+      schema-utils: 4.0.1
+      sharp: 0.32.1
+      webpack: 5.80.0(webpack-cli@5.0.1)
+    dev: false
 
   /restore-cursor@1.0.1:
     resolution: {integrity: sha512-reSjH4HuiFlxlaBaFCiS6O76ZGG2ygKoSlCsipKdaZuKSPx/+bt9mULkn4l0asVzbEfQQmXRg6Wp6gv6m0wElw==}

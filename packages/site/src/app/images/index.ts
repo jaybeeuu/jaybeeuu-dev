@@ -1,24 +1,24 @@
-import bath from "./bath.jpg";
-import blackTusk from "./black-tusk.jpg";
-import christmasTrail from "./christmas-trail.jpg";
-import crabappleDrive from "./crabapple-drive.jpg";
-import englishBayPark from "./english-bay-park.jpg";
-import fagus from "./fagus.jpg";
-import galaxy from "./galaxy.jpg";
-import greatNorthernHighway from "./great-northern-highway.jpg";
-import greenLake from "./green-lake.jpg";
-import harmonyRidge from "./harmony-ridge.jpg";
-import jerseyCream from "./jersey-cream.jpg";
-import kew from "./kew.jpg";
-import lionsGateBridge from "./lions-gate-bridge.jpg";
-import moon from "./moon.jpg";
-import nullarbor from "./nullarbor.jpg";
-import rainbowPark from "./rainbow-park.jpg";
-import royalExhibitionHall from "./royal-exhibition-hall.jpg";
-import ship from "./ship.jpg";
-import sydneyHarbourBridge from "./sydney-harbour-bridge.jpg";
-import sydney from "./sydney.jpg";
-import tree from "./tree.jpg";
+import bath from "./bath.background.jpg";
+import blackTusk from "./black-tusk.background.jpg";
+import christmasTrail from "./christmas-trail.background.jpg";
+import crabappleDrive from "./crabapple-drive.background.jpg";
+import englishBayPark from "./english-bay-park.background.jpg";
+import fagus from "./fagus.background.jpg";
+import galaxy from "./galaxy.background.jpg";
+import greatNorthernHighway from "./great-northern-highway.background.jpg";
+import greenLake from "./green-lake.background.jpg";
+import harmonyRidge from "./harmony-ridge.background.jpg";
+import jerseyCream from "./jersey-cream.background.jpg";
+import kew from "./kew.background.jpg";
+import lionsGateBridge from "./lions-gate-bridge.background.jpg";
+import moon from "./moon.background.jpg";
+import nullarbor from "./nullarbor.background.jpg";
+import rainbowPark from "./rainbow-park.background.jpg";
+import royalExhibitionHall from "./royal-exhibition-hall.background.jpg";
+import ship from "./ship.background.jpg";
+import sydneyHarbourBridge from "./sydney-harbour-bridge.background.jpg";
+import sydney from "./sydney.background.jpg";
+import tree from "./tree.background.jpg";
 
 export type Image =
   | "bath"
@@ -43,7 +43,7 @@ export type Image =
   | "sydney"
   | "tree";
 
-export const imageUrls: { [image in Image]: string } = {
+export const imageUrls: { [image in Image]: ResponsiveImageOutput } = {
   bath,
   "black-tusk": blackTusk,
   "christmas-trail": christmasTrail,

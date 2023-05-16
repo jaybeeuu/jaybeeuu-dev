@@ -10,15 +10,21 @@
   position: relative;
 }
 
+.background-picture {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background-color: var(--background-colour-document);
+  transition: var(--transition-theme), opacity var(--transition-theme-timing);
+}
+
 .background-image {
   height: 100%;
   width: 100%;
   position: absolute;
   background-color: var(--background-colour-document);
-  background-position: center bottom;
-  background-repeat: no-repeat;
-  background-size: cover;
-  transition: var(--transition-theme), opacity var(--transition-theme-timing);
+  object-fit: cover;
+  object-position: 50% 100%;
 }
 
 .transparent-in {

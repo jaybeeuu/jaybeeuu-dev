@@ -4,7 +4,6 @@ import type { ComponentChildren, JSX } from "preact";
 import { h } from "preact";
 import { CSSTransition } from "preact-transitioning";
 import { useEffect, useState } from "preact/hooks";
-import type { Image } from "../images";
 import { imageUrls } from "../images";
 import type { Theme } from "../services/theme";
 import type { BackgroundImages } from "../state";
@@ -16,16 +15,25 @@ export interface BackgroundProps {
   className?: string;
 }
 
-export interface ImageStateEntry {
-  name: Image;
+export interface ImageStateEntry extends ResponsiveImageOutput {
   alt: string;
-  url: string;
 }
 
 export interface ImageState {
   current: ImageStateEntry | null;
   previous: ImageStateEntry | null;
 }
+
+type TitleCase<Value extends string> = Value extends `${infer Prefix}-${infer Suffix}`
+  ? `${Capitalize<Prefix>} ${TitleCase<Suffix>}`
+  : Capitalize<Value>;
+
+const titleCase = <Value extends string>(kebabCase: Value): TitleCase<Value> => {
+  return kebabCase
+    .split("-")
+    .map(([first, ...rest]) => [first?.toUpperCase(), ... rest].join(""))
+    .join(" ") as TitleCase<Value>;
+};
 
 export const useImages = (
   images: BackgroundImages | null,
@@ -38,35 +46,50 @@ export const useImages = (
 
   useEffect(() => {
     const current = images?.[currentTheme];
+    const currentImage: ImageStateEntry | null = current ? {
+      alt: titleCase(current),
+      ...imageUrls[current]
+    } : null;
+
     setImageState({
       previous: imageState.current,
-      current: current ? {
-        name: current,
-        alt: current,
-        url: imageUrls[current]
-      } : null
+      current: currentImage ?? null
     });
   }, [currentTheme, images]);
 
   return imageState;
 };
 
-const QuasiImg = ({
+const ResponsiveImage = ({
   alt,
   className,
-  url
-}: {
-  alt: string;
-  className?: string;
-  url: string;
-}): JSX.Element => {
+  height,
+  placeholder,
+  src,
+  srcSet,
+  width
+}: { className?: string; } & ImageStateEntry
+): JSX.Element => {
   return (
-    <div
-      className={classNames(css.backgroundImage, className)}
-      role="img"
-      aria-label={alt}
-      style={{ backgroundImage: `url(${url})` }}
-    />
+    <picture
+      className={classNames(css.backgroundPicture, className)}
+    >
+      <source
+        sizes='(max-width: 600px) 600px, (max-width: 900px) 900px, (max-width: 1200px) 1200px, 1800px'
+        srcSet={srcSet}
+        type='image/jpg'
+      />
+      <img
+        alt={alt}
+        className={css.backgroundImage}
+        height={height}
+        placeholder={placeholder}
+        sizes='(max-width: 600px) 600px, (max-width: 900px) 900px, (max-width: 1200px) 1200px, 1800px'
+        src={src}
+        srcSet={srcSet}
+        width={width}
+      />
+    </picture>
   );
 };
 
@@ -93,9 +116,9 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
             exit
             duration={590}
             in={!current}
-            key={previous.url}
+            key={previous.src}
           >
-            <QuasiImg {...previous} />
+            <ResponsiveImage {...previous} />
           </CSSTransition>
         ) : null}
         {current ? (
@@ -111,9 +134,9 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
             }}
             appear
             duration={500}
-            key={current.url}
+            key={current.src}
           >
-            <QuasiImg {...current} />
+            <ResponsiveImage {...current} />
           </CSSTransition>
         ) : null}
       </div>

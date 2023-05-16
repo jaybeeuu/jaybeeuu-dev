@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'backgroundImage': string;
+  'backgroundPicture': string;
   'componentRoot': string;
   'content': string;
   'opaque': string;
