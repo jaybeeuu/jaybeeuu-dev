@@ -71,14 +71,9 @@ const ResponsiveImage = ({
 }: { className?: string; } & ImageStateEntry
 ): JSX.Element => {
   return (
-    <picture
+    <div
       className={classNames(css.backgroundPicture, className)}
-    >
-      <source
-        sizes='(max-width: 600px) 600px, (max-width: 900px) 900px, (max-width: 1200px) 1200px, 1800px'
-        srcSet={srcSet}
-        type='image/jpg'
-      />
+      style={{ backgroundImage: `url(${placeholder})` }}>
       <img
         alt={alt}
         className={css.backgroundImage}
@@ -89,7 +84,7 @@ const ResponsiveImage = ({
         srcSet={srcSet}
         width={width}
       />
-    </picture>
+    </div>
   );
 };
 

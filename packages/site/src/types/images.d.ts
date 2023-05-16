@@ -1,11 +1,11 @@
 interface ResponsiveImageOutput {
-  src: string
-  srcSet: string
-  placeholder: string | undefined
-  images: { path: string; width: number; height: number }[]
-  width: number
-  height: number
-  toString: () => string
+  src: string;
+  srcSet: string;
+  placeholder: string;
+  images: { path: string; width: number; height: number }[];
+  width: number;
+  height: number;
+  toString: () => string;
 }
 
 declare module "*.background.jpg" {
