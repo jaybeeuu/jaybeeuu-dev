@@ -25,7 +25,7 @@
 }
 
 .background-image {
-  background-color: var(--background-colour-document);
+  background-color: transparent;
   object-fit: cover;
   object-position: 50% 100%;
 
