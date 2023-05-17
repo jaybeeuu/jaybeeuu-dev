@@ -4,7 +4,8 @@ import type { ComponentChildren, JSX } from "preact";
 import { h } from "preact";
 import { CSSTransition } from "preact-transitioning";
 import { useEffect, useState } from "preact/hooks";
-import { imageUrls } from "../images";
+import type { ImageDetails} from "../images";
+import { images } from "../images";
 import type { Theme } from "../services/theme";
 import type { BackgroundImages } from "../state";
 import { backgroundImages, onMainContentScroll, theme } from "../state";
@@ -15,28 +16,13 @@ export interface BackgroundProps {
   className?: string;
 }
 
-export interface ImageStateEntry extends ResponsiveImageOutput {
-  alt: string;
-}
-
 export interface ImageState {
-  current: ImageStateEntry | null;
-  previous: ImageStateEntry | null;
+  current: ImageDetails | null;
+  previous: ImageDetails | null;
 }
-
-type TitleCase<Value extends string> = Value extends `${infer Prefix}-${infer Suffix}`
-  ? `${Capitalize<Prefix>} ${TitleCase<Suffix>}`
-  : Capitalize<Value>;
-
-const titleCase = <Value extends string>(kebabCase: Value): TitleCase<Value> => {
-  return kebabCase
-    .split("-")
-    .map(([first, ...rest]) => [first?.toUpperCase(), ... rest].join(""))
-    .join(" ") as TitleCase<Value>;
-};
 
 export const useImages = (
-  images: BackgroundImages | null,
+  backgrounds: BackgroundImages | null,
   currentTheme: Theme
 ): ImageState => {
   const [imageState, setImageState] = useState<ImageState>({
@@ -45,17 +31,16 @@ export const useImages = (
   });
 
   useEffect(() => {
-    const current = images?.[currentTheme];
-    const currentImage: ImageStateEntry | null = current ? {
-      alt: titleCase(current),
-      ...imageUrls[current]
-    } : null;
+    const current = backgrounds?.[currentTheme];
+    const currentImage: ImageDetails | null = current
+      ? images[current]
+      : null;
 
     setImageState({
       previous: imageState.current,
       current: currentImage ?? null
     });
-  }, [currentTheme, images]);
+  }, [currentTheme, backgrounds]);
 
   return imageState;
 };
@@ -63,37 +48,30 @@ export const useImages = (
 const ResponsiveImage = ({
   alt,
   className,
-  height,
   placeholder,
   src,
-  srcSet,
-  width
-}: { className?: string; } & ImageStateEntry
-): JSX.Element => {
-  return (
-    <div
-      className={classNames(css.backgroundPicture, className)}
-      style={{ backgroundImage: `url(${placeholder})` }}>
-      <img
-        alt={alt}
-        className={css.backgroundImage}
-        height={height}
-        placeholder={placeholder}
-        sizes='(max-width: 600px) 600px, (max-width: 900px) 900px, (max-width: 1200px) 1200px, 1800px'
-        src={src}
-        srcSet={srcSet}
-        width={width}
-      />
-    </div>
-  );
-};
+  position = "50% 100%"
+}: { className?: string; } & ImageDetails
+): JSX.Element => (
+  <div
+    className={classNames(css.backgroundPicture, className)}
+    style={{ backgroundImage: `url(${placeholder})` }}
+  >
+    <img
+      alt={alt}
+      className={css.backgroundImage}
+      src={src}
+      style={{ objectPosition: position }}
+    />
+  </div>
+);
 
 export const Background = ({ children, className }: BackgroundProps): JSX.Element => {
   const [currentTheme] = useValue(theme);
-  const [images] = useValue(backgroundImages);
+  const [backgrounds] = useValue(backgroundImages);
   const onScroll = useAction(onMainContentScroll);
   const { current, previous } = useImages(
-    images,
+    backgrounds,
     currentTheme
   );
 

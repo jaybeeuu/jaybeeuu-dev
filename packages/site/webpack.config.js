@@ -153,9 +153,10 @@ export default {
                 loader: "responsive-loader",
                 options: {
                   adapter: sharpAdapter,
-                  sizes: [600, 900, 1200, 1800],
+                  sizes: [1800],
                   placeholder: true,
-                  placeholderSize: 80
+                  placeholderSize: 160,
+                  progressive: true
                 }
               }
             ]

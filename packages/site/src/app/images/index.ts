@@ -20,7 +20,7 @@ import sydneyHarbourBridge from "./sydney-harbour-bridge.background.jpg";
 import sydney from "./sydney.background.jpg";
 import tree from "./tree.background.jpg";
 
-export type Image =
+export type ImageName =
   | "bath"
   | "black-tusk"
   | "christmas-trail"
@@ -43,26 +43,31 @@ export type Image =
   | "sydney"
   | "tree";
 
-export const imageUrls: { [image in Image]: ResponsiveImageOutput } = {
-  bath,
-  "black-tusk": blackTusk,
-  "christmas-trail": christmasTrail,
-  "crabapple-drive": crabappleDrive,
-  "english-bay-park": englishBayPark,
-  fagus,
-  galaxy,
-  "great-northern-highway": greatNorthernHighway,
-  "green-lake": greenLake,
-  "harmony-ridge": harmonyRidge,
-  "jersey-cream": jerseyCream,
-  kew,
-  "lions-gate-bridge": lionsGateBridge,
-  moon,
-  nullarbor,
-  "rainbow-park": rainbowPark,
-  "royal-exhibition-hall": royalExhibitionHall,
-  ship,
-  "sydney-harbour-bridge": sydneyHarbourBridge,
-  sydney,
-  tree
+export interface ImageDetails extends ResponsiveImageOutput {
+  position?: string;
+  alt: string;
+}
+
+export const images: { [image in ImageName]: ImageDetails } = {
+  bath: { ...bath, alt: "Bath" },
+  "black-tusk": { ...blackTusk, alt: "Black Tusk" },
+  "christmas-trail": { ...christmasTrail, alt: "Christmas Trail" },
+  "crabapple-drive": { ...crabappleDrive, alt: "Crabapple Drive" },
+  "english-bay-park": { ...englishBayPark, alt: "English Bay Park", position: "20% 100%" },
+  fagus: { ...fagus, alt: "Fagus" },
+  galaxy: { ...galaxy, alt: "Galaxy" },
+  "great-northern-highway": { ...greatNorthernHighway, alt: "Great Northern Highway" },
+  "green-lake": { ...greenLake, alt: "Green Lake", position: "50% 40%" },
+  "harmony-ridge": { ...harmonyRidge, alt: "Harmony Ridge" },
+  "jersey-cream": { ...jerseyCream, alt: "Jersey Cream" },
+  kew: { ...kew, alt: "Kew" },
+  "lions-gate-bridge": { ...lionsGateBridge, alt: "Lions Gate Bridge" },
+  moon: { ...moon, alt: "Moon" },
+  nullarbor: { ...nullarbor, alt: "Nullarbor" },
+  "rainbow-park": { ...rainbowPark, alt: "Rainbow Park" },
+  "royal-exhibition-hall": { ...royalExhibitionHall, alt: "Royal Exhibition Hall" },
+  ship: { ...ship, alt: "Ship" },
+  "sydney-harbour-bridge": { ...sydneyHarbourBridge, alt: "Sydney Harbour Bridge" },
+  sydney: { ...sydney, alt: "Sydney" },
+  tree: { ...tree, alt: "Tree" }
 };

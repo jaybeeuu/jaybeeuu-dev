@@ -15,24 +15,19 @@
   background-position: center bottom;
   background-repeat: no-repeat;
   background-size: cover;
-
   position: absolute;
-
   height: 100%;
   width: 100%;
-
   transition: var(--transition-theme), opacity var(--transition-theme-timing);
 }
 
 .background-image {
   background-color: transparent;
-  object-fit: cover;
-  object-position: 50% 100%;
-
   position: absolute;
-
   height: 100%;
   width: 100%;
+  object-fit: cover;
+  object-position: 50% 100%;
 }
 
 .transparent-in {
