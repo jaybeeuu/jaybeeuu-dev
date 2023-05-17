@@ -13,3 +13,4 @@ export { getErrorMessage } from "./log.js";
 export * as log from "./log.js";
 export { multiPartition } from "./multi-partition.js";
 export * from "./promise-status.js";
+export * from "./title-case.js";
