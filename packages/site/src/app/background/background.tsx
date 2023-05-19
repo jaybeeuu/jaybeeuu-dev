@@ -1,3 +1,4 @@
+import { useIsMounted } from "@jaybeeuu/preact-async";
 import { useAction, useValue } from "@jaybeeuu/preact-recoilless";
 import classNames from "classnames";
 import type { ComponentChildren, JSX } from "preact";
@@ -25,21 +26,26 @@ export const useImages = (
   backgrounds: BackgroundImages | null,
   currentTheme: Theme
 ): ImageState => {
+  const isMounted = useIsMounted();
   const [imageState, setImageState] = useState<ImageState>({
     previous: null,
     current: null
   });
 
   useEffect(() => {
-    const current = backgrounds?.[currentTheme];
-    const currentImage: ImageDetails | null = current
-      ? images[current]
-      : null;
+    void (async () => {
+      const current = backgrounds?.[currentTheme];
+      const currentImage: ImageDetails | null = current
+        ? await images[current]()
+        : null;
 
-    setImageState({
-      previous: imageState.current,
-      current: currentImage ?? null
-    });
+      if (isMounted.current) {
+        setImageState({
+          previous: imageState.current,
+          current: currentImage ?? null
+        });
+      }
+    })();
   }, [currentTheme, backgrounds]);
 
   return imageState;
