@@ -155,7 +155,7 @@ export default {
                   adapter: sharpAdapter,
                   sizes: [1800],
                   placeholder: true,
-                  placeholderSize: 160,
+                  placeholderSize: 40,
                   progressive: true
                 }
               }
