@@ -15,7 +15,8 @@ export const postsManifest: DerivedValue<Promise<PostManifest>> = {
   name: "postManifest",
   derive: async (): Promise<PostManifest> => {
     return fetchJson<PostManifest>("/blog/manifest.json");
-  }
+  },
+  removalSchedule: { schedule: "delayed", delay: 500 }
 };
 
 export const currentPostSlug: PrimitiveValue<string | null> = {
