@@ -61,7 +61,10 @@ const ResponsiveImage = ({
 ): JSX.Element => (
   <div
     className={classNames(css.backgroundPicture, className)}
-    style={{ backgroundImage: `url(${placeholder})` }}
+    style={{
+      backgroundImage: `url(${placeholder})`,
+      backgroundPosition: position
+    }}
   >
     <img
       alt={alt}
