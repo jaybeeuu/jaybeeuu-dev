@@ -153,7 +153,8 @@ export default {
                 loader: "responsive-loader",
                 options: {
                   adapter: sharpAdapter,
-                  sizes: [1800],
+                  format: "webp",
+                  sizes: [160, 640, 1200, 1800],
                   placeholder: true,
                   placeholderSize: 40,
                   progressive: true

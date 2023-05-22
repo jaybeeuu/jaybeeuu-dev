@@ -1,4 +1,4 @@
-import { useIsMounted } from "@jaybeeuu/preact-async";
+import { useAsyncGenerator, useIsMounted, useSemanticMemo } from "@jaybeeuu/preact-async";
 import { useAction, useValue } from "@jaybeeuu/preact-recoilless";
 import classNames from "classnames";
 import type { ComponentChildren, JSX } from "preact";
@@ -51,29 +51,40 @@ export const useImages = (
   return imageState;
 };
 
-const ResponsiveImage = ({
+const ProgressiveImage = ({
   alt,
   className,
+  images: imgs,
   placeholder,
-  src,
   position = "50% 100%"
 }: { className?: string; } & ImageDetails
-): JSX.Element => (
-  <div
-    className={classNames(css.backgroundPicture, className)}
-    style={{
-      backgroundImage: `url(${placeholder})`,
-      backgroundPosition: position
-    }}
-  >
-    <img
-      alt={alt}
-      className={css.backgroundImage}
-      src={src}
-      style={{ objectPosition: position }}
-    />
-  </div>
-);
+): JSX.Element => {
+  const pathIterator = useSemanticMemo(() => (async function* () {
+    for (const { path } of imgs.sort((left, right) => left.width - right.width)) {
+      await fetch(path);
+      yield path;
+    }
+  })(), [images]);
+  const path = useAsyncGenerator(pathIterator, null);
+  return (
+    <div
+      className={classNames(css.backgroundPicture, className)}
+      style={{
+        backgroundImage: `url(${placeholder})`,
+        backgroundPosition: position
+      }}
+    >
+      {path ? (
+        <img
+          alt={alt}
+          className={css.backgroundImage}
+          src={path}
+          style={{ objectPosition: position }}
+        />
+      ) : null}
+    </div>
+  );
+};
 
 export const Background = ({ children, className }: BackgroundProps): JSX.Element => {
   const [currentTheme] = useValue(theme);
@@ -100,7 +111,7 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
             in={!current}
             key={previous.src}
           >
-            <ResponsiveImage {...previous} />
+            <ProgressiveImage {...previous} />
           </CSSTransition>
         ) : null}
         {current ? (
@@ -118,7 +129,7 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
             duration={500}
             key={current.src}
           >
-            <ResponsiveImage {...current} />
+            <ProgressiveImage {...current} />
           </CSSTransition>
         ) : null}
       </div>
