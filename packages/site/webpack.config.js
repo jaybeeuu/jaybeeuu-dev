@@ -154,7 +154,7 @@ export default {
                 options: {
                   adapter: sharpAdapter,
                   format: "webp",
-                  sizes: [160, 640, 1200, 1800],
+                  sizes: [160, 800, 1800],
                   placeholder: true,
                   placeholderSize: 40,
                   progressive: true

@@ -11,6 +11,7 @@ export type ImageName =
   | "harmony-ridge"
   | "jersey-cream"
   | "kew"
+  | "lamberts-castle"
   | "lions-gate-bridge"
   | "moon"
   | "nullarbor"
@@ -39,6 +40,7 @@ export const images: { [image in ImageName]: () => Promise<ImageDetails> } = {
   "harmony-ridge": async () => ({ ...(await import("./harmony-ridge.background.jpg")).default, alt: "Harmony Ridge" }),
   "jersey-cream": async () => ({ ...(await import("./jersey-cream.background.jpg")).default, alt: "Jersey Cream" }),
   "kew": async () => ({ ...(await import("./kew.background.jpg")).default, alt: "Kew" }),
+  "lamberts-castle": async () => ({ ...(await import("./lamberts-castle.background.jpg")).default, alt: "Lamberts Castle", position: "50% 25%" }),
   "lions-gate-bridge": async () => ({ ...(await import("./lions-gate-bridge.background.jpg")).default, alt: "Lions Gate Bridge" }),
   "moon": async () => ({ ...(await import("./moon.background.jpg")).default, alt: "Moon" }),
   "nullarbor": async () => ({ ...(await import("./nullarbor.background.jpg")).default, alt: "Nullarbor" }),
