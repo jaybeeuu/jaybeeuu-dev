@@ -60,12 +60,18 @@ const ProgressiveImage = ({
 }: { className?: string; } & ImageDetails
 ): JSX.Element => {
   const pathIterator = useSemanticMemo(() => (async function* () {
-    for (const { path } of imgs.sort((left, right) => left.width - right.width)) {
-      await fetch(path);
+    const promises = imgs
+      .sort((left, right) => left.width - right.width)
+      .map(({ path }) => ({ path, promise: fetch(path) }));
+
+    for (const { path, promise } of promises) {
+      await promise;
       yield path;
     }
   })(), [images]);
+
   const path = useAsyncGenerator(pathIterator, null);
+
   return (
     <div
       className={classNames(css.backgroundPicture, className)}

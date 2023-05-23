@@ -3,15 +3,11 @@
   margin: var(--margin-content);
 }
 
-.article-content {
+.article {
   background-color: var(--background-colour-content);
   border-radius: var(--border-radius-content);
   padding: var(--padding-content);
   transition: var(--transition-theme);
-}
-
-.article-content > :first-child {
-  margin-top: 0;
 }
 
 .date {
