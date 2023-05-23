@@ -62,7 +62,10 @@ const ProgressiveImage = ({
   const pathIterator = useSemanticMemo(() => (async function* () {
     const promises = imgs
       .sort((left, right) => left.width - right.width)
-      .map(({ path }) => ({ path, promise: fetch(path) }));
+      .map(({ path }) => ({
+        path,
+        promise: fetch(path).then((response) => response.blob())
+      }));
 
     for (const { path, promise } of promises) {
       await promise;
