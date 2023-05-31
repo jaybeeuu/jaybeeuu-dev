@@ -1,26 +1,49 @@
-import { useAsyncGenerator, useIsMounted, useSemanticMemo } from "@jaybeeuu/preact-async";
+import { useIsMounted } from "@jaybeeuu/preact-async";
 import { useAction, useValue } from "@jaybeeuu/preact-recoilless";
 import classNames from "classnames";
 import type { ComponentChildren, JSX } from "preact";
 import { h } from "preact";
 import { CSSTransition } from "preact-transitioning";
-import { useEffect, useState } from "preact/hooks";
-import type { ImageDetails} from "../images";
+import { useEffect, useRef, useState } from "preact/hooks";
+import type { ImageDetails, ImageName} from "../images";
 import { images } from "../images";
 import type { Theme } from "../services/theme";
 import type { BackgroundImages } from "../state";
 import { backgroundImages, onMainContentScroll, theme } from "../state";
 import css from "./background.module.css";
+import { ImageLoader } from "./image-loader";
 
 export interface BackgroundProps {
   children: ComponentChildren;
   className?: string;
 }
 
-export interface ImageState {
-  current: ImageDetails | null;
-  previous: ImageDetails | null;
+interface ImageStateEntry extends ImageDetails {
+  loader: ImageLoader;
 }
+
+export interface ImageState {
+  current: ImageStateEntry | null;
+  previous: ImageStateEntry | null;
+}
+
+const getImageStateEntry = async (
+  imageName: ImageName | undefined,
+  loaders: { [name: string]: ImageLoader }
+): Promise<ImageStateEntry | null> => {
+  if (!imageName) {
+    return null;
+  }
+
+  const imageDetails = await images[imageName]();
+  const loader = loaders[imageName] ?? new ImageLoader(imageDetails);
+  loaders[imageName] = loader;
+
+  return {
+    ...imageDetails,
+    loader
+  };
+};
 
 export const useImages = (
   backgrounds: BackgroundImages | null,
@@ -32,18 +55,15 @@ export const useImages = (
     current: null
   });
 
+  const loaders = useRef<{ [name: string]: ImageLoader; }>({});
+
   useEffect(() => {
     void (async () => {
-      const current = backgrounds?.[currentTheme];
-      const currentImage: ImageDetails | null = current
-        ? await images[current]()
-        : null;
+      const currentName = backgrounds?.[currentTheme];
+      const current = await getImageStateEntry(currentName, loaders.current);
 
       if (isMounted.current) {
-        setImageState({
-          previous: imageState.current,
-          current: currentImage ?? null
-        });
+        setImageState({ previous: imageState.current, current });
       }
     })();
   }, [currentTheme, backgrounds]);
@@ -51,30 +71,31 @@ export const useImages = (
   return imageState;
 };
 
+const useLoader = (loader: ImageLoader): string => {
+  const isMounted = useIsMounted();
+  const [path, setPath] = useState(loader.currentBest.path);
+
+  useEffect(() => {
+    const unsubscribe = loader.subscribe((image) => {
+      if (isMounted.current) {
+        setPath(image.path);
+      }
+    });
+    return () => unsubscribe();
+  }, [loader]);
+
+  return path;
+};
+
 const ProgressiveImage = ({
   alt,
   className,
-  images: imgs,
+  loader,
   placeholder,
   position = "50% 100%"
-}: { className?: string; } & ImageDetails
+}: { className?: string; } & ImageStateEntry
 ): JSX.Element => {
-  const pathIterator = useSemanticMemo(() => (async function* () {
-    const promises = imgs
-      .sort((left, right) => left.width - right.width)
-      .map(({ path }) => ({
-        path,
-        promise: fetch(path).then((response) => response.blob())
-      }));
-
-    for (const { path, promise } of promises) {
-      await promise;
-      yield path;
-    }
-  })(), [images]);
-
-  const path = useAsyncGenerator(pathIterator, null);
-
+  const path = useLoader(loader);
   return (
     <div
       className={classNames(css.backgroundPicture, className)}
@@ -94,6 +115,7 @@ const ProgressiveImage = ({
     </div>
   );
 };
+ProgressiveImage.displayName = "ProgressiveImage";
 
 export const Background = ({ children, className }: BackgroundProps): JSX.Element => {
   const [currentTheme] = useValue(theme);
@@ -156,4 +178,4 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
     </div>
   );
 };
-Background.displayName = "Theme";
+Background.displayName = "Background";

@@ -15,5 +15,6 @@ const Home = (): JSX.Element => {
     </div>
   );
 };
+Home.displayName = "Home";
 
 export const HomeRoute = asRoute(Home);

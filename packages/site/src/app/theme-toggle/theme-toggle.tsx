@@ -45,3 +45,4 @@ export const ThemeToggle = ({ className }: ThemeToggleProps): JSX.Element => {
     </div>
   );
 };
+ThemeToggle.displayName = "ThemeToggle";

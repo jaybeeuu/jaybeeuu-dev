@@ -25,3 +25,4 @@ export const App = (): JSX.Element => (
     </Background>
   </ThemeRoot>
 );
+App.displayName = "App";

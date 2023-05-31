@@ -82,12 +82,13 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
     </div>
   );
 });
+PostComponent.displayName = "PostComponent";
 
 export interface PostProps {
   slug: string;
 }
 
-const Post: FunctionComponent<PostProps> = ({ slug }) => {
+const Post = ({ slug }: PostProps): JSX.Element | null => {
   useBackgrounds({ dark: "moon", light: "black-tusk" });
 
   const [selectedSlug, setSlug] = useValue(currentPostSlug);

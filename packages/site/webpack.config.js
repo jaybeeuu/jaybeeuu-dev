@@ -154,10 +154,11 @@ export default {
                 options: {
                   adapter: sharpAdapter,
                   format: "webp",
-                  sizes: [160, 800, 1800],
+                  name: "[name]-[hash]-[width].[ext]",
                   placeholder: true,
                   placeholderSize: 40,
-                  progressive: true
+                  progressive: true,
+                  sizes: [900, 1400, 1800]
                 }
               }
             ]

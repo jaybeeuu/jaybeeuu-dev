@@ -40,7 +40,7 @@ export const withPromise = <ContentProps extends object>(
     }
   };
 
-  FetchCompleteComponent.displayName = `WithRequest(${Content.displayName ?? Content.name})`;
+  FetchCompleteComponent.displayName = `WithPromise(${Content.displayName ?? Content.name})`;
 
   return FetchCompleteComponent;
 };

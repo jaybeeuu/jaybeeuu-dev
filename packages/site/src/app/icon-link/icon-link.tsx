@@ -32,5 +32,4 @@ export const IconLink = ({
     />
   </a>
 );
-
 IconLink.displayName = "IconLink";

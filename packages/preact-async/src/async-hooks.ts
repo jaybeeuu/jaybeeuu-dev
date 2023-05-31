@@ -46,12 +46,14 @@ export const useSemanticMemo = <Value>(
 ): Value => {
   const previousInputs = useRef(inputs);
   const previousValue = useRef<Value | undefined>();
+
   if (
     typeof previousValue.current === "undefined"
     || inputs.some((input, index) => input !== previousInputs.current[index])
   ) {
     previousValue.current = getValue();
   }
+
   return previousValue.current;
 };
 
