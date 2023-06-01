@@ -156,9 +156,10 @@ export default {
                   format: "webp",
                   name: "[name]-[hash]-[width].[ext]",
                   placeholder: true,
-                  placeholderSize: 40,
+                  placeholderSize: 400,
                   progressive: true,
-                  sizes: [900, 1400, 1800]
+                  // sizes: [900, 1400, 1800]
+                  sizes: [1800]
                 }
               }
             ]

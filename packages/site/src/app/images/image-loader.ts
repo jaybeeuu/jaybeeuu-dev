@@ -1,25 +1,28 @@
-import type { ImageDetails } from "../images";
-
 export interface ImageInstance {
   width: number;
   path: string;
 }
 
-export class ImageLoader {
-  #name: string;
+export interface ImageLoader {
+  readonly currentBest: ImageInstance;
+  subscribe: (callback: (image: ImageInstance) => void) => () => void;
+}
+
+export class FetchImageLoader implements ImageLoader {
+  readonly #imageDetails: ResponsiveImageOutput;
+
   #currentBest: ImageInstance;
   #listeners: ((image: ImageInstance) => void)[] = [];
+  #hasLoaded: boolean = false;
 
   constructor(
-    imageDetails: ImageDetails
+    imageDetails: ResponsiveImageOutput
   ) {
-    this.#name = imageDetails.alt;
     this.#currentBest = {
       width: 0,
       path: imageDetails.placeholder
     };
-
-    void this.startLoading(imageDetails);
+    this.#imageDetails = imageDetails;
   }
 
   get currentBest(): ImageInstance {
@@ -27,6 +30,11 @@ export class ImageLoader {
   }
 
   subscribe(callback: (image: ImageInstance) => void): () => void {
+    if (!this.#hasLoaded) {
+      void this.startLoading();
+      this.#hasLoaded = true;
+    }
+
     this.#listeners.push(callback);
     callback(this.#currentBest);
 
@@ -35,8 +43,8 @@ export class ImageLoader {
     };
   }
 
-  private async startLoading(imageDetails: ImageDetails): Promise<void> {
-    const images = imageDetails.images
+  private async startLoading(): Promise<void> {
+    const images = this.#imageDetails.images
       .sort((left, right) => left.width - right.width)
       .map(({ path, width }) => ({
         path,

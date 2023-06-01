@@ -58,7 +58,7 @@ export async function* monitorPromise<Value> (
   userOptions: Partial<MonitorPromiseOptions> = {}
 ): AsyncGenerator<PromiseState<Value>> {
   const options: MonitorPromiseOptions = {
-    timeoutDelay: 5000,
+    timeoutDelay: 60000,
     ...userOptions
   };
   const timeout = echo(failed(new Error("Request timed out.")), options.timeoutDelay);
@@ -96,15 +96,21 @@ type ResolvedValues<Values extends object> = {
     : Values[Key]
 }
 
-export const combinePromises = <Values extends object>(values: Values): PromiseState<ResolvedValues<Values>> => {
-  const [simpleValues, promiseStates] = Object.entries(values).reduce<[[string, unknown][], [string, PromiseState][]]>(([simple, prom], [key, value]) => {
-    if (isAnyPromiseState(value)) {
-      prom.push(([key, value]));
-    } else {
-      simple.push([key, value]);
-    }
-    return [simple, prom];
-  }, [[], []]);
+export const combinePromises = <Values extends object>(
+  values: Values
+): PromiseState<ResolvedValues<Values>> => {
+  const [simpleValues, promiseStates] = Object.entries(values)
+    .reduce<[[string, unknown][], [string, PromiseState][]]>(
+    ([simple, prom], [key, value]) => {
+      if (isAnyPromiseState(value)) {
+        prom.push(([key, value]));
+      } else {
+        simple.push([key, value]);
+      }
+      return [simple, prom];
+    },
+    [[], []]
+  );
 
   const [
     failedPromises,

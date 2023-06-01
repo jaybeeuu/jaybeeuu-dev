@@ -1,4 +1,4 @@
-import type { FunctionComponent, JSX, RefObject } from "preact";
+import type { JSX, RefObject } from "preact";
 import { h, createRef, render } from "preact";
 import { useEffect, useLayoutEffect } from "preact/hooks";
 import classNames from "classnames";
