@@ -158,8 +158,7 @@ export default {
                   placeholder: true,
                   placeholderSize: 100,
                   progressive: true,
-                  // sizes: [900, 1400, 1800]
-                  sizes: [800, 1800]
+                  sizes: [1800]
                 }
               }
             ]
@@ -326,7 +325,7 @@ export default {
           rss: resolvedURLToSite("feeds/rss.xml")
         },
         author: {
-          name: "Josh bickley-Wallace",
+          name: "Josh Bickley-Wallace",
           email: "joshbickleywallace@outlook.com",
           link: siteURL
         }

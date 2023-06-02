@@ -1,24 +1,14 @@
 import { ControllablePromise } from "@jaybeeuu/utilities/test";
 import type { RenderHookResult } from "@testing-library/preact";
 import { act, renderHook, waitFor } from "@testing-library/preact";
-import type { ImageDetails, ImageLoader } from "../images";
+import type { ImageDetails } from "../images";
 import { images } from "../images";
 import type { Theme } from "../services/theme";
 import type { BackgroundImages } from "../state";
 import type { ImageState } from "./background";
 import { useImages } from "./background";
-import type { ImageInstance } from "../images/image-loader";
 
 jest.mock("../images");
-
-class MockImageLoader implements ImageLoader {
-  get currentBest(): ImageInstance {
-    return { path: "{currrent-best-path}", width: 0 };
-  }
-  subscribe(): () => void {
-    return () => {};
-  }
-}
 
 const makeImageDetails = (image: string): ImageDetails => ({
   src: `${String(image)}-src`,
@@ -29,7 +19,6 @@ const makeImageDetails = (image: string): ImageDetails => ({
     width: 100,
     height: 100
   }],
-  loader: new MockImageLoader(),
   width: 100,
   height: 100,
   alt: `${String(image)}-alt`

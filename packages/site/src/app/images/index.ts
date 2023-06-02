@@ -1,7 +1,3 @@
-import type { ImageLoader } from "./image-loader";
-import { FetchImageLoader } from "./image-loader";
-export type { ImageLoader };
-
 export type ImageName =
   | "bath"
   | "black-tusk"
@@ -29,7 +25,6 @@ export type ImageName =
 export interface ImageDetails extends ResponsiveImageOutput {
   position?: string;
   alt: string;
-  loader: ImageLoader;
 }
 
 const createGetImageDetails = (
@@ -40,11 +35,9 @@ const createGetImageDetails = (
   let details: ImageDetails | null = null;
   return async () => {
     if (!details){
-      const responsiveImage = await getResponsiveImage();
       details = {
-        ...responsiveImage,
+        ...await getResponsiveImage(),
         alt,
-        loader: new FetchImageLoader(responsiveImage),
         position
       };
     }
