@@ -1,5 +1,6 @@
 const jestRules = {
   "jest/prefer-expect-assertions": "off",
+  "jest/prefer-lowercase-title": ["error", { "ignore": ["describe"] }],
   "jest/valid-describe": "off",
   "jest/valid-title": ["error", { "ignoreTypeOfDescribeName": false }],
   "react/display-name": "off"

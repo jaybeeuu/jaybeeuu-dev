@@ -7,7 +7,7 @@ import type {
   PrimitiveValue,
   ActionContext
 } from "@jaybeeuu/recoilless";
-import type { Image } from "./images/index";
+import type { ImageName } from "./images/index";
 import type { Theme } from "./services/theme";
 import { getMediaTheme, persistedTheme } from "./services/theme";
 
@@ -15,7 +15,8 @@ export const postsManifest: DerivedValue<Promise<PostManifest>> = {
   name: "postManifest",
   derive: async (): Promise<PostManifest> => {
     return fetchJson<PostManifest>("/blog/manifest.json");
-  }
+  },
+  removalSchedule: { schedule: "delayed", delay: 500 }
 };
 
 export const currentPostSlug: PrimitiveValue<string | null> = {
@@ -50,7 +51,7 @@ export const theme: PrimitiveValue<Theme> = {
   initialValue: persistedTheme.get() ?? getMediaTheme()
 };
 
-export interface BackgroundImages { light: Image, dark: Image }
+export interface BackgroundImages { light: ImageName, dark: ImageName }
 
 export const backgroundImages: PrimitiveValue<BackgroundImages | null> = {
   name: "backgroundImage",

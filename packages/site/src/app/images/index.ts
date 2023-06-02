@@ -1,26 +1,4 @@
-import bath from "./bath.jpg";
-import blackTusk from "./black-tusk.jpg";
-import christmasTrail from "./christmas-trail.jpg";
-import crabappleDrive from "./crabapple-drive.jpg";
-import englishBayPark from "./english-bay-park.jpg";
-import fagus from "./fagus.jpg";
-import galaxy from "./galaxy.jpg";
-import greatNorthernHighway from "./great-northern-highway.jpg";
-import greenLake from "./green-lake.jpg";
-import harmonyRidge from "./harmony-ridge.jpg";
-import jerseyCream from "./jersey-cream.jpg";
-import kew from "./kew.jpg";
-import lionsGateBridge from "./lions-gate-bridge.jpg";
-import moon from "./moon.jpg";
-import nullarbor from "./nullarbor.jpg";
-import rainbowPark from "./rainbow-park.jpg";
-import royalExhibitionHall from "./royal-exhibition-hall.jpg";
-import ship from "./ship.jpg";
-import sydneyHarbourBridge from "./sydney-harbour-bridge.jpg";
-import sydney from "./sydney.jpg";
-import tree from "./tree.jpg";
-
-export type Image =
+export type ImageName =
   | "bath"
   | "black-tusk"
   | "christmas-trail"
@@ -33,6 +11,7 @@ export type Image =
   | "harmony-ridge"
   | "jersey-cream"
   | "kew"
+  | "lamberts-castle"
   | "lions-gate-bridge"
   | "moon"
   | "nullarbor"
@@ -43,26 +22,119 @@ export type Image =
   | "sydney"
   | "tree";
 
-export const imageUrls: { [image in Image]: string } = {
-  bath,
-  "black-tusk": blackTusk,
-  "christmas-trail": christmasTrail,
-  "crabapple-drive": crabappleDrive,
-  "english-bay-park": englishBayPark,
-  fagus,
-  galaxy,
-  "great-northern-highway": greatNorthernHighway,
-  "green-lake": greenLake,
-  "harmony-ridge": harmonyRidge,
-  "jersey-cream": jerseyCream,
-  kew,
-  "lions-gate-bridge": lionsGateBridge,
-  moon,
-  nullarbor,
-  "rainbow-park": rainbowPark,
-  "royal-exhibition-hall": royalExhibitionHall,
-  ship,
-  "sydney-harbour-bridge": sydneyHarbourBridge,
-  sydney,
-  tree
+export interface ImageDetails extends ResponsiveImageOutput {
+  position?: string;
+  alt: string;
+}
+
+const createGetImageDetails = (
+  getResponsiveImage: () => Promise<ResponsiveImageOutput>,
+  alt: string,
+  position?: string
+): () => Promise<ImageDetails> => {
+  let details: ImageDetails | null = null;
+  return async () => {
+    if (!details){
+      details = {
+        ...await getResponsiveImage(),
+        alt,
+        position
+      };
+    }
+    return details;
+  };
+};
+
+export const images: { [image in ImageName]: () => Promise<ImageDetails> } = {
+  bath: createGetImageDetails(
+    async () => (await import("./bath.background.jpg")).default,
+    "Bath"
+  ),
+  "black-tusk": createGetImageDetails(
+    async () => (await import("./black-tusk.background.jpg")).default,
+    "Black Tusk"
+  ),
+  "christmas-trail": createGetImageDetails(
+    async () => (await import("./christmas-trail.background.jpg")).default,
+    "Christmas Trail"
+  ),
+  "crabapple-drive": createGetImageDetails(
+    async () => (await import("./crabapple-drive.background.jpg")).default,
+    "Crabapple Drive"
+  ),
+  "english-bay-park": createGetImageDetails(
+    async () => (await import("./english-bay-park.background.jpg")).default,
+    "English Bay Park",
+    "20% 100%"
+  ),
+  "fagus": createGetImageDetails(
+    async () => (await import("./fagus.background.jpg")).default,
+    "Fagus"
+  ),
+  "galaxy": createGetImageDetails(
+    async () => (await import("./galaxy.background.jpg")).default,
+    "Galaxy"
+  ),
+  "great-northern-highway": createGetImageDetails(
+    async () => (await import("./great-northern-highway.background.jpg")).default,
+    "Great Northern Highway"
+  ),
+  "green-lake": createGetImageDetails(
+    async () => (await import("./green-lake.background.jpg")).default,
+    "Green Lake",
+    "50% 40%"
+  ),
+  "harmony-ridge": createGetImageDetails(
+    async () => (await import("./harmony-ridge.background.jpg")).default,
+    "Harmony Ridge"
+  ),
+  "jersey-cream": createGetImageDetails(
+    async () => (await import("./jersey-cream.background.jpg")).default,
+    "Jersey Cream"
+  ),
+  "kew": createGetImageDetails(
+    async () => (await import("./kew.background.jpg")).default,
+    "Kew"
+  ),
+  "lamberts-castle": createGetImageDetails(
+    async () => (await import("./lamberts-castle.background.jpg")).default,
+    "Lamberts Castle",
+    "50% 25%"
+  ),
+  "lions-gate-bridge": createGetImageDetails(
+    async () => (await import("./lions-gate-bridge.background.jpg")).default,
+    "Lions Gate Bridge"
+  ),
+  "moon": createGetImageDetails(
+    async () => (await import("./moon.background.jpg")).default,
+    "Moon"
+  ),
+  "nullarbor": createGetImageDetails(
+    async () => (await import("./nullarbor.background.jpg")).default,
+    "Nullarbor"
+  ),
+  "rainbow-park": createGetImageDetails(
+    async () => (await import("./rainbow-park.background.jpg")).default,
+    "Rainbow Park"
+  ),
+  "royal-exhibition-hall":createGetImageDetails(
+    async () => (await import("./royal-exhibition-hall.background.jpg")).default,
+    "Royal Exhibition Hall"
+  ),
+  "ship": createGetImageDetails(
+    async () => (await import("./ship.background.jpg")).default,
+    "Ship"
+  ),
+  "sydney-harbour-bridge": createGetImageDetails(
+    async () => (await import("./sydney-harbour-bridge.background.jpg")).default,
+    "Sydney Harbour Bridge"
+  ),
+  "sydney": createGetImageDetails(
+    async () => (await import("./sydney.background.jpg")).default,
+    "Sydney"
+  ),
+  "tree": createGetImageDetails(
+    async () => (await import("./tree.background.jpg")).default,
+    "Tree"
+  )
 };

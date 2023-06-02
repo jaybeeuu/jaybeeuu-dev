@@ -4,7 +4,7 @@ import { asRoute } from "./as-route";
 import { ErrorMessage } from "./error";
 import { useBackgrounds } from "./use-background";
 
-export const FouOhFour = asRoute((): JSX.Element => {
+const FouOhFourComponent = (): JSX.Element => {
   useBackgrounds({ dark: "galaxy", light: "harmony-ridge" });
   return (
     <ErrorMessage
@@ -12,4 +12,7 @@ export const FouOhFour = asRoute((): JSX.Element => {
       message="Sorry, there isn't anything here."
     />
   );
-});
+};
+FouOhFourComponent.displayName = "FourOhFourComponent";
+
+export const FouOhFour = asRoute(FouOhFourComponent);

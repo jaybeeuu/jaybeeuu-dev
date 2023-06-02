@@ -1,94 +1,87 @@
 import { useAction, useValue } from "@jaybeeuu/preact-recoilless";
 import classNames from "classnames";
 import type { ComponentChildren, JSX } from "preact";
-import { CSSTransition } from "preact-transitioning";
 import { h } from "preact";
-import type { Inputs} from "preact/hooks";
-import { useCallback, useRef, useState } from "preact/hooks";
+import { CSSTransition } from "preact-transitioning";
+import { useEffect, useState } from "preact/hooks";
+import type { ImageDetails } from "../images";
+import { images } from "../images";
 import type { Theme } from "../services/theme";
 import type { BackgroundImages } from "../state";
-import { backgroundImages, onMainContentScroll, theme  } from "../state";
+import { backgroundImages, onMainContentScroll, theme } from "../state";
 import css from "./background.module.css";
-import type { ImageState } from "./image-preloader";
-import { ImagePreloader } from "./image-preloader";
+import { ProgressiveImage } from "./progressive-image";
 
 export interface BackgroundProps {
   children: ComponentChildren;
   className?: string;
 }
-
-const useSemanticMemo = <Value,>(factory: () => Value, inputs: Inputs): Value => {
-  const previousInputs = useRef(inputs);
-  const currentValue = useRef<Value | "__UNSET__">("__UNSET__");
-  if (
-    currentValue.current === "__UNSET__"
-    || inputs.length !== previousInputs.current.length
-    || inputs.some((input, index) => input !== previousInputs.current[index])
-  ) {
-    currentValue.current = factory();
-  }
-
-  previousInputs.current = inputs;
-
-  return currentValue.current;
-};
-
-const useRerender = (): () => void => {
-  const renderCountRef = useRef(0);
-  const [, rerender] = useState(0);
-  return useCallback(
-    () => rerender(++renderCountRef.current),
-    []
-  );
-};
+export interface ImageState {
+  current: ImageDetails | null;
+  previous: ImageDetails | null;
+}
 
 export const useImages = (
-  images: BackgroundImages | null,
+  backgrounds: BackgroundImages | null,
   currentTheme: Theme
 ): ImageState => {
-  const current = images?.[currentTheme] ?? null;
-  const rerender = useRerender();
-  const imagePreloader = useSemanticMemo(
-    () => new ImagePreloader(rerender),
-    [rerender]
-  );
-  return imagePreloader.setImage(current);
-};
+  const [imageState, setImageState] = useState<ImageState>({
+    previous: null,
+    current: null
+  });
 
-const QuasiImg = ({
-  alt,
-  className,
-  url
-}: {
-  alt: string;
-  className?: string;
-  url: string;
-}): JSX.Element => {
-  return (
-    <div
-      className={classNames(css.backgroundImage, className)}
-      role="img"
-      aria-label={alt}
-      style={{ backgroundImage: `url(${url})` }}
-    />
-  );
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const currentName = backgrounds?.[currentTheme];
+      if (!currentName) {
+        return;
+      }
+
+      const current = await images[currentName]();
+
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (!cancelled) {
+        setImageState({ previous: imageState.current, current });
+      }
+    })();
+    return () => cancelled = true;
+  }, [currentTheme, backgrounds]);
+
+  return imageState;
 };
 
 export const Background = ({ children, className }: BackgroundProps): JSX.Element => {
   const [currentTheme] = useValue(theme);
-  const [images] = useValue(backgroundImages);
+  const [backgrounds] = useValue(backgroundImages);
   const onScroll = useAction(onMainContentScroll);
-  const { current, previous} = useImages(
-    images,
+  const { current, previous } = useImages(
+    backgrounds,
     currentTheme
   );
 
   return (
     <div className={classNames(className, css.componentRoot)}>
       <div>
+        {previous ? (
+          <CSSTransition
+            classNames={{
+              appearDone: css.opaque,
+              enterDone: css.opaque,
+              exit: css.opaque,
+              exitActive: css.transparentOut
+            }}
+            exit
+            duration={500}
+            in={!current}
+            key={previous.src}
+          >
+            <ProgressiveImage {...previous} />
+          </CSSTransition>
+        ) : null}
         {current ? (
           <CSSTransition
-            in={current.loaded}
+            in={!!current}
             classNames={{
               appear: css.transparentIn,
               appearActive: css.opaque,
@@ -99,25 +92,9 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
             }}
             appear
             duration={500}
-            key={current.url}
+            key={current.src}
           >
-            <QuasiImg {...current} />
-          </CSSTransition>
-        ) : null}
-        {previous ? (
-          <CSSTransition
-            classNames={{
-              appearDone: css.opaque,
-              enterDone: css.opaque,
-              exit: css.opaque,
-              exitActive: css.transparentOut
-            }}
-            exit
-            duration={590}
-            in={!current?.loaded}
-            key={previous.url}
-          >
-            <QuasiImg {...previous} />
+            <ProgressiveImage {...current} />
           </CSSTransition>
         ) : null}
       </div>
@@ -135,4 +112,4 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
     </div>
   );
 };
-Background.displayName = "Theme";
+Background.displayName = "Background";

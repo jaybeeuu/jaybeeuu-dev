@@ -1,4 +1,4 @@
-import type { FunctionComponent, JSX, RefObject } from "preact";
+import type { JSX, RefObject } from "preact";
 import { h, createRef, render } from "preact";
 import { useEffect, useLayoutEffect } from "preact/hooks";
 import classNames from "classnames";
@@ -68,13 +68,13 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
   return (
     <div className={classNames(css.componentRoot, e2eHooks.article)}>
       <div>
-        <article ref={articleRef}>
+        <article ref={articleRef} className={css.article}>
           <h1 className={css.title}>{postMeta.title}</h1>
           <div className={css.date}>
             {new Date(postMeta.publishDate).toLocaleDateString()}
             {postMeta.lastUpdateDate ? ` (updated ${new Date(postMeta.lastUpdateDate).toLocaleDateString()})` : null}
           </div>
-          <div className={css.articleContent}
+          <div
             dangerouslySetInnerHTML={{ __html: postHtml }}
           />
         </article>
@@ -82,12 +82,13 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
     </div>
   );
 });
+PostComponent.displayName = "PostComponent";
 
 export interface PostProps {
   slug: string;
 }
 
-const Post: FunctionComponent<PostProps> = ({ slug }) => {
+const Post = ({ slug }: PostProps): JSX.Element | null => {
   useBackgrounds({ dark: "moon", light: "black-tusk" });
 
   const [selectedSlug, setSlug] = useValue(currentPostSlug);

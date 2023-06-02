@@ -51,7 +51,7 @@ const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
 PostList.displayName = "PostList";
 
 export const PostsRoute = asRoute((): JSX.Element => {
-  useBackgrounds({ dark: "great-northern-highway", light: "kew" });
+  useBackgrounds({ dark: "great-northern-highway", light: "royal-exhibition-hall" });
   const manifest = useValue(postsManifest);
   return <PostList manifest={manifest} />;
 });

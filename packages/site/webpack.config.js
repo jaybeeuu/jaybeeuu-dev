@@ -1,14 +1,16 @@
 // @ts-check
 
 import { FeedWebpackPlugin } from "@jaybeeuu/feed-webpack-plugin";
+import { default as CaseSensitivePathsPlugin } from "case-sensitive-paths-webpack-plugin";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import fs from "fs";
+import { GitRevisionPlugin } from "git-revision-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
+import ImageMinimizerPlugin from "image-minimizer-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import path from "path";
-import { default as CaseSensitivePathsPlugin } from "case-sensitive-paths-webpack-plugin";
 import SitemapPluginImport from "sitemap-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import webpack from "webpack";
@@ -16,7 +18,8 @@ import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import { config as babelConfig } from "./config/babel.js";
 import { env, stringifiedEnv } from "./config/env.js";
 import { paths } from "./config/paths.js";
-import { GitRevisionPlugin } from "git-revision-webpack-plugin";
+// @ts-expect-error
+import sharpAdapter from "responsive-loader/sharp.js";
 
 /** @type {typeof SitemapPluginImport} */
 // @ts-expect-error
@@ -144,38 +147,25 @@ export default {
             ]
           },
           {
-            test: [/\.sprite.svg$/],
-            type: "asset"
-          },
-          {
-            test: [/\.(bmp|gif|jpe?g|png|svg)$/],
-            type: "asset",
+            test: /\.jpg$/i,
             use: [
               {
-                loader: "image-webpack-loader",
+                loader: "responsive-loader",
                 options: {
-                  enforce: "pre",
-                  bypassOnDebug: true,
-                  mozjpeg: {
-                    progressive: true,
-                    quality: 75
-                  },
-                  optipng: {
-                    enabled: false
-                  },
-                  pngquant: {
-                    quality: [0.65, 0.90],
-                    speed: 4
-                  },
-                  gifsicle: {
-                    interlaced: false
-                  },
-                  webp: {
-                    quality: 75
-                  }
+                  adapter: sharpAdapter,
+                  format: "webp",
+                  name: "[name]-[hash]-[width].[ext]",
+                  placeholder: true,
+                  placeholderSize: 100,
+                  progressive: true,
+                  sizes: [1800]
                 }
               }
             ]
+          },
+          {
+            test: [/\.(bmp|gif|jpe?g|png|svg)$/],
+            type: "asset"
           },
           {
             exclude: [/\.(ts|tsx|js|jsx|mjs)$/, /\.css$/, /\.html$/, /\.json$/, /\.(bmp|gif|jpe?g|png|svg)$/],
@@ -190,12 +180,43 @@ export default {
   },
   optimization: {
     moduleIds: isProduction ? "deterministic" : "named",
-    minimize: isProduction,
+    minimize: true,
     minimizer: [
       "...",
       new CssMinimizerPlugin(),
       new TerserPlugin({
         parallel: isProduction ? 2 : true
+      }),
+      new ImageMinimizerPlugin({
+        minimizer: [
+          {
+            implementation: ImageMinimizerPlugin.sharpMinify,
+            options: {
+              // https://sharp.pixelplumbing.com/api-output
+              encodeOptions: {
+                jpeg: {
+                  progressive: true,
+                  optimiseScans: true
+                },
+                png: {
+                  progressive: true
+                }
+              }
+            }
+          },
+          {
+            implementation: ImageMinimizerPlugin.svgoMinify,
+            filter: (source, sourcePath) => !(/\.sprite\.svg$/i.test(sourcePath)),
+            options: {
+              encodeOptions: {
+                multipass: true,
+                plugins: [
+                  "preset-default"
+                ]
+              }
+            }
+          }
+        ]
       })
     ],
     splitChunks: {
@@ -304,7 +325,7 @@ export default {
           rss: resolvedURLToSite("feeds/rss.xml")
         },
         author: {
-          name: "Josh bickley-Wallace",
+          name: "Josh Bickley-Wallace",
           email: "joshbickleywallace@outlook.com",
           link: siteURL
         }

@@ -1,188 +1,185 @@
 import { ControllablePromise } from "@jaybeeuu/utilities/test";
+import type { RenderHookResult } from "@testing-library/preact";
 import { act, renderHook, waitFor } from "@testing-library/preact";
+import type { ImageDetails } from "../images";
+import { images } from "../images";
 import type { Theme } from "../services/theme";
 import type { BackgroundImages } from "../state";
-import type { ImageStateEntry } from "./image-preloader";
+import type { ImageState } from "./background";
 import { useImages } from "./background";
-import { imageUrls } from "../images";
 
 jest.mock("../images");
 
-// eslint-disable-next-line jest/unbound-method, @typescript-eslint/unbound-method
-const { objectContaining } = expect;
+const makeImageDetails = (image: string): ImageDetails => ({
+  src: `${String(image)}-src`,
+  srcSet: `${String(image)}-srcSet`,
+  placeholder: `${String(image)}-placeholder`,
+  images: [{
+    path: `${String(image)}-path`,
+    width: 100,
+    height: 100
+  }],
+  width: 100,
+  height: 100,
+  alt: `${String(image)}-alt`
+});
+
+interface UseImagesProps {
+  backgrounds: BackgroundImages | null;
+  currentTheme: Theme;
+}
+
+const renderUseImages = (
+  initialProps: UseImagesProps
+): RenderHookResult<ImageState, UseImagesProps> => {
+  return renderHook(
+    ({ backgrounds, currentTheme })=> useImages(backgrounds, currentTheme),
+    { initialProps }
+  );
+};
 
 describe("useImages", () => {
   it("returns null in the current image if there are no images.", () => {
-    const { result } = renderHook(() => useImages(null, "light"));
+    const { result } = renderUseImages({
+      backgrounds: null,
+      currentTheme: "light"
+    });
 
     expect(result.current).toStrictEqual({ current: null, previous: null });
   });
 
-  it("returns the light image as current when the light theme is selected.", () => {
-    const { result } = renderHook(() => useImages(
-      {
+  it("returns null when the light theme has been selected but the promise hasn't resolved yet.", () => {
+    const { result } = renderUseImages({
+      backgrounds: {
         dark: "bath",
         light: "black-tusk"
       },
-      "light"
-    ));
-
-    expect(result.current).toStrictEqual({
-      current: objectContaining({
-        alt: "black-tusk",
-        url: imageUrls["black-tusk"]
-      }) as ImageStateEntry,
-      previous: null
+      currentTheme: "dark"
     });
+
+    expect(result.current).toStrictEqual({ current: null, previous: null });
   });
 
-  it("returns the dark image as current when the dark theme is selected.", () => {
-    const { result } = renderHook(() => useImages(
-      {
+  it("returns null when the dark theme has been selected but the promise hasn't resolved yet.", () => {
+    const { result } = renderUseImages({
+      backgrounds: {
         dark: "bath",
         light: "black-tusk"
       },
-      "dark"
-    ));
-
-    expect(result.current).toStrictEqual({
-      current: objectContaining({
-        alt: "bath",
-        url: imageUrls.bath
-      }) as ImageStateEntry,
-      previous: null
+      currentTheme: "dark"
     });
+
+    expect(result.current).toStrictEqual({ current: null, previous: null });
   });
 
-  it("sets loaded to false while the image is preloading.", () => {
-    jest.spyOn(global, "fetch").mockReturnValue(new ControllablePromise());
-    const { result } = renderHook(() => useImages(
-      {
-        dark: "bath",
-        light: "black-tusk"
-      },
-      "dark"
-    ));
+  it(
+    "returns the light image as current when the light theme is selected after the promise resolves.",
+    async () => {
+      const promise = new ControllablePromise<ImageDetails>();
+      jest.mocked(images["black-tusk"]).mockReturnValue(promise);
 
-    expect(result.current).toStrictEqual({
-      current: objectContaining({
-        loaded: false
-      }) as ImageStateEntry,
-      previous: null
-    });
-  });
-
-  it("sets loaded to true once the image has loaded.", async () => {
-    const fetchPromise = new ControllablePromise<Response>();
-    jest.spyOn(global, "fetch").mockReturnValue(fetchPromise);
-
-    const { result } = renderHook(() => useImages(
-      { dark: "bath", light: "black-tusk" },
-      "dark"
-    ));
-
-    await act(() => fetchPromise.resolve({} as unknown as Response));
-
-    await waitFor(() => expect(result.current).toStrictEqual({
-      current: objectContaining({
-        loaded: true
-      }) as ImageStateEntry,
-      previous: null
-    }));
-  });
-
-  it("sets loaded to false for a new current image.", async () => {
-    const fetchPromise = new ControllablePromise<Response>();
-    jest.spyOn(global, "fetch").mockReturnValue(fetchPromise);
-
-    const { result, rerender } = renderHook(
-      ({ currentTheme, images }: {
-        images: BackgroundImages | null;
-        currentTheme: Theme;
-      } = {
-        images: {
+      const { result } = renderUseImages({
+        backgrounds: {
           dark: "bath",
           light: "black-tusk"
         },
-        currentTheme: "dark"
-      }) => useImages(images, currentTheme));
+        currentTheme: "light"
+      });
 
-    await act(() => fetchPromise.resolve({} as unknown as Response));
+      const blackTusk = makeImageDetails("black-tusk");
+      await act(() => promise.resolve(blackTusk));
 
-    await waitFor(() => result.current.current);
+      await waitFor(() => expect(result.current).toStrictEqual({
+        current: blackTusk,
+        previous: null
+      }));
+    }
+  );
 
-    rerender({
-      images: {
+  it("returns the dark image as current when the dark theme is selected.", async () => {
+    const promise = new ControllablePromise<ImageDetails>();
+    jest.mocked(images.bath).mockReturnValue(promise);
+
+    const { result } = renderUseImages({
+      backgrounds: {
         dark: "bath",
         light: "black-tusk"
       },
-      currentTheme: "light"
+      currentTheme: "dark"
     });
 
-    expect(result.current).toStrictEqual(objectContaining({
-      current: objectContaining({
-        loaded: false
-      }) as ImageStateEntry
+    const bath = makeImageDetails("bath");
+    await act(() => promise.resolve(bath));
+
+    await waitFor(() => expect(result.current).toStrictEqual({
+      current: bath,
+      previous: null
     }));
   });
 
-  it("sets the previous and current images when the images change.", () => {
-    const { result, rerender } = renderHook(({
-      images,
-      currentTheme
-    }: { images: BackgroundImages | null, currentTheme: Theme } = {
-      images: {
-        dark: "bath",
-        light: "black-tusk"
-      },
-      currentTheme: "dark"
-    }) => useImages(images, currentTheme));
+  it("sets the previous and current images when the images change.", async() => {
+    const blackTusk = makeImageDetails("black-tusk");
+    jest.mocked(images["black-tusk"]).mockResolvedValue(blackTusk);
+    const christmasTrail = makeImageDetails("christmas-trail");
+    jest.mocked(images["christmas-trail"]).mockResolvedValue(christmasTrail);
 
-    rerender({
-      images: {
-        dark: "christmas-trail",
-        light: "crabapple-drive"
-      },
-      currentTheme: "dark"
-    });
-
-    expect(result.current).toStrictEqual({
-      current: objectContaining({
-        alt: "christmas-trail"
-      }) as ImageStateEntry,
-      previous: objectContaining({
-        alt: "bath"
-      }) as ImageStateEntry
-    });
-  });
-
-  it("sets the previous and current images when the theme changes.", () => {
-    const { result, rerender } = renderHook(({
-      images,
-      currentTheme
-    }: { images: BackgroundImages | null, currentTheme: Theme } = {
-      images: {
-        dark: "bath",
-        light: "black-tusk"
-      },
-      currentTheme: "dark"
-    }) => useImages(images, currentTheme));
-
-    rerender({
-      images: {
+    const { rerender, result } = renderUseImages({
+      backgrounds: {
         dark: "bath",
         light: "black-tusk"
       },
       currentTheme: "light"
     });
 
-    expect(result.current).toStrictEqual({
-      current: objectContaining({
-        alt: "black-tusk"
-      }) as ImageStateEntry,
-      previous: objectContaining({
-        alt: "bath"
-      }) as ImageStateEntry
+    await waitFor(() => expect(result.current).toStrictEqual({
+      current: blackTusk,
+      previous: null
+    }));
+
+    rerender({
+      backgrounds: {
+        dark: "crabapple-drive",
+        light: "christmas-trail"
+      },
+      currentTheme: "light"
     });
+
+    await waitFor(() => expect(result.current).toStrictEqual({
+      current: christmasTrail,
+      previous: blackTusk
+    }));
+  });
+
+  it("sets the previous and current images when the theme changes.", async () => {
+    const blackTusk = makeImageDetails("black-tusk");
+    jest.mocked(images["black-tusk"]).mockResolvedValue(blackTusk);
+    const bath = makeImageDetails("bath");
+    jest.mocked(images.bath).mockResolvedValue(bath);
+
+    const { rerender, result } = renderUseImages({
+      backgrounds: {
+        dark: "bath",
+        light: "black-tusk"
+      },
+      currentTheme: "light"
+    });
+
+    await waitFor(() => expect(result.current).toStrictEqual({
+      current: blackTusk,
+      previous: null
+    }));
+
+    rerender({
+      backgrounds: {
+        dark: "bath",
+        light: "black-tusk"
+      },
+      currentTheme: "dark"
+    });
+
+    await waitFor(() => expect(result.current).toStrictEqual({
+      current: bath,
+      previous: blackTusk
+    }));
   });
 });

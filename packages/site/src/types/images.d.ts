@@ -1,3 +1,23 @@
+interface ResponsiveImageOutput {
+  src: string;
+  srcSet: string;
+  placeholder: string;
+  images: { path: string; width: number; height: number }[];
+  width: number;
+  height: number;
+  toString: () => string;
+}
+
+declare module "*.background.jpg" {
+  const src: ResponsiveImageOutput;
+  export default src;
+}
+
+declare module "*.jpg" {
+  const fileUrl: string;
+  export default fileUrl;
+}
+
 declare module "*.svg" {
   const svgUrl: string;
   export default svgUrl;
