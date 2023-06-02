@@ -10,6 +10,18 @@
   position: relative;
 }
 
+.transparent-in {
+  opacity: 0;
+}
+
+.opaque {
+  opacity: 1;
+}
+
+.transparent-out {
+  opacity: 0;
+}
+
 .background-picture {
   background-color: var(--background-colour-document);
   background-position: center bottom;
@@ -28,16 +40,4 @@
   width: 100%;
   object-fit: cover;
   object-position: 50% 100%;
-}
-
-.transparent-in {
-  opacity: 0;
-}
-
-.opaque {
-  opacity: 1;
-}
-
-.transparent-out {
-  opacity: 0;
 }
