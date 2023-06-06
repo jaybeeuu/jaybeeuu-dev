@@ -57,7 +57,7 @@ describe("images", () => {
 
     expect(post).toStrictEqual(
       expect.stringContaining(
-        "src=\"posts-root/some-image-j8Ri3I.jpg\""
+        "src=\"/posts-root/some-image-j8Ri3I.jpg\""
       )
     );
   });

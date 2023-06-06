@@ -69,7 +69,7 @@ describe("links", () => {
   });
 
   it(
-    "compiles relative links to files which exist to hashed assets and copies them to the assets dir (see image)",
+    "compiles relative links to files which exist to hashed assets and copies them to the assets dir (see image).",
     async () => {
       await cleanUpDirectories();
       const updateOptions = { hrefRoot: "posts" };
@@ -89,6 +89,25 @@ describe("links", () => {
       ).resolves.toBe(
         "This is not a post."
       );
+    }
+  );
+
+  it(
+    "leaves external hrefs intact.",
+    async () => {
+      await cleanUpDirectories();
+
+      const post = await getCompiledPostWithContent({
+        slug: "{slug}",
+        content: [
+          "This is a [link](http://somewhere.net/a-post.md)"
+        ]
+      });
+
+      expect(post).toBe([
+        "<p>This is a <a href=\"http://somewhere.net/a-post.md\">link</a></p>",
+        ""
+      ].join("\n"));
     }
   );
 });
