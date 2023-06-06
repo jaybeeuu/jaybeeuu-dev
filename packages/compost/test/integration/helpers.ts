@@ -154,9 +154,11 @@ export const getCompiledPostWithContent = async (
   options: Partial<UpdateOptions> = {}
 ): Promise<string> => {
   await cleanUpDirectories();
+
   const userPost = Array.isArray(contentOrPost)
     ? { content: contentOrPost }
     : contentOrPost;
+
   const postFile = {
     slug: "{slug}",
     content: ["{content}"],

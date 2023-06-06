@@ -1,29 +1,30 @@
+import { joinUrlPath, log } from "@jaybeeuu/utilities";
 import path from "path";
-import { assertIsNotNullish, joinUrlPath, log } from "@jaybeeuu/utilities";
 import {
+  copyFile,
+  deleteDirectories,
   recurseDirectory,
   writeJsonFile,
-  writeTextFile,
-  deleteDirectories,
-  copyFile
+  writeTextFile
 } from "../../files/index.js";
-import type { Result} from "../../results.js";
+import type { Result } from "../../results.js";
 import { success } from "../../results.js";
-import type { CompileFailureReason} from "./compile.js";
+import type { CompileFailureReason } from "./compile.js";
 import { compilePost } from "./compile.js";
-import type { GetMetaFileContentFailure } from "./metafile.js";
-import { getMetaFileContent } from "./metafile.js";
 import type {
   ValidateSlugFailureReason
 } from "./file-paths.js";
 import {
   getCompiledPostFileName,
   getPostMarkdownFilePath,
+  getSlug,
   validateSlug
 } from "./file-paths.js";
 import type { GetManifestFailure } from "./manifest.js";
 import { getManifest } from "./manifest.js";
-import type { UpdateOptions, PostManifest } from "./types.js";
+import type { GetMetaFileContentFailure } from "./metafile.js";
+import { getMetaFileContent } from "./metafile.js";
+import type { PostManifest, UpdateOptions } from "./types.js";
 
 export type UpdateFailureReason
  = CompileFailureReason
@@ -57,8 +58,7 @@ export const update = async (
     resolvedSourceDir,
     { include: [/.post.json$/] })
   ) {
-    const slug = metadataFileInfo.fileName.split(".")[0];
-    assertIsNotNullish(slug);
+    const slug = getSlug(metadataFileInfo.relativeFilePath);
     const slugValidation = validateSlug(slug);
 
     if (!slugValidation.success) {

@@ -28,8 +28,8 @@ export const writeTextFile = async (
 };
 
 export interface File {
-  path: string,
-  content: string
+  path: string;
+  content: string;
 }
 
 export const writeTextFiles = async (

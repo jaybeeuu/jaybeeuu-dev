@@ -1,4 +1,5 @@
 import type fsModule from "fs";
+import { writeFile } from "fs";
 import type PathModule from "path";
 
 const mocked = <T extends (...args: any[]) => any>(fn: T): jest.MockInstance<ReturnType<T>, Parameters<T>> => {
@@ -339,6 +340,10 @@ const maybeGetDirectory = (
 };
 
 const getDirectory = (path: string): Directory => {
+  if (path === "/") {
+    return root;
+  }
+
   const maybeGetDirectoryResult = maybeGetDirectory(path);
 
   if (maybeGetDirectoryResult.existed) {

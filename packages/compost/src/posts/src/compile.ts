@@ -9,11 +9,12 @@ import type {
 import { marked } from "marked";
 import type { IOptions } from "sanitize-html";
 import sanitizeHtml from "sanitize-html";
-import { assertIsNotNullish } from "@jaybeeuu/utilities";
+import { assertIsNotNullish, joinUrlPath } from "@jaybeeuu/utilities";
 import { canAccessSync, readTextFile, readTextFileSync } from "../../files/index.js";
 import { getHash } from "../../hash.js";
 import type { Result } from "../../results.js";
 import { success, failure } from "../../results.js";
+import { getSlug } from "./file-paths.js";
 
 export interface RenderContext {
   codeLineNumbers: boolean;
@@ -36,6 +37,46 @@ const escapeText = (text: string): string => {
     .toLowerCase()
     .replace(/[^ a-z0-9]+/g, "")
     .replace(/[ ]/g, "-");
+};
+
+const markdownExtensionRegexp = /\.(md|markdown)$/;
+
+const isPostHref = (href: string | null): href is string => {
+  if (!href) {
+    return false;
+  }
+
+  const isMarkdownFile = markdownExtensionRegexp.test(href);
+
+  const canAccessMarkdown = canAccessSync(href, "read");
+
+  if (!isMarkdownFile || !canAccessMarkdown) {
+    return false;
+  }
+
+  const postMetaFilePath = href.replace(markdownExtensionRegexp, ".post.json");
+
+  return canAccessSync(postMetaFilePath);
+};
+
+const getAssetDetails = (
+  resolvedFilePath: string,
+  hrefRoot: string
+): { hashedFileName: string; href: string; } => {
+  if (!canAccessSync(resolvedFilePath, "read")) {
+    throw new Error(`Unable to access image file: ${resolvedFilePath}`);
+  }
+
+  const fileContent = readTextFileSync(resolvedFilePath);
+  const fileHash = getHash(fileContent);
+  const { name: imageFileName, ext: imageFileExtension } = path.parse(resolvedFilePath);
+  const hashedFileName = `${imageFileName}-${fileHash}${imageFileExtension}`;
+  const href = joinUrlPath(
+    hrefRoot,
+    hashedFileName
+  );
+
+  return { href, hashedFileName };
 };
 
 class CustomRenderer extends marked.Renderer {
@@ -120,21 +161,16 @@ class CustomRenderer extends marked.Renderer {
       href
     );
 
-    if (!canAccessSync(resolvedImagePath, "read")) {
-      throw new Error(`Unable to access image file: ${resolvedImagePath}`);
-    }
-    const imageFileContent = readTextFileSync(resolvedImagePath);
-    const imageHash = getHash(imageFileContent);
-    const { name: imageFileName, ext: imageFileExtension } = path.parse(resolvedImagePath);
-    const hashedFileName = `${imageFileName}-${imageHash}${imageFileExtension}`;
-    const transformedHref = path.posix.join(
-      this.#renderContext.hrefRoot,
-      hashedFileName
+    const { href: transformedHref, hashedFileName } = getAssetDetails(
+      resolvedImagePath,
+      this.#renderContext.hrefRoot
     );
+
     this.assets.push({
       sourcePath: resolvedImagePath,
       destinationPath: hashedFileName
     });
+
     return super.image.call(
       rendererThis,
       transformedHref,
@@ -160,6 +196,40 @@ class CustomRenderer extends marked.Renderer {
       `</h${level}>`
     ].join("\n");
   }
+
+  link(
+    href: string | null,
+    title: string | null,
+    text: string
+  ): string {
+    if (!href) {
+      return super.link(href, title, text);
+    }
+
+    const resolvedHrefPath = path.resolve(
+      path.dirname(this.#renderContext.sourceFilePath),
+      href
+    );
+
+    switch (true) {
+      case isPostHref(resolvedHrefPath): return super.link(
+        joinUrlPath(this.#renderContext.hrefRoot, getSlug(resolvedHrefPath)),
+        title,
+        text
+      );
+      case href.startsWith("."): {
+        const asset = getAssetDetails(resolvedHrefPath, this.#renderContext.hrefRoot);
+
+        this.assets.push({
+          sourcePath: resolvedHrefPath,
+          destinationPath: asset.hashedFileName
+        });
+
+        return super.link(asset.href, title, text);
+      }
+      default: return super.link(href, title, text);
+    }
+  }
 }
 
 const markedOptions = {
@@ -168,6 +238,7 @@ const markedOptions = {
     if (!language ) {
       return code;
     }
+
     loadLanguages(language);
     const prismLanguage = Prism.languages[language];
     assertIsNotNullish(prismLanguage);
