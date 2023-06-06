@@ -87,7 +87,7 @@ describe("links", () => {
       await expect(
         getOutputFile("not-a-post-0d2O72.md", updateOptions)
       ).resolves.toBe(
-        "this is not a post."
+        "This is not a post."
       );
     }
   );
