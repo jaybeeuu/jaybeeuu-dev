@@ -1,10 +1,12 @@
 import type { UpdateOptions } from "packages/compost/src/posts/src/types";
 import {
+  cleanUpDirectories,
   getCompiledPostWithContent, getOutputFile
 } from "./helpers";
 
 describe("images", () => {
   it("includes image tags in the compiled html.", async () => {
+    await cleanUpDirectories();
     const post = await getCompiledPostWithContent({
       content: [
         "# This post needs an image",
@@ -23,6 +25,7 @@ describe("images", () => {
   });
 
   it("gives the image tags the correct alt attribute.", async () => {
+    await cleanUpDirectories();
     const post = await getCompiledPostWithContent({
       content: [
         "# This post needs an image",
@@ -41,6 +44,7 @@ describe("images", () => {
   });
 
   it("transforms the src of the image tags, placing it in the hrefRoot.", async () => {
+    await cleanUpDirectories();
     const post = await getCompiledPostWithContent({
       content: [
         "# This post needs an image",
@@ -59,6 +63,7 @@ describe("images", () => {
   });
 
   it("leaves https urls intact.", async () => {
+    await cleanUpDirectories();
     const updateOptions: Partial<UpdateOptions> = { hrefRoot: "posts-root" };
     const post = await getCompiledPostWithContent({
       content: [
@@ -78,6 +83,7 @@ describe("images", () => {
   });
 
   it("leaves http urls intact.", async () => {
+    await cleanUpDirectories();
     const updateOptions: Partial<UpdateOptions> = { hrefRoot: "posts-root" };
     const post = await getCompiledPostWithContent({
       content: [
@@ -97,6 +103,7 @@ describe("images", () => {
   });
 
   it("copies the image into the output dir in the right place.", async () => {
+    await cleanUpDirectories();
     const updateOptions: Partial<UpdateOptions> = { hrefRoot: "posts-root" };
     void await getCompiledPostWithContent({
       content: [

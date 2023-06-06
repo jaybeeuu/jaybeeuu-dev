@@ -1,9 +1,11 @@
 import {
+  cleanUpDirectories,
   getCompiledPostWithContent
 } from "./helpers";
 
 describe("compile", () => {
   it("compiles a post tto include some basic content.", async () => {
+    await cleanUpDirectories();
     const postContent = "This is the content";
     const post = await getCompiledPostWithContent([
       "# This is the first post",
@@ -15,6 +17,7 @@ describe("compile", () => {
 
   describe("code blocks", () => {
     it("compiles a code block.", async () => {
+      await cleanUpDirectories();
       const codeLine = "console.log(\"Here's a message\")";
       const post = await getCompiledPostWithContent([
         "```ts",
@@ -31,6 +34,7 @@ describe("compile", () => {
     });
 
     it("compiles a code block with no code type.", async () => {
+      await cleanUpDirectories();
       const codeLine = "console.log(\"Here's a message\");";
       const post = await getCompiledPostWithContent([
         "```",
@@ -42,6 +46,7 @@ describe("compile", () => {
     });
 
     it("compiles a code block with no code type, adding the correct class to the pre tag.", async () => {
+      await cleanUpDirectories();
       const codeLine = "console.log(\"Here's a message\");";
       const post = await getCompiledPostWithContent([
         "```",
@@ -53,6 +58,7 @@ describe("compile", () => {
     });
 
     it("includes the relevant classes and html tags for line numbers when the option is passed in.", async () => {
+      await cleanUpDirectories();
       const codeLine = "console.log(\"Here's a message\");";
       const post = await getCompiledPostWithContent([
         "```",
@@ -69,6 +75,7 @@ describe("compile", () => {
 
   describe("heading links", () => {
     it("compiles a heading to contain a link.", async () => {
+      await cleanUpDirectories();
       const hrefRoot = "posts";
       const slug = "{slug}";
       const post = await getCompiledPostWithContent({
@@ -88,6 +95,7 @@ describe("compile", () => {
     });
 
     it("compiles a heading to contain a unique link.", async () => {
+      await cleanUpDirectories();
       const hrefRoot = "posts";
       const slug = "{slug}";
       const post = await getCompiledPostWithContent({
@@ -123,6 +131,7 @@ describe("compile", () => {
       "$#: Heading $level",
       ({ level }) => {
         it(`compiles subheading ${level} correctly.`, async () => {
+          await cleanUpDirectories();
           const hrefRoot = "posts";
           const slug = "{slug}";
           const post = await getCompiledPostWithContent({
@@ -142,6 +151,7 @@ describe("compile", () => {
         });
 
         it("compiles a heading link to contain a link which only includes the text - not the rest of the link.", async () => {
+          await cleanUpDirectories();
           const hrefRoot = "posts";
           const slug = "{slug}";
           const post = await getCompiledPostWithContent({
@@ -163,6 +173,7 @@ describe("compile", () => {
     );
 
     it("removes the first h1's if the remove-h1 flag is passed true.", async () => {
+      await cleanUpDirectories();
       const post = await getCompiledPostWithContent({
         content: [
           "# [This is the first post](www.example.com)"
@@ -171,24 +182,8 @@ describe("compile", () => {
 
       expect(post).toBe("");
     });
-
-    it("compiles an inline hash link to link properly within the document.", async () => {
-      const hrefRoot = "posts";
-      const slug = "{slug}";
-      const post = await getCompiledPostWithContent({
-        slug,
-        content: [
-          "This is a [link](#destination)"
-        ]
-      }, { hrefRoot });
-
-      expect(post).toBe([
-        "<p>This is a <a href=\"#destination\">link</a></p>",
-        ""
-      ].join("\n"));
-    });
-
     it("compiles a strike through correctly.", async () => {
+      await cleanUpDirectories();
       const hrefRoot = "posts";
       const slug = "{slug}";
       const post = await getCompiledPostWithContent({

@@ -28,7 +28,7 @@ export const canAccessSync = (file: string, mode?: Mode): boolean => {
   try {
     fs.accessSync(file, mode && modeFsConstMap[mode]);
     return true;
-  } catch {
+  } catch (err) {
     return false;
   }
 };
