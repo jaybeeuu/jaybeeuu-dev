@@ -1,5 +1,14 @@
 # @jaybeeuu/preact-recoilless
 
+## 4.0.0
+
+### Patch Changes
+
+- Updated dependencies [[`d03754c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/d03754cf9ca4a0b8454fc8d67bb47223bca8088d), [`d03754c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/d03754cf9ca4a0b8454fc8d67bb47223bca8088d), [`1edd82d`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/1edd82dbef12a5714a4ded8503f08e34a310a6d4), [`b3a5607`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/b3a5607fae8b3c8f26005971d7fb01e77132aa93)]:
+  - @jaybeeuu/utilities@1.1.0
+  - @jaybeeuu/preact-async@3.0.0
+  - @jaybeeuu/recoilless@4.0.0
+
 ## 3.0.0
 
 ### Patch Changes

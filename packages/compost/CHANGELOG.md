@@ -1,5 +1,13 @@
 # @jaybeeuu/compost
 
+## 0.1.0
+
+### Minor Changes
+
+- [#124](https://github.com/jaybeeuu/jaybeeuu-dev/pull/124) [`6595cd5`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/6595cd5b7fdc6960aa204356ea0082c3c0d86746) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Copy linked assets to the output directory, with a hashed file name and add a hash in the HRef
+
+- [#124](https://github.com/jaybeeuu/jaybeeuu-dev/pull/124) [`6595cd5`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/6595cd5b7fdc6960aa204356ea0082c3c0d86746) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Transform link to peer post so that it links properly in the compiled HTML.
+
 ## 0.0.3
 
 ### Patch Changes
