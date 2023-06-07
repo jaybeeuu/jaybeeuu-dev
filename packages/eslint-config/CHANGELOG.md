@@ -1,5 +1,11 @@
 # @jaybeeuu/eslint-config
 
+## 1.0.3
+
+### Patch Changes
+
+- [#122](https://github.com/jaybeeuu/jaybeeuu-dev/pull/122) [`d03754c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/d03754cf9ca4a0b8454fc8d67bb47223bca8088d) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Allow Capital at the start of describe blocks.
+
 ## 1.0.2
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @jaybeeuu/utilities
 
+## 1.1.0
+
+### Minor Changes
+
+- [#122](https://github.com/jaybeeuu/jaybeeuu-dev/pull/122) [`d03754c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/d03754cf9ca4a0b8454fc8d67bb47223bca8088d) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Adds title-case funciton and type
+
+- [#122](https://github.com/jaybeeuu/jaybeeuu-dev/pull/122) [`d03754c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/d03754cf9ca4a0b8454fc8d67bb47223bca8088d) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Add Title case utility function.
+
+### Patch Changes
+
+- [#125](https://github.com/jaybeeuu/jaybeeuu-dev/pull/125) [`1edd82d`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/1edd82dbef12a5714a4ded8503f08e34a310a6d4) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Add check for string to titleCase type.
+
 ## 1.0.0
 
 ### Major Changes

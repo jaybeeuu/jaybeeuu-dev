@@ -1,5 +1,14 @@
 # @jaybeeuu/e2e
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`d03754c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/d03754cf9ca4a0b8454fc8d67bb47223bca8088d), [`d03754c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/d03754cf9ca4a0b8454fc8d67bb47223bca8088d), [`6595cd5`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/6595cd5b7fdc6960aa204356ea0082c3c0d86746), [`1edd82d`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/1edd82dbef12a5714a4ded8503f08e34a310a6d4), [`6595cd5`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/6595cd5b7fdc6960aa204356ea0082c3c0d86746)]:
+  - @jaybeeuu/utilities@1.1.0
+  - @jaybeeuu/compost@0.1.0
+  - @jaybeeuu/e2e-hooks@0.0.1
+
 ## 0.0.5
 
 ### Patch Changes
