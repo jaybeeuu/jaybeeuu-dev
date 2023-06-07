@@ -5,7 +5,7 @@ src-dir: &src-dir ~/src
 job-base: &job-base
   resource_class: large
   docker:
-    - image: cimg/node:18.11.0
+    - image: cimg/node:18.14.2
       auth:
         username: $DOCKERHUB_USERNAME
         password: $DOCKERHUB_PASSWORD
@@ -16,7 +16,7 @@ commands:
     steps:
       - run:
           name: Install pnpm
-          command: npm i -g pnpm@8.3.1
+          command: sudo npm i -g pnpm@8.6.1
 
   setup_workspace:
     steps:
@@ -120,7 +120,7 @@ jobs:
   e2e:
     <<: *job-base
     docker:
-      - image: cypress/included:12.10.0
+      - image: cypress/included:12.14.0
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
@@ -128,7 +128,11 @@ jobs:
     working_directory: *src-dir
 
     steps:
-      - setup_workspace
+      - attach_workspace:
+          at: *src-dir
+      - run:
+          name: Install pnpm
+          command: npm i -g pnpm@8.6.1
       - run:
           name: Derive Deployment URL
           command: |
