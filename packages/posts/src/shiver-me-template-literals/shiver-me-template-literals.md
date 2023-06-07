@@ -85,7 +85,7 @@ type CamelCase<S extends string> = string extends S
       : S;
 ```
 
-Start at `CamelCase`.
+The entry point for us ia `CamelCase`.
 You use it something like this: `CamelCase<"kebab-case">`,
 The result is a type like this: `kebabCase`.
 
@@ -112,7 +112,8 @@ otherwise check if we have a dash again
 (`S extends ${infer T}-${infer U}`)
 If it doesn't then capitalize `S` (`Captialize<S>`, we'll get to that),
 This type is recursive - this is the base case.
-Otherwise capitalize the first word (`T`) and recurse on the second (`U`),
+Otherwise capitalize the first word (`T`) and recurse on the second (`U`), so if there's more-than-one-dash,
+they all get removed and the words capiitalized,
 making it PascalCase
 (`${Capitalize<T>}${PascalCase<U>}`).
 
