@@ -64,6 +64,8 @@ It knows that `howDoYeHail` a `string`...
 
 But I only told it `kebab-case`... Is it psychic? TypeScript can't break open a string and infer that type can it?
 
+## The Types
+
 Cue digging into the types in `@types/yargs`.
 What I discovered was a really
 [neat piece of work](https://github.com/DefinitelyTyped/DefinitelyTyped/blame/6ddc77f6f1f08aeeee508a03d5f1fb1db27dc9d1/types/yargs/index.d.ts#L813),
