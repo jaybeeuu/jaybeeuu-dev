@@ -4,6 +4,7 @@
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
   "private": true,
+  "type": "module",
   "description": "My blog posts",
   "keywords": [
     "Bickley-Wallace",
@@ -18,11 +19,18 @@
     "lint": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
     "spellcheck-interactive": "mdspell --en-GB --ignore-numbers \"**/*.md\" \"!**/node_modules/**/*.md\"",
     "spellcheck": "pnpm run spellcheck-interactive --report",
-    "build": "compost --href-root blog --code-line-numbers --remove-h1 --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\""
+    "build": "compost --href-root blog --code-line-numbers --remove-h1 --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\"",
+    "example": "nodemon --exec \"node ./node_modules/ts-node/dist/bin.js --esm\""
   },
   "devDependencies": {
     "@jaybeeuu/compost": "workspace:*",
+    "@types/node": "^18.15.13",
+    "@types/yargs": "^17.0.24",
     "markdown-spellcheck": "^1.3.1",
-    "markdownlint-cli2": "^0.7.0"
+    "markdownlint-cli2": "^0.7.0",
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0",
+    "typescript": "^5.0.4",
+    "yargs": "^17.2.1"
   }
 }
