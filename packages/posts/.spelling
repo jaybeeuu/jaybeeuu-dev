@@ -69,6 +69,12 @@ preact
 ESM
 regexp
 gists
+yargs
+destructured
+PascalCase
+uppercase
+lowercase
+uncapitalize
  - src/premature-optimisation.md
 v14.15.1
 Hrn

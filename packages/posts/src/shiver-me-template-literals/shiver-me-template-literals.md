@@ -19,7 +19,7 @@ This library is fantastic.
 It allow you to built command line interfaces (CLI's) for node applications.
 If you haven't tried it you should.
 
-Theres  a lot of things that Yargs can do,
+There's a lot of things that Yargs can do,
 but For this story the important feature is that you define the arguments for you're app in code.
 For example:
 
@@ -52,7 +52,7 @@ ts-node yargs-example.ts --how-do-you-hail "Long John Silver"
 
 You can imagine what you get back.
 
-Theres some magic happening here though.
+There's some magic happening here though.
 See how `howDoYeHail` is destructured off the result of the promise?
 Yargs give us the arguments as `camelCase` even though I told it the name of the argument in `kebab-case`.
 
@@ -85,7 +85,7 @@ type CamelCase<S extends string> = string extends S
       : S;
 ```
 
-The entry point for us ia `CamelCase`.
+The entry point for us is `CamelCase`.
 You use it something like this: `CamelCase<"kebab-case">`,
 The result is a type like this: `kebabCase`.
 
@@ -100,7 +100,7 @@ Otherwise test it against a template literal type.
 If `S` has a dash in it
 (`S extends ${infer T}-${infer U}`)
 then
-(having labeled the left and right hand words of it as `T` and `U` (`infer`))
+(having labelled the left and right hand words of it as `T` and `U` (`infer`))
 drop the `-` and join `T` to `PascalCase<U>` `${T}${PascalCase<U>}`, otherwise `S` again.
 
 RIght we've arrived at `PascalCase`.
@@ -113,7 +113,7 @@ otherwise check if we have a dash again
 If it doesn't then capitalize `S` (`Captialize<S>`, we'll get to that),
 This type is recursive - this is the base case.
 Otherwise capitalize the first word (`T`) and recurse on the second (`U`), so if there's more-than-one-dash,
-they all get removed and the words capiitalized,
+they all get removed and the words capitalized,
 making it PascalCase
 (`${Capitalize<T>}${PascalCase<U>}`).
 
@@ -124,7 +124,7 @@ I went to definition on that. but... it's Intrinsic.
 
 There turn out to be 4
 [intrinsic string manipulation types](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#intrinsic-string-manipulation-types).
-Uppercase, lowercase, capitalize and uncapitalise.
-I'm not sure what i'm going to do with them yet,
+Uppercase, Lowercase, Capitalize and Uncapitalize.
+I'm not sure what I'm going to do with them yet,
 but I'm sure they're going to be exactly what I need some day.
 It's always handy to have some magic up your sleeve.
