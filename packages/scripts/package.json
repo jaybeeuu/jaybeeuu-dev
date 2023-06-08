@@ -27,22 +27,22 @@
   },
   "devDependencies": {
     "@jaybeeuu/eslint-config": "workspace:*",
-    "@types/node": "^18.15.13",
+    "@types/node": "^20.2.5",
     "@types/yargs": "^17.0.24",
-    "@typescript-eslint/eslint-plugin": "^5.59.0",
-    "@typescript-eslint/parser": "^5.59.0",
-    "eslint": "^8.38.0",
-    "typescript": "^5.0.4"
+    "@typescript-eslint/eslint-plugin": "^5.59.9",
+    "@typescript-eslint/parser": "^5.59.9",
+    "eslint": "^8.42.0",
+    "typescript": "^5.1.3"
   },
   "dependencies": {
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.1",
     "@jaybeeuu/utilities": "workspace:*",
-    "@octokit/rest": "^19.0.7",
+    "@octokit/rest": "^19.0.11",
     "chalk": "^5.2.0",
     "devcert": "^1.2.2",
     "node-fetch": "^3.3.1",
-    "simple-git": "^3.17.0",
-    "yargs": "^17.7.1"
+    "simple-git": "^3.19.0",
+    "yargs": "^17.7.2"
   }
 }

@@ -1,19 +1,23 @@
 import path from "path";
 // import highlight from "highlight.js";
-import Prism from "prismjs";
-import loadLanguages from "prismjs/components/index.js";
+import { assertIsNotNullish, joinUrlPath } from "@jaybeeuu/utilities";
 import type {
   Renderer,
   Slugger
 } from "marked";
 import { marked } from "marked";
+import { gfmHeadingId } from "marked-gfm-heading-id";
+import type { SynchronousOptions } from "marked-highlight";
+import { markedHighlight } from "marked-highlight";
+import { mangle } from "marked-mangle";
+import Prism from "prismjs";
+import loadLanguages from "prismjs/components/index.js";
 import type { IOptions } from "sanitize-html";
 import sanitizeHtml from "sanitize-html";
-import { assertIsNotNullish, joinUrlPath } from "@jaybeeuu/utilities";
 import { canAccessSync, readTextFile, readTextFileSync } from "../../files/index.js";
 import { getHash } from "../../hash.js";
 import type { Result } from "../../results.js";
-import { success, failure } from "../../results.js";
+import { failure, success } from "../../results.js";
 import { getSlug } from "./file-paths.js";
 
 export interface RenderContext {
@@ -83,7 +87,7 @@ class CustomRenderer extends marked.Renderer {
   readonly #assets: Assets[] = [];
   readonly #renderContext: RenderContext;
 
-  public readonly code: Renderer["code"];
+  // public readonly code: Renderer["code"];
   public readonly image: Renderer["image"];
 
   public get assets(): Assets[] {
@@ -233,6 +237,14 @@ class CustomRenderer extends marked.Renderer {
 }
 
 const markedOptions = {
+  gfm: true,
+  sanitize: false,
+  smartLists: true,
+  smartypants: false,
+  xhtml: false
+};
+
+const markedHighlightOptions: SynchronousOptions = {
   highlight: (code: string, language: string): string => {
 
     if (!language ) {
@@ -243,13 +255,9 @@ const markedOptions = {
     const prismLanguage = Prism.languages[language];
     assertIsNotNullish(prismLanguage);
     const highlighted = Prism.highlight(code, prismLanguage, "language");
+    // console.log({ code, highlighted });
     return highlighted;
-  },
-  gfm: true,
-  sanitize: false,
-  smartLists: true,
-  smartypants: false,
-  xhtml: false
+  }
 };
 
 const sanitizeOptions: IOptions = {
@@ -278,13 +286,23 @@ export interface CompiledPost {
   assets: Assets[];
 }
 
+marked.use(
+  mangle(),
+  gfmHeadingId(),
+  markedHighlight(markedHighlightOptions)
+);
+
 export const compilePost = async (
   renderContext: RenderContext
 ): Promise<Result<CompiledPost, CompileFailureReason>> => {
   try {
     const fileAsString = await readTextFile(renderContext.sourceFilePath);
     const renderer = new CustomRenderer(renderContext);
-    const html = marked(fileAsString, { renderer, ...markedOptions });
+
+    const html = marked.parse(fileAsString, {
+      renderer,
+      ...markedOptions
+    });
     const sanitized = sanitizeHtml(html, sanitizeOptions);
     return success({
       html: sanitized,
