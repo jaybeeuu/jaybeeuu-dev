@@ -153,11 +153,11 @@ export default {
                 loader: "responsive-loader",
                 options: {
                   adapter: sharpAdapter,
-                  format: "webp",
+                  format: "jpg",
+                  progressive: true,
                   name: "[name]-[hash]-[width].[ext]",
                   placeholder: true,
                   placeholderSize: 100,
-                  progressive: true,
                   sizes: [1800]
                 }
               }
