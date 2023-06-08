@@ -1,5 +1,11 @@
 # @jaybeeuu/utilities
 
+## 1.1.1
+
+### Patch Changes
+
+- [#127](https://github.com/jaybeeuu/jaybeeuu-dev/pull/127) [`153c0e1`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/153c0e190ca5ae677ddb0556ff5305c2c8916163) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Update all dependencies
+
 ## 1.1.0
 
 ### Minor Changes
