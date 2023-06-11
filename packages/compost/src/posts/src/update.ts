@@ -1,4 +1,5 @@
-import { joinUrlPath, log } from "@jaybeeuu/utilities";
+import type { Result } from "@jaybeeuu/utilities";
+import { joinUrlPath, log, success } from "@jaybeeuu/utilities";
 import path from "path";
 import {
   copyFile,
@@ -7,8 +8,6 @@ import {
   writeJsonFile,
   writeTextFile
 } from "../../files/index.js";
-import type { Result } from "../../results.js";
-import { success } from "../../results.js";
 import type { CompileFailureReason } from "./compile.js";
 import { compilePost } from "./compile.js";
 import type {

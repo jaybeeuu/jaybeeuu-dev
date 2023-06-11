@@ -1,18 +1,19 @@
-import type { JSX, RefObject } from "preact";
-import { h, createRef, render } from "preact";
-import { useEffect, useLayoutEffect } from "preact/hooks";
-import classNames from "classnames";
 import type { PostMetaData } from "@jaybeeuu/compost";
-import { assertIsNotNullish, assertIsString } from "@jaybeeuu/utilities";
 import { post as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import { useAction, useValue } from "@jaybeeuu/preact-recoilless";
+import { assertIsNotNullish, assertIsString } from "@jaybeeuu/utilities";
+import classNames from "classnames";
+import type { JSX, RefObject } from "preact";
+import { createRef, h, render } from "preact";
+import { useEffect, useLayoutEffect } from "preact/hooks";
+import { FouOhFour } from "../four-oh-four";
 import { asRoute } from "../as-route";
 import { Icon } from "../icon";
+import type { PostHtmlLookupResult, PostMetaDataLookupResult } from "../state";
 import { currentPostHtml, currentPostMeta, currentPostSlug, hideTitleBar as hideTitleBarAction } from "../state";
 import { useBackgrounds } from "../use-background";
 import { usePageInfo } from "../use-page-info";
 import { withPromise } from "../with-promise";
-
 import css from "./post.module.css";
 
 const useHashLinks = (postHtml: string, articleRef: RefObject<HTMLElement>): void => {
@@ -40,7 +41,12 @@ const useHashLinks = (postHtml: string, articleRef: RefObject<HTMLElement>): voi
   }, [postHtml]);
 };
 
-const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, postMeta: PostMetaData }): JSX.Element => {
+interface PostComponentProps {
+  postHtml: string;
+  postMeta: PostMetaData;
+}
+
+const Post = withPromise(({ postHtml, postMeta }: PostComponentProps): JSX.Element => {
   const articleRef = createRef<HTMLElement>();
   usePageInfo({ title: postMeta.title, description: postMeta.abstract });
   useLayoutEffect(() => {
@@ -82,27 +88,48 @@ const PostComponent = withPromise(({ postHtml, postMeta }: { postHtml: string, p
     </div>
   );
 });
-PostComponent.displayName = "PostComponent";
+Post.displayName = "PostComponent";
 
-export interface PostProps {
+interface PostLookupResultProps {
+  postHtmlLookupResult: PostHtmlLookupResult;
+  postMetaLookupResult: PostMetaDataLookupResult;
+}
+
+const PostLookupResult = withPromise(({
+  postHtmlLookupResult,
+  postMetaLookupResult
+}: PostLookupResultProps): JSX.Element => {
+  if (postHtmlLookupResult.success && postMetaLookupResult.success) {
+    return <Post
+      postHtml={postHtmlLookupResult.value}
+      postMeta={postMetaLookupResult.value}
+    />;
+  }
+
+  return <FouOhFour />;
+});
+PostLookupResult.displayName = "PostLookupResult";
+
+export interface PostLookupProps {
   slug: string;
 }
 
-const Post = ({ slug }: PostProps): JSX.Element | null => {
+const PostLookup = ({ slug }: PostLookupProps): JSX.Element | null => {
   useBackgrounds({ dark: "moon", light: "black-tusk" });
 
-  const [selectedSlug, setSlug] = useValue(currentPostSlug);
+  const [, setSlug] = useValue(currentPostSlug);
   useEffect(() => setSlug(slug), [slug]);
+  const postMetaLookupResult = useValue(currentPostMeta);
+  const postHtmlLookupResult = useValue(currentPostHtml);
 
-  if (!selectedSlug) {
-    return null;
-  }
-
-  const postMeta = useValue(currentPostMeta);
-  const postHtml = useValue(currentPostHtml);
-  return <PostComponent {...{ postMeta, postHtml }} />;
+  return (
+    <PostLookupResult
+      postMetaLookupResult={postMetaLookupResult}
+      postHtmlLookupResult={postHtmlLookupResult}
+    />
+  );
 };
-Post.displayName = "Post";
+PostLookup.displayName = "PostLookup";
 
-export const PostRoute = asRoute(Post);
+export const PostRoute = asRoute(PostLookup);
 

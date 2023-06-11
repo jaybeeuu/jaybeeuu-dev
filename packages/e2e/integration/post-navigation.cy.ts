@@ -1,12 +1,12 @@
+import * as navBar from "../features/nav-bar";
+import * as post from "../features/post";
+import * as postList from "../features/post-list";
 import {
   getPostsAlias,
   registerEmptyRoutes,
   registerRoutes,
   withPostMetaData
 } from "../routes/blog";
-import * as navBar from "../features/nav-bar";
-import * as post from "../features/post";
-import * as postList from "../features/post-list";
 
 context("Empty Post List", () => {
   beforeEach(() => {
@@ -80,7 +80,7 @@ context("Post navigation", (): void => {
     post.getArticle().should("contain.post.title", "the-rewrite");
   });
 
-  it("Sets the page title to the title of the the-rewrite post when the link is clicked.", () => {
+  it("sets the page title to the title of the the-rewrite post when the link is clicked.", () => {
     postList.openPost("the-rewrite");
     withPostMetaData("the-rewrite").then((meta) => {
       cy.title().should("contain", meta.title);

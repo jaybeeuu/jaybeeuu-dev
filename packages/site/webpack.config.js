@@ -61,7 +61,9 @@ export default {
   devtool: isProduction ? "source-map" : "source-map",
   devServer: isWatching ? {
     compress: true,
-    historyApiFallback: true,
+    historyApiFallback: {
+      disableDotRule: true
+    },
     host: env.CLIENT_HOST_NAME,
     https: {
       key: fs.readFileSync(paths.certs.key),

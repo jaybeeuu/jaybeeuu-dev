@@ -21,7 +21,7 @@
     "build": "tsc --project ./tsconfig.build.json --pretty",
     "watch": "tsc --project ./tsconfig.build.json --pretty --watch",
     "lint": "eslint --ext .js,.ts --format codeframe .",
-    "start": "tsc --pretty --watch --preserveWatchOutput --incremental",
+    "start": "tsc --pretty --watch --incremental",
     "type-check": "tsc --noEmit --pretty"
   },
   "devDependencies": {

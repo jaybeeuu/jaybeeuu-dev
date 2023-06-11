@@ -1,9 +1,8 @@
-import { is, isObject, isRecord, or } from "@jaybeeuu/utilities";
-import type { PostManifest, PostMetaData } from "./types.js";
+import type { Failure, Result } from "@jaybeeuu/utilities";
+import { failure, is, isObject, isRecord, or } from "@jaybeeuu/utilities";
 import type { FetchJsonFileFailureReason, ReadJsonFileFailureReason } from "../../files/index.js";
 import { fetchJsonFile, readJsonFile } from "../../files/index.js";
-import type { Failure, Result } from "../../results.js";
-import { failure } from "../../results.js";
+import type { PostManifest, PostMetaData } from "./types.js";
 
 const isPostMetaData = isObject<PostMetaData>({
   abstract: is("string"),
