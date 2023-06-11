@@ -1,9 +1,8 @@
-import { is, isObject } from "@jaybeeuu/utilities";
-import type { PostMetaData } from "./types.js";
-import type { FileInfo} from "../../files/index.js";
+import type { Result } from "@jaybeeuu/utilities";
+import { is, isObject, repackError } from "@jaybeeuu/utilities";
+import type { FileInfo } from "../../files/index.js";
 import { readJsonFile } from "../../files/index.js";
-import type { Result} from "../../results.js";
-import { repackError } from "../../results.js";
+import type { PostMetaData } from "./types.js";
 
 export type PostMetaFileData = Pick<PostMetaData, "abstract" | "title" | "publish">;
 

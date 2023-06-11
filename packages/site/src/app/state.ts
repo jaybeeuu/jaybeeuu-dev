@@ -1,5 +1,6 @@
 import type { PostManifest, PostMetaData } from "@jaybeeuu/compost";
-import { assertIsNotNullish } from "@jaybeeuu/utilities";
+import type { Result} from "@jaybeeuu/utilities";
+import { failure, success } from "@jaybeeuu/utilities";
 import { fetchJson, fetchText } from "../utils/request";
 import type {
   DerivationContext,
@@ -24,25 +25,35 @@ export const currentPostSlug: PrimitiveValue<string | null> = {
   initialValue: null
 };
 
-export const currentPostMeta: DerivedValue<Promise<PostMetaData>> = {
+export type PostFailureReasons = "post-does-not-exist" | "no-slug-set";
+
+export type PostMetaDataLookupResult = Result<PostMetaData, PostFailureReasons>;
+
+export const currentPostMeta: DerivedValue<Promise<PostMetaDataLookupResult>> = {
   name: "currentPostMeta",
-  derive: async ({ get }): Promise<PostMetaData> => {
+  derive: async ({ get }): Promise<Result<PostMetaData, PostFailureReasons>> => {
     const manifest = await get(postsManifest);
     const slug = get(currentPostSlug);
-
-    const entry = manifest[slug!];
-
-    assertIsNotNullish(entry, `Slug "${String(slug)}" does not exist in the manifest.`);
-
-    return entry;
+    if (!slug) {
+      return failure("no-slug-set");
+    }
+    const entry = manifest[slug];
+    return entry
+      ? success(entry)
+      : failure("post-does-not-exist", `The slug "${slug}" is not a post.`);
   }
 };
 
-export const currentPostHtml: DerivedValue<Promise<string>> = {
+export type PostHtmlLookupResult = Result<string, PostFailureReasons>;
+
+export const currentPostHtml: DerivedValue<Promise<PostHtmlLookupResult>> = {
   name: "currentPostHtml",
-  derive: async ({ get }): Promise<string> => {
+  derive: async ({ get }): Promise<Result<string, PostFailureReasons>> => {
     const postMeta = await get(currentPostMeta);
-    return fetchText(postMeta.href);
+
+    return postMeta.success
+      ? success( await fetchText(postMeta.value.href))
+      : postMeta;
   }
 };
 

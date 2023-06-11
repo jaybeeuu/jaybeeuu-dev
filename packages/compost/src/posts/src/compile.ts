@@ -1,6 +1,12 @@
 import path from "path";
 // import highlight from "highlight.js";
-import { assertIsNotNullish, joinUrlPath } from "@jaybeeuu/utilities";
+import type { Result } from "@jaybeeuu/utilities";
+import {
+  assertIsNotNullish,
+  failure,
+  joinUrlPath,
+  success
+} from "@jaybeeuu/utilities";
 import type {
   Renderer,
   Slugger
@@ -16,8 +22,6 @@ import type { IOptions } from "sanitize-html";
 import sanitizeHtml from "sanitize-html";
 import { canAccessSync, readTextFile, readTextFileSync } from "../../files/index.js";
 import { getHash } from "../../hash.js";
-import type { Result } from "../../results.js";
-import { failure, success } from "../../results.js";
 import { getSlug } from "./file-paths.js";
 
 export interface RenderContext {

@@ -1,8 +1,7 @@
-import { assertIsNotNullish } from "@jaybeeuu/utilities";
+import type { Result } from "@jaybeeuu/utilities";
+import { assertIsNotNullish, failure, success } from "@jaybeeuu/utilities";
 import path from "path";
 import { getHash } from "../../hash.js";
-import type { Result } from "../../results.js";
-import { failure, success } from "../../results.js";
 
 const ALLOWED_SLUG_FORMAT = "[0-9A-z-]{4,}";
 

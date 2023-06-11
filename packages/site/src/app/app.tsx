@@ -3,7 +3,7 @@ import classNames from "classnames";
 import type { JSX } from "preact";
 import { h } from "preact";
 import { Router } from "preact-router";
-import { FouOhFour } from "./404";
+import { FouOhFourRoute } from "./four-oh-four";
 import css from "./app.module.css";
 import { Background } from "./background";
 import { HomeRoute } from "./home";
@@ -20,7 +20,7 @@ export const App = (): JSX.Element => (
         <HomeRoute path="/" />
         <PostsRoute path="/blog" />
         <PostRoute path="/blog/:slug" />
-        <FouOhFour default />
+        <FouOhFourRoute default />
       </Router>
     </Background>
   </ThemeRoot>

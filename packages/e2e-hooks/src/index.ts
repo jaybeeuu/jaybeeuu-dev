@@ -35,3 +35,8 @@ const mainBlock = makeHookBlock("main");
 export const main = {
   root: mainBlock.element("root")
 };
+
+const fourOhFourBlock = makeHookBlock("four-oh-four");
+export const fourOhFour = {
+  root: fourOhFourBlock.element("root")
+};

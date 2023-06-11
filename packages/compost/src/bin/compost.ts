@@ -1,12 +1,11 @@
-import { debounce, log } from "@jaybeeuu/utilities";
+import type { Result } from "@jaybeeuu/utilities";
+import { debounce, failure, log, success } from "@jaybeeuu/utilities";
 import chokidar from "chokidar";
-import { hideBin } from "yargs/helpers";
 import yargsFactory from "yargs";
+import { hideBin } from "yargs/helpers";
 import { update } from "../posts/index.js";
 import type { UpdateOptions } from "../posts/src/types.js";
 import type { UpdateFailureReason } from "../posts/src/update.js";
-import type { Result} from "../results.js";
-import { success, failure } from "../results.js";
 
 const yargs = yargsFactory(hideBin(process.argv));
 

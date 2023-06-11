@@ -1,5 +1,5 @@
 .component-root {
-  width: var(--width-content);
+  max-width: var(--width-content);
   margin: var(--margin-content);
   padding: var(--padding-content);
   background-color: var(--background-colour-content);

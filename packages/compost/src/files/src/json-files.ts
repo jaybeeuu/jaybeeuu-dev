@@ -1,6 +1,5 @@
-import { getErrorMessage } from "@jaybeeuu/utilities";
-import type { Result} from "../../results.js";
-import { failure, success } from "../../results.js";
+import type { Result } from "@jaybeeuu/utilities";
+import { failure, getErrorMessage, success } from "@jaybeeuu/utilities";
 import { canAccess } from "./can-access.js";
 import { readTextFile, writeTextFile } from "./text-files.js";
 
