@@ -2,6 +2,8 @@
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/jaybeeuu/jaybeeuu-dev/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/jaybeeuu/jaybeeuu-dev/tree/main)
 
+[![codecov](https://codecov.io/gh/jaybeeuu/jaybeeuu-dev/branch/main/graph/badge.svg?token=GPM3D67R55)](https://codecov.io/gh/jaybeeuu/jaybeeuu-dev)
+
 Welcome to my monorepo! The code in here is used to build and run my blog.
 There are various tools in here, this readme will get you started and describe the structure of the packages.
 

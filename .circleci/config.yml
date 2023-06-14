@@ -1,6 +1,10 @@
 version: 2.1
 
+orbs:
+  codecov: codecov/codecov@3.2.5
+
 src-dir: &src-dir ~/src
+
 
 job-base: &job-base
   resource_class: large
@@ -115,7 +119,8 @@ jobs:
       - setup_workspace
       - run:
           name: Unit Tests
-          command: pnpm test
+          command: pnpm test -- --coverage
+      - codecov/upload
 
   e2e:
     <<: *job-base
