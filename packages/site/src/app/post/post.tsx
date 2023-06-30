@@ -1,7 +1,8 @@
 import type { PostMetaData } from "@jaybeeuu/compost";
 import { post as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import { useAction, useValue } from "@jaybeeuu/preact-recoilless";
-import { assertIsNotNullish, assertIsString } from "@jaybeeuu/utilities";
+import type { TypeAssertion} from "@jaybeeuu/utilities";
+import { assert, assertIsNotNullish, is } from "@jaybeeuu/utilities";
 import classNames from "classnames";
 import type { JSX, RefObject } from "preact";
 import { createRef, h, render } from "preact";
@@ -15,6 +16,8 @@ import { useBackgrounds } from "../use-background";
 import { usePageInfo } from "../use-page-info";
 import { withPromise } from "../with-promise";
 import css from "./post.module.css";
+
+const assertIsString: TypeAssertion<string> = assert(is("string"));
 
 const useHashLinks = (postHtml: string, articleRef: RefObject<HTMLElement>): void => {
   const hideTitleBar = useAction(hideTitleBarAction);

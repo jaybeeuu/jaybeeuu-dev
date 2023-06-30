@@ -1,18 +1,17 @@
-import type { TypePredicate } from "./base.js";
-import { is } from "./base.js";
+import type { TypePredicate } from "./type-guards.js";
+import { isNullish, typeDescription } from "./type-guards.js";
+
+export type TypeAssertion<Type> = (candidate: unknown) => asserts candidate is Type;
 
 export const assert = <Type>(
-  typePredicate: TypePredicate<Type>, typeDescription: string
+  typePredicate: TypePredicate<Type>
 ): TypeAssertion<Type> => (
   candidate
 ): asserts candidate is Type => {
   if (!typePredicate(candidate)) {
-    throw new TypeError(`Expected ${typeDescription} but got ${typeof candidate}.`);
+    throw new TypeError(`Expected a ${typePredicate[typeDescription]} but got a ${typeof candidate}.`);
   }
 };
-
-export type TypeAssertion<Type> = (candidate: unknown) => asserts candidate is Type;
-export const assertIsString: TypeAssertion<string> = assert(is("string"), "string");
 
 export const assertIsNotNullish: <Type>(
   candidate: Type,
@@ -21,7 +20,7 @@ export const assertIsNotNullish: <Type>(
   candidate,
   message
 ) => {
-  if (candidate === null || candidate === undefined) {
+  if (isNullish(candidate)) {
     throw new TypeError(message ?? `Encountered unexpected ${String(candidate)}.`);
   }
 };

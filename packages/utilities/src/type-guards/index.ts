@@ -1,24 +1,19 @@
 export type {
   TypePredicate
-} from "./base.js";
+} from "./type-guards.js";
 export {
-  hasBooleanProperty,
-  hasFunctionProperty,
-  hasOwnProperty,
-  hasStringProperty,
   is,
   isArrayOf,
   isInPrimitiveUnion,
-  isNull,
+  isNullish,
   isObject,
-  isRecord,
+  isRecordOf,
   or
-} from "./base.js";
+} from "./type-guards.js";
 export type {
   TypeAssertion
 } from "./assertions.js";
 export {
   assert,
-  assertIsString,
   assertIsNotNullish
 } from "./assertions.js";

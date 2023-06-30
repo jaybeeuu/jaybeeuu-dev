@@ -18,7 +18,7 @@ const isVersion = isObject<Version>({
   buildMode: is("string")
 });
 
-const assertIsVersion: TypeAssertion<Version> = assert(isVersion, "Version");
+const assertIsVersion: TypeAssertion<Version> = assert(isVersion);
 
 const assertValueURL = (url: string): void => {
   new URL(url);

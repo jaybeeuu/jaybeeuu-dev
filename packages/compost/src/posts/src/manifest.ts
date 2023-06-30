@@ -1,5 +1,5 @@
 import type { Failure, Result } from "@jaybeeuu/utilities";
-import { failure, is, isObject, isRecord, or } from "@jaybeeuu/utilities";
+import { failure, is, isObject, isRecordOf, or } from "@jaybeeuu/utilities";
 import type { FetchJsonFileFailureReason, ReadJsonFileFailureReason } from "../../files/index.js";
 import { fetchJsonFile, readJsonFile } from "../../files/index.js";
 import type { PostManifest, PostMetaData } from "./types.js";
@@ -15,7 +15,7 @@ const isPostMetaData = isObject<PostMetaData>({
   title: is("string")
 });
 
-const isManifestFile = isRecord<PostManifest>(isPostMetaData);
+const isManifestFile = isRecordOf<PostManifest>(isPostMetaData);
 
 export type GetManifestFailure = "read manifest failed";
 

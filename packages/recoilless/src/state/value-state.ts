@@ -1,4 +1,4 @@
-import { hasFunctionProperty } from "@jaybeeuu/utilities";
+import { is, isObject } from "@jaybeeuu/utilities";
 
 export type Listener<Val> = (value: Val) => void;
 export type Unsubscribe = () => void;
@@ -18,7 +18,7 @@ export const assertIsSettableValueState: <Val>(
 ) => asserts candidate is SettableValueState<Val> = (
   candidate
 ) => {
-  if (!hasFunctionProperty(candidate, "set")) {
-    throw new TypeError(`Value ${candidate.name} is not primitive.`);
+  if (!isObject({ set: is("function") })(candidate)) {
+    throw new TypeError(`Value ${candidate.name} is not settable.`);
   }
 };

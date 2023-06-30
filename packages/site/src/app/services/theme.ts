@@ -1,5 +1,5 @@
 import type { TypeAssertion } from "@jaybeeuu/utilities";
-import { assert, isInPrimitiveUnion, isNull, or } from "@jaybeeuu/utilities";
+import { assert, is, isInPrimitiveUnion, or } from "@jaybeeuu/utilities";
 
 const themes = ["light", "dark"] as const;
 export type Theme = typeof themes[number];
@@ -55,10 +55,7 @@ const localStorageValue = <Value extends string>(
 export const persistedTheme = (() => {
   const storageValue = localStorageValue<Theme>(
     "THEME",
-    assert(
-      or(isTheme, isNull),
-      "Theme or null"
-    )
+    assert(or(isTheme, is("null")))
   );
   return {
     set: (newTheme: Theme): void => {
