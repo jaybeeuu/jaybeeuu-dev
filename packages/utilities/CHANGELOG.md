@@ -1,5 +1,11 @@
 # @jaybeeuu/utilities
 
+## 2.0.0
+
+### Major Changes
+
+- [#132](https://github.com/jaybeeuu/jaybeeuu-dev/pull/132) [`86b4735`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/86b4735768940e2be39234e39f530a6aeeccbc2b) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Tidied up the API and improved message inference for assertions.
+
 ## 1.1.1
 
 ### Patch Changes
