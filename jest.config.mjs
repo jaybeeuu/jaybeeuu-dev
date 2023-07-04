@@ -9,6 +9,19 @@ const config = {
     "<rootDir>/packages/scripts",
     "<rootDir>/packages/site*",
     "<rootDir>/packages/utilities"
+  ],
+  collectCoverage: true,
+  coverageDirectory: "./coverage-reports/unit",
+  reporters: [
+    "default",
+    [
+      "jest-junit",
+      {
+        suiteName: "Unit Tests",
+        outputDirectory: "./test-reports",
+        outputName: "unit.xml",
+      }
+    ]
   ]
 };
 
