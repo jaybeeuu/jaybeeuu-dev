@@ -1,6 +1,6 @@
-import type { MonitorPromiseOptions, PromiseState} from "@jaybeeuu/utilities";
+import type { MonitorPromiseOptions, PromiseState } from "@jaybeeuu/utilities";
 import { monitorPromise, pending } from "@jaybeeuu/utilities";
-import type { Inputs, MutableRef} from "preact/hooks";
+import type { Inputs, MutableRef } from "preact/hooks";
 import {
   useCallback,
   useEffect,
@@ -19,12 +19,34 @@ export const useIsMounted = (): MutableRef<boolean> => {
   return isMountedRef;
 };
 
+const noValueSymbol = Symbol.for("no-value");
+
+export const useSemanticMemo = <Value>(
+  getValue: () => Value,
+  inputs: Inputs
+): Value => {
+  const previousInputs = useRef(inputs);
+  const previousValue = useRef<Value | typeof noValueSymbol>(noValueSymbol);
+
+  if (
+    previousValue.current === noValueSymbol
+    || inputs.some((input, index) => input !== previousInputs.current[index])
+  ) {
+    previousValue.current = getValue();
+    previousInputs.current = inputs;
+  }
+
+  return previousValue.current;
+};
+
 export const useAsyncGenerator = <Value>(
-  generator: AsyncGenerator<Value>,
-  initialValue: Value
+  makeGenerator: () => AsyncGenerator<Value>,
+  initialValue: Value,
+  deps: Inputs
 ): Value => {
   const [value, setValue] = useState<Value>(initialValue);
   const isMounted = useIsMounted();
+  const generator = useSemanticMemo(makeGenerator, deps);
 
   useEffect(() => {
     void (async () => {
@@ -38,23 +60,6 @@ export const useAsyncGenerator = <Value>(
   }, [generator]);
 
   return value;
-};
-
-export const useSemanticMemo = <Value>(
-  getValue: () => Value,
-  inputs: Inputs
-): Value => {
-  const previousInputs = useRef(inputs);
-  const previousValue = useRef<Value | undefined>();
-
-  if (
-    typeof previousValue.current === "undefined"
-    || inputs.some((input, index) => input !== previousInputs.current[index])
-  ) {
-    previousValue.current = getValue();
-  }
-
-  return previousValue.current;
 };
 
 export const usePromise = <Value>(

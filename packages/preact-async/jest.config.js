@@ -1,21 +1,32 @@
 // @ts-check
 
-/** @type {import('jest').Config} */
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 const config = {
   clearMocks: true,
-  transform: {
-    "^.+\\.(t|j)sx?$": "ts-jest"
+  preset: "ts-jest",
+  moduleNameMapper: {
+    "(\\.\\.?/.*)\\.js$": "$1"
   },
-  testEnvironment: "node",
+  setupFilesAfterEnv: ["<rootDir>/jest-setup.ts"],
+  testEnvironment: "jsdom",
   testMatch: [
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
   ],
   testPathIgnorePatterns: [
-    "node_modules/(?!(\\.pnpm))"
+    "/node_modules/",
+    "/lib/"
+  ],
+  transform: {
+    "\\.(ts|tsx)$": "ts-jest",
+    "\\.(mjs|js|jsx)$": "babel-jest"
+  },
+  transformIgnorePatterns: [
+    "/node_modules/(?!(\\.pnpm|@testing-library/preact|preact/))"
   ],
   watchPathIgnorePatterns: [
     "<rootDir>/lib"
   ]
 };
 
-module.exports = config;
+export default config;

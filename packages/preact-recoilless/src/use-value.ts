@@ -1,7 +1,6 @@
 import {
   useCallback,
   useEffect,
-  useMemo,
   useState
 } from "preact/hooks";
 import type {
@@ -47,8 +46,11 @@ const useDerivedValue = <Val>(
   const current = valueState.current;
 
   if (current instanceof Promise) {
-    const promiseStatus = useMemo(() => monitorPromise(current, options), [current]);
-    return useAsyncGenerator<PromiseState<Val>>(promiseStatus, { status: "pending" });
+    return useAsyncGenerator<PromiseState<Val>>(
+      () => monitorPromise(current, options),
+      { status: "pending" },
+      [current]
+    );
   }
 
   return current;
