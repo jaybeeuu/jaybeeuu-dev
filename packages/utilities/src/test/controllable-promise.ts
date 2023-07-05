@@ -3,7 +3,7 @@ export type Executor<Value> = (
   reject: (reason?: any) => void
 ) => void;
 
-export class ControllablePromise<Value = undefined> extends Promise<Value> {
+export class ControllablePromise<Value = void> extends Promise<Value> {
   #resolvePromise?: (value: Value | PromiseLike<Value>) => void;
   #rejectPromise?: (reason?: any) => void;
 

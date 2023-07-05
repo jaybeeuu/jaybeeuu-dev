@@ -119,7 +119,9 @@ jobs:
       - setup_workspace
       - run:
           name: Unit Tests
-          command: pnpm test -- --coverage
+          command: pnpm test -- --ci
+      - store_test_results:
+          path: ./test-reports/
       - codecov/upload
 
   e2e:
@@ -150,6 +152,8 @@ jobs:
       - run:
           name: Run e2e Tests
           command: node ./packages/scripts/bin/wait-up.js --url "$DEPLOYMENT_URL/version.json" --commit-hash $CIRCLE_SHA1 && pnpm e2e run --config "baseUrl=$DEPLOYMENT_URL"
+      - store_test_results:
+          path: ./packages/e2e/.reports
       - store_artifacts:
           path: ./packages/e2e/.screenshots
           destination: e2e-screenshots

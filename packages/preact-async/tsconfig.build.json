@@ -5,6 +5,7 @@
   ],
   "exclude": [
     "**/*.spec.ts",
+    "**/*.spec.tsx",
     "lib",
     "node_modules",
     "test"

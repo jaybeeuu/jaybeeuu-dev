@@ -1,4 +1,6 @@
-node_modules
-.pnpm-debug.log
 .fs
-coverage
+.pnpm-debug.log
+/.VSCodeCounter
+/coverage-reports
+/test-reports
+node_modules
