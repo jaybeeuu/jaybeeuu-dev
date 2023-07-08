@@ -1,5 +1,14 @@
 # @jaybeeuu/scripts
 
+## 0.1.6
+
+### Patch Changes
+
+- [#136](https://github.com/jaybeeuu/jaybeeuu-dev/pull/136) [`e00b326`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/e00b32650f2b67041968e4de4034bcbb0cbc1bdb) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Update dependencies
+
+- Updated dependencies [[`e00b326`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/e00b32650f2b67041968e4de4034bcbb0cbc1bdb)]:
+  - @jaybeeuu/utilities@2.0.1
+
 ## 0.1.5
 
 ### Patch Changes
