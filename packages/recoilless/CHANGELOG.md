@@ -1,5 +1,13 @@
 # @jaybeeuu/recoilless
 
+## 6.0.0
+
+### Major Changes
+
+- [#138](https://github.com/jaybeeuu/jaybeeuu-dev/pull/138) [`e5bd7a1`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/e5bd7a1f0239afc9917c411c863a9fbebd2fab20) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Prevent subscribers to a value updating the value by throwing if the set function is called during a set.
+
+  This prevents infinite loops, and enforces strict adherence to the Flux architecture.
+
 ## 5.0.1
 
 ### Patch Changes
