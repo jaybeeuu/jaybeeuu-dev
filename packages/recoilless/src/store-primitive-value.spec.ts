@@ -125,6 +125,32 @@ describe("recoilless store", () => {
 
       expect(newState.current).toBe(firstName.initialValue);
     });
+
+    it("throws if the value is updated by a listener.", () => {
+      const store = new Store();
+      const state = store.getValue(firstName);
+
+      state.subscribe(() => state.set("Harold"));
+
+      expect(() => state.set("Henry")).toThrow("Value \"firstName\" was updated by a subscriber. A value may mot update as a result of an update to itself.");
+    });
+
+    it("allows other values to be updated by a listener.", () => {
+      const store = new Store();
+      const firstNameSate = store.getValue(firstName);
+      const surnameSate = store.getValue({ name: "surname", initialValue: "Ford" });
+
+      firstNameSate.subscribe(() => surnameSate.set("Kissinger"));
+
+      expect(() => firstNameSate.set("Henry")).not.toThrow();
+    });
+
+    it("exposes the name on a property.", () => {
+      const store = new Store();
+      const state = store.getValue(firstName);
+
+      expect(state.name).toBe("firstName");
+    });
   });
 
   describe("delayed store removal", () => {

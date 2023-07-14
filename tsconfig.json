@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "outDir": "lib",
+
     "lib": ["ES2021"],
     "module": "ESNext",
     "target": "ES2020",
