@@ -36,12 +36,12 @@ const manifestTransformations = {
     lastUpdateDate: "Sat, 01 May 2021 00:00:00 GMT"
   },
   "module-spotting": {
-    publishDate: "Mon, 01 Feb 2021 00:00:00 GMT",
+    publishDate: "Mon, 01 Feb 2021 00:00:00 GMT"
   },
   "the-rewrite": {
     publishDate: "Mon, 01 Mar 2021 00:00:00 GMT"
   }
-}
+};
 
 /**
  * @returns {Promise<void>}

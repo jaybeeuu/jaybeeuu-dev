@@ -17,19 +17,29 @@ export class WatchableValue<Val> {
   readonly #listeners = new Set<Listener<Val>>();
   readonly #onLastUnsubscribe: () => void;
 
+  #isUpdating: boolean = false;
+  #name: string;
   #value: Val;
 
   public constructor(
     value: Val,
-    removeFromStore: () => void
+    removeFromStore: () => void,
+    name: string
   ) {
-    this.#value = value;
+    this.#name = name;
     this.#onLastUnsubscribe = removeFromStore;
+    this.#value = value;
   }
 
   public set(newValue: Val): void {
+    if (this.#isUpdating) {
+      throw new Error(`Value "${this.#name}" was updated by a subscriber. A value may mot update as a result of an update to itself.`);
+    }
+
+    this.#isUpdating = true;
     this.#value = newValue;
     this.#listeners.forEach((subscription) => subscription(this.#value));
+    this.#isUpdating = false;
   }
 
   public get current(): Val {

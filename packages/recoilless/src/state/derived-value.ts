@@ -56,7 +56,11 @@ export class DerivedValueState<Val> implements ValueState<Val> {
       }
     );
     this.#unscheduleRemoval = unscheduleRemoval;
-    this.#value = new WatchableValue(firstValue, () => scheduleRemoval());
+    this.#value = new WatchableValue(
+      firstValue,
+      () => scheduleRemoval(),
+      name
+    );
   }
 
   #deriveAgain(): void {

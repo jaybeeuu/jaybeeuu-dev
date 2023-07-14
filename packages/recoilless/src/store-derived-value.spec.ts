@@ -168,6 +168,13 @@ describe("recoilless store", () => {
         `${firstName.initialValue} ${surname.initialValue}`
       );
     });
+
+    it("exposes the name on a property.", () => {
+      const store = new Store();
+      const state = store.getValue(fullName);
+
+      expect(state.name).toBe("fullName");
+    });
   });
 
   describe("stateful Derived Value", () => {

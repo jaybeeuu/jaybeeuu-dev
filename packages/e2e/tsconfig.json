@@ -2,12 +2,13 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "declaration": false,
     "declarationMap": false,
     "inlineSourceMap": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    "outDir": "lib",
     "sourceMap": false,
-    "types": ["cypress"],
+    "types": ["cypress"]
   },
   "exclude": [
     "node_modules"

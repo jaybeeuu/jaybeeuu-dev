@@ -34,7 +34,8 @@ export class PrimitiveValueState<Val>  implements SettableValueState<Val>{
 
     this.#value = new WatchableValue(
       initialValue,
-      () => scheduleRemoval()
+      () => scheduleRemoval(),
+      name
     );
     this.#unscheduleRemoval = unscheduleRemoval;
   }
