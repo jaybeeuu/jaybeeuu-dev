@@ -1,5 +1,12 @@
 # @jaybeeuu/preact-recoilless
 
+## 6.0.0
+
+### Patch Changes
+
+- Updated dependencies [[`e5bd7a1`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/e5bd7a1f0239afc9917c411c863a9fbebd2fab20)]:
+  - @jaybeeuu/recoilless@6.0.0
+
 ## 5.0.1
 
 ### Patch Changes
