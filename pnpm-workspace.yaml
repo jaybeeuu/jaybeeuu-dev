@@ -7,6 +7,7 @@ packages:
   - 'packages/posts'
   - 'packages/preact-async'
   - 'packages/preact-recoilless'
+  - 'packages/reading-time-cli'
   - 'packages/recoilless'
   - 'packages/scripts'
   - 'packages/site'

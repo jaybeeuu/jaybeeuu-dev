@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -369,6 +369,43 @@ importers:
       ts-jest:
         specifier: ^29.1.1
         version: 29.1.1(@babel/core@7.22.6)(babel-jest@29.6.0)(jest@29.6.0)(typescript@5.1.6)
+      tslib:
+        specifier: ^2.6.0
+        version: 2.6.0
+      typescript:
+        specifier: ^5.1.6
+        version: 5.1.6
+
+  packages/reading-time-cli:
+    dependencies:
+      chalk:
+        specifier: ^5.3.0
+        version: 5.3.0
+      reading-time:
+        specifier: ^1.5.0
+        version: 1.5.0
+      yargs:
+        specifier: ^17.7.2
+        version: 17.7.2
+    devDependencies:
+      '@jaybeeuu/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@types/node':
+        specifier: ^20.4.0
+        version: 20.4.0
+      '@types/yargs':
+        specifier: ^17.0.24
+        version: 17.0.24
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^5.61.0
+        version: 5.61.0(@typescript-eslint/parser@5.61.0)(eslint@8.44.0)(typescript@5.1.6)
+      '@typescript-eslint/parser':
+        specifier: ^5.61.0
+        version: 5.61.0(eslint@8.44.0)(typescript@5.1.6)
+      eslint:
+        specifier: ^8.44.0
+        version: 8.44.0
       tslib:
         specifier: ^2.6.0
         version: 2.6.0
@@ -9087,6 +9124,10 @@ packages:
     engines: {node: '>=8.10.0'}
     dependencies:
       picomatch: 2.3.1
+
+  /reading-time@1.5.0:
+    resolution: {integrity: sha512-onYyVhBNr4CmAxFsKS7bz+uTLRakypIe4R+5A824vBSkQy/hB3fZepoVEf8OVAxzLvK+H/jm9TzpI3ETSm64Kg==}
+    dev: false
 
   /rechoir@0.8.0:
     resolution: {integrity: sha512-/vxpCXddiX8NGfGO/mTafwjq4aFa/71pvamip0++IQk3zG8cbCj0fifNPrjjF1XMXUne91jL9OoxmdykoEtifQ==}

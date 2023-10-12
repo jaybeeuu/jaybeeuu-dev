@@ -1,0 +1,20 @@
+
+{
+  "extends": [
+    "@jaybeeuu/eslint-config/base"
+  ],
+  "env": {
+    "node": true
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.ts",
+        "*.tsx"
+      ],
+      "rules": {
+        "no-console": ["off"]
+      }
+    }
+  ]
+}
