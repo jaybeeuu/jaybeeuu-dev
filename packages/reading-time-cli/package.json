@@ -1,0 +1,54 @@
+{
+  "name": "@jaybeeuu/reading-time-cli",
+  "version": "0.0.0",
+  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
+  "license": "MIT",
+  "homepage": "https://github.com/jaybeeuu/jaybeeuu-dev/tree/main/packages/reading-time-clie#readme",
+  "description": "A simple CLI for reading-time.",
+  "keywords": [
+    "cli",
+    "markdown",
+    "reading-time-cli",
+    "reading-time.js",
+    "reading-time",
+    "reading",
+    "time"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaybeeuu/jaybeeuu-dev.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jaybeeuu/jaybeeuu-dev/issues"
+  },
+  "type": "module",
+  "main": "./lib/index.js",
+  "files": [
+    "./lib"
+  ],
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc --project ./tsconfig.build.json --pretty",
+    "lint": "eslint --ext .js,.ts --format codeframe .",
+    "start": "tsc --project ./tsconfig.build.json --pretty --watch --incremental",
+    "type-check": "tsc --noEmit --pretty"
+  },
+  "devDependencies": {
+    "@jaybeeuu/eslint-config": "workspace:*",
+    "@types/node": "^20.4.0",
+    "@types/yargs": "^17.0.24",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
+    "eslint": "^8.44.0",
+    "tslib": "^2.6.0",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "reading-time": "^1.5.0",
+    "yargs": "^17.7.2"
+  }
+}
