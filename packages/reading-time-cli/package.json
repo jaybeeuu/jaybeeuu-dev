@@ -26,6 +26,9 @@
   "files": [
     "./lib"
   ],
+  "bin": {
+    "reading-time": "./bin/reading-time.js"
+  },
   "exports": {
     ".": "./lib/index.js"
   },
