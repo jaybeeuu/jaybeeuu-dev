@@ -4,6 +4,13 @@ import type { FetchJsonFileFailureReason, ReadJsonFileFailureReason } from "../.
 import { fetchJsonFile, readJsonFile } from "../../files/index.js";
 import type { PostManifest, PostMetaData } from "./types.js";
 
+const isReadingTime = isObject({
+  text: is("string"),
+  time: is("number"),
+  words: is("number"),
+  minutes: is("number")
+});
+
 const isPostMetaData = isObject<PostMetaData>({
   abstract: is("string"),
   fileName: is("string"),
@@ -12,12 +19,13 @@ const isPostMetaData = isObject<PostMetaData>({
   publish: is("boolean"),
   publishDate: is("string"),
   slug: is("string"),
-  title: is("string")
+  title: is("string"),
+  readingTime: isReadingTime
 });
 
 const isManifestFile = isRecordOf<PostManifest>(isPostMetaData);
 
-export type GetManifestFailure = "read manifest failed";
+export type GetManifestFailureReason = "read manifest failed";
 
 const getManifestFromOldManifestLocator = async (
   manifestLocator: string
@@ -36,7 +44,7 @@ const getManifestFromOldManifestLocator = async (
 export const getManifest = async (
   manifestOutputFileName: string,
   manifestLocators: string[]
-): Promise<Result<PostManifest, GetManifestFailure>> => {
+): Promise<Result<PostManifest, GetManifestFailureReason>> => {
   const defaultedManifestLocators = [...manifestLocators, manifestOutputFileName];
   const failures: Failure<FetchJsonFileFailureReason | ReadJsonFileFailureReason>[] = [];
 

@@ -13,6 +13,22 @@ import {
 } from "../../src/files/index";
 import { update } from "../../src/posts/index.js";
 import type { PostManifest, UpdateOptions } from "../../src/posts/src/types.js";
+import type * as ReadingTime from "reading-time";
+
+jest.mock<typeof ReadingTime>("reading-time", () => {
+  const readingTime = jest.requireActual<typeof ReadingTime>("reading-time");
+
+  return {
+    __esModule: true,
+    ...readingTime,
+    default: jest.fn().mockReturnValue({
+      text: "1 min read.",
+      time: 1,
+      words: 1,
+      minutes: 1
+    })
+  };
+});
 
 jest.mock("fs");
 jest.mock<typeof Utilities>("@jaybeeuu/utilities", () => {

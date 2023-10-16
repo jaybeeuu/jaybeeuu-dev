@@ -1,17 +1,18 @@
 import type { Result } from "@jaybeeuu/utilities";
-import { joinUrlPath, log, success } from "@jaybeeuu/utilities";
+import { failure, joinUrlPath, log, success } from "@jaybeeuu/utilities";
 import path from "path";
 import {
   copyFile,
   deleteDirectories,
+  readTextFile,
   recurseDirectory,
   writeJsonFile,
   writeTextFile
 } from "../../files/index.js";
-import type { CompileFailureReason } from "./compile.js";
+import type { CompileFailureReason as CompileFailureReason } from "./compile.js";
 import { compilePost } from "./compile.js";
 import type {
-  ValidateSlugFailureReason
+  ValidateSlugFailureReason as ValidateSlugFailureReason
 } from "./file-paths.js";
 import {
   getCompiledPostFileName,
@@ -19,17 +20,31 @@ import {
   getSlug,
   validateSlug
 } from "./file-paths.js";
-import type { GetManifestFailure } from "./manifest.js";
+import type { GetManifestFailureReason } from "./manifest.js";
 import { getManifest } from "./manifest.js";
-import type { GetMetaFileContentFailure } from "./metafile.js";
+import type { GetMetaFileContentFailureReason } from "./metafile.js";
 import { getMetaFileContent } from "./metafile.js";
 import type { PostManifest, UpdateOptions } from "./types.js";
+import getReadingTime from "reading-time";
 
 export type UpdateFailureReason
  = CompileFailureReason
  | ValidateSlugFailureReason
- | GetManifestFailure
- | GetMetaFileContentFailure;
+ | GetManifestFailureReason
+ | GetMetaFileContentFailureReason
+ | LoadSourceFailureReason;
+
+export type LoadSourceFailureReason = `Failed to load file ${string}`;
+
+const loadPostSourceText = async (sourceFilePath: string): Promise<Result<string, LoadSourceFailureReason>> => {
+  try {
+    const postText = await readTextFile(sourceFilePath);
+
+    return success(postText);
+  } catch (error) {
+    return failure(`Failed to load file ${sourceFilePath}`, error);
+  }
+};
 
 export const update = async (
   options: UpdateOptions
@@ -63,26 +78,36 @@ export const update = async (
     if (!slugValidation.success) {
       return slugValidation;
     }
+
     const metaFileContentResult = await getMetaFileContent(metadataFileInfo);
     if (!metaFileContentResult.success) {
       return metaFileContentResult;
     }
+
     const metaData = metaFileContentResult.value;
     if (!metaData.publish && !options.includeUnpublished){
       continue;
     }
 
     const postMarkdownFilePath = getPostMarkdownFilePath(metadataFileInfo.absolutePath, slug);
-    const compiledPostResult = await compilePost({
+
+    const sourceFileText = await loadPostSourceText(postMarkdownFilePath);
+    if (!sourceFileText.success) {
+      return sourceFileText;
+    }
+
+    const compiledPostResult = compilePost({
       codeLineNumbers: options.codeLineNumbers,
       hrefRoot: options.hrefRoot,
       removeH1: options.removeH1,
-      sourceFilePath: postMarkdownFilePath
+      sourceFilePath: postMarkdownFilePath,
+      sourceFileText: sourceFileText.value
     });
 
     if (!compiledPostResult.success) {
       return compiledPostResult;
     }
+
     const { html: compiledPost, assets } = compiledPostResult.value;
 
     const compiledFileName = getCompiledPostFileName(slug, compiledPost);
@@ -109,13 +134,16 @@ export const update = async (
         ? new Date(originalRecord.lastUpdateDate).toISOString()
         : null;
 
+    const readingTime = getReadingTime(sourceFileText.value);
+
     newManifest[slug] = {
       ...metaData,
-      publishDate,
-      lastUpdateDate,
-      slug,
       fileName: compiledFileName,
-      href
+      href,
+      lastUpdateDate,
+      publishDate,
+      readingTime,
+      slug
     };
   }
 

@@ -20,7 +20,7 @@ import Prism from "prismjs";
 import loadLanguages from "prismjs/components/index.js";
 import type { IOptions } from "sanitize-html";
 import sanitizeHtml from "sanitize-html";
-import { canAccessSync, readTextFile, readTextFileSync } from "../../files/index.js";
+import { canAccessSync, readTextFileSync } from "../../files/index.js";
 import { getHash } from "../../hash.js";
 import { getSlug } from "./file-paths.js";
 
@@ -29,6 +29,7 @@ export interface RenderContext {
   hrefRoot: string;
   removeH1: boolean;
   sourceFilePath: string;
+  sourceFileText: string;
 }
 
 export interface Assets {
@@ -296,17 +297,16 @@ marked.use(
   markedHighlight(markedHighlightOptions)
 );
 
-export const compilePost = async (
+export const compilePost = (
   renderContext: RenderContext
-): Promise<Result<CompiledPost, CompileFailureReason>> => {
+): Result<CompiledPost, CompileFailureReason> => {
   try {
-    const fileAsString = await readTextFile(renderContext.sourceFilePath);
     const renderer = new CustomRenderer(renderContext);
 
-    const html = marked.parse(fileAsString, {
-      renderer,
-      ...markedOptions
-    });
+    const html = marked.parse(
+      renderContext.sourceFileText,
+      { renderer, ...markedOptions }
+    );
     const sanitized = sanitizeHtml(html, sanitizeOptions);
     return success({
       html: sanitized,

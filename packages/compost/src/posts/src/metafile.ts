@@ -12,7 +12,7 @@ const isPostMetaFile = isObject<PostMetaFileData>({
   title: is("string")
 });
 
-export type GetMetaFileContentFailure = "read metadata failed";
+export type GetMetaFileContentFailureReason = "read metadata failed";
 
 export const getMetaFileContent = async (
   metaFileInfo: FileInfo

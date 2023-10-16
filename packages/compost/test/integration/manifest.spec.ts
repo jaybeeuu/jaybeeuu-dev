@@ -10,15 +10,16 @@ import {
 import { advanceTo } from "jest-date-mock";
 import type { Response } from "node-fetch";
 import fetch from "node-fetch";
-import type { PostMetaData } from "../../src/index";
+import type { PostManifest, PostMetaData } from "../../src/index";
 import type { PostMetaFileData } from "../../src/posts/src/metafile";
+import readingTime from "reading-time";
 
 jest.mock("node-fetch");
 
 const writeOutputManifestFile = (
   metaData: Pick<PostMetaData, "slug"> & Partial<Omit<PostMetaData, "slug">>
 ): Promise<void> => {
-  const defaultedManifest = {
+  const defaultedManifest: PostManifest = {
     [metaData.slug]: {
       title: "{title}",
       abstract: "{abstract}",
@@ -27,6 +28,7 @@ const writeOutputManifestFile = (
       lastUpdateDate: "Sun, 06 Jun 2021 22:08:34 GMT",
       fileName: "{fileName}",
       href: "{href}",
+      readingTime: { minutes: 1, words: 1, text: "1 min read", time: 60000 },
       ...metaData,
       slug: metaData.slug
     }
@@ -38,6 +40,13 @@ const writeOutputManifestFile = (
 describe("manifest", () => {
   it("has an entry for a new post with the correct properties.", async () => {
     await cleanUpDirectories();
+
+    jest.mocked(readingTime).mockReturnValue({
+      minutes: 20,
+      text: "{reading time}",
+      time: 120000,
+      words: 10
+    });
 
     const publishDate = "2020-03-11";
     advanceTo(publishDate);
@@ -60,11 +69,12 @@ describe("manifest", () => {
     expect(manifest).toStrictEqual({
       [slug]: {
         ...meta,
-        publishDate: new Date(publishDate).toISOString(),
-        lastUpdateDate: null,
-        slug,
         fileName: expect.stringMatching(new RegExp(`${slug}-[A-z0-9]{6}.html`)) as unknown,
-        href: expect.stringMatching(new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`)) as unknown
+        href: expect.stringMatching(new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`)) as unknown,
+        lastUpdateDate: null,
+        publishDate: new Date(publishDate).toISOString(),
+        readingTime: { minutes: 20, text: "{reading time}", time: 120000, words: 10 },
+        slug
       }
     });
   });
