@@ -1,7 +1,8 @@
 import type { PostManifest, PostMetaData } from "@jaybeeuu/compost";
 import { assertIsNotNullish } from "@jaybeeuu/utilities";
 
-export type PostSlug = "memoising-selectors" | "module-spotting" | "the-rewrite";
+export const slugs = ["memoising-selectors", "module-spotting", "the-rewrite"] as const;
+export type PostSlug = typeof slugs[number];
 
 export const withManifest = (): Cypress.Chainable<PostManifest> => {
   return cy.fixture("blog/manifest.json").then((manifest) => {

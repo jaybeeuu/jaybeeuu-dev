@@ -3,6 +3,7 @@ import {
   getCompiledPostWithContent,
   getOutputFile
 } from "./helpers";
+import { Failure } from "@jaybeeuu/utilities";
 
 describe("links", () => {
   it("compiles an inline hash link to link properly within the document.", async () => {
@@ -20,6 +21,35 @@ describe("links", () => {
       "<p>This is a <a href=\"#destination\">link</a></p>",
       ""
     ].join("\n"));
+  });
+
+  it("compiles an inline link with no href properly.", async () => {
+    await cleanUpDirectories();
+    const hrefRoot = "posts";
+    const slug = "{slug}";
+    const post = await getCompiledPostWithContent({
+      slug,
+      content: [
+        "This is a [link]()"
+      ]
+    }, { hrefRoot });
+
+    expect(post).toBe([
+      "<p>This is a <a>link</a></p>",
+      ""
+    ].join("\n"));
+  });
+
+  it("throws when a link does not go to a file that exists.", async () => {
+    await cleanUpDirectories();
+    const hrefRoot = "posts";
+    const slug = "{slug}";
+    await expect(() => getCompiledPostWithContent({
+      slug,
+      content: [
+        "This is a [link](./does-not-exist.md)"
+      ]
+    }, { hrefRoot })).rejects.toBeInstanceOf(Failure);
   });
 
   it("compiles an inline link to another post properly within the document.", async () => {

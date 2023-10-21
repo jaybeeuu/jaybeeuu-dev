@@ -4,6 +4,8 @@ interface CssExports {
   'article': string;
   'componentRoot': string;
   'date': string;
+  'metaDataRow': string;
+  'readingTime': string;
   'title': string;
 }
 export const cssExports: CssExports;

@@ -1,3 +1,10 @@
+export interface ReadingTime {
+  text: string;
+  time: number;
+  words: number;
+  minutes: number;
+}
+
 export interface PostMetaData {
   abstract: string;
   fileName: string;
@@ -7,10 +14,17 @@ export interface PostMetaData {
   slug: string;
   title: string;
   publish: boolean;
+  readingTime: ReadingTime;
 }
 
 export interface PostManifest {
   [slug: string]: PostMetaData;
+}
+
+export type OldPostMetaData = Pick<PostMetaData, "fileName" | "publishDate" | "lastUpdateDate">;
+
+export interface OldPostManifest {
+  [slug: string]: OldPostMetaData;
 }
 
 export interface PostRedirectsMap {

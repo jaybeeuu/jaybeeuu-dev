@@ -5,7 +5,7 @@ import type { TypeAssertion} from "@jaybeeuu/utilities";
 import { assert, assertIsNotNullish, is } from "@jaybeeuu/utilities";
 import classNames from "classnames";
 import type { JSX, RefObject } from "preact";
-import { createRef, h, render } from "preact";
+import { createRef, h, render, Fragment } from "preact";
 import { useEffect, useLayoutEffect } from "preact/hooks";
 import { FouOhFour } from "../four-oh-four";
 import { asRoute } from "../as-route";
@@ -24,6 +24,7 @@ const useHashLinks = (postHtml: string, articleRef: RefObject<HTMLElement>): voi
   useLayoutEffect(() => {
     const currentArticle = articleRef.current;
     if (!currentArticle) {
+
       return;
     }
     const links = currentArticle.querySelectorAll("a");
@@ -75,15 +76,29 @@ const Post = withPromise(({ postHtml, postMeta }: PostComponentProps): JSX.Eleme
   useHashLinks(postHtml, articleRef);
 
   return (
-    <div className={classNames(css.componentRoot, e2eHooks.article)}>
+    <div className={classNames(css.componentRoot, e2eHooks.block)}>
       <div>
         <article ref={articleRef} className={css.article}>
-          <h1 className={css.title}>{postMeta.title}</h1>
-          <div className={css.date}>
-            {new Date(postMeta.publishDate).toLocaleDateString()}
-            {postMeta.lastUpdateDate ? ` (updated ${new Date(postMeta.lastUpdateDate).toLocaleDateString()})` : null}
-          </div>
-          <div
+          <hgroup className={e2eHooks.header}>
+            <h1 className={css.title}>{postMeta.title}</h1>
+            <div className={css.metaDataRow}>
+              <span>
+                <time dateTime={new Date(postMeta.publishDate).toLocaleDateString()}>
+                  {new Date(postMeta.publishDate).toLocaleDateString()}
+                </time>
+                {postMeta.lastUpdateDate ? (
+                  <Fragment>
+                    &nbsp;
+                    <time dateTime={postMeta.lastUpdateDate}>
+                      (updated {new Date(postMeta.lastUpdateDate).toLocaleDateString()})
+                    </time>
+                  </Fragment>
+                ) : null}
+              </span>
+              <span className={css.readingTime}>{postMeta.readingTime.text}</span>
+            </div>
+          </hgroup>
+          <div className={e2eHooks.article}
             dangerouslySetInnerHTML={{ __html: postHtml }}
           />
         </article>

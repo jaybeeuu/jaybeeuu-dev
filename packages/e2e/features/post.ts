@@ -10,6 +10,9 @@ export const get = (): Cypress.Chainable<JQuery> => {
 
 export type ShouldContainPostParagraphsParameters = ["contain.post.paragraphs", PostSlug];
 export type ShouldContainPostTitleParameters = ["contain.post.title", PostSlug];
+export type ShouldContainPostPublishDateParameters = ["contain.post.publishDate", PostSlug];
+export type ShouldContainPostLastUpdateDateParameters = ["contain.post.lastUpdateDate", PostSlug];
+export type ShouldContainPostReadingTimeParameters = ["contain.post.readingTime", PostSlug];
 
 export interface ArticleChainer extends Cypress.Chainer<JQuery> {
   (
@@ -18,13 +21,26 @@ export interface ArticleChainer extends Cypress.Chainer<JQuery> {
   (
     ...[chainer, slug]: ShouldContainPostParagraphsParameters
   ): Cypress.Chainable<JQuery>;
+  (
+    ...[chainer, slug]: ShouldContainPostPublishDateParameters
+  ): Cypress.Chainable<JQuery>;
+  (
+    ...[chainer, slug]: ShouldContainPostLastUpdateDateParameters
+  ): Cypress.Chainable<JQuery>;
+  (
+    ...[chainer, slug]: ShouldContainPostReadingTimeParameters
+  ): Cypress.Chainable<JQuery>;
 }
 
 export type ArticleChainable = Cypress.Chainable<JQuery> & {
   should: ArticleChainer
 };
 
-const shouldContainPostParagraphs = (...[, slug]: ShouldContainPostParagraphsParameters): void => {
+const getArticleBlock = (): Cypress.Chainable<JQuery> => cy.get(mainPanelSelectors.block);
+
+const shouldContainPostParagraphs = (
+  ...[, slug]: ShouldContainPostParagraphsParameters
+): void => {
   withPostMetaData(slug).then((meta) => {
     cy.fixture(`blog/${meta.fileName}`).then((postContent: string) => {
       const paragraphs = [...postContent.matchAll(/(<p>.*?<\/p>)/g)].flat();
@@ -32,15 +48,52 @@ const shouldContainPostParagraphs = (...[, slug]: ShouldContainPostParagraphsPar
         throw new Error("Post did not contain any paragraphs.");
       }
       paragraphs.forEach((paragraph) => {
-        cy.get(mainPanelSelectors.article).find("article").should("contain.html", paragraph);
+        getArticleBlock().find(mainPanelSelectors.article).should("contain.html", paragraph);
       });
     });
   });
 };
 
-const shouldContainPostTitle = (...[, slug]: ShouldContainPostTitleParameters): void => {
+const shouldContainPostTitle = (
+  ...[, slug]: ShouldContainPostTitleParameters
+): void => {
   withPostMetaData(slug).then((meta) => {
-    cy.get(mainPanelSelectors.article).should("contain.text", meta.title);
+    getArticleBlock().find(mainPanelSelectors.header).should("contain.text", meta.title);
+  });
+};
+
+const shouldContainPostPublishDate = (
+  ...[, slug]: ShouldContainPostPublishDateParameters
+): void => {
+  withPostMetaData(slug).then((meta) => {
+    getArticleBlock().find(mainPanelSelectors.header).should(
+      "contain.text",
+      new Date(meta.publishDate).toLocaleDateString()
+    );
+  });
+};
+
+const shouldContainPostLastUpdateDate = (
+  ...[, slug]: ShouldContainPostLastUpdateDateParameters
+): void => {
+  withPostMetaData(slug).then((meta) => {
+    getArticleBlock().find(mainPanelSelectors.header).should(
+      "contain.text",
+      meta.lastUpdateDate
+        ? `(updated ${new Date(meta.lastUpdateDate).toLocaleDateString()})`
+        : "(updated )"
+    );
+  });
+};
+
+const shouldContainPostReadingTime = (
+  ...[, slug]: ShouldContainPostReadingTimeParameters
+): void => {
+  withPostMetaData(slug).then((meta) => {
+    getArticleBlock().find(mainPanelSelectors.header).should(
+      "contain.text",
+      meta.readingTime.text
+    );
   });
 };
 
@@ -66,6 +119,18 @@ export const getArticle = (): ArticleChainable => {
     }
     if (isChainer<ShouldContainPostTitleParameters>("contain.post.title", args)) {
       shouldContainPostTitle(...args);
+      return article;
+    }
+    if (isChainer<ShouldContainPostPublishDateParameters>("contain.post.publishDate", args)) {
+      shouldContainPostPublishDate(...args);
+      return article;
+    }
+    if (isChainer<ShouldContainPostLastUpdateDateParameters>("contain.post.lastUpdateDate", args)) {
+      shouldContainPostLastUpdateDate(...args);
+      return article;
+    }
+    if (isChainer<ShouldContainPostReadingTimeParameters>("contain.post.readingTime", args)) {
+      shouldContainPostReadingTime(...args);
       return article;
     }
 

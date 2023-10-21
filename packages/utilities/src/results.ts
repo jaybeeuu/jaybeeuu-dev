@@ -36,13 +36,12 @@ export class Failure<Reason extends string> extends Error {
   ) {
     super(messageOrError instanceof Error ? messageOrError.message : String(messageOrError));
     this.messageOrError = messageOrError;
-
     this.name = `Failure(${reason})`;
+    this.reason = reason;
+
     if (this.stack?.startsWith("Error")) {
       this.stack = this.stack.replace("Error", this.name);
     }
-    this.reason = reason;
-
     this.stack = messageOrError instanceof Error && messageOrError.stack
       ? messageOrError.stack
       : getPublicStack(this, framesSincePublic);

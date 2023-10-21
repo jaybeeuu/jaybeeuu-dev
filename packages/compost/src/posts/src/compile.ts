@@ -20,7 +20,7 @@ import Prism from "prismjs";
 import loadLanguages from "prismjs/components/index.js";
 import type { IOptions } from "sanitize-html";
 import sanitizeHtml from "sanitize-html";
-import { canAccessSync, readTextFile, readTextFileSync } from "../../files/index.js";
+import { canAccessSync, readTextFileSync } from "../../files/index.js";
 import { getHash } from "../../hash.js";
 import { getSlug } from "./file-paths.js";
 
@@ -29,6 +29,7 @@ export interface RenderContext {
   hrefRoot: string;
   removeH1: boolean;
   sourceFilePath: string;
+  sourceFileText: string;
 }
 
 export interface Assets {
@@ -49,11 +50,7 @@ const escapeText = (text: string): string => {
 
 const markdownExtensionRegexp = /\.(md|markdown)$/;
 
-const isPostHref = (href: string | null): href is string => {
-  if (!href) {
-    return false;
-  }
-
+const isPostHref = (href: string): href is string => {
   const isMarkdownFile = markdownExtensionRegexp.test(href);
 
   const canAccessMarkdown = canAccessSync(href, "read");
@@ -72,7 +69,7 @@ const getAssetDetails = (
   hrefRoot: string
 ): { hashedFileName: string; href: string; } => {
   if (!canAccessSync(resolvedFilePath, "read")) {
-    throw new Error(`Unable to access image file: ${resolvedFilePath}`);
+    throw new Error(`Unable to access file: ${resolvedFilePath}`);
   }
 
   const fileContent = readTextFileSync(resolvedFilePath);
@@ -220,11 +217,13 @@ class CustomRenderer extends marked.Renderer {
     );
 
     switch (true) {
-      case isPostHref(resolvedHrefPath): return super.link(
-        joinUrlPath(this.#renderContext.hrefRoot, getSlug(resolvedHrefPath)),
-        title,
-        text
-      );
+      case isPostHref(resolvedHrefPath):{
+        return super.link(
+          joinUrlPath(this.#renderContext.hrefRoot, getSlug(resolvedHrefPath)),
+          title,
+          text
+        );
+      }
       case href.startsWith("."): {
         const asset = getAssetDetails(resolvedHrefPath, this.#renderContext.hrefRoot);
 
@@ -250,7 +249,6 @@ const markedOptions = {
 
 const markedHighlightOptions: SynchronousOptions = {
   highlight: (code: string, language: string): string => {
-
     if (!language ) {
       return code;
     }
@@ -259,7 +257,7 @@ const markedHighlightOptions: SynchronousOptions = {
     const prismLanguage = Prism.languages[language];
     assertIsNotNullish(prismLanguage);
     const highlighted = Prism.highlight(code, prismLanguage, "language");
-    // console.log({ code, highlighted });
+
     return highlighted;
   }
 };
@@ -296,17 +294,16 @@ marked.use(
   markedHighlight(markedHighlightOptions)
 );
 
-export const compilePost = async (
+export const compilePost = (
   renderContext: RenderContext
-): Promise<Result<CompiledPost, CompileFailureReason>> => {
+): Result<CompiledPost, CompileFailureReason> => {
   try {
-    const fileAsString = await readTextFile(renderContext.sourceFilePath);
     const renderer = new CustomRenderer(renderContext);
 
-    const html = marked.parse(fileAsString, {
-      renderer,
-      ...markedOptions
-    });
+    const html = marked.parse(
+      renderContext.sourceFileText,
+      { renderer, ...markedOptions }
+    );
     const sanitized = sanitizeHtml(html, sanitizeOptions);
     return success({
       html: sanitized,

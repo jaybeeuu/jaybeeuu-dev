@@ -5,7 +5,8 @@ export { makeClassSelectors };
 const postBlock = makeHookBlock("post");
 export const post = {
   block: postBlock(),
-  article: postBlock.element("article")
+  article: postBlock.element("article"),
+  header: postBlock.element("header")
 };
 
 const navBarBlock = makeHookBlock("nav-bar");
