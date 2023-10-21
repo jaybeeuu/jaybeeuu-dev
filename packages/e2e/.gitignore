@@ -1,5 +1,5 @@
 /.reports
 /.screenshots
 /.videos
-/fixtures/blog
+/fixtures/blog/*.html
 /node_modules

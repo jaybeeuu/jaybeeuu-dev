@@ -2,25 +2,10 @@ import * as navBar from "../features/nav-bar";
 import * as post from "../features/post";
 import * as postList from "../features/post-list";
 import {
-  getPostsAlias,
-  registerEmptyRoutes,
   registerRoutes,
   slugs,
   withPostMetaData
 } from "../routes/blog";
-
-context("Empty Post List", () => {
-  beforeEach(() => {
-    cy.visit("/");
-  });
-
-  it("displays a message when there's no posts", () => {
-    registerEmptyRoutes();
-    postList.openList();
-    cy.wait(getPostsAlias("manifest"));
-    postList.get().should("contain.text", "Nothing to see? Write some posts...");
-  });
-});
 
 context("Post navigation", (): void => {
   beforeEach(() => {

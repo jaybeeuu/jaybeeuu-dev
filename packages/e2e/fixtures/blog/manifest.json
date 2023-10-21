@@ -1,0 +1,50 @@
+{
+  "memoising-selectors": {
+    "title": "Memoising Selectors",
+    "abstract": "Complex operations in redux selectors can result in render thrashing, but why and how does it happen?",
+    "publish": true,
+    "fileName": "memoising-selectors-KGPeR1.html",
+    "href": "/blog/memoising-selectors-KGPeR1.html",
+    "lastUpdateDate": null,
+    "publishDate": "2023-08-21T19:58:49.725Z",
+    "readingTime": {
+      "text": "4 min read",
+      "minutes": 3.525,
+      "time": 211500,
+      "words": 705
+    },
+    "slug": "memoising-selectors"
+  },
+  "module-spotting": {
+    "title": "Module Spotting",
+    "abstract": "Modules in JavaScript have a long and complex history. Let's explore...",
+    "publish": true,
+    "fileName": "module-spotting-f6jjp5.html",
+    "href": "/blog/module-spotting-f6jjp5.html",
+    "lastUpdateDate": "2023-09-16T12:34:49.842Z",
+    "publishDate": "2023-08-21T19:58:49.842Z",
+    "readingTime": {
+      "text": "15 min read",
+      "minutes": 14.58,
+      "time": 874800,
+      "words": 2916
+    },
+    "slug": "module-spotting"
+  },
+  "the-rewrite": {
+    "title": "The Rewrite",
+    "abstract": "One of the grads at SL asked me if they should change their entire application. These were my thoughts...",
+    "publish": true,
+    "fileName": "the-rewrite-Me2Kw1.html",
+    "href": "/blog/the-rewrite-Me2Kw1.html",
+    "lastUpdateDate": null,
+    "publishDate": "2023-08-21T19:58:49.869Z",
+    "readingTime": {
+      "text": "3 min read",
+      "minutes": 2.99,
+      "time": 179400,
+      "words": 598
+    },
+    "slug": "the-rewrite"
+  }
+}
