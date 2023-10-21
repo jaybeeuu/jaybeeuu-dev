@@ -1,5 +1,11 @@
 # @jaybeeuu/utilities
 
+## 3.0.0
+
+### Major Changes
+
+- [#145](https://github.com/jaybeeuu/jaybeeuu-dev/pull/145) [`a9abe75`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/a9abe7579d6999fda80205094c9340ea460e3738) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Removed echo registry
+
 ## 2.0.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @jaybeeuu/compost
 
+## 0.2.0
+
+### Minor Changes
+
+- [#143](https://github.com/jaybeeuu/jaybeeuu-dev/pull/143) [`9d06557`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/9d06557f912d32baa9de0dae68fb02ef47496846) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Include reading time in composted metadata.
+
 ## 0.1.2
 
 ### Patch Changes
