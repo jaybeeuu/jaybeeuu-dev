@@ -160,6 +160,9 @@ jobs:
       - store_artifacts:
           path: ./packages/e2e/.videos
           destination: e2e-videos
+      - store_artifacts:
+          path: ./packages/e2e/fixtures/blog
+          destination: e2e-posts
 
   version:
     <<: *job-base
