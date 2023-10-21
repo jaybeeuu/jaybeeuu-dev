@@ -2,37 +2,24 @@ import type { Failure, Result } from "@jaybeeuu/utilities";
 import { failure, is, isObject, isRecordOf, or } from "@jaybeeuu/utilities";
 import type { FetchJsonFileFailureReason, ReadJsonFileFailureReason } from "../../files/index.js";
 import { fetchJsonFile, readJsonFile } from "../../files/index.js";
-import type { PostManifest, PostMetaData } from "./types.js";
+import type { OldPostManifest, OldPostMetaData } from "./types.js";
 
-const isReadingTime = isObject({
-  text: is("string"),
-  time: is("number"),
-  words: is("number"),
-  minutes: is("number")
-});
-
-const isPostMetaData = isObject<PostMetaData>({
-  abstract: is("string"),
+const isOldPostMetaData = isObject<OldPostMetaData>({
   fileName: is("string"),
-  href: is("string"),
   lastUpdateDate: or(is("string"), is("null")),
-  publish: is("boolean"),
-  publishDate: is("string"),
-  slug: is("string"),
-  title: is("string"),
-  readingTime: isReadingTime
+  publishDate: is("string")
 });
 
-const isManifestFile = isRecordOf<PostManifest>(isPostMetaData);
+const isOldManifest = isRecordOf<OldPostManifest>(isOldPostMetaData);
 
-export type GetManifestFailureReason = "read manifest failed";
+export type GetOldManifestFailureReason = "read manifest failed";
 
 const getManifestFromOldManifestLocator = async (
   manifestLocator: string
-): Promise<Result<PostManifest, FetchJsonFileFailureReason | ReadJsonFileFailureReason>> => {
+): Promise<Result<OldPostManifest, FetchJsonFileFailureReason | ReadJsonFileFailureReason>> => {
   const readResult = (/^https?/).test(manifestLocator)
-    ? await fetchJsonFile(manifestLocator, isManifestFile)
-    : await readJsonFile(manifestLocator, isManifestFile);
+    ? await fetchJsonFile(manifestLocator, isOldManifest)
+    : await readJsonFile(manifestLocator, isOldManifest);
 
   if (readResult.success) {
     return readResult;
@@ -41,10 +28,10 @@ const getManifestFromOldManifestLocator = async (
   return readResult;
 };
 
-export const getManifest = async (
+export const getOldManifest = async (
   manifestOutputFileName: string,
   manifestLocators: string[]
-): Promise<Result<PostManifest, GetManifestFailureReason>> => {
+): Promise<Result<OldPostManifest, GetOldManifestFailureReason>> => {
   const defaultedManifestLocators = [...manifestLocators, manifestOutputFileName];
   const failures: Failure<FetchJsonFileFailureReason | ReadJsonFileFailureReason>[] = [];
 

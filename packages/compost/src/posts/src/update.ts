@@ -20,17 +20,17 @@ import {
   getSlug,
   validateSlug
 } from "./file-paths.js";
-import type { GetManifestFailureReason } from "./manifest.js";
-import { getManifest } from "./manifest.js";
+import type { GetOldManifestFailureReason } from "./manifest.js";
+import { getOldManifest } from "./manifest.js";
 import type { GetMetaFileContentFailureReason } from "./metafile.js";
 import { getMetaFileContent } from "./metafile.js";
-import type { PostManifest, UpdateOptions } from "./types.js";
+import type { OldPostManifest, PostManifest, UpdateOptions } from "./types.js";
 import getReadingTime from "reading-time";
 
 export type UpdateFailureReason
  = CompileFailureReason
  | ValidateSlugFailureReason
- | GetManifestFailureReason
+ | GetOldManifestFailureReason
  | GetMetaFileContentFailureReason
  | LoadSourceFailureReason;
 
@@ -49,7 +49,7 @@ const loadPostSourceText = async (sourceFilePath: string): Promise<Result<string
 export const update = async (
   options: UpdateOptions
 ): Promise<Result<PostManifest, UpdateFailureReason>> => {
-  const oldManifestReadResult = await getManifest(
+  const oldManifestReadResult = await getOldManifest(
     path.join(options.outputDir, options.manifestFileName),
     options.oldManifestLocators
   );
@@ -61,7 +61,9 @@ export const update = async (
     }
   }
 
-  const oldManifest: PostManifest = oldManifestReadResult.success ? oldManifestReadResult.value : {};
+  const oldManifest: OldPostManifest = oldManifestReadResult.success
+    ? oldManifestReadResult.value
+    : {};
   const newManifest: PostManifest = {};
   const resolvedOutputDir = path.resolve(options.outputDir);
   const resolvedSourceDir = path.resolve(options.sourceDir);
