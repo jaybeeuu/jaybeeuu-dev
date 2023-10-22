@@ -48,17 +48,17 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "tslib": "^2.6.0"
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@jaybeeuu/eslint-config": "workspace:*",
-    "@types/jest": "^29.5.2",
-    "@typescript-eslint/eslint-plugin": "^5.61.0",
-    "@typescript-eslint/parser": "^5.61.0",
-    "eslint": "^8.44.0",
-    "eslint-plugin-jest": "^27.2.2",
-    "jest": "^29.6.0",
+    "@types/jest": "^29.5.6",
+    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/parser": "^6.8.0",
+    "eslint": "^8.52.0",
+    "eslint-plugin-jest": "^27.4.3",
+    "jest": "^29.7.0",
     "ts-jest": "^29.1.1",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   }
 }
