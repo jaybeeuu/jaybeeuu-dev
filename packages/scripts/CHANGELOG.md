@@ -1,5 +1,12 @@
 # @jaybeeuu/scripts
 
+## 0.1.8
+
+### Patch Changes
+
+- Updated dependencies [[`ad6448c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/ad6448ca1c078f6d855840ee32afd76e95c855ee)]:
+  - @jaybeeuu/utilities@3.0.1
+
 ## 0.1.7
 
 ### Patch Changes

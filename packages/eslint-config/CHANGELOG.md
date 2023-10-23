@@ -1,5 +1,11 @@
 # @jaybeeuu/eslint-config
 
+## 2.0.0
+
+### Major Changes
+
+- [#150](https://github.com/jaybeeuu/jaybeeuu-dev/pull/150) [`ad6448c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/ad6448ca1c078f6d855840ee32afd76e95c855ee) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Updates eslint-typescript to v6, which includes stricter checks. Lint with --fix and check your code.
+
 ## 1.0.5
 
 ### Patch Changes
