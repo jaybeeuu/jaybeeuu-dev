@@ -2,13 +2,13 @@ import type fsModule from "fs";
 import { writeFile } from "fs";
 import type PathModule from "path";
 
-const mocked = <T extends (...args: any[]) => any>(fn: T): jest.MockInstance<ReturnType<T>, Parameters<T>> => {
-  if (!("mock" in fn)) {
-    throw new Error(`Expected a mock function but ${fn.name || "{anonymous function}"} had no mock property.`);
-  }
-  const mockedFn = fn as unknown as jest.MockInstance<ReturnType<T>, Parameters<T>>;
-  return mockedFn;
-};
+// const jest.mocked = <T extends (...args: any[]) => any>(fn: T): jest.MockInstance<ReturnType<T>, Parameters<T>> => {
+//   if (!("mock" in fn)) {
+//     throw new Error(`Expected a mock function but ${fn.name || "{anonymous function}"} had no mock property.`);
+//   }
+//   const mockedFn = fn as unknown as jest.MockInstance<ReturnType<T>, Parameters<T>>;
+//   return mockedFn;
+// };
 
 const pathUtils = jest.requireActual<typeof PathModule>("path");
 
@@ -397,7 +397,7 @@ const getFile = (path: string): File => {
 
 const assertPathIsString: (path: fsModule.PathLike) => asserts path is string = (path) => {
   if (typeof path !== "string") {
-    throw new Error("Cannot handle buffer paths - tht hasn't been mocked.");
+    throw new Error("Cannot handle buffer paths - tht hasn't been jest.mocked.");
   }
 };
 
@@ -414,7 +414,7 @@ const assertIsSupportedCopyFileArguments: (
   }
 };
 
-mocked(
+jest.mocked(
   fs.promises.copyFile
 ).mockImplementation(
   async (...args) => {
@@ -438,7 +438,7 @@ const assertIsSupportedAccessArguments: (
   }
 };
 
-mocked(fs.promises.access).mockImplementation(async (...args): Promise<void> => {
+jest.mocked(fs.promises.access).mockImplementation(async (...args): Promise<void> => {
   assertIsSupportedAccessArguments(args);
   await Promise.resolve();
   const [path] = args;
@@ -454,7 +454,7 @@ mocked(fs.promises.access).mockImplementation(async (...args): Promise<void> => 
   throw new Error(`Could not access ${path}: Neither file nor directory called ${fileOrDirName} existed in ${parentDirName}`);
 });
 
-mocked(fs.accessSync).mockImplementation((...args): void => {
+jest.mocked(fs.accessSync).mockImplementation((...args): void => {
   assertIsSupportedAccessArguments(args);
   const [path] = args;
   const resolvedPath = resolvePath(path);
@@ -490,7 +490,7 @@ const assertIsSupportedLstatArguments: (
   }
 };
 
-mocked(fs.promises.lstat as Lstat).mockImplementation(async (
+jest.mocked(fs.promises.lstat as Lstat).mockImplementation(async (
   ...args
 ): Promise<fsModule.Stats | fsModule.BigIntStats> => {
   assertIsSupportedLstatArguments(args);
@@ -528,7 +528,7 @@ const assertIsSupportedMkdirArguments: (
   }
 };
 
-mocked(fs.promises.mkdir as Mkdir).mockImplementation(async (...args): Promise<string | string[] | undefined> => {
+jest.mocked(fs.promises.mkdir as Mkdir).mockImplementation(async (...args): Promise<string | string[] | undefined> => {
   assertIsSupportedMkdirArguments(args);
   const [path, options] = args;
   await Promise.resolve();
@@ -584,7 +584,7 @@ mocked(fs.promises.mkdir as Mkdir).mockImplementation(async (...args): Promise<s
   return getParentDirResult.failedPath;
 });
 
-mocked(fs.promises.rm).mockImplementation(async (path, options) => {
+jest.mocked(fs.promises.rm).mockImplementation(async (path, options) => {
   assertPathIsString(path);
   await Promise.resolve();
   const resolvedPath = resolvePath(path);
@@ -654,7 +654,7 @@ const assertIsSupportedReaddirArguments: (
   }
 };
 
-mocked<Readdir>(
+jest.mocked<Readdir>(
   fs.promises.readdir as Readdir
 ).mockImplementation(
   async (...args) => {
@@ -678,7 +678,7 @@ const assertIsSupportedReadFileArguments: (
   }
 };
 
-mocked(fs.readFileSync).mockImplementation((...args) => {
+jest.mocked(fs.readFileSync).mockImplementation((...args) => {
   assertIsSupportedReadFileArguments(args);
   const [path] = args;
   const file = getFile(path);
@@ -686,7 +686,7 @@ mocked(fs.readFileSync).mockImplementation((...args) => {
   return file.content;
 });
 
-mocked(fs.promises.readFile).mockImplementation(async (...args) => {
+jest.mocked(fs.promises.readFile).mockImplementation(async (...args) => {
   assertIsSupportedReadFileArguments(args);
   const [path] = args;
   await Promise.resolve();
@@ -707,7 +707,7 @@ const assertIsSupportedWriteFileArguments: (
   }
 };
 
-mocked(fs.promises.writeFile).mockImplementation(async (...args) => {
+jest.mocked(fs.promises.writeFile).mockImplementation(async (...args) => {
   assertIsSupportedWriteFileArguments(args);
   const [path, data] = args;
   await Promise.resolve();

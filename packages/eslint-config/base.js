@@ -37,8 +37,9 @@ module.exports = {
       extends: [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "plugin:@typescript-eslint/strict"
+        "plugin:@typescript-eslint/recommended-type-checked",
+        "plugin:@typescript-eslint/strict",
+        "plugin:@typescript-eslint/strict-type-checked"
       ],
       rules: {
         "@typescript-eslint/consistent-indexed-object-style": ["error", "index-signature"],

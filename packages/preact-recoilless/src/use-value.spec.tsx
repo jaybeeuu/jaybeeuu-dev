@@ -44,7 +44,7 @@ describe("useValue", () => {
         { wrapper: Wrapper() }
       );
 
-      await act(() => result.current[1]("Iceland"));
+      await act(() => { result.current[1]("Iceland"); });
 
       expect(result.current).toStrictEqual(["Iceland", expect.any(Function)]);
     });
@@ -55,7 +55,7 @@ describe("useValue", () => {
       const { result } = renderHook(() => useValue(value), { wrapper: Wrapper(store) });
       const { result: otherResult } = renderHook(() => useValue(value), { wrapper: Wrapper(store) });
 
-      await act(() => otherResult.current[1]("Iceland"));
+      await act(() => { otherResult.current[1]("Iceland"); });
 
       expect(result.current).toStrictEqual(["Iceland", expect.any(Function)]);
     });
@@ -87,7 +87,7 @@ describe("useValue", () => {
       const { result } = renderHook(
         () => useValue(holiday), { wrapper: Wrapper(store) }
       );
-      await act(() => firstStopState.set("Iceland"));
+      await act(() => { firstStopState.set("Iceland"); });
       expect(result.current).toBe("Iceland");
     });
 

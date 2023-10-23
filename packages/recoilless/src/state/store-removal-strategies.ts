@@ -23,7 +23,7 @@ const makeScheduleSynchronousRemoval: RemovalSchedulerFactory<SynchronousRemoval
   options: SynchronousRemovalFactoryOptions,
   removeFromStore: RemoveFromStore
 ) => ({
-  schedule: () => removeFromStore(),
+  schedule: () => { removeFromStore(); },
   unschedule: () => {}
 });
 
@@ -42,11 +42,11 @@ const makeScheduleDelayedRemoval: RemovalSchedulerFactory<DelayedRemovalFactoryO
     schedule: () => {
       clearTimeout(removalTimeout);
       removalTimeout = setTimeout(
-        () => removeFromStore(),
+        () => { removeFromStore(); },
         options.delay
       );
     },
-    unschedule: () => clearTimeout(removalTimeout)
+    unschedule: () => { clearTimeout(removalTimeout); }
   };
 };
 
@@ -67,7 +67,7 @@ export const makeScheduler = (
   unschedule: UnscheduleRemoval;
 } => {
   return schedulerFactories[options.schedule](
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
     options as any,
     removeFromStore
   );

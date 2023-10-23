@@ -29,12 +29,12 @@ export class PrimitiveValueState<Val>  implements SettableValueState<Val>{
       unschedule: unscheduleRemoval
     } = makeScheduler(
       removalSchedule ?? defaultRemovalSchedule,
-      () => removeFromStore()
+      () => { removeFromStore(); }
     );
 
     this.#value = new WatchableValue(
       initialValue,
-      () => scheduleRemoval(),
+      () => { scheduleRemoval(); },
       name
     );
     this.#unscheduleRemoval = unscheduleRemoval;

@@ -60,6 +60,7 @@ export interface HookMap {
 type ClassSelectors<Hooks extends HookMap> = {
   [Key in keyof Hooks]: Hooks[Key] extends string
     ? `.${Hooks[Key]}`
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     : Hooks[Key] extends (...args: any) => any
       ? (...args: Parameters<Hooks[Key]>) => `.${ReturnType<Hooks[Key]>}`
       : ClassSelectors<Extract<Hooks[Key], HookMap>>;

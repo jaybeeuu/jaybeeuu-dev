@@ -76,7 +76,7 @@ export const usePromise = <Value>(
 
   useEffect(() => {
     const abortController = new AbortController();
-    abortRef.current = () => abortController.abort();
+    abortRef.current = () => { abortController.abort(); };
 
     const statusGenerator = monitorPromise(
       getPromise({ abortSignal: abortController.signal }),
@@ -92,11 +92,11 @@ export const usePromise = <Value>(
       }
     })();
 
-    return () => abortController.abort();
+    return () => { abortController.abort(); };
   }, inputs);
 
   return {
-    abort: useCallback(() => abortRef.current(), []),
+    abort: useCallback(() => { abortRef.current(); }, []),
     promiseState
   };
 };

@@ -13,8 +13,7 @@ describe("delay", () => {
 
     jest.advanceTimersByTime(100);
 
-    const result = await promise;
-    expect(result).toBeUndefined();
+    await expect(promise).resolves.toBeUndefined();
   });
 });
 
@@ -47,7 +46,7 @@ describe("echo", () => {
     setupMockTimers();
     const promise = echo("{value}", 100);
     const timeout = new Promise((resolve) => setTimeout(
-      () => resolve("{NOT Value}"),
+      () => { resolve("{NOT Value}"); },
       110
     ));
 
@@ -65,7 +64,7 @@ describe("echo", () => {
     setupMockTimers();
     const promise = echo("{value}", 100);
     const timeout = new Promise((resolve) => setTimeout(
-      () => resolve("{NOT value}"),
+      () => { resolve("{NOT value}"); },
       110
     ));
 

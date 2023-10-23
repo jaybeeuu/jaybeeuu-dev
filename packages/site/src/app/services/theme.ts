@@ -26,7 +26,7 @@ export const listenToMediaTheme = (listener: MediaThemeListener): Unsubscribe =>
   };
 
   themeMediaQuery.addEventListener("change", handler);
-  return () => themeMediaQuery.removeEventListener("change", handler);
+  return () => { themeMediaQuery.removeEventListener("change", handler); };
 };
 
 const localStorageValue = <Value extends string>(

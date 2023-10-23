@@ -97,9 +97,9 @@ const shouldContainPostReadingTime = (
   });
 };
 
-const isChainer = <ChainerArgs extends [string, ...any[]]>(
+const isChainer = <ChainerArgs extends [string, ...unknown[]]>(
   chainerType: ChainerArgs[0],
-  args: any[]
+  args: unknown[]
 ): args is ChainerArgs => {
   return args[0] === chainerType;
 };
@@ -111,7 +111,7 @@ export const getArticle = (): ArticleChainable => {
 
   function articleShould (
     this: Cypress.Chainable<JQuery>,
-    ...args: any[]
+    ...args: unknown[]
   ): Cypress.Chainable<JQuery> {
     if (isChainer<ShouldContainPostParagraphsParameters>("contain.post.paragraphs", args)) {
       shouldContainPostParagraphs(...args);
@@ -134,7 +134,7 @@ export const getArticle = (): ArticleChainable => {
       return article;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
     originalShould.apply(this, args as any);
 
     return article;

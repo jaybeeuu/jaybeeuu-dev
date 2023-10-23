@@ -1,3 +1,5 @@
+import { assertIsNotNullish } from "./type-guards/index.js";
+
 type Is<PossibleValues, Target extends PossibleValues> = (
   candidate: PossibleValues
 ) => candidate is Target;
@@ -29,17 +31,19 @@ export function multiPartition<Values, T1 extends Values, T2 extends Values, T3 
   isT5: Is<Values, T5>
 ): [T1[], T2[], T3[], T4[], T5[]];
 export function multiPartition(
-  array: any[],
-  ...predicates: ((candidate: any) => boolean)[]
-): any[][];
+  array: unknown[],
+  ...predicates: ((candidate: unknown) => boolean)[]
+): unknown[][];
 export function multiPartition(
-  array: any[],
-  ...predicates: ((candidate: any) => boolean)[]
-): any[][] {
-  return array.reduce<any[][]>((acc, value) => {
+  array: unknown[],
+  ...predicates: ((candidate: unknown) => boolean)[]
+): unknown[][] {
+  return array.reduce<unknown[][]>((acc, value) => {
     const index = predicates.findIndex((predicate) => predicate(value));
     if (index >= 0) {
-      acc[index]!.push(value);
+      const partition = acc[index];
+      assertIsNotNullish(partition);
+      partition.push(value);
     }
     return acc;
   }, Array.from(

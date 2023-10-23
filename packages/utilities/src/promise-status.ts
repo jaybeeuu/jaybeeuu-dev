@@ -20,7 +20,9 @@ export interface Complete<Value> {
 }
 
 export const pending = (): Pending => pendingStatus;
-export const failed = (error: Error | { [value: string]: Error }): Failed => ({ status: "failed", error });
+export const failed = (error: Error | { [value: string]: Error }): Failed => (
+  { status: "failed", error }
+);
 
 export function complete(): Complete<never>
 export function complete<Value>(value: Value): Complete<Value>
@@ -30,7 +32,10 @@ export function complete<Value>(value?: Value): Complete<Value> {
 
 export type PromiseState<Response = unknown> = Pending | Failed | Complete<Response>;
 
-const isObjectWithProp = <Prop extends string>(candidate: unknown, prop: Prop): candidate is { [key in Prop]: unknown } => {
+const isObjectWithProp = <Prop extends string>(
+  candidate: unknown,
+  prop: Prop
+): candidate is { [key in Prop]: unknown } => {
   return typeof candidate === "object" && candidate !== null && prop in candidate;
 };
 
@@ -40,7 +45,9 @@ const isAnyPromiseState = (candidate: unknown): candidate is PromiseState => {
     && PromiseStatuses.includes(candidate.status);
 };
 
-const valueOrError = async <Value>(promise: Promise<Value>): Promise<Complete<Value> | Failed> => {
+const valueOrError = async <Value>(
+  promise: Promise<Value>
+): Promise<Complete<Value> | Failed> => {
   try {
     return complete(await promise);
   } catch (maybeError) {

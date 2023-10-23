@@ -22,7 +22,7 @@ export type TypeString
   | "object"
   | "function";
 
-export const isObject = <Obj extends {}>(
+export const isObject = <Obj extends object>(
   properties: { [key in keyof Obj]: TypePredicate<Obj[key]> }
 ): TypePredicate<Obj> => Object.assign(
   (candidate: unknown): candidate is Obj => {
@@ -90,7 +90,7 @@ export interface TypeStringPrimitiveTypeMap {
   symbol: symbol;
   undefined: undefined;
   object: object;
-  function: Function;
+  function: AnyFunction;
   null: null
 }
 

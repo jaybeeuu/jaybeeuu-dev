@@ -1,25 +1,26 @@
 export type Executor<Value> = (
   resolve: (value: Value | PromiseLike<Value>) => void,
-  reject: (reason?: any) => void
+  reject: (reason?: unknown) => void
 ) => void;
 
 export class ControllablePromise<Value = void> extends Promise<Value> {
   #resolvePromise?: (value: Value | PromiseLike<Value>) => void;
-  #rejectPromise?: (reason?: any) => void;
+  #rejectPromise?: (reason?: unknown) => void;
 
   constructor(executor: Executor<Value> = () => {}) {
     let resolvePromise: (value: Value | PromiseLike<Value>) => void;
-    let rejectPromise: (reason?: any) => void;
+    let rejectPromise: (reason?: unknown) => void;
     super((resolve, reject) => {
       resolvePromise = resolve;
       rejectPromise = reject;
       executor(resolve, reject);
     });
 
-    // @ts-expect-error
+    // @ts-expect-error The executor passed into super is called before control returns to this constructor.
+    // Therefore resolvePromise will always be defined by the time we set #resolvePromise.
     this.#resolvePromise = resolvePromise;
 
-    // @ts-expect-error
+    // @ts-expect-error See explanation above.
     this.#rejectPromise = rejectPromise;
   }
 
@@ -27,7 +28,7 @@ export class ControllablePromise<Value = void> extends Promise<Value> {
     this.#resolvePromise?.(value);
   }
 
-  reject(reason?: any): void {
+  reject(reason?: unknown): void {
     this.#rejectPromise?.(reason);
   }
 }
