@@ -42,10 +42,10 @@ describe("async-hooks", () => {
       const factory = jest.fn<undefined, []>().mockReturnValue(undefined);
 
       const { rerender } = renderHook(
-        ({ prop }) => useSemanticMemo(
+        ({ prop }) => { useSemanticMemo(
           factory,
           [prop]
-        ),
+        ); },
         { initialProps: { prop: 1 }}
       );
 
@@ -147,7 +147,7 @@ describe("async-hooks", () => {
 
       unmount();
 
-      await act(() => promise.resolve());
+      await act(() => { promise.resolve(); });
 
       expect(result.current).toBe(0);
     });
@@ -256,7 +256,7 @@ describe("async-hooks", () => {
         [value]
       ), { initialProps: { value: 1 } });
 
-      await act(() => result.current.abort());
+      await act(() => { result.current.abort(); });
 
       await waitFor(() => {
         expect(abortedRef.current).toBe(true);

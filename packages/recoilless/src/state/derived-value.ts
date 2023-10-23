@@ -22,7 +22,7 @@ export class DerivedValueState<Val> implements ValueState<Val> {
   readonly #dependencyUnsubscribes: Unsubscribe[] = [];
   readonly #derive: Derive<Val>;
   readonly #getDependency: GetDependency;
-  readonly #registeredDependencies = new Set<ValueState<any>>();
+  readonly #registeredDependencies = new Set<ValueState<unknown>>();
   readonly #value: WatchableValue<Val>;
   readonly #name: string;
 
@@ -51,14 +51,14 @@ export class DerivedValueState<Val> implements ValueState<Val> {
       () => {
         removeFromStore();
         this.#dependencyUnsubscribes.forEach(
-          (unsubscribeDependency) => unsubscribeDependency()
+          (unsubscribeDependency) => { unsubscribeDependency(); }
         );
       }
     );
     this.#unscheduleRemoval = unscheduleRemoval;
     this.#value = new WatchableValue(
       firstValue,
-      () => scheduleRemoval(),
+      () => { scheduleRemoval(); },
       name
     );
   }
@@ -77,7 +77,7 @@ export class DerivedValueState<Val> implements ValueState<Val> {
       this.#registeredDependencies.add(dependencyState);
       this.#dependencyUnsubscribes.push(
         dependencyState.subscribe(
-          () => this.#deriveAgain()
+          () => { this.#deriveAgain(); }
         )
       );
     }

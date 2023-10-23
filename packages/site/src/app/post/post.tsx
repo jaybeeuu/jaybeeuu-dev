@@ -37,7 +37,7 @@ const useHashLinks = (postHtml: string, articleRef: RefObject<HTMLElement>): voi
           window.location.hash = href;
           const destinationElement = currentArticle.querySelector(href);
           destinationElement?.scrollIntoView({ behavior: "smooth" });
-          requestAnimationFrame(() => hideTitleBar());
+          requestAnimationFrame(() => { hideTitleBar(); });
           e.stopPropagation();
           e.preventDefault();
         });
@@ -136,7 +136,7 @@ const PostLookup = ({ slug }: PostLookupProps): JSX.Element | null => {
   useBackgrounds({ dark: "moon", light: "black-tusk" });
 
   const [, setSlug] = useValue(currentPostSlug);
-  useEffect(() => setSlug(slug), [slug]);
+  useEffect(() => { setSlug(slug); }, [slug]);
   const postMetaLookupResult = useValue(currentPostMeta);
   const postHtmlLookupResult = useValue(currentPostHtml);
 

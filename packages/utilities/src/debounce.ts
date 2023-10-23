@@ -1,3 +1,5 @@
+import { assertIsNotNullish } from "./type-guards/index.js";
+
 export interface DebounceOptions {
   delay: number;
   leading: boolean;
@@ -43,7 +45,8 @@ export const debounce = <Args extends unknown[]>(
     setTimeout(() => {
       if (shouldExecute) {
         nextStrategy = scheduleExecution;
-        actor(...latestArgs!);
+        assertIsNotNullish(latestArgs);
+        actor(...latestArgs);
       } else {
         nextStrategy = options.leading
           ? immediateExecution
@@ -54,5 +57,5 @@ export const debounce = <Args extends unknown[]>(
   nextStrategy = options.leading
     ? immediateExecution
     : scheduleExecution;
-  return (...args) => nextStrategy(...args);
+  return (...args) => { nextStrategy(...args); };
 };

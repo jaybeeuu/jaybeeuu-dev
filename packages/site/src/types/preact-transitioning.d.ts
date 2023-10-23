@@ -31,11 +31,11 @@ declare module "preact-transitioning" {
 
   interface TransitionProps {
     children: (transitionState: TransitionState) => JSX.Element
-    in?: Boolean;
-    appear?: Boolean;
-    enter?: Boolean;
-    exit?: Boolean;
-    alwaysMounted?: Boolean;
+    in?: boolean;
+    appear?: boolean;
+    enter?: boolean;
+    exit?: boolean;
+    alwaysMounted?: boolean;
     duration?: number;
     onEnter?: () => void;
     onEntering?: () => void;

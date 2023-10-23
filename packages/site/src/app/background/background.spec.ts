@@ -87,12 +87,12 @@ describe("useImages", () => {
       });
 
       const blackTusk = makeImageDetails("black-tusk");
-      await act(() => promise.resolve(blackTusk));
+      await act(() => { promise.resolve(blackTusk); });
 
-      await waitFor(() => expect(result.current).toStrictEqual({
+      await waitFor(() => { expect(result.current).toStrictEqual({
         current: blackTusk,
         previous: null
-      }));
+      }); });
     }
   );
 
@@ -109,12 +109,12 @@ describe("useImages", () => {
     });
 
     const bath = makeImageDetails("bath");
-    await act(() => promise.resolve(bath));
+    await act(() => { promise.resolve(bath); });
 
-    await waitFor(() => expect(result.current).toStrictEqual({
+    await waitFor(() => { expect(result.current).toStrictEqual({
       current: bath,
       previous: null
-    }));
+    }); });
   });
 
   it("sets the previous and current images when the images change.", async() => {
@@ -131,10 +131,10 @@ describe("useImages", () => {
       currentTheme: "light"
     });
 
-    await waitFor(() => expect(result.current).toStrictEqual({
+    await waitFor(() => { expect(result.current).toStrictEqual({
       current: blackTusk,
       previous: null
-    }));
+    }); });
 
     rerender({
       backgrounds: {
@@ -144,10 +144,10 @@ describe("useImages", () => {
       currentTheme: "light"
     });
 
-    await waitFor(() => expect(result.current).toStrictEqual({
+    await waitFor(() => { expect(result.current).toStrictEqual({
       current: christmasTrail,
       previous: blackTusk
-    }));
+    }); });
   });
 
   it("sets the previous and current images when the theme changes.", async () => {
@@ -164,10 +164,10 @@ describe("useImages", () => {
       currentTheme: "light"
     });
 
-    await waitFor(() => expect(result.current).toStrictEqual({
+    await waitFor(() => { expect(result.current).toStrictEqual({
       current: blackTusk,
       previous: null
-    }));
+    }); });
 
     rerender({
       backgrounds: {
@@ -177,9 +177,9 @@ describe("useImages", () => {
       currentTheme: "dark"
     });
 
-    await waitFor(() => expect(result.current).toStrictEqual({
+    await waitFor(() => { expect(result.current).toStrictEqual({
       current: bath,
       previous: blackTusk
-    }));
+    }); });
   });
 });

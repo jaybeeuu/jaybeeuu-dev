@@ -49,7 +49,7 @@ export class Failure<Reason extends string> extends Error {
 }
 
 export type Result<Value, FailureReason extends string> = Success<Value> | Failure<FailureReason>;
-export type FailureReasons<Res> = Res extends Result<any, infer FailureReason>
+export type FailureReasons<Res> = Res extends Result<unknown, infer FailureReason>
   ? FailureReason
   : never;
 

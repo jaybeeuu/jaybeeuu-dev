@@ -54,7 +54,7 @@ describe("recoilless store", () => {
       const state = store.getValue({
         name: "asyncFullName",
         derive: ({ get }: DerivationContext<Promise<string>>): Promise<string> => new Promise<string>((resolve) => {
-          setTimeout(() => resolve(`${get(firstName)} ${get(surname)}`), 0);
+          setTimeout(() => { resolve(`${get(firstName)} ${get(surname)}`); }, 0);
         })
       });
       await expect(state.current).resolves.toBe(

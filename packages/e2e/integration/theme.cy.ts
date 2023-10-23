@@ -3,9 +3,9 @@ import { getThemeSwitch } from "../features/nav-bar";
 
 class MockMediaQuery {
   #matches = true;
-  #changeListeners: ((ev: MediaQueryListEventMap["change"]) => any)[] = [];
+  #changeListeners: ((ev: MediaQueryListEventMap["change"]) => void)[] = [];
   #resolveHasListeners = (): void => {};
-  #hasListenersPromise = new Promise<true>((resolve) => this.#resolveHasListeners = () => resolve(true));
+  #hasListenersPromise = new Promise<true>((resolve) => this.#resolveHasListeners = () => { resolve(true); });
 
   set matches (
     newMatches: boolean
@@ -27,7 +27,7 @@ class MockMediaQuery {
 
   addEventListener<K extends keyof MediaQueryListEventMap>(
     type: K,
-    listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => any
+    listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => void
   ): void {
     this.#changeListeners = [...this.#changeListeners, listener];
     this.#resolveHasListeners();
@@ -35,7 +35,7 @@ class MockMediaQuery {
 
   removeEventListener<K extends keyof MediaQueryListEventMap>(
     type: K,
-    listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => any
+    listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => void
   ): void {
     this.#changeListeners.filter((candidate) => candidate !== listener);
   }

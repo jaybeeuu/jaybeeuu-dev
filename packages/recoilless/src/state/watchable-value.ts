@@ -38,7 +38,7 @@ export class WatchableValue<Val> {
 
     this.#isUpdating = true;
     this.#value = newValue;
-    this.#listeners.forEach((subscription) => subscription(this.#value));
+    this.#listeners.forEach((subscription) => { subscription(this.#value); });
     this.#isUpdating = false;
   }
 

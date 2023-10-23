@@ -1,7 +1,9 @@
 /* eslint-disable no-console */
-export const info = (message: string, ...args: unknown[]): void => console.log(message, ...args);
+export const info = (message: string, ...args: unknown[]): void => {
+  console.log(message, ...args);
+};
 
-export const getErrorMessage = (err: any | null | undefined): string => {
+export const getErrorMessage = (err: unknown): string => {
   if (typeof err === "string") {
     return err || "{empty string}";
   }

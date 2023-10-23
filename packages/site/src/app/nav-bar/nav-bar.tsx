@@ -27,7 +27,7 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
       <Icon
         className={css.menuButton}
         name={"menu"}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => { setIsOpen(!isOpen); }}
         title={"Menu"}
       />
       <div className={classNames(css.optionsList, { [css.open]: isOpen })}>
@@ -35,7 +35,7 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
           activeClassName={css.active}
           className={classNames(css.link, e2eHooks.homeLink)}
           href={"/"}
-          onClick={() => setIsOpen(false)}
+          onClick={() => { setIsOpen(false); }}
         >
             Home
         </Link>
@@ -43,7 +43,7 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
           activeClassName={css.active}
           className={classNames(css.link, e2eHooks.postsListLink)}
           href={"/blog"}
-          onClick={() => setIsOpen(false)}
+          onClick={() => { setIsOpen(false); }}
         >
             Blog
         </Link>
@@ -72,7 +72,7 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
       </div>
       <div
         className={classNames(css.dismissBox, { [css.open]: isOpen })}
-        onClick={() => setIsOpen(false)}
+        onClick={() => { setIsOpen(false); }}
       />
     </div>
   );

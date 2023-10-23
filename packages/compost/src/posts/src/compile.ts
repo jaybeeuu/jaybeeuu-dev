@@ -8,8 +8,7 @@ import {
   success
 } from "@jaybeeuu/utilities";
 import type {
-  Renderer,
-  Slugger
+  MarkedOptions
 } from "marked";
 import { marked } from "marked";
 import { gfmHeadingId } from "marked-gfm-heading-id";
@@ -44,8 +43,8 @@ const innerHTML = (text: string): string => {
 const escapeText = (text: string): string => {
   return text
     .toLowerCase()
-    .replace(/[^ a-z0-9]+/g, "")
-    .replace(/[ ]/g, "-");
+    .replace(/[^ \-a-z0-9]/g, "")
+    .replace(/ /g, "-");
 };
 
 const markdownExtensionRegexp = /\.(md|markdown)$/;
@@ -84,39 +83,48 @@ const getAssetDetails = (
   return { href, hashedFileName };
 };
 
+class Slugger {
+  slugCountMap = new Map<string, number>();
+
+  slug(text: string): string {
+    const slug = escapeText(text);
+    const count = this.slugCountMap.get(slug) ?? 0;
+    this.slugCountMap.set(slug, count + 1);
+
+    return count === 0 ? slug : `${slug}-${count}`;
+  }
+}
+
 class CustomRenderer extends marked.Renderer {
   readonly #assets: Assets[] = [];
   readonly #renderContext: RenderContext;
+  readonly #slugger = new Slugger();
 
   // public readonly code: Renderer["code"];
-  public readonly image: Renderer["image"];
+  // public readonly image: Renderer["image"];
 
   public get assets(): Assets[] {
     return this.#assets;
   }
 
-  constructor(renderContext: RenderContext, markedOptions?: marked.MarkedOptions) {
+  constructor(renderContext: RenderContext, markedOptions?: MarkedOptions) {
     super(markedOptions);
     this.#renderContext = renderContext;
 
-    const that: CustomRenderer = this;
-
-    this.code = function (this: marked.RendererThis, ...args) {
-      return that.innerCode(this, ...args);
+    this.code = function (...args) {
+      return this.innerCode(...args);
     };
-    this.image = function (this: marked.RendererThis, ...args) {
-      return that.innerImage(this, ...args);
+    this.image = function (...args) {
+      return this.innerImage(...args);
     };
   }
 
   private innerCode(
-    rendererThis: marked.RendererThis,
     code: string,
     language: string | undefined,
     isEscaped: boolean
   ): string {
-    const rendered = super.code.call(
-      rendererThis,
+    const rendered = super.code(
       code,
       language,
       isEscaped
@@ -144,7 +152,6 @@ class CustomRenderer extends marked.Renderer {
   }
 
   private innerImage(
-    rendererThis: marked.RendererThis,
     href: string | null,
     title: string | null,
     text: string
@@ -152,8 +159,7 @@ class CustomRenderer extends marked.Renderer {
     assertIsNotNullish(href);
 
     if (href.startsWith("https:") || href.startsWith("http:")) {
-      return super.image.call(
-        rendererThis,
+      return super.image(
         href,
         title,
         text
@@ -176,21 +182,20 @@ class CustomRenderer extends marked.Renderer {
       destinationPath: hashedFileName
     });
 
-    return super.image.call(
-      rendererThis,
+    return super.image(
       transformedHref,
       title,
       text
     );
   }
 
-  heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6, raw: string, slugger: Slugger): string {
+  heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6): string {
     if (level === 1 && this.#renderContext.removeH1) {
       return "";
     }
     const htmlContent = innerHTML(text);
     const escapedText = escapeText(htmlContent);
-    const headerSlug = slugger.slug(escapedText);
+    const headerSlug = this.#slugger.slug(escapedText);
     const href = `#${headerSlug}`;
 
     return [
@@ -203,14 +208,10 @@ class CustomRenderer extends marked.Renderer {
   }
 
   link(
-    href: string | null,
+    href: string,
     title: string | null,
     text: string
   ): string {
-    if (!href) {
-      return super.link(href, title, text);
-    }
-
     const resolvedHrefPath = path.resolve(
       path.dirname(this.#renderContext.sourceFilePath),
       href

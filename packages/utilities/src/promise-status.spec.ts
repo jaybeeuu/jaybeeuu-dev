@@ -98,7 +98,7 @@ describe("monitorPromise", () => {
 describe("combinePromises", () => {
   const samples: {
     description: string,
-    values: { [key: string]: PromiseState | unknown },
+    values: { [key: string]: unknown },
     expected: PromiseState
   }[] = [
     {

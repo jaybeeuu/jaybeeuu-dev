@@ -44,7 +44,7 @@ export class Store {
     if (isDerivedValue(value)) {
       return new DerivedValueState(
         value,
-        () => this.#removeValue(value),
+        () => { this.#removeValue(value); },
         (dependency) => this.#getDependency(dependency),
         this.#options.defaultRemovalSchedule
       );
@@ -52,7 +52,7 @@ export class Store {
 
     return new PrimitiveValueState(
       value,
-      () => this.#removeValue(value),
+      () => { this.#removeValue(value); },
       this.#options.defaultRemovalSchedule
     );
   };
