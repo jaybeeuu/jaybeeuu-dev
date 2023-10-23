@@ -1,8 +1,8 @@
 ---
+"@jaybeeuu/eslint-config": major
 "@jaybeeuu/feed-webpack-plugin": patch
 "@jaybeeuu/preact-recoilless": patch
 "@jaybeeuu/reading-time-cli": patch
-"@jaybeeuu/eslint-config": patch
 "@jaybeeuu/preact-async": patch
 "@jaybeeuu/recoilless": patch
 "@jaybeeuu/e2e-hooks": patch
@@ -14,4 +14,4 @@
 "@jaybeeuu/e2e": patch
 ---
 
-Updae all dependencies
+Update dependencies - bumps eslint-typescript passed v6, and so includes stricter linting by default.
