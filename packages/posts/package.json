@@ -14,6 +14,11 @@
   "files": [
     "lib"
   ],
+  "exports": {
+    "./manifest": {
+      "default": "./lib/manifest.json"
+    }
+  },
   "scripts": {
     "build": "compost --href-root blog --code-line-numbers --remove-h1 --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\"",
     "lint": "markdownlint \"**/*.md\" --ignore node_modules",
