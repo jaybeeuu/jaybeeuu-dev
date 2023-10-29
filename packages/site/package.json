@@ -13,12 +13,12 @@
   ],
   "type": "module",
   "scripts": {
-    "build:debug": "cross-env NODE_ENV=devlopment webpack",
-    "build": "cross-env NODE_ENV=production webpack",
+    "start": "vite",
+    "build": "vite build",
+    "start-wp": "cross-env NODE_ENV=development webpack",
+    "build-wp": "cross-env NODE_ENV=production webpack ",
     "gen-certs": "gen-certs",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx --format codeframe .",
-    "start-prod": "cross-env NODE_ENV=production webpack serve",
-    "start": "webpack serve",
     "test": "jest",
     "type-check": "tsc --noEmit --pretty"
   },
@@ -32,6 +32,7 @@
     "@jaybeeuu/eslint-config": "workspace:*",
     "@jaybeeuu/feed-webpack-plugin": "workspace:*",
     "@jaybeeuu/scripts": "workspace:*",
+    "@preact/preset-vite": "^2.6.0",
     "@testing-library/preact": "^3.2.3",
     "@types/case-sensitive-paths-webpack-plugin": "^2.1.8",
     "@types/jest": "^29.5.6",
@@ -67,6 +68,8 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
     "url-loader": "^4.1.1",
+    "vite": "^4.5.0",
+    "vite-plugin-static-copy": "^0.17.0",
     "webpack": "^5.89.0",
     "webpack-bundle-analyzer": "^4.9.1",
     "webpack-cli": "^5.1.4",
@@ -91,6 +94,7 @@
     "prism-theme-vars": "^0.2.4",
     "regenerator-runtime": "^0.14.0",
     "responsive-loader": "^3.1.2",
-    "sharp": "^0.32.6"
+    "sharp": "^0.32.6",
+    "vite-plugin-mkcert": "^1.16.0"
   }
 }
