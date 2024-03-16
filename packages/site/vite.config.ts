@@ -3,6 +3,7 @@ import fs from "fs";
 import { defineConfig } from "vite";
 2;
 import { viteStaticCopy } from "vite-plugin-static-copy";
+import { imagetools } from "vite-imagetools";
 
 const postsRoot = "blog";
 
@@ -23,6 +24,29 @@ export default defineConfig({
   },
   plugins: [
     preact(),
+    imagetools({
+      defaultDirectives: (url) => {
+        if (url.searchParams.has("placeholder")) {
+          return new URLSearchParams({
+            w: "100",
+            format: "jpg",
+            blur: "0.75",
+            progressive: "true",
+            inline: "true",
+          });
+        }
+
+        if (url.searchParams.has("background")) {
+          return new URLSearchParams({
+            w: "1800",
+            format: "jpg",
+            progressive: "true",
+          });
+        }
+
+        return new URLSearchParams();
+      },
+    }),
     viteStaticCopy({
       targets: [
         {

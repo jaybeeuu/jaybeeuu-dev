@@ -8,21 +8,16 @@ interface ResponsiveImageOutput {
   toString: () => string;
 }
 
-declare module "*.background.jpg" {
-  const src: ResponsiveImageOutput;
+declare module "*.jpg?placeholder" {
+  const src: string;
+  export default src;
+}
+declare module "*.jpg?background" {
+  const src: string;
   export default src;
 }
 
-declare module "*.jpg" {
+declare module "*.(jpg|png|svg)" {
   const fileUrl: string;
   export default fileUrl;
-}
-
-declare module "*.svg" {
-  const svgUrl: string;
-  export default svgUrl;
-}
-declare module "*.png" {
-  const pngUrl: string;
-  export default pngUrl;
 }
