@@ -1,5 +1,16 @@
 # @jaybeeuu/preact-recoilless
 
+## 7.0.2
+
+### Patch Changes
+
+- [#154](https://github.com/jaybeeuu/jaybeeuu-dev/pull/154) [`79f9014`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/79f9014a0fc3c8c446a455c719ee3ee38cbcc518) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Update dependencies to latest
+
+- Updated dependencies [[`79f9014`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/79f9014a0fc3c8c446a455c719ee3ee38cbcc518)]:
+  - @jaybeeuu/preact-async@5.0.2
+  - @jaybeeuu/recoilless@7.0.2
+  - @jaybeeuu/utilities@3.0.2
+
 ## 7.0.1
 
 ### Patch Changes
