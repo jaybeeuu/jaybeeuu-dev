@@ -1,5 +1,11 @@
 # @jaybeeuu/utilities
 
+## 3.0.2
+
+### Patch Changes
+
+- [#154](https://github.com/jaybeeuu/jaybeeuu-dev/pull/154) [`79f9014`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/79f9014a0fc3c8c446a455c719ee3ee38cbcc518) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Update dependencies to latest
+
 ## 3.0.1
 
 ### Patch Changes

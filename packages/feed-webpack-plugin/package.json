@@ -1,6 +1,6 @@
 {
   "name": "@jaybeeuu/feed-webpack-plugin",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
   "description": "A simple webpack wrapper for the feed library.",
