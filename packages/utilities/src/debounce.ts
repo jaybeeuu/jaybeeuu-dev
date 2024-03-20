@@ -5,23 +5,27 @@ export interface DebounceOptions {
   leading: boolean;
 }
 
-export type UserDebounceOptions = Partial<DebounceOptions> & Pick<DebounceOptions, "delay">;
+export type UserDebounceOptions = Partial<DebounceOptions> &
+  Pick<DebounceOptions, "delay">;
 
-const normalisedOptions = (optionsOrDelay: number | UserDebounceOptions): DebounceOptions => {
-  const userOptions = typeof optionsOrDelay === "number"
-    ? { delay: optionsOrDelay }
-    : optionsOrDelay;
+const normalisedOptions = (
+  optionsOrDelay: number | UserDebounceOptions,
+): DebounceOptions => {
+  const userOptions =
+    typeof optionsOrDelay === "number"
+      ? { delay: optionsOrDelay }
+      : optionsOrDelay;
 
   return {
     leading: false,
-    ...userOptions
+    ...userOptions,
   };
 };
 
 export const debounce = <Args extends unknown[]>(
   actor: (...args: Args) => void,
-  optionsOrDelay: number | UserDebounceOptions
-): (...args: Args) => void => {
+  optionsOrDelay: number | UserDebounceOptions,
+): ((...args: Args) => void) => {
   const options = normalisedOptions(optionsOrDelay);
   let latestArgs: Args | null = null;
   let shouldExecute = false;
@@ -48,14 +52,12 @@ export const debounce = <Args extends unknown[]>(
         assertIsNotNullish(latestArgs);
         actor(...latestArgs);
       } else {
-        nextStrategy = options.leading
-          ? immediateExecution
-          : scheduleExecution;
+        nextStrategy = options.leading ? immediateExecution : scheduleExecution;
       }
     }, options.delay);
   };
-  nextStrategy = options.leading
-    ? immediateExecution
-    : scheduleExecution;
-  return (...args) => { nextStrategy(...args); };
+  nextStrategy = options.leading ? immediateExecution : scheduleExecution;
+  return (...args) => {
+    nextStrategy(...args);
+  };
 };

@@ -7,7 +7,7 @@ Did it make a noticeable difference?
 All performance optimisations come with a cost. It might be increased complexity or memory usage, slower writes or less
 maintainable code but the cost is there and it's usually tangible. "So what?" I hear you ask -
 "if it's faster it's faster!" Fine, but did you check? Was the difference perceivable to the end user? The cost of the
-optimisation is only worthwhile if it actually improves the system enough and you will often be surprised *where* the
+optimisation is only worthwhile if it actually improves the system enough and you will often be surprised _where_ the
 time is spent in your code, intuition is often wrong.
 
 Here's a quick example. Have a look at this code:
@@ -20,40 +20,32 @@ const numberOfAccesses = 5;
 
 const charCodeOf0 = "0".charCodeAt(0);
 const getRandomString = () => {
-  return Array.from(
-    { length: lengthOfString },
-    () => {
-      const randomInt = Math.floor(
-        Math.random() * 79
-      ) + charCodeOf0;
-      return String.fromCharCode(randomInt);
-    }
-  ).join("");
+  return Array.from({ length: lengthOfString }, () => {
+    const randomInt = Math.floor(Math.random() * 79) + charCodeOf0;
+    return String.fromCharCode(randomInt);
+  }).join("");
 };
 
 console.time("Array");
-for(let i = 0; i < numberOfIterations; i++) {
-  const array = Array.from(
-    { length: numberOfStrings },
-    () => getRandomString()
+for (let i = 0; i < numberOfIterations; i++) {
+  const array = Array.from({ length: numberOfStrings }, () =>
+    getRandomString(),
   );
 
-  for(let j = 0; j < numberOfAccesses; j++) {
+  for (let j = 0; j < numberOfAccesses; j++) {
     array.includes(getRandomString());
   }
 }
 console.timeEnd("Array");
 
-
 console.time("Set");
-for(let i = 0; i < numberOfIterations; i++) {
-  const array = Array.from(
-    { length: numberOfStrings },
-    () => getRandomString()
+for (let i = 0; i < numberOfIterations; i++) {
+  const array = Array.from({ length: numberOfStrings }, () =>
+    getRandomString(),
   );
   const set = new Set(array);
 
-  for(let j = 0; j < numberOfAccesses; j++) {
+  for (let j = 0; j < numberOfAccesses; j++) {
     set.has(getRandomString());
   }
 }
@@ -62,18 +54,18 @@ console.timeEnd("Set");
 
 OK what am I up to?
 
-* `getRandomString` is generating a `lengthOfString` character string of the 79 characters between `0` and `~`,
+- `getRandomString` is generating a `lengthOfString` character string of the 79 characters between `0` and `~`,
 
-* Next we have two timed for loops; bracketed by the `console.time()` and `console.timeEnd()` calls.
-  * The first, between `console.time("Array")` and `console.timeEnd("Array")`,
-    * uses `getRandomString` to generate an array of length `numberOfStrings`
-    * Tries to discover if another random string is in that array `numberOfAccesses` times.
-  * The second, between `console.time("Set")` and `console.timeEnd("Set")`,
-    * Uses `getRandomString` to generate an array of length `numberOfStrings`.
-    * Then, because we want to efficiently see if strings are in the array,
+- Next we have two timed for loops; bracketed by the `console.time()` and `console.timeEnd()` calls.
+  - The first, between `console.time("Array")` and `console.timeEnd("Array")`,
+    - uses `getRandomString` to generate an array of length `numberOfStrings`
+    - Tries to discover if another random string is in that array `numberOfAccesses` times.
+  - The second, between `console.time("Set")` and `console.timeEnd("Set")`,
+    - Uses `getRandomString` to generate an array of length `numberOfStrings`.
+    - Then, because we want to efficiently see if strings are in the array,
       writes the thing into a
       [`Set`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
-    * Tries to discover if another random string is in that array `numberOfAccesses` times.
+    - Tries to discover if another random string is in that array `numberOfAccesses` times.
 
 Why a set in the second case?
 Well
@@ -157,7 +149,7 @@ discover the pitfall. Meanwhile reaching for the more familiar array first off w
 structure and faster code. What's not to love?
 
 Of course, it doesn't take much fiddling with the constants at the top of that sample to make the `Set` far out
-perform the array. But even then...  how much faster is it?
+perform the array. But even then... how much faster is it?
 In your application how many times will the thing run in your application?
 Is it worth it?
 Worse - is that really the least performant bit of your codebase?
@@ -181,7 +173,7 @@ so there were weird mutation bugs I had to track down.
 The rest of the project treated most data structures as immutable so that was a deviation.
 There was also more code; more places it could go wrong and more for me to maintain.
 
-In this instance the benefit outweighed the cost - it *was*, undeniably, faster.
+In this instance the benefit outweighed the cost - it _was_, undeniably, faster.
 But in so many other situations you won't even notice difference,
 and sometimes... despite your best intentions... you will make things worse.
 

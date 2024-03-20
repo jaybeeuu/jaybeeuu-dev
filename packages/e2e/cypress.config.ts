@@ -4,7 +4,7 @@ export default defineConfig({
   e2e: {
     baseUrl: "https://localhost:3443",
     specPattern: "integration/**/*.cy.{js,jsx,ts,tsx}",
-    supportFile: false
+    supportFile: false,
   },
   experimentalFetchPolyfill: true,
   fixturesFolder: "fixtures",
@@ -13,6 +13,6 @@ export default defineConfig({
   videosFolder: ".videos",
   reporter: "mocha-junit-reporter",
   reporterOptions: {
-    mochaFile: "./.reports/[suiteFilename].xml"
-  }
+    mochaFile: "./.reports/[suiteFilename].xml",
+  },
 });

@@ -29,8 +29,7 @@ In the bad old days you would have to do something like this:
 const action = "eat";
 const fruit = "pear";
 
-const sentence = "I would like to " + action + " a "
-  + fruit + ".";
+const sentence = "I would like to " + action + " a " + fruit + ".";
 
 console.log(sentence); // Logs "I would like to eat a pear".
 ```
@@ -102,14 +101,14 @@ Let me explain.
 I like to separate out the concerns of styling my components (I use react at the moment)
 and selecting elements to assert on or interact with in my UI end to end (E2E) tests (I use Cypress).
 So rather than using CSS classes to apply both styles and select elements in E2E,
-I add classes to style our elements (style classes) and *also* add different classes for use in E2E (E2E Hooks),
+I add classes to style our elements (style classes) and _also_ add different classes for use in E2E (E2E Hooks),
 when I need them.
 If you inspect a couple of elements on this blog (try the buttons in the navbar/header) you'll see them;
 they are the classes that start `e2e__`.
 
 This is good.
 I am free to restyle components or elements or refactor the classes I apply without breaking my tests.
-Tests that don't need to change as a result of refactors bring more *value*.
+Tests that don't need to change as a result of refactors bring more _value_.
 
 The problem is that we need to have unique class names because CSS classes are globally scoped.
 For style classes I use CSS modules (which are fantastic) but that would be awkward as E2E hooks,
@@ -130,7 +129,7 @@ I don't want to get too deep but understanding BEM a little is important to grok
 BEM stands for Block Element Modifier.
 The idea is that your CSS classes will be made up of combinations of those three things.
 This does a couple of things.
-For one it's *a* convention, so naming becomes more consistent.
+For one it's _a_ convention, so naming becomes more consistent.
 Also it give you some concept of scoping and so helps to avoid the global CSS classes problem.
 
 Blocks are top level containers; "a stand alone entity that is meaningful on its own".
@@ -169,9 +168,9 @@ And I'm lazy so I use a set of functions to build them.
 OK I'm being flippant here.
 There's better reasons to take this next step.
 
-* It's easier to discover BEM syntax is being used if you have words describing it, rather than just the classes and
-(you document your teams working practices and conventions right?) some wiki page somewhere.
-* It's more likely those who follow after will use your naming convention if it's easy.
+- It's easier to discover BEM syntax is being used if you have words describing it, rather than just the classes and
+  (you document your teams working practices and conventions right?) some wiki page somewhere.
+- It's more likely those who follow after will use your naming convention if it's easy.
   Encoding how to do it in code,
   then publicising and documenting it makes it pretty difficult to do anything but follow the pattern.
 
@@ -222,17 +221,11 @@ import { makeHookBlock } from "@jaybeeuu/e2e-hooks";
 const carouselBlock = makeHookBlock("carousel");
 const dotButton = carouselBlock.element("dot-button");
 
-const activeDotButton = carouselBlock.modifiedElement(
-  "dot-button",
-  "active"
-);
+const activeDotButton = carouselBlock.modifiedElement("dot-button", "active");
 
 const dotButton = ({ active, onClick }) => (
   <button
-    className={classNames(
-      dotButton,
-      { active: activeDotButton }
-    )}
+    className={classNames(dotButton, { active: activeDotButton })}
     onClick={onClick}
   />
 );
@@ -292,30 +285,27 @@ Can we do better?
 Lets have a go with template literal types:
 
 ```ts
-type Hook<Block extends string> = `e2e__${Block}`
+type Hook<Block extends string> = `e2e__${Block}`;
 
 interface HookBlock<Block extends string> {
   (): Hook<Block>;
 
   element: <Element extends string>(
-    element: Element
+    element: Element,
   ) => `${Hook<Block>}__${Element}`;
 
-  modifiedElement: <
-    Element extends string,
-    Modifier extends string
-  >(
+  modifiedElement: <Element extends string, Modifier extends string>(
     element: Element,
-    modifier: Modifier
+    modifier: Modifier,
   ) => `${Hook<Block>}__${Element}--${Modifier}`;
 
   modifier: <Modifier extends string>(
-    modifier: Modifier
+    modifier: Modifier,
   ) => `${Hook<Block>}--${Modifier}`;
 }
 
 const makeHookBlock = <Block extends string>(
-  block: Block
+  block: Block,
 ): HookBlock<Block> => {
   // ...
 };
@@ -337,23 +327,19 @@ Here's an example usage:
 const carouselBlock = makeHookBlock("carousel");
 const dotButton = carouselBlock.element("dot-button");
 
-const activeDotButton = carouselBlock.modifiedElement(
-  "dot-button",
-  "active"
-);
+const activeDotButton = carouselBlock.modifiedElement("dot-button", "active");
 ```
 
 Let's look at the `element` call as an example.
 The type for that function is:
 
 ```ts
-element: <Element extends string>(
-  element: Element
-) => `${Hook<Block>}__${Element}`;
+element: <Element extends string>(element: Element) =>
+  `${Hook<Block>}__${Element}`;
 ```
 
 The `Element` generic type is the value we pass into the function - it's the bit that will end up after the `__`.
-In the example  here it's type will be a string literal: `"dot-button"`
+In the example here it's type will be a string literal: `"dot-button"`
 (not just `string`).
 
 `Hook<Block>` is the root class for your hook block.

@@ -5,17 +5,15 @@ import { h } from "preact";
 import type { FailedProps } from "./with-promise";
 import { withPromise } from "./with-promise";
 
-const Pending = (): JSX.Element => (
-  <div>Pending</div>
-);
+const Pending = (): JSX.Element => <div>Pending</div>;
 const Failed = ({ error }: FailedProps): JSX.Element => (
-  <div>{
-    error instanceof Error
+  <div>
+    {error instanceof Error
       ? error.message
       : Object.entries(error).map(
-        ([source, err]) => `${source}: ${err.message}`
-      )
-  }</div>
+          ([source, err]) => `${source}: ${err.message}`,
+        )}
+  </div>
 );
 
 interface ContentProps {
@@ -33,7 +31,7 @@ const ContentWithPromise = withPromise({ Pending, Failed, Content });
 describe("withPromise", () => {
   it("renders the pending component when the promise is yet to complete.", async () => {
     const { findByText } = render(
-      <ContentWithPromise message={{ status: "pending" }} />
+      <ContentWithPromise message={{ status: "pending" }} />,
     );
 
     await expect(findByText("Pending")).resolves.toBeVisible();
@@ -44,7 +42,7 @@ describe("withPromise", () => {
       <ContentWithPromise
         message={{ status: "complete", value: "{message}" }}
         value={1}
-      />
+      />,
     );
 
     await expect(findByText("{message} 1")).resolves.toBeVisible();
@@ -52,7 +50,9 @@ describe("withPromise", () => {
 
   it("renders the failed component when the promise fails.", async () => {
     const { findByText } = render(
-      <ContentWithPromise message={{ status: "failed", error: new Error("Whoops!") }} />
+      <ContentWithPromise
+        message={{ status: "failed", error: new Error("Whoops!") }}
+      />,
     );
 
     await expect(findByText("message: Whoops!")).resolves.toBeVisible();
@@ -63,7 +63,7 @@ describe("withPromise", () => {
       <ContentWithPromise
         message={{ status: "complete", value: "{message}" }}
         value={{ status: "pending" }}
-      />
+      />,
     );
 
     await expect(findByText("Pending")).resolves.toBeVisible();
@@ -71,24 +71,27 @@ describe("withPromise", () => {
 
   it.each<PromiseState<string>>([
     { status: "pending" },
-    { status: "complete", value: "{message}" }
-  ])("$#: renders the failed component when at least one of the promises has failed (the other had $status).", async (otherPromise) => {
-    const { findByText } = render(
-      <ContentWithPromise
-        message={otherPromise}
-        value={{ status: "failed", error: new Error("Whoops!") }}
-      />
-    );
+    { status: "complete", value: "{message}" },
+  ])(
+    "$#: renders the failed component when at least one of the promises has failed (the other had $status).",
+    async (otherPromise) => {
+      const { findByText } = render(
+        <ContentWithPromise
+          message={otherPromise}
+          value={{ status: "failed", error: new Error("Whoops!") }}
+        />,
+      );
 
-    await expect(findByText("value: Whoops!")).resolves.toBeVisible();
-  });
+      await expect(findByText("value: Whoops!")).resolves.toBeVisible();
+    },
+  );
 
   it("renders the content component when all promises have completed.", async () => {
     const { findByText } = render(
       <ContentWithPromise
         message={{ status: "complete", value: "{message}" }}
         value={{ status: "complete", value: 1 }}
-      />
+      />,
     );
 
     await expect(findByText("{message} 1")).resolves.toBeVisible();

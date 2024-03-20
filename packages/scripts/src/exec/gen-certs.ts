@@ -11,40 +11,34 @@ export const main = (argv: string[]): void => {
           default: ["localhost"],
           alias: "d",
           type: "string",
-          array: true
+          array: true,
         },
         directory: {
           default: "./certs",
           alias: "o",
-          type: "string"
+          type: "string",
         },
         certName: {
           default: "cert.crt",
           alias: "crt",
-          type: "string"
+          type: "string",
         },
         keyName: {
           default: "key.key",
           alias: "k",
-          type: "string"
+          type: "string",
         },
         caName: {
           default: "ca.pem",
           alias: "ca",
-          type: "string"
-        }
+          type: "string",
+        },
       },
       async (args) => {
         await genCerts(args);
-      }
+      },
     )
-    .command(
-      "uninstall",
-      "Uninstalls the CA.",
-      {},
-      uninstall
-    )
+    .command("uninstall", "Uninstalls the CA.", {}, uninstall)
     .demandCommand()
-    .help()
-    .argv;
+    .help().argv;
 };

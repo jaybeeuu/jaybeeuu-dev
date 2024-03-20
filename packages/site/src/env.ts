@@ -1,6 +1,6 @@
 // When changing this list of variables also update accepted vars in ../config/env.js
 declare const process: {
-  env: { [key: string]: string | undefined }
+  env: { [key: string]: string | undefined };
 };
 
 export const CLIENT_HOST_NAME = process.env.CLIENT_HOST_NAME ?? "localhost";

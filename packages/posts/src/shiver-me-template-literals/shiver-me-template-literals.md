@@ -31,14 +31,12 @@ const { howDoYeHail } = await yargs(process.argv.slice(2))
     alias: "h",
     demandOption: true,
     describe: "What should I call you?",
-    type: "string"
+    type: "string",
   })
   .help()
   .parse();
 
-console.log(
-  `Avast there! Welcome ${howDoYeHail}`
-);
+console.log(`Avast there! Welcome ${howDoYeHail}`);
 ```
 
 OK this thing parses a single argument from `process.argv`; `how-do-you-hail`.
@@ -74,17 +72,17 @@ showcasing some built-in types I didn't know existed:
 ```ts
 /** Convert literal string types like 'foo-bar' to 'FooBar' */
 type PascalCase<S extends string> = string extends S
-    ? string
-    : S extends `${infer T}-${infer U}`
-      ? `${Capitalize<T>}${PascalCase<U>}`
-      : Capitalize<S>;
+  ? string
+  : S extends `${infer T}-${infer U}`
+    ? `${Capitalize<T>}${PascalCase<U>}`
+    : Capitalize<S>;
 
 /** Convert literal string types like 'foo-bar' to 'fooBar' */
 type CamelCase<S extends string> = string extends S
-    ? string
-    : S extends `${infer T}-${infer U}`
-      ? `${T}${PascalCase<U>}`
-      : S;
+  ? string
+  : S extends `${infer T}-${infer U}`
+    ? `${T}${PascalCase<U>}`
+    : S;
 ```
 
 The entry point for us is `CamelCase`.

@@ -20,7 +20,9 @@
   border-radius: var(--border-radius-content);
   margin: 4rem 0;
   padding: 1rem;
-  transition: var(--transition-theme), border-color var(--transition-average);
+  transition:
+    var(--transition-theme),
+    border-color var(--transition-average);
 }
 
 .post:hover {

@@ -4,13 +4,13 @@ import type {
   PrimitiveValue,
   SettableValue,
   Value,
-  ValueState
+  ValueState,
 } from "./state/index.js";
 import {
   assertIsSettableValueState,
   DerivedValueState,
   isDerivedValue,
-  PrimitiveValueState
+  PrimitiveValueState,
 } from "./state/index.js";
 import type { StoreRemovalSchedule } from "./state/store-removal-strategies.js";
 
@@ -26,7 +26,10 @@ export interface ActionContext {
   set: SetValue;
 }
 
-export type Action<Args extends unknown[]> = (context: ActionContext, ...args: Args) => void
+export type Action<Args extends unknown[]> = (
+  context: ActionContext,
+  ...args: Args
+) => void;
 
 export interface StoreOptions {
   defaultRemovalSchedule?: StoreRemovalSchedule;
@@ -34,7 +37,7 @@ export interface StoreOptions {
 
 type DefaultedStoreOptions = {
   [Option in keyof StoreOptions]-?: StoreOptions[Option];
-}
+};
 
 export class Store {
   readonly #options: DefaultedStoreOptions;
@@ -44,16 +47,20 @@ export class Store {
     if (isDerivedValue(value)) {
       return new DerivedValueState(
         value,
-        () => { this.#removeValue(value); },
+        () => {
+          this.#removeValue(value);
+        },
         (dependency) => this.#getDependency(dependency),
-        this.#options.defaultRemovalSchedule
+        this.#options.defaultRemovalSchedule,
       );
     }
 
     return new PrimitiveValueState(
       value,
-      () => { this.#removeValue(value); },
-      this.#options.defaultRemovalSchedule
+      () => {
+        this.#removeValue(value);
+      },
+      this.#options.defaultRemovalSchedule,
     );
   };
 
@@ -62,9 +69,9 @@ export class Store {
   };
 
   readonly #getDependency: GetDependency = <Val>(
-    value: Value<Val>
+    value: Value<Val>,
   ): ValueState<Val> => {
-    if (!(this.#values.has(value.name))) {
+    if (!this.#values.has(value.name)) {
       this.#values.set(value.name, this.#createValue(value));
     }
 
@@ -74,26 +81,27 @@ export class Store {
   constructor(options: Partial<StoreOptions> = {}) {
     this.#options = {
       defaultRemovalSchedule: { schedule: "synchronous" },
-      ...options
+      ...options,
     };
   }
 
   public readonly getValue: GetValue = this.#getDependency as GetValue;
 
   public getActor<Args extends unknown[]>(
-    action: Action<Args>
+    action: Action<Args>,
   ): (...args: Args) => void {
     return (...args: Args) => {
       action(
         {
-          get: <Val>(value: Value<Val>): Val => this.#getDependency(value).current,
+          get: <Val>(value: Value<Val>): Val =>
+            this.#getDependency(value).current,
           set: (value, entry) => {
             const valueState = this.#getDependency(value);
             assertIsSettableValueState(valueState);
             valueState.set(entry);
-          }
+          },
         },
-        ...args
+        ...args,
       );
     };
   }

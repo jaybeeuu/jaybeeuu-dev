@@ -1,7 +1,10 @@
 import type { Listener, Unsubscribe, ValueState } from "./value-state.js";
 import { WatchableValue } from "./watchable-value.js";
 import type { Value } from "./value.js";
-import type { StoreRemovalSchedule, UnscheduleRemoval } from "./store-removal-strategies.js";
+import type {
+  StoreRemovalSchedule,
+  UnscheduleRemoval,
+} from "./store-removal-strategies.js";
 import { makeScheduler } from "./store-removal-strategies.js";
 
 export interface DerivedValue<Val> {
@@ -32,7 +35,7 @@ export class DerivedValueState<Val> implements ValueState<Val> {
     { derive, removalSchedule, name }: DerivedValue<Val>,
     removeFromStore: () => void,
     getDependency: GetDependency,
-    defaultRemovalSchedule: StoreRemovalSchedule
+    defaultRemovalSchedule: StoreRemovalSchedule,
   ) {
     this.#derive = derive;
     this.#getDependency = getDependency;
@@ -40,34 +43,33 @@ export class DerivedValueState<Val> implements ValueState<Val> {
 
     const firstValue = this.#derive({
       get: (...args) => this.#getDependencyValue(...args),
-      previousValue: undefined
+      previousValue: undefined,
     });
 
-    const {
-      schedule: scheduleRemoval,
-      unschedule: unscheduleRemoval
-    } = makeScheduler(
-      removalSchedule ?? defaultRemovalSchedule,
-      () => {
+    const { schedule: scheduleRemoval, unschedule: unscheduleRemoval } =
+      makeScheduler(removalSchedule ?? defaultRemovalSchedule, () => {
         removeFromStore();
-        this.#dependencyUnsubscribes.forEach(
-          (unsubscribeDependency) => { unsubscribeDependency(); }
-        );
-      }
-    );
+        this.#dependencyUnsubscribes.forEach((unsubscribeDependency) => {
+          unsubscribeDependency();
+        });
+      });
     this.#unscheduleRemoval = unscheduleRemoval;
     this.#value = new WatchableValue(
       firstValue,
-      () => { scheduleRemoval(); },
-      name
+      () => {
+        scheduleRemoval();
+      },
+      name,
     );
   }
 
   #deriveAgain(): void {
-    this.#value.set(this.#derive({
-      get: (...args) => this.#getDependencyValue(...args),
-      previousValue: this.current
-    }));
+    this.#value.set(
+      this.#derive({
+        get: (...args) => this.#getDependencyValue(...args),
+        previousValue: this.current,
+      }),
+    );
   }
 
   #getDependencyValue<Dependency>(dependency: Value<Dependency>): Dependency {
@@ -76,9 +78,9 @@ export class DerivedValueState<Val> implements ValueState<Val> {
     if (!this.#registeredDependencies.has(dependencyState)) {
       this.#registeredDependencies.add(dependencyState);
       this.#dependencyUnsubscribes.push(
-        dependencyState.subscribe(
-          () => { this.#deriveAgain(); }
-        )
+        dependencyState.subscribe(() => {
+          this.#deriveAgain();
+        }),
       );
     }
 

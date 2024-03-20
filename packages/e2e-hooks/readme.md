@@ -5,7 +5,7 @@ Exports css classes which can be used to "hook" elements on the page in order to
 I like to separate out the concerns of styling my components (I use react at the moment)
 and selecting elements to assert on or interact with in my UI end to end (E2E) tests (I use Cypress).
 So rather than using CSS classes to apply both styles and select elements in E2E,
-I add classes to style our elements (style classes) and *also* add different classes for use in E2E (E2E Hooks),
+I add classes to style our elements (style classes) and _also_ add different classes for use in E2E (E2E Hooks),
 when I need them.
 If you inspect a couple of elements on [my blog](https://jaybeeuu.dev) (try the buttons in the navbar/header) you'll see them;
 they are the classes that start `e2e__`.

@@ -7,24 +7,28 @@ export interface BaseSchedulerFactoryOptions<Schedule extends string> {
 }
 
 type RemovalSchedulerFactory<
-  Options extends BaseSchedulerFactoryOptions<string>
+  Options extends BaseSchedulerFactoryOptions<string>,
 > = (
   options: Options,
-  removeFromStore: RemoveFromStore
+  removeFromStore: RemoveFromStore,
 ) => {
   schedule: ScheduleRemoval;
   unschedule: UnscheduleRemoval;
 };
 
-export interface SynchronousRemovalFactoryOptions extends BaseSchedulerFactoryOptions<"synchronous"> {
-}
+export interface SynchronousRemovalFactoryOptions
+  extends BaseSchedulerFactoryOptions<"synchronous"> {}
 
-const makeScheduleSynchronousRemoval: RemovalSchedulerFactory<SynchronousRemovalFactoryOptions> = (
+const makeScheduleSynchronousRemoval: RemovalSchedulerFactory<
+  SynchronousRemovalFactoryOptions
+> = (
   options: SynchronousRemovalFactoryOptions,
-  removeFromStore: RemoveFromStore
+  removeFromStore: RemoveFromStore,
 ) => ({
-  schedule: () => { removeFromStore(); },
-  unschedule: () => {}
+  schedule: () => {
+    removeFromStore();
+  },
+  unschedule: () => {},
 });
 
 export interface DelayedRemovalFactoryOptions {
@@ -32,36 +36,43 @@ export interface DelayedRemovalFactoryOptions {
   delay: number;
 }
 
-const makeScheduleDelayedRemoval: RemovalSchedulerFactory<DelayedRemovalFactoryOptions> = (
+const makeScheduleDelayedRemoval: RemovalSchedulerFactory<
+  DelayedRemovalFactoryOptions
+> = (
   options: DelayedRemovalFactoryOptions,
-  removeFromStore: RemoveFromStore
+  removeFromStore: RemoveFromStore,
 ) => {
   let removalTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
 
   return {
     schedule: () => {
       clearTimeout(removalTimeout);
-      removalTimeout = setTimeout(
-        () => { removeFromStore(); },
-        options.delay
-      );
+      removalTimeout = setTimeout(() => {
+        removeFromStore();
+      }, options.delay);
     },
-    unschedule: () => { clearTimeout(removalTimeout); }
+    unschedule: () => {
+      clearTimeout(removalTimeout);
+    },
   };
 };
 
-export type StoreRemovalSchedule = SynchronousRemovalFactoryOptions | DelayedRemovalFactoryOptions;
+export type StoreRemovalSchedule =
+  | SynchronousRemovalFactoryOptions
+  | DelayedRemovalFactoryOptions;
 
 const schedulerFactories: {
-  [Schedule in StoreRemovalSchedule["schedule"]]: RemovalSchedulerFactory<Extract<StoreRemovalSchedule, { schedule: Schedule; }>>
+  [Schedule in StoreRemovalSchedule["schedule"]]: RemovalSchedulerFactory<
+    Extract<StoreRemovalSchedule, { schedule: Schedule }>
+  >;
 } = {
   delayed: makeScheduleDelayedRemoval,
-  synchronous: makeScheduleSynchronousRemoval
+  synchronous: makeScheduleSynchronousRemoval,
 };
 
 export const makeScheduler = (
   options: StoreRemovalSchedule,
-  removeFromStore: RemoveFromStore
+  removeFromStore: RemoveFromStore,
 ): {
   schedule: ScheduleRemoval;
   unschedule: UnscheduleRemoval;
@@ -69,6 +80,6 @@ export const makeScheduler = (
   return schedulerFactories[options.schedule](
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
     options as any,
-    removeFromStore
+    removeFromStore,
   );
 };

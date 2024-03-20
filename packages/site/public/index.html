@@ -1,130 +1,158 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0d1014" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0d1014">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Josh Bickley-Wallace</title>
+    <meta
+      name="description"
+      content="Josh Bickley-Wallace, Software Engineer"
+    />
 
-  <title>Josh Bickley-Wallace</title>
-  <meta name="description" content="Josh Bickley-Wallace, Software Engineer">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="alternate" type="application/atom+xml" href="feeds/atom.xml" />
+    <link rel="alternate" type="application/rss+xml" href="feeds/rss.xml" />
+    <style>
+      html,
+      body,
+      #app,
+      #theme-root {
+        height: 100%;
+        width: 100%;
+      }
 
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-  <link rel="alternate" type="application/atom+xml" href="feeds/atom.xml">
-  <link rel="alternate" type="application/rss+xml" href="feeds/rss.xml">
-  <style>
-    html, body, #app, #theme-root {
-      height: 100%;
-      width: 100%;
-    }
-
-    html {
-      height: 100%;
-      width: 100%;
-      margin: 0;
-      padding: 0;
-      font-family: calibri, x-locale-body, sans-serif;
-      font-weight: 200;
-      font-size: 10px;
-    }
-
-    body {
-      height: 100%;
-      width: 100%;
-      font-size: 2rem;
-      margin: 0;
-    }
-
-    /* for-phone-only */
-    @media only screen and (max-width: 650px) {
       html {
-        font-weight: 300;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: calibri, x-locale-body, sans-serif;
+        font-weight: 200;
+        font-size: 10px;
       }
 
       body {
-        font-size: 1.8rem;
+        height: 100%;
+        width: 100%;
+        font-size: 2rem;
+        margin: 0;
       }
-    }
 
-    #app {
-      height: 100%;
-      width: 100%;
-    }
+      /* for-phone-only */
+      @media only screen and (max-width: 650px) {
+        html {
+          font-weight: 300;
+        }
 
-    #theme-root {
-      height: 100%;
-      width: 100%;
-      transition: var(--transition-theme);
-    }
+        body {
+          font-size: 1.8rem;
+        }
+      }
 
-    @media (prefers-color-scheme: light) {
+      #app {
+        height: 100%;
+        width: 100%;
+      }
+
       #theme-root {
-        background-color: var(--background-colour-document, #eeeeee);
-        color: var(--colour-text-main, #343438);
+        height: 100%;
+        width: 100%;
+        transition: var(--transition-theme);
       }
-    }
 
-    @media (prefers-color-scheme: dark) {
-      #theme-root {
-        background-color: var(--background-colour-document, #0d1014);
-        color: var(--colour-text-main, #96a4b8);
+      @media (prefers-color-scheme: light) {
+        #theme-root {
+          background-color: var(--background-colour-document, #eeeeee);
+          color: var(--colour-text-main, #343438);
+        }
       }
-    }
 
-    .fade-in {
-      animation: fade-in ease-in-out 2s;
-      -webkit-animation: fade-in ease-in-out 2s;
-    }
-    @keyframes fade-in {
-      0% { opacity: 0; }
-      60% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-    @-webkit-keyframes fade-in {
-      0% { opacity: 0; }
-      60% { opacity: 0; }
-      100% { opacity: 1; }
-    }
+      @media (prefers-color-scheme: dark) {
+        #theme-root {
+          background-color: var(--background-colour-document, #0d1014);
+          color: var(--colour-text-main, #96a4b8);
+        }
+      }
 
-    .spinner {
-      margin: auto;
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      .fade-in {
+        animation: fade-in ease-in-out 2s;
+        -webkit-animation: fade-in ease-in-out 2s;
+      }
+      @keyframes fade-in {
+        0% {
+          opacity: 0;
+        }
+        60% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @-webkit-keyframes fade-in {
+        0% {
+          opacity: 0;
+        }
+        60% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
 
-      display: inline-block;
-      width: 5rem;
-      height: 5rem;
-      border: 0.3px solid var(--spinner-secondary, rgba(255, 255, 255, .3));
-      border-top-color: var(--spinner-main, #ffffff);
-      border-radius: 50%;
-      animation: spinner 2s ease-in-out infinite;
-      -webkit-animation: spinner 2s ease-in-out infinite;
-    }
-    @keyframes spinner {
-      0% { transform: rotate(40deg); }
-      25% { transform: rotate(-40deg); }
-      100% { transform: rotate(400deg); }
-    }
-    @-webkit-keyframes spinner {
-      0% { -webkit-transform: rotate(40deg); }
-      25% { -webkit-transform: rotate(-40deg); }
-      100% { -webkit-transform: rotate(400deg); }
-    }
-  </style>
-</head>
+      .spinner {
+        margin: auto;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
 
-<body>
-  <div id="app">
-    <div id="theme-root" class="dark">
-      <div class="fade-in">
-        <div class="spinner"></div>
+        display: inline-block;
+        width: 5rem;
+        height: 5rem;
+        border: 0.3px solid var(--spinner-secondary, rgba(255, 255, 255, 0.3));
+        border-top-color: var(--spinner-main, #ffffff);
+        border-radius: 50%;
+        animation: spinner 2s ease-in-out infinite;
+        -webkit-animation: spinner 2s ease-in-out infinite;
+      }
+      @keyframes spinner {
+        0% {
+          transform: rotate(40deg);
+        }
+        25% {
+          transform: rotate(-40deg);
+        }
+        100% {
+          transform: rotate(400deg);
+        }
+      }
+      @-webkit-keyframes spinner {
+        0% {
+          -webkit-transform: rotate(40deg);
+        }
+        25% {
+          -webkit-transform: rotate(-40deg);
+        }
+        100% {
+          -webkit-transform: rotate(400deg);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <div id="theme-root" class="dark">
+        <div class="fade-in">
+          <div class="spinner"></div>
+        </div>
       </div>
     </div>
-  </div>
-</body>
-
+  </body>
 </html>

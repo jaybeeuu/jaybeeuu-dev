@@ -11,7 +11,7 @@ to worry about it.
 But it also helps to understand what you are trying to do:
 
 Memoising selectors is aimed at letting react know it doesn't have to rerender the component. Remember that Every time
-*any* part of the Redux store changes all of your connected components will get a notification and will try to rerender.
+_any_ part of the Redux store changes all of your connected components will get a notification and will try to rerender.
 If you let it it can be quite costly. SO it is a good idea to avoid it if possible.
 
 The easiest way to tell a component not to rerender when it's props (e.g. because of a store update) or state change do
@@ -22,7 +22,7 @@ the last lot the only rerender if there is a difference. But the comparison they
 partly because it is super quick. So:
 
 ```js
-const a = ['a'];
+const a = ["a"];
 const b = a;
 
 /*
@@ -31,7 +31,7 @@ const b = a;
  */
 console.log(a === b);
 
-const c = ['a'];
+const c = ["a"];
 /*
  * prints false because even though the data is the same,
  * because c has declared a new array in memory.
@@ -54,9 +54,9 @@ rather than mutate the existing object. e.g.
 
 ```js
 const state = {
- 'a': {
-    'b': 10
-  }
+  a: {
+    b: 10,
+  },
 };
 
 // In order to change b to 11 i could do:
@@ -69,10 +69,10 @@ state.a.b = 11;
  */
 const newState = {
   ...state,
-   'a': {
-     ...state.a,
-     'b': 11
-   }
+  a: {
+    ...state.a,
+    b: 11,
+  },
 };
 
 // (this is what your reducers do)
@@ -90,13 +90,11 @@ if (newA !== oldA) {
 So Redux takes care of most of that, but if you are calculating something based off the Redux store in your selector e.g.
 
 ```js
-const getEnabledUsers = (state) => state.users.filer(
-  (user) => user.enabled
-);
+const getEnabledUsers = (state) => state.users.filer((user) => user.enabled);
 ```
 
 `getEnabledUsers` will return a new array instance every single time it runs. And if you use it in `mapStateToProps`
-it will run every time you change *anything* (not just users) in the store, and in turn your react component will
+it will run every time you change _anything_ (not just users) in the store, and in turn your react component will
 rerender every time. And if your whole app does that then that is bad.
 
 Memoisation to the rescue.
@@ -111,17 +109,15 @@ const previousEnabledUsers = [];
 const getEnabledUsers = (state) => {
   if (previousUsersInstance !== state.users) {
     previousUsersInstance = state.users;
-    previousEnabledUsers = state.users.filter(
-      (user) => user.enabled
-    );
+    previousEnabledUsers = state.users.filter((user) => user.enabled);
   }
   return previousEnabledUsers;
-}
+};
 ```
 
 Now react will only rerender if the users array has actually updated.
 
 But it is a bit complicated and a hassle to write that memoisation, and it has a nonzero memory footprint. So don't do
-it if you don't need to and when you do then it's best to use  a library like
+it if you don't need to and when you do then it's best to use a library like
 [reselect](https://github.com/reduxjs/reselect) and [re-reselect](https://github.com/toomuchdesign/re-reselect) to avoid
 the boiler plate and keep you code expressive.

@@ -5,7 +5,7 @@ export {
   ValueOrFactory,
   delay,
   echo,
-  microEcho
+  microEcho,
 } from "./delay.js";
 export { joinUrlPath } from "./join-url-path.js";
 export * as log from "./log.js";
@@ -15,4 +15,3 @@ export * from "./promise-status.js";
 export * from "./results.js";
 export * from "./title-case.js";
 export * from "./type-guards/index.js";
-

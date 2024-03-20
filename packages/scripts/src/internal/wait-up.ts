@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 import { Agent } from "node:https";
-import type { TypeAssertion} from "@jaybeeuu/utilities";
-import { monitorPromise} from "@jaybeeuu/utilities";
+import type { TypeAssertion } from "@jaybeeuu/utilities";
+import { monitorPromise } from "@jaybeeuu/utilities";
 import { delay } from "@jaybeeuu/utilities";
 import { assert, is, isObject } from "@jaybeeuu/utilities";
 export interface Version {
@@ -15,7 +15,7 @@ const isVersion = isObject<Version>({
   commit: is("string"),
   branch: is("string"),
   commitDateTime: is("string"),
-  buildMode: is("string")
+  buildMode: is("string"),
 });
 
 const assertIsVersion: TypeAssertion<Version> = assert(isVersion);
@@ -40,20 +40,17 @@ const getCacheBustedUrl = (url: string): string => {
 const getVersion = async (
   url: string,
   abortSignal: AbortSignal,
-  insecureSSL: boolean
+  insecureSSL: boolean,
 ): Promise<Version> => {
   const cacheBustedUrl = getCacheBustedUrl(url);
   const agent = new Agent({
-    rejectUnauthorized: !insecureSSL
+    rejectUnauthorized: !insecureSSL,
   });
-  const response = await fetch(
-    cacheBustedUrl,
-    {
-      agent,
-      signal: abortSignal,
-      headers: { "Cache-Control": "no-cache" }
-    }
-  );
+  const response = await fetch(cacheBustedUrl, {
+    agent,
+    signal: abortSignal,
+    headers: { "Cache-Control": "no-cache" },
+  });
   const json = await response.json();
   assertIsVersion(json);
   return json;
@@ -64,7 +61,7 @@ const pollForCommitHash = async (
   commitHash: string,
   pollTime: number,
   abortSignal: AbortSignal,
-  insecureSSL: boolean
+  insecureSSL: boolean,
 ): Promise<Version> => {
   while (!abortSignal.aborted) {
     try {
@@ -73,7 +70,7 @@ const pollForCommitHash = async (
         return version;
       }
       console.log(`Found commit "${version.commit}": No match.`);
-    } catch (error){
+    } catch (error) {
       console.log(error?.toString() ?? "Error");
     }
     await delay(pollTime);
@@ -87,18 +84,15 @@ export const waitUp = async ({
   pollTime,
   timeoutDelay,
   url,
-  insecureSSL
+  insecureSSL,
 }: WaitUpOptions): Promise<void> => {
-  console.log(
-    "Wait Up!\n",
-    {
-      commitHash,
-      pollTime,
-      timeoutDelay,
-      url,
-      insecureSSL
-    }
-  );
+  console.log("Wait Up!\n", {
+    commitHash,
+    pollTime,
+    timeoutDelay,
+    url,
+    insecureSSL,
+  });
   assertValueURL(url);
   const abortController = new AbortController();
   const pollPromise = pollForCommitHash(
@@ -106,21 +100,23 @@ export const waitUp = async ({
     commitHash,
     pollTime,
     abortController.signal,
-    insecureSSL
+    insecureSSL,
   );
 
   const startTime = Date.now();
 
-  for await (const promise of monitorPromise(pollPromise, { timeoutDelay: timeoutDelay })) {
+  for await (const promise of monitorPromise(pollPromise, {
+    timeoutDelay: timeoutDelay,
+  })) {
     switch (promise.status) {
-      case "pending":{
+      case "pending": {
         console.log("Polling for commit hash.");
         break;
       }
       case "complete": {
         console.log(
           `Found expected version in ${Date.now() - startTime}ms.\n`,
-          promise.value
+          promise.value,
         );
         return;
       }
@@ -128,9 +124,9 @@ export const waitUp = async ({
         throw new Error(
           typeof promise.error.message === "string"
             ? promise.error.message
-            : promise.error.message.message);
+            : promise.error.message.message,
+        );
       }
     }
   }
 };
-

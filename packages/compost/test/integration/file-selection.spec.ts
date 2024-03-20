@@ -3,7 +3,7 @@ import {
   compilePosts,
   getPost,
   getPostManifest,
-  writePostFile
+  writePostFile,
 } from "./helpers";
 
 describe("file-selection", () => {
@@ -13,15 +13,12 @@ describe("file-selection", () => {
     const slug = "unfinished-post";
     await writePostFile({
       slug,
-      content: [
-        "# This a work in progress.",
-        "Some Content."
-      ],
+      content: ["# This a work in progress.", "Some Content."],
       meta: {
         title: "This an unfinished post",
         abstract: "Still a work in progress.",
-        publish: false
-      }
+        publish: false,
+      },
     });
 
     await compilePosts();
@@ -37,11 +34,8 @@ describe("file-selection", () => {
     const slug = "not-a-post";
     await writePostFile({
       slug,
-      content: [
-        "# This is not a post.",
-        "Some Content."
-      ],
-      meta: null
+      content: ["# This is not a post.", "Some Content."],
+      meta: null,
     });
 
     await compilePosts();
@@ -56,15 +50,12 @@ describe("file-selection", () => {
     const slug = "unfinished-post";
     await writePostFile({
       slug,
-      content: [
-        "# This a work in progress.",
-        "Some content."
-      ],
+      content: ["# This a work in progress.", "Some content."],
       meta: {
         title: "This an unfinished post",
         abstract: "Still a work in progress.",
-        publish: false
-      }
+        publish: false,
+      },
     });
 
     await compilePosts({ includeUnpublished: true });
@@ -81,15 +72,12 @@ describe("file-selection", () => {
     await writePostFile({
       slug,
       path: "./sub-directory",
-      content: [
-        "# This is the first post",
-        postContent
-      ],
+      content: ["# This is the first post", postContent],
       meta: {
         title: "This is the first post",
         abstract: "This is the very first post.",
-        publish: true
-      }
+        publish: true,
+      },
     });
 
     await compilePosts();

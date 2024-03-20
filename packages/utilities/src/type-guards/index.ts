@@ -1,6 +1,4 @@
-export type {
-  TypePredicate
-} from "./type-guards.js";
+export type { TypePredicate } from "./type-guards.js";
 export {
   is,
   isArrayOf,
@@ -8,12 +6,7 @@ export {
   isNullish,
   isObject,
   isRecordOf,
-  or
+  or,
 } from "./type-guards.js";
-export type {
-  TypeAssertion
-} from "./assertions.js";
-export {
-  assert,
-  assertIsNotNullish
-} from "./assertions.js";
+export type { TypeAssertion } from "./assertions.js";
+export { assert, assertIsNotNullish } from "./assertions.js";

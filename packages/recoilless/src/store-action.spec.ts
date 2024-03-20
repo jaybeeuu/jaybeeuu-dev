@@ -1,17 +1,17 @@
 import type { PrimitiveValue } from "./state/index.js";
-import type { Action, ActionContext} from "./store.js";
+import type { Action, ActionContext } from "./store.js";
 import { Store } from "./store.js";
 
 describe("recoilless store", () => {
   describe("action", () => {
     const storedValue: PrimitiveValue<number> = {
       name: "storedValue",
-      initialValue: 1
+      initialValue: 1,
     };
 
     const addDoubleToValue: Action<[number]> = (
       { get, set }: ActionContext,
-      valueToDouble: number
+      valueToDouble: number,
     ): void => {
       const value = get(storedValue);
       const newValue = 2 * value + valueToDouble;

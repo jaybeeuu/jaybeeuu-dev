@@ -2,7 +2,7 @@ export {
   useAsyncGenerator,
   useIsMounted,
   usePromise,
-  useSemanticMemo
+  useSemanticMemo,
 } from "./async-hooks.js";
 export {
   ContentComponent,
@@ -11,5 +11,5 @@ export {
   MaybePromises,
   PendingComponent,
   withPromise,
-  WithPromiseComponents
+  WithPromiseComponents,
 } from "./with-promise.js";

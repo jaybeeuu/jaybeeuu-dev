@@ -13,10 +13,8 @@ import { withPromise as withPromise } from "../with-promise";
 
 import css from "./posts.module.css";
 
-const compareDateString = (
-  left: PostMetaData,
-  right: PostMetaData
-): number => Date.parse(right.publishDate) - Date.parse(left.publishDate);
+const compareDateString = (left: PostMetaData, right: PostMetaData): number =>
+  Date.parse(right.publishDate) - Date.parse(left.publishDate);
 
 const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
   usePageInfo({ title: "Blog posts", description: "Index of my blog posts" });
@@ -26,32 +24,33 @@ const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
       {manifestValues.length === 0
         ? "Nothing to see? Write some posts..."
         : manifestValues.sort(compareDateString).map((meta) => (
-          <Link
-            href={`/blog/${meta.slug}`}
-            className={classNames(
-              css.post,
-              e2eHooks.link,
-              e2eHooks.sluggedLink(meta.slug)
-            )}
-            key={meta.slug}
-            data-slug={meta.slug}
-          >
-            <h2 className={css.title}>
-              {meta.title}
-            </h2>
-            <p className={css.date}>
-              {new Date(meta.publishDate).toLocaleDateString()}
-            </p>
-            <summary>{meta.abstract}</summary>
-          </Link>
-        ))}
+            <Link
+              href={`/blog/${meta.slug}`}
+              className={classNames(
+                css.post,
+                e2eHooks.link,
+                e2eHooks.sluggedLink(meta.slug),
+              )}
+              key={meta.slug}
+              data-slug={meta.slug}
+            >
+              <h2 className={css.title}>{meta.title}</h2>
+              <p className={css.date}>
+                {new Date(meta.publishDate).toLocaleDateString()}
+              </p>
+              <summary>{meta.abstract}</summary>
+            </Link>
+          ))}
     </div>
   );
 });
 PostList.displayName = "PostList";
 
 export const PostsRoute = asRoute((): JSX.Element => {
-  useBackgrounds({ dark: "great-northern-highway", light: "royal-exhibition-hall" });
+  useBackgrounds({
+    dark: "great-northern-highway",
+    light: "royal-exhibition-hall",
+  });
   const manifest = useValue(postsManifest);
   return <PostList manifest={manifest} />;
 });

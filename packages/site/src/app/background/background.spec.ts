@@ -14,14 +14,16 @@ const makeImageDetails = (image: string): ImageDetails => ({
   src: `${String(image)}-src`,
   srcSet: `${String(image)}-srcSet`,
   placeholder: `${String(image)}-placeholder`,
-  images: [{
-    path: `${String(image)}-path`,
-    width: 100,
-    height: 100
-  }],
+  images: [
+    {
+      path: `${String(image)}-path`,
+      width: 100,
+      height: 100,
+    },
+  ],
   width: 100,
   height: 100,
-  alt: `${String(image)}-alt`
+  alt: `${String(image)}-alt`,
 });
 
 interface UseImagesProps {
@@ -30,11 +32,11 @@ interface UseImagesProps {
 }
 
 const renderUseImages = (
-  initialProps: UseImagesProps
+  initialProps: UseImagesProps,
 ): RenderHookResult<ImageState, UseImagesProps> => {
   return renderHook(
-    ({ backgrounds, currentTheme })=> useImages(backgrounds, currentTheme),
-    { initialProps }
+    ({ backgrounds, currentTheme }) => useImages(backgrounds, currentTheme),
+    { initialProps },
   );
 };
 
@@ -42,7 +44,7 @@ describe("useImages", () => {
   it("returns null in the current image if there are no images.", () => {
     const { result } = renderUseImages({
       backgrounds: null,
-      currentTheme: "light"
+      currentTheme: "light",
     });
 
     expect(result.current).toStrictEqual({ current: null, previous: null });
@@ -52,9 +54,9 @@ describe("useImages", () => {
     const { result } = renderUseImages({
       backgrounds: {
         dark: "bath",
-        light: "black-tusk"
+        light: "black-tusk",
       },
-      currentTheme: "dark"
+      currentTheme: "dark",
     });
 
     expect(result.current).toStrictEqual({ current: null, previous: null });
@@ -64,37 +66,38 @@ describe("useImages", () => {
     const { result } = renderUseImages({
       backgrounds: {
         dark: "bath",
-        light: "black-tusk"
+        light: "black-tusk",
       },
-      currentTheme: "dark"
+      currentTheme: "dark",
     });
 
     expect(result.current).toStrictEqual({ current: null, previous: null });
   });
 
-  it(
-    "returns the light image as current when the light theme is selected after the promise resolves.",
-    async () => {
-      const promise = new ControllablePromise<ImageDetails>();
-      jest.mocked(images["black-tusk"]).mockReturnValue(promise);
+  it("returns the light image as current when the light theme is selected after the promise resolves.", async () => {
+    const promise = new ControllablePromise<ImageDetails>();
+    jest.mocked(images["black-tusk"]).mockReturnValue(promise);
 
-      const { result } = renderUseImages({
-        backgrounds: {
-          dark: "bath",
-          light: "black-tusk"
-        },
-        currentTheme: "light"
-      });
+    const { result } = renderUseImages({
+      backgrounds: {
+        dark: "bath",
+        light: "black-tusk",
+      },
+      currentTheme: "light",
+    });
 
-      const blackTusk = makeImageDetails("black-tusk");
-      await act(() => { promise.resolve(blackTusk); });
+    const blackTusk = makeImageDetails("black-tusk");
+    await act(() => {
+      promise.resolve(blackTusk);
+    });
 
-      await waitFor(() => { expect(result.current).toStrictEqual({
+    await waitFor(() => {
+      expect(result.current).toStrictEqual({
         current: blackTusk,
-        previous: null
-      }); });
-    }
-  );
+        previous: null,
+      });
+    });
+  });
 
   it("returns the dark image as current when the dark theme is selected.", async () => {
     const promise = new ControllablePromise<ImageDetails>();
@@ -103,21 +106,25 @@ describe("useImages", () => {
     const { result } = renderUseImages({
       backgrounds: {
         dark: "bath",
-        light: "black-tusk"
+        light: "black-tusk",
       },
-      currentTheme: "dark"
+      currentTheme: "dark",
     });
 
     const bath = makeImageDetails("bath");
-    await act(() => { promise.resolve(bath); });
+    await act(() => {
+      promise.resolve(bath);
+    });
 
-    await waitFor(() => { expect(result.current).toStrictEqual({
-      current: bath,
-      previous: null
-    }); });
+    await waitFor(() => {
+      expect(result.current).toStrictEqual({
+        current: bath,
+        previous: null,
+      });
+    });
   });
 
-  it("sets the previous and current images when the images change.", async() => {
+  it("sets the previous and current images when the images change.", async () => {
     const blackTusk = makeImageDetails("black-tusk");
     jest.mocked(images["black-tusk"]).mockResolvedValue(blackTusk);
     const christmasTrail = makeImageDetails("christmas-trail");
@@ -126,28 +133,32 @@ describe("useImages", () => {
     const { rerender, result } = renderUseImages({
       backgrounds: {
         dark: "bath",
-        light: "black-tusk"
+        light: "black-tusk",
       },
-      currentTheme: "light"
+      currentTheme: "light",
     });
 
-    await waitFor(() => { expect(result.current).toStrictEqual({
-      current: blackTusk,
-      previous: null
-    }); });
+    await waitFor(() => {
+      expect(result.current).toStrictEqual({
+        current: blackTusk,
+        previous: null,
+      });
+    });
 
     rerender({
       backgrounds: {
         dark: "crabapple-drive",
-        light: "christmas-trail"
+        light: "christmas-trail",
       },
-      currentTheme: "light"
+      currentTheme: "light",
     });
 
-    await waitFor(() => { expect(result.current).toStrictEqual({
-      current: christmasTrail,
-      previous: blackTusk
-    }); });
+    await waitFor(() => {
+      expect(result.current).toStrictEqual({
+        current: christmasTrail,
+        previous: blackTusk,
+      });
+    });
   });
 
   it("sets the previous and current images when the theme changes.", async () => {
@@ -159,27 +170,31 @@ describe("useImages", () => {
     const { rerender, result } = renderUseImages({
       backgrounds: {
         dark: "bath",
-        light: "black-tusk"
+        light: "black-tusk",
       },
-      currentTheme: "light"
+      currentTheme: "light",
     });
 
-    await waitFor(() => { expect(result.current).toStrictEqual({
-      current: blackTusk,
-      previous: null
-    }); });
+    await waitFor(() => {
+      expect(result.current).toStrictEqual({
+        current: blackTusk,
+        previous: null,
+      });
+    });
 
     rerender({
       backgrounds: {
         dark: "bath",
-        light: "black-tusk"
+        light: "black-tusk",
       },
-      currentTheme: "dark"
+      currentTheme: "dark",
     });
 
-    await waitFor(() => { expect(result.current).toStrictEqual({
-      current: bath,
-      previous: blackTusk
-    }); });
+    await waitFor(() => {
+      expect(result.current).toStrictEqual({
+        current: bath,
+        previous: blackTusk,
+      });
+    });
   });
 });

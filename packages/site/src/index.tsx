@@ -2,7 +2,7 @@ import { h, render } from "preact";
 import { App } from "./app";
 import { StoreProvider } from "@jaybeeuu/preact-recoilless";
 
-if (process.env.NODE_ENV === "development" ) {
+if (process.env.NODE_ENV === "development") {
   require("preact/debug");
 }
 
@@ -17,5 +17,5 @@ render(
   <StoreProvider>
     <App />
   </StoreProvider>,
-  app
+  app,
 );

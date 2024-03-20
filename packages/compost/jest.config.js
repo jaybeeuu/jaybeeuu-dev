@@ -9,23 +9,15 @@ const config = {
   //   "!./src/bin/**"
   // ],
   transform: {
-    "^.+\\.(t|j)sx?$": "ts-jest"
+    "^.+\\.(t|j)sx?$": "ts-jest",
   },
-  testMatch: [
-    "**/*.spec.ts"
-  ],
-  testPathIgnorePatterns: [
-    "/node_modules/",
-    "/lib/"
-  ],
-  watchPathIgnorePatterns: [
-    "<rootDir>/.fs/",
-    "<rootDir>/lib/"
-  ],
+  testMatch: ["**/*.spec.ts"],
+  testPathIgnorePatterns: ["/node_modules/", "/lib/"],
+  watchPathIgnorePatterns: ["<rootDir>/.fs/", "<rootDir>/lib/"],
   moduleNameMapper: {
     "node-fetch": "<rootDir>/test/mocks/node-fetch.ts",
-    "(\\.\\.?/.*)\\.js$": "$1"
-  }
+    "(\\.\\.?/.*)\\.js$": "$1",
+  },
 };
 
 export default config;

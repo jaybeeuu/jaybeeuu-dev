@@ -3,13 +3,7 @@
   "compilerOptions": {
     "outDir": "lib",
     "module": "ESNext",
-    "types": [
-      "node",
-      "jest"
-    ]
+    "types": ["node", "jest"]
   },
-  "exclude": [
-    "lib",
-    "node_modules"
-  ]
+  "exclude": ["lib", "node_modules"]
 }

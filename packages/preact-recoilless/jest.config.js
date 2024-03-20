@@ -6,26 +6,18 @@ const config = {
   preset: "ts-jest",
   transform: {
     "\\.(ts|tsx)$": "ts-jest",
-    "\\.(mjs|js|jsx)$": "babel-jest"
+    "\\.(mjs|js|jsx)$": "babel-jest",
   },
   testEnvironment: "jsdom",
-  testMatch: [
-    "**/*.spec.ts",
-    "**/*.spec.tsx"
-  ],
-  testPathIgnorePatterns: [
-    "/node_modules/",
-    "/lib/"
-  ],
-  watchPathIgnorePatterns: [
-    "<rootDir>/lib"
-  ],
+  testMatch: ["**/*.spec.ts", "**/*.spec.tsx"],
+  testPathIgnorePatterns: ["/node_modules/", "/lib/"],
+  watchPathIgnorePatterns: ["<rootDir>/lib"],
   transformIgnorePatterns: [
-    "/node_modules/(?!(\\.pnpm|@testing-library/preact|preact/))"
+    "/node_modules/(?!(\\.pnpm|@testing-library/preact|preact/))",
   ],
   moduleNameMapper: {
-    "(\\.\\.?/.*)\\.js$": "$1"
-  }
+    "(\\.\\.?/.*)\\.js$": "$1",
+  },
 };
 
 export default config;

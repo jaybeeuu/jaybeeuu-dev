@@ -1,8 +1,8 @@
 declare module "preact-transitioning" {
   import type { ComponentType, ComponentChildren, JSX } from "preact";
 
-  type TransitionPhase
-    = "appear"
+  type TransitionPhase =
+    | "appear"
     | "appearActive"
     | "appearDone"
     | "enter"
@@ -18,8 +18,8 @@ declare module "preact-transitioning" {
     [ActivePhase in CurrentPhase]: true;
   };
 
-  type TransitionState
-    = BaseTransitionState<"appear">
+  type TransitionState =
+    | BaseTransitionState<"appear">
     | BaseTransitionState<"appearActive">
     | BaseTransitionState<"appearDone">
     | BaseTransitionState<"enter">
@@ -30,7 +30,7 @@ declare module "preact-transitioning" {
     | BaseTransitionState<"exitDone">;
 
   interface TransitionProps {
-    children: (transitionState: TransitionState) => JSX.Element
+    children: (transitionState: TransitionState) => JSX.Element;
     in?: boolean;
     appear?: boolean;
     enter?: boolean;
@@ -50,17 +50,19 @@ declare module "preact-transitioning" {
 
   interface CSSTransitionProps extends TransitionProps {
     children: ComponentChildren;
-    classNames: string | {
-      appear?: string;
-      appearActive?: string;
-      appearDone?: string;
-      enter?: string;
-      enterActive?: string;
-      enterDone?: string;
-      exit?: string;
-      exitActive?: string;
-      exitDone?: string;
-    }
+    classNames:
+      | string
+      | {
+          appear?: string;
+          appearActive?: string;
+          appearDone?: string;
+          enter?: string;
+          enterActive?: string;
+          enterDone?: string;
+          exit?: string;
+          exitActive?: string;
+          exitDone?: string;
+        };
   }
 
   type CSSTransition = ComponentType<CSSTransitionProps>;
@@ -77,14 +79,14 @@ declare module "preact-transitioning" {
       exit?: JSX.CSSProperties;
       exitActive?: JSX.CSSProperties;
       exitDone?: JSX.CSSProperties;
-    }
+    };
   }
 
   type StyleTransition = ComponentType<StyleTransitionProps>;
   declare const StyleTransition: StyleTransition;
 
   interface TransitionGroupProps {
-    children: ComponentChildren
+    children: ComponentChildren;
     appear?: boolean;
     enter?: boolean;
     exit?: boolean;

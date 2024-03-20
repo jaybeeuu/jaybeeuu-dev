@@ -45,17 +45,15 @@ describe("echo", () => {
   it("resolves first in a race.", async () => {
     setupMockTimers();
     const promise = echo("{value}", 100);
-    const timeout = new Promise((resolve) => setTimeout(
-      () => { resolve("{NOT Value}"); },
-      110
-    ));
+    const timeout = new Promise((resolve) =>
+      setTimeout(() => {
+        resolve("{NOT Value}");
+      }, 110),
+    );
 
     jest.advanceTimersByTime(110);
 
-    const result = await Promise.race([
-      promise,
-      timeout
-    ]);
+    const result = await Promise.race([promise, timeout]);
 
     expect(result).toBe("{value}");
   });
@@ -63,19 +61,17 @@ describe("echo", () => {
   it("does not resolve first if the clear function it called.", async () => {
     setupMockTimers();
     const promise = echo("{value}", 100);
-    const timeout = new Promise((resolve) => setTimeout(
-      () => { resolve("{NOT value}"); },
-      110
-    ));
+    const timeout = new Promise((resolve) =>
+      setTimeout(() => {
+        resolve("{NOT value}");
+      }, 110),
+    );
 
     promise.clear();
 
     jest.advanceTimersByTime(110);
 
-    const result = await Promise.race([
-      promise,
-      timeout
-    ]);
+    const result = await Promise.race([promise, timeout]);
 
     expect(result).toBe("{NOT value}");
   });

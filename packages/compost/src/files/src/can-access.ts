@@ -21,7 +21,7 @@ const modeFsConstMap = {
   write: fs.constants.W_OK,
 
   /** File can be executed by the calling process. */
-  execute: fs.constants.X_OK
+  execute: fs.constants.X_OK,
 } satisfies { [mode in Mode]: number };
 
 export const canAccessSync = (file: string, mode?: Mode): boolean => {
@@ -33,7 +33,10 @@ export const canAccessSync = (file: string, mode?: Mode): boolean => {
   }
 };
 
-export const canAccess = async (file: string, mode?: Mode): Promise<boolean> => {
+export const canAccess = async (
+  file: string,
+  mode?: Mode,
+): Promise<boolean> => {
   try {
     await fs.promises.access(file, mode && modeFsConstMap[mode]);
     return true;

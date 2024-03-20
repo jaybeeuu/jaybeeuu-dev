@@ -1,6 +1,6 @@
 export type Executor<Value> = (
   resolve: (value: Value | PromiseLike<Value>) => void,
-  reject: (reason?: unknown) => void
+  reject: (reason?: unknown) => void,
 ) => void;
 
 export class ControllablePromise<Value = void> extends Promise<Value> {

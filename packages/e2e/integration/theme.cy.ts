@@ -5,11 +5,14 @@ class MockMediaQuery {
   #matches = true;
   #changeListeners: ((ev: MediaQueryListEventMap["change"]) => void)[] = [];
   #resolveHasListeners = (): void => {};
-  #hasListenersPromise = new Promise<true>((resolve) => this.#resolveHasListeners = () => { resolve(true); });
+  #hasListenersPromise = new Promise<true>(
+    (resolve) =>
+      (this.#resolveHasListeners = () => {
+        resolve(true);
+      }),
+  );
 
-  set matches (
-    newMatches: boolean
-  ) {
+  set matches(newMatches: boolean) {
     this.#matches = newMatches;
     const event = new MediaQueryListEvent("change", { matches: newMatches });
     this.#changeListeners.forEach((listener) => {
@@ -17,7 +20,7 @@ class MockMediaQuery {
     });
   }
 
-  get matches (): boolean {
+  get matches(): boolean {
     return this.#matches;
   }
 
@@ -27,7 +30,7 @@ class MockMediaQuery {
 
   addEventListener<K extends keyof MediaQueryListEventMap>(
     type: K,
-    listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => void
+    listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => void,
   ): void {
     this.#changeListeners = [...this.#changeListeners, listener];
     this.#resolveHasListeners();
@@ -35,7 +38,7 @@ class MockMediaQuery {
 
   removeEventListener<K extends keyof MediaQueryListEventMap>(
     type: K,
-    listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => void
+    listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => void,
   ): void {
     this.#changeListeners.filter((candidate) => candidate !== listener);
   }
@@ -43,9 +46,11 @@ class MockMediaQuery {
 
 let isDarkQuery = new MockMediaQuery();
 
-Cypress.on("window:before:load", window => {
+Cypress.on("window:before:load", (window) => {
   isDarkQuery = new MockMediaQuery();
-  cy.stub(window, "matchMedia").withArgs("(prefers-color-scheme: dark)").returns(isDarkQuery);
+  cy.stub(window, "matchMedia")
+    .withArgs("(prefers-color-scheme: dark)")
+    .returns(isDarkQuery);
 });
 
 const setPrefersColorScheme = (colorScheme: "light" | "dark"): void => {

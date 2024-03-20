@@ -21,7 +21,10 @@ export interface PostManifest {
   [slug: string]: PostMetaData;
 }
 
-export type OldPostMetaData = Pick<PostMetaData, "fileName" | "publishDate" | "lastUpdateDate">;
+export type OldPostMetaData = Pick<
+  PostMetaData,
+  "fileName" | "publishDate" | "lastUpdateDate"
+>;
 
 export interface OldPostManifest {
   [slug: string]: OldPostMetaData;

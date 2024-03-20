@@ -19,8 +19,8 @@ export const paths = {
   packageJson: resolveApp("package.json"),
   certs: {
     key: path.join(certs, "key.key"),
-    certificate: path.join(certs, "cert.crt")
+    certificate: path.join(certs, "cert.crt"),
   },
   manifest: resolveApp("node_modules/@jaybeeuu/posts/lib/manifest.json"),
-  postsLib: "node_modules/@jaybeeuu/posts/lib"
+  postsLib: "node_modules/@jaybeeuu/posts/lib",
 };

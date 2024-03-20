@@ -1,19 +1,14 @@
 import type { MonitorPromiseOptions, PromiseState } from "@jaybeeuu/utilities";
 import { monitorPromise, pending } from "@jaybeeuu/utilities";
 import type { Inputs, MutableRef } from "preact/hooks";
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState
-} from "preact/hooks";
+import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 
 export const useIsMounted = (): MutableRef<boolean> => {
   const isMountedRef = useRef(false);
 
   useEffect(() => {
     isMountedRef.current = true;
-    return () => isMountedRef.current = false;
+    return () => (isMountedRef.current = false);
   });
 
   return isMountedRef;
@@ -23,14 +18,14 @@ const noValueSymbol = Symbol.for("no-value");
 
 export const useSemanticMemo = <Value>(
   getValue: () => Value,
-  inputs: Inputs
+  inputs: Inputs,
 ): Value => {
   const previousInputs = useRef(inputs);
   const previousValue = useRef<Value | typeof noValueSymbol>(noValueSymbol);
 
   if (
-    previousValue.current === noValueSymbol
-    || inputs.some((input, index) => input !== previousInputs.current[index])
+    previousValue.current === noValueSymbol ||
+    inputs.some((input, index) => input !== previousInputs.current[index])
   ) {
     previousValue.current = getValue();
     previousInputs.current = inputs;
@@ -42,7 +37,7 @@ export const useSemanticMemo = <Value>(
 export const useAsyncGenerator = <Value>(
   makeGenerator: () => AsyncGenerator<Value>,
   initialValue: Value,
-  deps: Inputs
+  deps: Inputs,
 ): Value => {
   const [value, setValue] = useState<Value>(initialValue);
   const isMounted = useIsMounted();
@@ -63,24 +58,27 @@ export const useAsyncGenerator = <Value>(
 };
 
 export const usePromise = <Value>(
-  getPromise: (options: { abortSignal: AbortSignal; }) => Promise<Value>,
+  getPromise: (options: { abortSignal: AbortSignal }) => Promise<Value>,
   inputs: Inputs,
-  options?: Partial<MonitorPromiseOptions>
+  options?: Partial<MonitorPromiseOptions>,
 ): {
   abort: () => void;
   promiseState: PromiseState<Value>;
 } => {
   const isMounted = useIsMounted();
   const abortRef = useRef(() => {});
-  const [promiseState, setPromiseState] = useState<PromiseState<Value>>(pending());
+  const [promiseState, setPromiseState] =
+    useState<PromiseState<Value>>(pending());
 
   useEffect(() => {
     const abortController = new AbortController();
-    abortRef.current = () => { abortController.abort(); };
+    abortRef.current = () => {
+      abortController.abort();
+    };
 
     const statusGenerator = monitorPromise(
       getPromise({ abortSignal: abortController.signal }),
-      options
+      options,
     );
 
     void (async () => {
@@ -92,11 +90,15 @@ export const usePromise = <Value>(
       }
     })();
 
-    return () => { abortController.abort(); };
+    return () => {
+      abortController.abort();
+    };
   }, inputs);
 
   return {
-    abort: useCallback(() => { abortRef.current(); }, []),
-    promiseState
+    abort: useCallback(() => {
+      abortRef.current();
+    }, []),
+    promiseState,
   };
 };

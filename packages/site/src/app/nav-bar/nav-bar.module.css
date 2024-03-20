@@ -7,14 +7,17 @@
 
 .link {
   color: var(--colour-text-main);
-  transition: var(--transition-theme), border-color var(--transition-average);
+  transition:
+    var(--transition-theme),
+    border-color var(--transition-average);
   border: none;
   border-left: var(--nav-link-border-width) dotted transparent;
   border-right: var(--nav-link-border-width) dotted transparent;
   margin-left: calc(var(--nav-link-border-width) * -1);
 }
 
-.link:hover, .link.active {
+.link:hover,
+.link.active {
   color: var(--colour-text-main);
   border-color: var(--colour-link-decoration);
 }
@@ -84,7 +87,8 @@
     display: block;
   }
 
-  .options-list > *, .options-list > .link {
+  .options-list > *,
+  .options-list > .link {
     padding: 1rem 2rem;
     margin: 1rem 2rem;
   }
@@ -95,6 +99,6 @@
   }
 
   .options-list > :last-child {
-    margin-bottom: 2rem;;
+    margin-bottom: 2rem;
   }
 }

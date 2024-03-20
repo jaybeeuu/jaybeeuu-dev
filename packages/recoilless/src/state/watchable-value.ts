@@ -11,7 +11,9 @@ export interface ImmediateRemovalLifecyclePolicy {
   policy: "immediateRemoval";
 }
 
-export type RemovalPolicy = DelayedRemovalLifecyclePolicy | ImmediateRemovalLifecyclePolicy;
+export type RemovalPolicy =
+  | DelayedRemovalLifecyclePolicy
+  | ImmediateRemovalLifecyclePolicy;
 
 export class WatchableValue<Val> {
   readonly #listeners = new Set<Listener<Val>>();
@@ -21,11 +23,7 @@ export class WatchableValue<Val> {
   #name: string;
   #value: Val;
 
-  public constructor(
-    value: Val,
-    removeFromStore: () => void,
-    name: string
-  ) {
+  public constructor(value: Val, removeFromStore: () => void, name: string) {
     this.#name = name;
     this.#onLastUnsubscribe = removeFromStore;
     this.#value = value;
@@ -33,12 +31,16 @@ export class WatchableValue<Val> {
 
   public set(newValue: Val): void {
     if (this.#isUpdating) {
-      throw new Error(`Value "${this.#name}" was updated by a subscriber. A value may mot update as a result of an update to itself.`);
+      throw new Error(
+        `Value "${this.#name}" was updated by a subscriber. A value may mot update as a result of an update to itself.`,
+      );
     }
 
     this.#isUpdating = true;
     this.#value = newValue;
-    this.#listeners.forEach((subscription) => { subscription(this.#value); });
+    this.#listeners.forEach((subscription) => {
+      subscription(this.#value);
+    });
     this.#isUpdating = false;
   }
 

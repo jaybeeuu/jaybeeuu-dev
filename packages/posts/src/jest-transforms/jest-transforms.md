@@ -94,7 +94,7 @@ which include them and the magic should be back on.
 Adapting Jest's example:
 
 ```ts
-transformIgnorePatterns: ["/node_modules/(?!(chalk)/)"]
+transformIgnorePatterns: ["/node_modules/(?!(chalk)/)"];
 ```
 
 That config will not transform modules which match the regexp.
@@ -157,7 +157,7 @@ since it also contains `node_modules/.pnpm`.
 Let's change the regexp:
 
 ```ts
-transformIgnorePatterns: ["/node_modules/(?!(\\.pnpm|chalk))"]
+transformIgnorePatterns: ["/node_modules/(?!(\\.pnpm|chalk))"];
 ```
 
 So now we don't match `node_modules/.pnpm`, we _might_ match the second `node_modules`, but not `node_modules/chalk`.

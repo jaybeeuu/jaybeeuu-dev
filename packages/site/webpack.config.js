@@ -29,7 +29,7 @@ const SitemapPlugin = SitemapPluginImport.default;
 // @ts-expect-error
 const caseSensitivePathsPlugin = new CaseSensitivePathsPlugin();
 const gitRevisionPlugin = new GitRevisionPlugin({
-  branch: true
+  branch: true,
 });
 
 const isProduction = env.NODE_ENV === "production";
@@ -59,44 +59,46 @@ const resolvedURLToSite = (...pathFragments) => {
 export default {
   mode,
   devtool: isProduction ? "source-map" : "source-map",
-  devServer: isWatching ? {
-    compress: true,
-    historyApiFallback: {
-      disableDotRule: true
-    },
-    host: env.CLIENT_HOST_NAME,
-    server:{
-      type: "https",
-      options: {
-        key: fs.readFileSync(paths.certs.key),
-        cert: fs.readFileSync(paths.certs.certificate)
+  devServer: isWatching
+    ? {
+        compress: true,
+        historyApiFallback: {
+          disableDotRule: true,
+        },
+        host: env.CLIENT_HOST_NAME,
+        server: {
+          type: "https",
+          options: {
+            key: fs.readFileSync(paths.certs.key),
+            cert: fs.readFileSync(paths.certs.certificate),
+          },
+        },
+        client: {
+          logging: "info",
+          overlay: true,
+          progress: true,
+        },
+        port: env.CLIENT_PORT,
+        static: {
+          watch: true,
+        },
+        devMiddleware: {
+          stats: "normal",
+        },
       }
-    },
-    client: {
-      logging: "info",
-      overlay: true,
-      progress: true
-    },
-    port: env.CLIENT_PORT,
-    static: {
-      watch: true
-    },
-    devMiddleware: {
-      stats: "normal"
-    }
-  } : undefined,
+    : undefined,
   entry: {
-    main: paths.srcIndex
+    main: paths.srcIndex,
   },
   output: {
     assetModuleFilename: "static/[name].[contenthash][ext][query]",
     clean: true,
     filename: "main.[contenthash].js",
     path: paths.dist,
-    publicPath: "/"
+    publicPath: "/",
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".jsx"]
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
   },
   module: {
     strictExportPresence: true,
@@ -110,9 +112,9 @@ export default {
               loader: "babel-loader",
               options: {
                 cacheDirectory: true,
-                ...babelConfig
-              }
-            }
+                ...babelConfig,
+              },
+            },
           },
           {
             test: /\.module\.css$/,
@@ -122,8 +124,8 @@ export default {
                 loader: "css-modules-typescript-loader",
                 options: {
                   mode: isProduction ? "verify" : "emit",
-                  modules: true
-                }
+                  modules: true,
+                },
               },
               {
                 loader: "css-loader",
@@ -132,12 +134,12 @@ export default {
                     localIdentName: isProduction
                       ? "jbw-[hash:base64:5]"
                       : "[name]__[local]--[hash:base64:5]",
-                    exportLocalsConvention: "camelCaseOnly"
+                    exportLocalsConvention: "camelCaseOnly",
                   },
-                  sourceMap: true
-                }
-              }
-            ]
+                  sourceMap: true,
+                },
+              },
+            ],
           },
           {
             test: /\.css$/,
@@ -146,10 +148,10 @@ export default {
               {
                 loader: "css-loader",
                 options: {
-                  sourceMap: true
-                }
-              }
-            ]
+                  sourceMap: true,
+                },
+              },
+            ],
           },
           {
             test: /\.jpg$/i,
@@ -163,27 +165,22 @@ export default {
                   name: "static/[name]-[hash]-[width].[ext]",
                   placeholder: true,
                   placeholderSize: 100,
-                  sizes: [1800]
-                }
-              }
-            ]
+                  sizes: [1800],
+                },
+              },
+            ],
           },
           {
             test: [/\.sprite.svg$/],
-            type: "asset/resource"
+            type: "asset/resource",
           },
           {
-            exclude: [
-              /\.(ts|tsx|js|jsx|mjs)$/,
-              /\.css$/,
-              /\.html$/,
-              /\.json$/
-            ],
-            type: "asset"
-          }
-        ]
-      }
-    ]
+            exclude: [/\.(ts|tsx|js|jsx|mjs)$/, /\.css$/, /\.html$/, /\.json$/],
+            type: "asset",
+          },
+        ],
+      },
+    ],
   },
   optimization: {
     moduleIds: isProduction ? "deterministic" : "named",
@@ -192,7 +189,7 @@ export default {
       "...",
       new CssMinimizerPlugin(),
       new TerserPlugin({
-        parallel: isProduction ? 2 : true
+        parallel: isProduction ? 2 : true,
       }),
       new ImageMinimizerPlugin({
         minimizer: [
@@ -203,16 +200,16 @@ export default {
               encodeOptions: {
                 jpeg: {
                   progressive: true,
-                  optimiseScans: true
+                  optimiseScans: true,
                 },
                 png: {
-                  progressive: true
-                }
-              }
-            }
-          }
-        ]
-      })
+                  progressive: true,
+                },
+              },
+            },
+          },
+        ],
+      }),
     ],
     splitChunks: {
       maxInitialRequests: 6,
@@ -222,22 +219,22 @@ export default {
           test: /[\\/]node_modules[\\/]/,
           chunks: "initial",
           filename: "slow-vendors.[contenthash].js",
-          priority: -10
+          priority: -10,
         },
         fastVendors: {
           test: /[\\/]lib[\\/]/,
           chunks: "initial",
           filename: "fast-vendors.[contenthash].js",
-          priority: -20
+          priority: -20,
         },
         default: {
           filename: "[name].[contenthash].js",
           chunks: "initial",
           priority: -30,
-          reuseExistingChunk: true
-        }
-      }
-    }
+          reuseExistingChunk: true,
+        },
+      },
+    },
   },
   plugins: [
     gitRevisionPlugin,
@@ -245,11 +242,11 @@ export default {
       patterns: [
         {
           from: "node_modules/@jaybeeuu/posts/lib/*",
-          to: `${postsRoot}/[name][ext]`
+          to: `${postsRoot}/[name][ext]`,
         },
         {
           from: "public/robots.txt",
-          to: "robots.txt"
+          to: "robots.txt",
         },
         {
           from: "public/version.json",
@@ -259,45 +256,47 @@ export default {
               branch: gitRevisionPlugin.branch(),
               commit: gitRevisionPlugin.commithash(),
               commitDateTime: gitRevisionPlugin.lastcommitdatetime(),
-              buildMode: mode
+              buildMode: mode,
             });
-          }
-        }
-      ]
+          },
+        },
+      ],
     }),
     new HtmlWebpackPlugin({
       inject: "body",
       base: "/",
-      template: paths.indexHtml
+      template: paths.indexHtml,
     }),
     new SitemapPlugin({
       base: "https://jaybeeuu.dev",
       options: {
         lastmod: true,
         changefreq: "monthly",
-        priority: 0.4
+        priority: 0.4,
       },
       paths: [
         {
           path: "/",
           priority: 0.3,
-          changefreq: "yearly"
+          changefreq: "yearly",
         },
         {
           path: `/${postsRoot}`,
           priority: 0.8,
-          changefreq: "weekly"
+          changefreq: "weekly",
         },
         ...Object.values(postManifest).map((meta) => {
-          const lastmod = (meta.lastUpdateDate ?? meta.publishDate).split("T")[0];
+          const lastmod = (meta.lastUpdateDate ?? meta.publishDate).split(
+            "T",
+          )[0];
           return {
             path: path.posix.join(postsRoot, meta.slug),
             lastmod,
             priority: 0.5,
-            changefreq: "monthly"
+            changefreq: "monthly",
           };
-        })
-      ]
+        }),
+      ],
     }),
     new FeedWebpackPlugin({
       atomFileName: "feeds/atom.xml",
@@ -310,20 +309,22 @@ export default {
         language: "en",
         favicon: siteURL,
         updated: new Date(
-          Math.max(...Object.values(postManifest).map((meta) => {
-            return +new Date(meta.publishDate);
-          }))
+          Math.max(
+            ...Object.values(postManifest).map((meta) => {
+              return +new Date(meta.publishDate);
+            }),
+          ),
         ),
         copyright: `All rights reserved ${new Date().getFullYear()}, Josh Bickley-Wallace`,
         feedLinks: {
           atom: resolvedURLToSite("feeds/atom.xml"),
-          rss: resolvedURLToSite("feeds/rss.xml")
+          rss: resolvedURLToSite("feeds/rss.xml"),
         },
         author: {
           name: "Josh Bickley-Wallace",
           email: "joshbickleywallace@outlook.com",
-          link: siteURL
-        }
+          link: siteURL,
+        },
       },
       items: Object.values(postManifest).map(
         /**
@@ -336,9 +337,9 @@ export default {
           id: meta.slug,
           link: resolvedURLToSite(postsRoot, meta.slug),
           published: new Date(meta.publishDate),
-          title: meta.title
-        })
-      )
+          title: meta.title,
+        }),
+      ),
     }),
     new webpack.ProgressPlugin(),
     new webpack.DefinePlugin(stringifiedEnv),
@@ -347,10 +348,12 @@ export default {
     new BundleAnalyzerPlugin({
       analyzerMode: "static",
       reportFilename: "bundle-report.html",
-      openAnalyzer: isProduction && !isWatching
+      openAnalyzer: isProduction && !isWatching,
     }),
-    isProduction ? new MiniCssExtractPlugin({
-      filename: "[name].[contenthash].css"
-    }) : null
-  ].filter(isNotNullish)
+    isProduction
+      ? new MiniCssExtractPlugin({
+          filename: "[name].[contenthash].css",
+        })
+      : null,
+  ].filter(isNotNullish),
 };

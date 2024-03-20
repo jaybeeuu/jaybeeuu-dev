@@ -1,5 +1,9 @@
-import { withFakeTimers }  from "@jaybeeuu/utilities/test";
-import type { DerivationContext, DerivedValue, PrimitiveValue } from "./state/index.js";
+import { withFakeTimers } from "@jaybeeuu/utilities/test";
+import type {
+  DerivationContext,
+  DerivedValue,
+  PrimitiveValue,
+} from "./state/index.js";
 import { DerivedValueState } from "./state/index.js";
 import { Store } from "./store.js";
 
@@ -7,19 +11,19 @@ describe("recoilless store", () => {
   describe("derived values", () => {
     const firstName: PrimitiveValue<string> = {
       name: "firstName",
-      initialValue: "Edmund"
+      initialValue: "Edmund",
     };
 
     const surname: PrimitiveValue<string> = {
       name: "surname",
-      initialValue: "Bickley-Wallace"
+      initialValue: "Bickley-Wallace",
     };
 
     const fullName: DerivedValue<string> = {
       name: "fullName",
       derive: ({ get }: DerivationContext<string>): string => {
         return `${get(firstName)} ${get(surname)}`;
-      }
+      },
     };
 
     it("allows the retrieval of a derived value from the store.", () => {
@@ -45,7 +49,7 @@ describe("recoilless store", () => {
       const store = new Store();
       const state = store.getValue(fullName);
       expect(state.current).toBe(
-        `${firstName.initialValue} ${surname.initialValue}`
+        `${firstName.initialValue} ${surname.initialValue}`,
       );
     });
 
@@ -53,12 +57,17 @@ describe("recoilless store", () => {
       const store = new Store();
       const state = store.getValue({
         name: "asyncFullName",
-        derive: ({ get }: DerivationContext<Promise<string>>): Promise<string> => new Promise<string>((resolve) => {
-          setTimeout(() => { resolve(`${get(firstName)} ${get(surname)}`); }, 0);
-        })
+        derive: ({
+          get,
+        }: DerivationContext<Promise<string>>): Promise<string> =>
+          new Promise<string>((resolve) => {
+            setTimeout(() => {
+              resolve(`${get(firstName)} ${get(surname)}`);
+            }, 0);
+          }),
       });
       await expect(state.current).resolves.toBe(
-        `${firstName.initialValue} ${surname.initialValue}`
+        `${firstName.initialValue} ${surname.initialValue}`,
       );
     });
 
@@ -69,9 +78,7 @@ describe("recoilless store", () => {
 
       firstNameState.set("Isaac");
 
-      expect(state.current).toBe(
-        `Isaac ${surname.initialValue}`
-      );
+      expect(state.current).toBe(`Isaac ${surname.initialValue}`);
     });
 
     it("updates the current value when more than one dependency is updated.", () => {
@@ -83,9 +90,7 @@ describe("recoilless store", () => {
       const secondNameState = store.getValue(surname);
       secondNameState.set("Wallace-Bickley");
 
-      expect(state.current).toBe(
-        "Isaac Wallace-Bickley"
-      );
+      expect(state.current).toBe("Isaac Wallace-Bickley");
     });
 
     it("updates all subscribers when the dependencies are updated.", () => {
@@ -99,8 +104,12 @@ describe("recoilless store", () => {
 
       firstNameState.set("Isaac");
 
-      expect(firstListener).toHaveBeenCalledWith(`Isaac ${surname.initialValue}`);
-      expect(secondListener).toHaveBeenCalledWith(`Isaac ${surname.initialValue}`);
+      expect(firstListener).toHaveBeenCalledWith(
+        `Isaac ${surname.initialValue}`,
+      );
+      expect(secondListener).toHaveBeenCalledWith(
+        `Isaac ${surname.initialValue}`,
+      );
     });
 
     it("any one function can only be subscribed once.", () => {
@@ -165,7 +174,7 @@ describe("recoilless store", () => {
       const newState = store.getValue(fullName);
 
       expect(newState.current).toBe(
-        `${firstName.initialValue} ${surname.initialValue}`
+        `${firstName.initialValue} ${surname.initialValue}`,
       );
     });
 
@@ -180,17 +189,20 @@ describe("recoilless store", () => {
   describe("stateful Derived Value", () => {
     const counterChange: PrimitiveValue<-1 | 0 | 1> = {
       name: "changeEvent",
-      initialValue: 0
+      initialValue: 0,
     };
 
     const counter: DerivedValue<number> = {
       name: "counter",
-      derive: ({ get, previousValue = 0 }: DerivationContext<number>): number => {
+      derive: ({
+        get,
+        previousValue = 0,
+      }: DerivationContext<number>): number => {
         const change = get(counterChange);
         const newValue = previousValue + change;
         previousValue = newValue;
         return newValue;
-      }
+      },
     };
 
     it("has the correct initial value on the state retrieved.", () => {
@@ -223,7 +235,7 @@ describe("recoilless store", () => {
         derive: ({ previousValue = {} }: DerivationContext<object>): object => {
           return previousValue;
         },
-        removalSchedule: { delay: 500, schedule: "delayed" }
+        removalSchedule: { delay: 500, schedule: "delayed" },
       };
 
       it("does not recalculate the value if something resubscribes within the delay.", () => {
@@ -262,14 +274,16 @@ describe("recoilless store", () => {
 
       it("does not recalculate the value if the delay comes from the store options.", () => {
         const store = new Store({
-          defaultRemovalSchedule: { delay: 500, schedule: "delayed" }
+          defaultRemovalSchedule: { delay: 500, schedule: "delayed" },
         });
 
         const value = {
           name: "delayedGCValue",
-          derive: ({ previousValue = {} }: DerivationContext<object>): object => {
+          derive: ({
+            previousValue = {},
+          }: DerivationContext<object>): object => {
             return previousValue;
-          }
+          },
         };
         const firstValueState = store.getValue(value);
         const unsubscribe = firstValueState.subscribe(() => {});

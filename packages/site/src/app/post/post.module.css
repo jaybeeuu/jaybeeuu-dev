@@ -32,7 +32,8 @@
 }
 
 @media only screen and (max-width: 820px) {
-  .title, .date {
+  .title,
+  .date {
     padding: 0 var(--padding-content);
   }
 }

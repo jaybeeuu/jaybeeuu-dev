@@ -9,10 +9,7 @@ export interface ErrorProps {
   message: string;
 }
 
-const ErrorComponent = ({
-  error,
-  message
-}: ErrorProps): JSX.Element => {
+const ErrorComponent = ({ error, message }: ErrorProps): JSX.Element => {
   useEffect(() => {
     log.error(message);
     if (error instanceof Error) {
@@ -31,8 +28,8 @@ const ErrorComponent = ({
         error instanceof Error
           ? error.message
           : Object.entries(error).map(
-            ([source, err]) => `${source}: ${err.message}`
-          )
+              ([source, err]) => `${source}: ${err.message}`,
+            )
       }
     />
   );

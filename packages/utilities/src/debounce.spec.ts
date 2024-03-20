@@ -25,7 +25,7 @@ describe("debounce", () => {
   });
 
   it("executes the actor with the supplied arguments.", () => {
-    const args: Args =  [1, "2", { id: 3 }];
+    const args: Args = [1, "2", { id: 3 }];
     const actor = jest.fn<never, Args>();
     const delay = 500;
 
@@ -95,20 +95,14 @@ describe("debounce", () => {
   describe("leading: true", () => {
     it("executes immediately.", () => {
       const actor = jest.fn();
-      debounce(
-        actor,
-        { delay: 500, leading: true }
-      )();
+      debounce(actor, { delay: 500, leading: true })();
       expect(actor).toHaveBeenCalledTimes(1);
     });
 
     it("does not execute again if called within the delay.", () => {
       const actor = jest.fn();
       const delay = 500;
-      const debounced = debounce(
-        actor,
-        { delay, leading: true }
-      );
+      const debounced = debounce(actor, { delay, leading: true });
 
       debounced();
       jest.advanceTimersByTime(delay - 1);
@@ -119,10 +113,7 @@ describe("debounce", () => {
     it("executes again after the delay if called within the delay.", () => {
       const actor = jest.fn();
       const delay = 500;
-      const debounced = debounce(
-        actor,
-        { delay, leading: true }
-      );
+      const debounced = debounce(actor, { delay, leading: true });
 
       debounced();
       jest.advanceTimersByTime(delay - 1);
@@ -134,10 +125,7 @@ describe("debounce", () => {
     it("doesn't execute again after the delay if not called within the delay.", () => {
       const actor = jest.fn();
       const delay = 500;
-      const debounced = debounce(
-        actor,
-        { delay, leading: true }
-      );
+      const debounced = debounce(actor, { delay, leading: true });
 
       debounced();
       jest.advanceTimersByTime(delay);
@@ -147,10 +135,7 @@ describe("debounce", () => {
     it("execute immediately again if not called within the delay.", () => {
       const actor = jest.fn();
       const delay = 500;
-      const debounced = debounce(
-        actor,
-        { delay, leading: true }
-      );
+      const debounced = debounce(actor, { delay, leading: true });
 
       debounced();
       jest.advanceTimersByTime(delay);

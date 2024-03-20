@@ -9,9 +9,7 @@ const Home = (): JSX.Element => {
   useBackgrounds({ dark: "bath", light: "english-bay-park" });
   return (
     <div className={css.componentRoot}>
-      <p>
-        Hi, I am Josh Bickley-Wallace. I&apos;m a software engineer.
-      </p>
+      <p>Hi, I am Josh Bickley-Wallace. I&apos;m a software engineer.</p>
     </div>
   );
 };

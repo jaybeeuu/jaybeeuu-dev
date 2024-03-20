@@ -18,18 +18,10 @@ export const IconLink = ({
   title,
   href,
   iconName,
-  type
+  type,
 }: IconLinkProps): JSX.Element => (
-  <a
-    className={css.componentRoot}
-    href={href}
-    type={type}
-    title={title}
-  >
-    <Icon
-      title={title}
-      name={iconName}
-    />
+  <a className={css.componentRoot} href={href} type={type} title={title}>
+    <Icon title={title} name={iconName} />
   </a>
 );
 IconLink.displayName = "IconLink";

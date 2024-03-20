@@ -4,10 +4,13 @@
   --transition-complex: 500ms ease-in-out;
   --transition-slow: 1s ease-in-out;
   --transition-theme-timing: var(--transition-complex);
-  --transition-theme: border-color var(--transition-slow), color var(--transition-theme-timing), fill var(--transition-theme-timing), background-color var(--transition-theme-timing);
+  --transition-theme: border-color var(--transition-slow),
+    color var(--transition-theme-timing), fill var(--transition-theme-timing),
+    background-color var(--transition-theme-timing);
 
   --margin-content-width: 3.6rem;
-  --margin-content: var(--margin-content-width) auto var(--margin-content-width) auto;
+  --margin-content: var(--margin-content-width) auto var(--margin-content-width)
+    auto;
   --padding-content-width: 2.4rem;
   --padding-content: var(--padding-content-width);
   --border-radius-content: 0.5rem;
@@ -19,7 +22,9 @@
 a {
   color: var(--colour-text-main);
   text-decoration-color: var(--colour-link-decoration);
-  transition: var(--transition-theme), color var(--transition-average);
+  transition:
+    var(--transition-theme),
+    color var(--transition-average);
 }
 
 a:hover {
@@ -35,20 +40,32 @@ a.hash-link {
 
 a.hash-link svg {
   fill: transparent;
-  transition: var(--transition-theme), fill var(--transition-average);
+  transition:
+    var(--transition-theme),
+    fill var(--transition-average);
 }
 
 /* for-phone-only */
 @media only screen and (max-width: 599px) {
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: var(--text-heading);
   transition: var(--transition-theme);
   border-bottom: 0.2rem solid var(--border-code-heading);
 }
 
-h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
   color: var(--colour-link-decoration);
   border-bottom: none;
 }
@@ -111,7 +128,8 @@ article p {
     font-size: 1.8rem;
   }
 
-  ul, ol {
+  ul,
+  ol {
     padding-left: 2.5rem;
   }
 }

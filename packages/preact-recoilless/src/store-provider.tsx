@@ -4,8 +4,8 @@ import { h, createContext } from "preact";
 import { useContext, useMemo } from "preact/hooks";
 
 export interface StoreProps {
-  store?: Store,
-  children: ComponentChildren
+  store?: Store;
+  children: ComponentChildren;
 }
 
 const StoreContext = createContext(new Store());

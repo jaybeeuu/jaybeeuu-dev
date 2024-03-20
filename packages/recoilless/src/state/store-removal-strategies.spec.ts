@@ -7,7 +7,7 @@ describe("makeScheduler", () => {
       const removeFromStore = jest.fn();
       const { schedule } = makeScheduler(
         { schedule: "synchronous" },
-        removeFromStore
+        removeFromStore,
       );
 
       schedule();
@@ -23,7 +23,7 @@ describe("makeScheduler", () => {
       const removeFromStore = jest.fn();
       const { schedule } = makeScheduler(
         { schedule: "delayed", delay: 100 },
-        removeFromStore
+        removeFromStore,
       );
 
       schedule();
@@ -36,7 +36,7 @@ describe("makeScheduler", () => {
       const removeFromStore = jest.fn();
       const { schedule } = makeScheduler(
         { schedule: "delayed", delay: 100 },
-        removeFromStore
+        removeFromStore,
       );
 
       schedule();
@@ -50,7 +50,7 @@ describe("makeScheduler", () => {
       const removeFromStore = jest.fn();
       const { schedule, unschedule } = makeScheduler(
         { schedule: "delayed", delay: 100 },
-        removeFromStore
+        removeFromStore,
       );
 
       schedule();
@@ -64,7 +64,7 @@ describe("makeScheduler", () => {
       const removeFromStore = jest.fn();
       const { schedule } = makeScheduler(
         { schedule: "delayed", delay: 100 },
-        removeFromStore
+        removeFromStore,
       );
 
       schedule();

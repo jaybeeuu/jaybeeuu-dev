@@ -7,10 +7,12 @@ describe("multi-partition", () => {
       input,
       (value: number): value is 1 => value === 1,
       (value: number): value is 2 => value === 2,
-      (value: number): value is 3 => value === 3
+      (value: number): value is 3 => value === 3,
     );
     expect(result).toStrictEqual([
-      [1, 1], [2, 2], [3, 3]
+      [1, 1],
+      [2, 2],
+      [3, 3],
     ]);
   });
 
@@ -20,11 +22,9 @@ describe("multi-partition", () => {
       input,
       (value: number): value is 1 => value === 1,
       (value: number): value is 2 => value === 2,
-      (value: number): value is 3 => value === 3
+      (value: number): value is 3 => value === 3,
     );
-    expect(result).toStrictEqual([
-      [], [], []
-    ]);
+    expect(result).toStrictEqual([[], [], []]);
   });
 
   it("discards values which don't match a predicate.", () => {
@@ -33,10 +33,8 @@ describe("multi-partition", () => {
       input,
       (value: number): value is 1 => value === 1,
       (value: number): value is 2 => value === 2,
-      (value: number): value is 3 => value === 3
+      (value: number): value is 3 => value === 3,
     );
-    expect(result).toStrictEqual([
-      [1], [2], [3]
-    ]);
+    expect(result).toStrictEqual([[1], [2], [3]]);
   });
 });

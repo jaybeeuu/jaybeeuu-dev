@@ -100,8 +100,8 @@ You will probably have time for lunch and make it home before midnight.
 
 The value of tests comes over time,
 and even then the value is most often in things that don't happen.
-Bugs that *don't* show up,
-time *not* spent understanding the intended outcome of some twisty logic.
+Bugs that _don't_ show up,
+time _not_ spent understanding the intended outcome of some twisty logic.
 They need to be thought of as an investment.
 They will pay dividends.
 
@@ -145,7 +145,7 @@ These are some things I think about when I'm writing tests to try and minimize t
    There are two things that should cause changes to a test.
    Changes to the API and changes to the behaviour.
    Anything else and they should stay green (unless you break something).
-   That means using patterns which test the *behaviour* not the *implementation*.
+   That means using patterns which test the _behaviour_ not the _implementation_.
 
 3. Keep them passing.
 

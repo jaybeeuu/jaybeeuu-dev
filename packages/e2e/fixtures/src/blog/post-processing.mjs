@@ -20,7 +20,7 @@ const readManifest = async () => {
 /**
  * @param {PostManifest} manifest
  * @return {Promise<void>}
-*/
+ */
 const writeManifest = (manifest) => {
   const asString = JSON.stringify(manifest, null, 2);
   return fs.promises.writeFile(manifestPath, asString, "utf-8");
@@ -33,14 +33,14 @@ const writeManifest = (manifest) => {
 const manifestTransformations = {
   "memoising-selectors": {
     publishDate: "Fri, 01 Jan 2021 00:00:00 GMT",
-    lastUpdateDate: "Sat, 01 May 2021 00:00:00 GMT"
+    lastUpdateDate: "Sat, 01 May 2021 00:00:00 GMT",
   },
   "module-spotting": {
-    publishDate: "Mon, 01 Feb 2021 00:00:00 GMT"
+    publishDate: "Mon, 01 Feb 2021 00:00:00 GMT",
   },
   "the-rewrite": {
-    publishDate: "Mon, 01 Mar 2021 00:00:00 GMT"
-  }
+    publishDate: "Mon, 01 Mar 2021 00:00:00 GMT",
+  },
 };
 
 /**
@@ -61,11 +61,11 @@ const transformManifest = async () => {
       transformed[slug] = {
         ...meta,
         // @ts-expect-error
-        ...manifestTransformations[slug]
+        ...manifestTransformations[slug],
       };
       return transformed;
     },
-    {}
+    {},
   );
 
   await writeManifest(transformedManifest);

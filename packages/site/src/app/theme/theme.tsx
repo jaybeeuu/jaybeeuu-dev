@@ -39,11 +39,7 @@ export const ThemeRoot = ({ children, className }: ThemeProps): JSX.Element => {
   return (
     <div
       id="theme-root"
-      className={classNames(
-        currentTheme,
-        className,
-        e2eHooks.root
-      )}
+      className={classNames(currentTheme, className, e2eHooks.root)}
     >
       {children}
     </div>

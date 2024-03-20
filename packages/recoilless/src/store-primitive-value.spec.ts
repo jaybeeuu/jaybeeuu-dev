@@ -5,7 +5,7 @@ import { Store } from "./store.js";
 
 const firstName: PrimitiveValue<string> = {
   name: "firstName",
-  initialValue: "Edmund"
+  initialValue: "Edmund",
 };
 
 describe("recoilless store", () => {
@@ -130,19 +130,32 @@ describe("recoilless store", () => {
       const store = new Store();
       const state = store.getValue(firstName);
 
-      state.subscribe(() => { state.set("Harold"); });
+      state.subscribe(() => {
+        state.set("Harold");
+      });
 
-      expect(() => { state.set("Henry"); }).toThrow("Value \"firstName\" was updated by a subscriber. A value may mot update as a result of an update to itself.");
+      expect(() => {
+        state.set("Henry");
+      }).toThrow(
+        'Value "firstName" was updated by a subscriber. A value may mot update as a result of an update to itself.',
+      );
     });
 
     it("allows other values to be updated by a listener.", () => {
       const store = new Store();
       const firstNameSate = store.getValue(firstName);
-      const surnameSate = store.getValue({ name: "surname", initialValue: "Ford" });
+      const surnameSate = store.getValue({
+        name: "surname",
+        initialValue: "Ford",
+      });
 
-      firstNameSate.subscribe(() => { surnameSate.set("Kissinger"); });
+      firstNameSate.subscribe(() => {
+        surnameSate.set("Kissinger");
+      });
 
-      expect(() => { firstNameSate.set("Henry"); }).not.toThrow();
+      expect(() => {
+        firstNameSate.set("Henry");
+      }).not.toThrow();
     });
 
     it("exposes the name on a property.", () => {
@@ -159,7 +172,7 @@ describe("recoilless store", () => {
     const delayedRemovalValue: PrimitiveValue<number> = {
       name: "delayedRemoval",
       initialValue: 0,
-      removalSchedule: { delay: 500, schedule: "delayed" }
+      removalSchedule: { delay: 500, schedule: "delayed" },
     };
 
     it("does not recalculate the value if something resubscribes within the delay.", () => {
@@ -198,7 +211,7 @@ describe("recoilless store", () => {
 
     it("delays removal if the default schedule is delayed, and there is no schedule supplied via the value.", () => {
       const store = new Store({
-        defaultRemovalSchedule: { delay: 500, schedule: "delayed" }
+        defaultRemovalSchedule: { delay: 500, schedule: "delayed" },
       });
 
       const value = { name: "number", initialValue: 0 };

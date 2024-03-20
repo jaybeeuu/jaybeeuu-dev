@@ -1,11 +1,7 @@
 import * as navBar from "../features/nav-bar";
 import * as post from "../features/post";
 import * as postList from "../features/post-list";
-import {
-  registerRoutes,
-  slugs,
-  withPostMetaData
-} from "../routes/blog";
+import { registerRoutes, slugs, withPostMetaData } from "../routes/blog";
 
 context("Post navigation", (): void => {
   beforeEach(() => {
