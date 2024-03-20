@@ -1,5 +1,11 @@
 # @jaybeeuu/eslint-config
 
+## 4.0.0
+
+### Major Changes
+
+- [#156](https://github.com/jaybeeuu/jaybeeuu-dev/pull/156) [`af476dc`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/af476dcfe00f3d3446930dd56af228c9a6cd5975) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Added eslint-config-prettier, following deprecation of formatting rules in eslint. Recommendation is to use prettier or similar for formatting.
+
 ## 3.0.0
 
 ### Major Changes
