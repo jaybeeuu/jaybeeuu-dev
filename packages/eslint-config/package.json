@@ -36,6 +36,7 @@
     "eslint-plugin-react": "^7.34.1"
   },
   "dependencies": {
+    "eslint-config-prettier": "^9.1.0",
     "eslint-formatter-codeframe": "^7.32.1",
     "typescript": "^5.4.2"
   },

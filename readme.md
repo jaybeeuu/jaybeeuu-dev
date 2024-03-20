@@ -60,9 +60,11 @@ settings and extension recommendations to help setup and get going.
 | build-changes | Builds all the packages that have changed since main.                               |
 | clean         | Cleans the repo. All untracked files and directories are removed.                   |
 | e2e           | Runs the e2e tests. Add `run` to ru them headless or `open` to open the cypress UI. |
+| format        | Formats files in the repo.                                                          |
+| format-check  | Checks the format of files in the repo.                                             |
 | gen-certs     | Generates the SSL certificates in all the packages which need them.                 |
 | lint          | Lints the packages with markdown-lint or eslint.                                    |
-| spellcheck    | Spell checks markdown in the application.                                           |
+| spell-check   | Spell checks markdown in the application.                                           |
 | start-all     | Starts all the packages in watch mode.                                              |
 | test          | Runs the unit tests using jest projects.                                            |
 | test-debug    | Runs the unit tests but uses the --inspect node option to open the debug port.      |

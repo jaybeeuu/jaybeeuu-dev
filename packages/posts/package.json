@@ -16,8 +16,8 @@
   ],
   "scripts": {
     "start": "compost --watch --href-root blog --include-unpublished --remove-h1 --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\"",
-    "spellcheck-interactive": "mdspell --en-GB --ignore-numbers \"**/*.md\" \"!**/node_modules/**/*.md\"",
-    "spellcheck": "pnpm run spellcheck-interactive --report",
+    "spell-check-interactive": "mdspell --en-GB --ignore-numbers \"**/*.md\" \"!**/node_modules/**/*.md\"",
+    "spell-check": "pnpm run spell-check-interactive --report",
     "build": "compost --href-root blog --code-line-numbers --remove-h1 --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\"",
     "example": "nodemon --exec \"node ./node_modules/ts-node/dist/bin.js --esm\""
   },

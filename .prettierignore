@@ -1,5 +1,5 @@
 lib/
 dist/
 
+packages/e2e/fixtures/blog/
 packages/site/**/*.module.css.d.ts
-
