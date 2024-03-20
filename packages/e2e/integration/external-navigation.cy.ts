@@ -6,10 +6,14 @@ context("external nav links", () => {
   });
 
   it("should have a link to my linked in profile.", () => {
-    navBar.getLinkedInLink().should("have.attr", "href", "https://linkedin.com/in/jaybeeuu");
+    navBar
+      .getLinkedInLink()
+      .should("have.attr", "href", "https://linkedin.com/in/jaybeeuu");
   });
 
   it("should have a link to my GitHub in profile.", () => {
-    navBar.getGithubLink().should("have.attr", "href", "https://github.com/jaybeeuu");
+    navBar
+      .getGithubLink()
+      .should("have.attr", "href", "https://github.com/jaybeeuu");
   });
 });

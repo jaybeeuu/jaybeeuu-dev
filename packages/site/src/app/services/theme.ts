@@ -2,7 +2,7 @@ import type { TypeAssertion } from "@jaybeeuu/utilities";
 import { assert, is, isInPrimitiveUnion, or } from "@jaybeeuu/utilities";
 
 const themes = ["light", "dark"] as const;
-export type Theme = typeof themes[number];
+export type Theme = (typeof themes)[number];
 
 const isTheme = isInPrimitiveUnion(themes);
 
@@ -19,19 +19,23 @@ export const getMediaTheme = (): Theme => {
   return themeFromQueryMatch(themeMediaQuery.matches);
 };
 
-export const listenToMediaTheme = (listener: MediaThemeListener): Unsubscribe => {
+export const listenToMediaTheme = (
+  listener: MediaThemeListener,
+): Unsubscribe => {
   const handler = (event: MediaQueryListEvent): void => {
     const newTheme = themeFromQueryMatch(event.matches);
     listener(newTheme);
   };
 
   themeMediaQuery.addEventListener("change", handler);
-  return () => { themeMediaQuery.removeEventListener("change", handler); };
+  return () => {
+    themeMediaQuery.removeEventListener("change", handler);
+  };
 };
 
 const localStorageValue = <Value extends string>(
   key: string,
-  assertIsValue: TypeAssertion<Value | null>
+  assertIsValue: TypeAssertion<Value | null>,
 ): {
   set: (value: Value) => void;
   get: () => Value | null;
@@ -48,14 +52,14 @@ const localStorageValue = <Value extends string>(
     },
     remove: (): void => {
       localStorage.removeItem(key);
-    }
+    },
   };
 };
 
 export const persistedTheme = (() => {
   const storageValue = localStorageValue<Theme>(
     "THEME",
-    assert(or(isTheme, is("null")))
+    assert(or(isTheme, is("null"))),
   );
   return {
     set: (newTheme: Theme): void => {
@@ -67,6 +71,6 @@ export const persistedTheme = (() => {
     },
     get: (): Theme | null => {
       return storageValue.get();
-    }
+    },
   };
 })();

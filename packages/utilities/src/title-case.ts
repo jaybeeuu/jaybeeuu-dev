@@ -4,9 +4,11 @@ export type TitleCase<Value extends string> = string extends Value
     ? `${Capitalize<Prefix>} ${TitleCase<Suffix>}`
     : Capitalize<Value>;
 
-export const titleCase = <Value extends string>(kebabCase: Value): TitleCase<Value> => {
+export const titleCase = <Value extends string>(
+  kebabCase: Value,
+): TitleCase<Value> => {
   return kebabCase
     .split("-")
-    .map(([first, ...rest]) => [first?.toUpperCase(), ... rest].join(""))
+    .map(([first, ...rest]) => [first?.toUpperCase(), ...rest].join(""))
     .join(" ") as TitleCase<Value>;
 };

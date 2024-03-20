@@ -37,8 +37,10 @@ context("Post navigation", (): void => {
   });
 
   describe("Meta", () => {
-    const expectMetaDescriptionToContain = (expectedDescription: string): void => {
-      cy.get("meta[name=\"description\"]").should(($descriptionMeta) => {
+    const expectMetaDescriptionToContain = (
+      expectedDescription: string,
+    ): void => {
+      cy.get('meta[name="description"]').should(($descriptionMeta) => {
         const actualDescription = $descriptionMeta.attr("content");
         expect(actualDescription).to.contain(expectedDescription);
       });
@@ -70,5 +72,4 @@ context("Post navigation", (): void => {
       });
     });
   });
-
 });

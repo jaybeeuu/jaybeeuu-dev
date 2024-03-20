@@ -57,7 +57,6 @@
     "@jaybeeuu/eslint-config": "workspace:*",
     "@jaybeeuu/utilities": "workspace:*",
     "@types/jest": "^29.5.12",
-    "@types/marked": "^6.0.0",
     "@types/node": "^20.11.28",
     "@types/node-fetch": "^2.6.11",
     "@types/prismjs": "^1.26.3",

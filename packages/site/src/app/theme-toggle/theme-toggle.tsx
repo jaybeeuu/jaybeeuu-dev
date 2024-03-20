@@ -1,4 +1,3 @@
-
 import type { JSX } from "preact";
 import { h } from "preact";
 import { useValue } from "@jaybeeuu/preact-recoilless";
@@ -9,9 +8,10 @@ import { theme } from "../state";
 
 import css from "./theme-toggle.module.css";
 
-const toggleTheme = (currentTheme: Theme, setTheme: (newTheme: Theme) => void) => () => {
-  setTheme(currentTheme === "light" ? "dark" : "light");
-};
+const toggleTheme =
+  (currentTheme: Theme, setTheme: (newTheme: Theme) => void) => () => {
+    setTheme(currentTheme === "light" ? "dark" : "light");
+  };
 
 export interface ThemeToggleProps {
   className: string;
@@ -24,24 +24,15 @@ export const ThemeToggle = ({ className }: ThemeToggleProps): JSX.Element => {
       className={classNames(css.componentRoot, className)}
       onClick={toggleTheme(currentTheme, setTheme)}
     >
-      <Icon
-        className={css.icon}
-        name={"sun"}
-        title={"Light Theme"}
-      />
+      <Icon className={css.icon} name={"sun"} title={"Light Theme"} />
       <span className={css.track}>
         <span
-          className={classNames(
-            css.switch,
-            { [css.right]: currentTheme === "dark" }
-          )}
+          className={classNames(css.switch, {
+            [css.right]: currentTheme === "dark",
+          })}
         />
       </span>
-      <Icon
-        name={"moon"}
-        title={"Dark Theme"}
-        className={css.icon}
-      />
+      <Icon name={"moon"} title={"Dark Theme"} className={css.icon} />
     </div>
   );
 };

@@ -1,51 +1,37 @@
 const jestRules = {
   "jest/prefer-expect-assertions": "off",
-  "jest/prefer-lowercase-title": ["error", { "ignore": ["describe"] }],
+  "jest/prefer-lowercase-title": ["error", { ignore: ["describe"] }],
   "jest/valid-describe": "off",
-  "jest/valid-title": ["error", { "ignoreTypeOfDescribeName": false }],
-  "react/display-name": "off"
+  "jest/valid-title": ["error", { ignoreTypeOfDescribeName: false }],
+  "react/display-name": "off",
 };
 
 module.exports = {
-  plugins: [
-    "jest"
-  ],
+  plugins: ["jest"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: true,
-    sourceType: "module"
+    sourceType: "module",
   },
   overrides: [
     {
-      files: [
-        "test/**/*.js",
-        "test/**/*.jsx",
-        "test/**/*.ts",
-        "test/**/*.tsx"
-      ],
-      extends: [
-        "plugin:jest/all"
-      ],
+      files: ["test/**/*.js", "test/**/*.jsx", "test/**/*.ts", "test/**/*.tsx"],
+      extends: ["plugin:jest/all"],
       rules: {
         ...jestRules,
-        "jest/require-hook": "off"
+        "jest/require-hook": "off",
       },
       env: {
         node: true,
-        "jest/globals": true
-      }
+        "jest/globals": true,
+      },
     },
     {
-      files: [
-        "**/*.spec.ts",
-        "**/*.spec.tsx"
-      ],
-      extends: [
-        "plugin:jest/all"
-      ],
+      files: ["**/*.spec.ts", "**/*.spec.tsx"],
+      extends: ["plugin:jest/all"],
       rules: {
-        ...jestRules
-      }
-    }
-  ]
+        ...jestRules,
+      },
+    },
+  ],
 };

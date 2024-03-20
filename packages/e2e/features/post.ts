@@ -1,5 +1,5 @@
 import { makeClassSelectors, post } from "@jaybeeuu/e2e-hooks";
-import type { PostSlug} from "../routes/blog";
+import type { PostSlug } from "../routes/blog";
 import { getPostsAlias, withPostMetaData } from "../routes/blog";
 
 const mainPanelSelectors = makeClassSelectors(post);
@@ -8,11 +8,23 @@ export const get = (): Cypress.Chainable<JQuery> => {
   return cy.get(mainPanelSelectors.block);
 };
 
-export type ShouldContainPostParagraphsParameters = ["contain.post.paragraphs", PostSlug];
+export type ShouldContainPostParagraphsParameters = [
+  "contain.post.paragraphs",
+  PostSlug,
+];
 export type ShouldContainPostTitleParameters = ["contain.post.title", PostSlug];
-export type ShouldContainPostPublishDateParameters = ["contain.post.publishDate", PostSlug];
-export type ShouldContainPostLastUpdateDateParameters = ["contain.post.lastUpdateDate", PostSlug];
-export type ShouldContainPostReadingTimeParameters = ["contain.post.readingTime", PostSlug];
+export type ShouldContainPostPublishDateParameters = [
+  "contain.post.publishDate",
+  PostSlug,
+];
+export type ShouldContainPostLastUpdateDateParameters = [
+  "contain.post.lastUpdateDate",
+  PostSlug,
+];
+export type ShouldContainPostReadingTimeParameters = [
+  "contain.post.readingTime",
+  PostSlug,
+];
 
 export interface ArticleChainer extends Cypress.Chainer<JQuery> {
   (
@@ -33,10 +45,11 @@ export interface ArticleChainer extends Cypress.Chainer<JQuery> {
 }
 
 export type ArticleChainable = Cypress.Chainable<JQuery> & {
-  should: ArticleChainer
+  should: ArticleChainer;
 };
 
-const getArticleBlock = (): Cypress.Chainable<JQuery> => cy.get(mainPanelSelectors.block);
+const getArticleBlock = (): Cypress.Chainable<JQuery> =>
+  cy.get(mainPanelSelectors.block);
 
 const shouldContainPostParagraphs = (
   ...[, slug]: ShouldContainPostParagraphsParameters
@@ -48,7 +61,9 @@ const shouldContainPostParagraphs = (
         throw new Error("Post did not contain any paragraphs.");
       }
       paragraphs.forEach((paragraph) => {
-        getArticleBlock().find(mainPanelSelectors.article).should("contain.html", paragraph);
+        getArticleBlock()
+          .find(mainPanelSelectors.article)
+          .should("contain.html", paragraph);
       });
     });
   });
@@ -58,7 +73,9 @@ const shouldContainPostTitle = (
   ...[, slug]: ShouldContainPostTitleParameters
 ): void => {
   withPostMetaData(slug).then((meta) => {
-    getArticleBlock().find(mainPanelSelectors.header).should("contain.text", meta.title);
+    getArticleBlock()
+      .find(mainPanelSelectors.header)
+      .should("contain.text", meta.title);
   });
 };
 
@@ -66,10 +83,9 @@ const shouldContainPostPublishDate = (
   ...[, slug]: ShouldContainPostPublishDateParameters
 ): void => {
   withPostMetaData(slug).then((meta) => {
-    getArticleBlock().find(mainPanelSelectors.header).should(
-      "contain.text",
-      new Date(meta.publishDate).toLocaleDateString()
-    );
+    getArticleBlock()
+      .find(mainPanelSelectors.header)
+      .should("contain.text", new Date(meta.publishDate).toLocaleDateString());
   });
 };
 
@@ -77,12 +93,14 @@ const shouldContainPostLastUpdateDate = (
   ...[, slug]: ShouldContainPostLastUpdateDateParameters
 ): void => {
   withPostMetaData(slug).then((meta) => {
-    getArticleBlock().find(mainPanelSelectors.header).should(
-      "contain.text",
-      meta.lastUpdateDate
-        ? `(updated ${new Date(meta.lastUpdateDate).toLocaleDateString()})`
-        : "(updated )"
-    );
+    getArticleBlock()
+      .find(mainPanelSelectors.header)
+      .should(
+        "contain.text",
+        meta.lastUpdateDate
+          ? `(updated ${new Date(meta.lastUpdateDate).toLocaleDateString()})`
+          : "(updated )",
+      );
   });
 };
 
@@ -90,16 +108,15 @@ const shouldContainPostReadingTime = (
   ...[, slug]: ShouldContainPostReadingTimeParameters
 ): void => {
   withPostMetaData(slug).then((meta) => {
-    getArticleBlock().find(mainPanelSelectors.header).should(
-      "contain.text",
-      meta.readingTime.text
-    );
+    getArticleBlock()
+      .find(mainPanelSelectors.header)
+      .should("contain.text", meta.readingTime.text);
   });
 };
 
 const isChainer = <ChainerArgs extends [string, ...unknown[]]>(
   chainerType: ChainerArgs[0],
-  args: unknown[]
+  args: unknown[],
 ): args is ChainerArgs => {
   return args[0] === chainerType;
 };
@@ -109,27 +126,49 @@ export const getArticle = (): ArticleChainable => {
   const article = cy.get(mainPanelSelectors.article);
   const originalShould = article.should;
 
-  function articleShould (
+  function articleShould(
     this: Cypress.Chainable<JQuery>,
     ...args: unknown[]
   ): Cypress.Chainable<JQuery> {
-    if (isChainer<ShouldContainPostParagraphsParameters>("contain.post.paragraphs", args)) {
+    if (
+      isChainer<ShouldContainPostParagraphsParameters>(
+        "contain.post.paragraphs",
+        args,
+      )
+    ) {
       shouldContainPostParagraphs(...args);
       return article;
     }
-    if (isChainer<ShouldContainPostTitleParameters>("contain.post.title", args)) {
+    if (
+      isChainer<ShouldContainPostTitleParameters>("contain.post.title", args)
+    ) {
       shouldContainPostTitle(...args);
       return article;
     }
-    if (isChainer<ShouldContainPostPublishDateParameters>("contain.post.publishDate", args)) {
+    if (
+      isChainer<ShouldContainPostPublishDateParameters>(
+        "contain.post.publishDate",
+        args,
+      )
+    ) {
       shouldContainPostPublishDate(...args);
       return article;
     }
-    if (isChainer<ShouldContainPostLastUpdateDateParameters>("contain.post.lastUpdateDate", args)) {
+    if (
+      isChainer<ShouldContainPostLastUpdateDateParameters>(
+        "contain.post.lastUpdateDate",
+        args,
+      )
+    ) {
       shouldContainPostLastUpdateDate(...args);
       return article;
     }
-    if (isChainer<ShouldContainPostReadingTimeParameters>("contain.post.readingTime", args)) {
+    if (
+      isChainer<ShouldContainPostReadingTimeParameters>(
+        "contain.post.readingTime",
+        args,
+      )
+    ) {
       shouldContainPostReadingTime(...args);
       return article;
     }
@@ -153,11 +192,16 @@ export const navigateToAnchor = (slug: PostSlug, hash: string): void => {
   cy.visit(`/blog/${slug}#${hash}`);
 };
 
-export const getAnchor = (slug: PostSlug, hash: string): Cypress.Chainable<JQuery> => {
+export const getAnchor = (
+  slug: PostSlug,
+  hash: string,
+): Cypress.Chainable<JQuery> => {
   return getArticle().find(`.hash-link[href="/blog/${slug}#${hash}"]`);
 };
 
-export const getAnchorDestination = (hash: string): Cypress.Chainable<JQuery> => {
+export const getAnchorDestination = (
+  hash: string,
+): Cypress.Chainable<JQuery> => {
   return getArticle().find(`#${hash}`);
 };
 

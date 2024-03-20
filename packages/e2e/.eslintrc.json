@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "@jaybeeuu/eslint-config/base",
-    "plugin:cypress/recommended"
-  ],
+  "extends": ["@jaybeeuu/eslint-config/base", "plugin:cypress/recommended"],
   "plugins": ["cypress"],
   "env": {
     "browser": true,

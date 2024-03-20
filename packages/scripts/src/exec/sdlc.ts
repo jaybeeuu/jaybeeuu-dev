@@ -1,4 +1,3 @@
-
 import yargs from "yargs/yargs";
 import { publish, version } from "../internal/sdlc.js";
 
@@ -10,42 +9,41 @@ export const main = (): void => {
       {
         base: {
           default: "main",
-          type: "string"
+          type: "string",
         },
         "git-hub-token": {
           type: "string",
-          demand: true
+          demand: true,
         },
         head: {
           default: "next",
-          type: "string"
+          type: "string",
         },
         owner: {
           default: "jaybeeuu",
-          type: "string"
+          type: "string",
         },
         remote: {
           default: "origin",
-          type: "string"
+          type: "string",
         },
         repo: {
           default: "jaybeeuu-dev",
-          type: "string"
+          type: "string",
         },
         user: {
           default: "jaybeeuu",
-          type: "string"
-        }
+          type: "string",
+        },
       },
-      (options) => version(options)
+      (options) => version(options),
     )
     .command(
       "publish",
       "Publish the packages whose versions have bumped & push tags to github.",
       {},
-      () => publish()
+      () => publish(),
     )
     .demandCommand()
-    .help()
-    .argv;
+    .help().argv;
 };

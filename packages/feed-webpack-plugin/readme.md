@@ -15,10 +15,14 @@ export default {
     new FeedWebpackPlugin({
       atomFileName: "feeds/atom.xml", // The file name that the Atom feed should be written to. If undefined no atom feed will be emitted.
       rssFileName: "feeds/rss.xml", // The file name that the rss feed should be written to. If undefined no rss feed will be emitted.
-      feedOptions: { /* Options used to build the feed. Passed onto new Feed. */ },
-      items: [ /* Items to include on the feed. Passed onto feed.addItem */]
-    })
-  ]
+      feedOptions: {
+        /* Options used to build the feed. Passed onto new Feed. */
+      },
+      items: [
+        /* Items to include on the feed. Passed onto feed.addItem */
+      ],
+    }),
+  ],
 };
 ```
 

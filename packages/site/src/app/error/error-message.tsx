@@ -13,25 +13,20 @@ export interface ErrorComponentProps {
 export const ErrorMessage = ({
   className,
   heading,
-  message
+  message,
 }: ErrorComponentProps): JSX.Element => {
   return (
     <div className={classNames(css.componentRoot, className)} role="alert">
       <h1>{heading}</h1>
-      {
-        Array.isArray(message)
-          ? (
-            message.map((msg, index) => (
-              <p
-                className={css.message}
-                key={index}
-              >
-                {msg}
-              </p>
-            ))
-          )
-          : <p className={css.message}>{message}</p>
-      }
+      {Array.isArray(message) ? (
+        message.map((msg, index) => (
+          <p className={css.message} key={index}>
+            {msg}
+          </p>
+        ))
+      ) : (
+        <p className={css.message}>{message}</p>
+      )}
     </div>
   );
 };

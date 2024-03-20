@@ -1,5 +1,13 @@
 import { typeDescription, type TypeString } from "./type-guards";
-import { is, isArrayOf, isInPrimitiveUnion, isNullish, isObject, isRecordOf, or } from "./index";
+import {
+  is,
+  isArrayOf,
+  isInPrimitiveUnion,
+  isNullish,
+  isObject,
+  isRecordOf,
+  or,
+} from "./index";
 
 describe("type-guards", () => {
   describe("isNullish", () => {
@@ -9,22 +17,22 @@ describe("type-guards", () => {
     }[] = [
       {
         value: null,
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         value: undefined,
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         value: "{not-null}",
-        expectedOutcome: false
-      }
+        expectedOutcome: false,
+      },
     ];
     it.each(samples)(
       "$#: isNull(value: $value) -> $expectedOutcome",
       ({ expectedOutcome, value }) => {
         expect(isNullish(value)).toBe(expectedOutcome);
-      }
+      },
     );
 
     it("has the right type description.", () => {
@@ -39,41 +47,45 @@ describe("type-guards", () => {
     }[] = [
       {
         value: { a: "1", b: 2 },
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         value: { a: "1", b: 2, c: true },
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         value: { a: 1, b: 2 },
-        expectedOutcome: false
+        expectedOutcome: false,
       },
       {
         value: "{not-an-object}",
-        expectedOutcome: false
+        expectedOutcome: false,
       },
       {
         value: null,
-        expectedOutcome: false
-      }
+        expectedOutcome: false,
+      },
     ];
 
     it.each(samples)(
-      "$#: isObject({ a: is(\"string\"), b: is(\"number\") })(value: $value) -> $expectedOutcome",
+      '$#: isObject({ a: is("string"), b: is("number") })(value: $value) -> $expectedOutcome',
       ({ expectedOutcome, value }) => {
-        expect(isObject({
-          a: is("string"),
-          b: is("number")
-        })(value)).toBe(expectedOutcome);
-      }
+        expect(
+          isObject({
+            a: is("string"),
+            b: is("number"),
+          })(value),
+        ).toBe(expectedOutcome);
+      },
     );
 
     it("has the right type description.", () => {
-      expect(isObject({
-        a: is("string"),
-        b: is("number")
-      })[typeDescription]).toBe("{ a: string; b: number; }");
+      expect(
+        isObject({
+          a: is("string"),
+          b: is("number"),
+        })[typeDescription],
+      ).toBe("{ a: string; b: number; }");
     });
   });
 
@@ -84,28 +96,28 @@ describe("type-guards", () => {
     }[] = [
       {
         value: [1, 2],
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         value: ["1", 2],
-        expectedOutcome: false
+        expectedOutcome: false,
       },
       {
         value: "{not-an-object}",
-        expectedOutcome: false
+        expectedOutcome: false,
       },
       {
         value: null,
-        expectedOutcome: false
-      }
+        expectedOutcome: false,
+      },
     ];
 
     it.each(samples)(
-      "$#: isArray(is(\"number\"))(value: $value) -> $expectedOutcome",
+      '$#: isArray(is("number"))(value: $value) -> $expectedOutcome',
       ({ expectedOutcome, value }) => {
         const predicate = isArrayOf(is("number"));
         expect(predicate(value)).toBe(expectedOutcome);
-      }
+      },
     );
 
     it("has the right type description.", () => {
@@ -120,31 +132,33 @@ describe("type-guards", () => {
     }[] = [
       {
         value: { a: 1, b: 2 },
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         value: { a: "1", b: 2 },
-        expectedOutcome: false
+        expectedOutcome: false,
       },
       {
         value: "{not-an-object}",
-        expectedOutcome: false
+        expectedOutcome: false,
       },
       {
         value: null,
-        expectedOutcome: false
-      }
+        expectedOutcome: false,
+      },
     ];
 
     it.each(samples)(
-      "$#: isRecordOf(is(\"number\"))(value: $value) -> $expectedOutcome",
+      '$#: isRecordOf(is("number"))(value: $value) -> $expectedOutcome',
       ({ expectedOutcome, value }) => {
         expect(isRecordOf(is("number"))(value)).toBe(expectedOutcome);
-      }
+      },
     );
 
     it("has the right type description.", () => {
-      expect(isRecordOf(is("number"))[typeDescription]).toBe("{ [key: string]: number; }");
+      expect(isRecordOf(is("number"))[typeDescription]).toBe(
+        "{ [key: string]: number; }",
+      );
     });
   });
 
@@ -157,95 +171,95 @@ describe("type-guards", () => {
       {
         typeString: "bigint",
         value: BigInt("7697543624385867012413"),
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         typeString: "bigint",
         value: "{string}",
-        expectedOutcome: false
+        expectedOutcome: false,
       },
       {
         typeString: "boolean",
         value: true,
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         typeString: "boolean",
         value: 10,
-        expectedOutcome: false
+        expectedOutcome: false,
       },
       {
         typeString: "function",
         value: () => {},
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         typeString: "function",
         value: {},
-        expectedOutcome: false
+        expectedOutcome: false,
       },
       {
         typeString: "null",
         value: null,
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         typeString: "null",
         value: false,
-        expectedOutcome: false
+        expectedOutcome: false,
       },
       {
         typeString: "number",
         value: 100,
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         typeString: "number",
         value: [],
-        expectedOutcome: false
+        expectedOutcome: false,
       },
       {
         typeString: "object",
         value: {},
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         typeString: "object",
         value: 99,
-        expectedOutcome: false
+        expectedOutcome: false,
       },
       {
         typeString: "string",
         value: "{string}",
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         typeString: "symbol",
         value: Symbol.for("thing"),
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         typeString: "symbol",
         value: {},
-        expectedOutcome: false
+        expectedOutcome: false,
       },
       {
         typeString: "undefined",
         value: undefined,
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         typeString: "undefined",
         value: {},
-        expectedOutcome: false
-      }
+        expectedOutcome: false,
+      },
     ];
 
     it.each(samples)(
       "$#: is(typeString: $typeString)(value: $value) -> $expectedOutcome;",
       ({ expectedOutcome, typeString, value }) => {
         expect(is(typeString)(value)).toBe(expectedOutcome);
-      }
+      },
     );
 
     it.each([
@@ -256,12 +270,12 @@ describe("type-guards", () => {
       { typeString: "symbol" },
       { typeString: "undefined" },
       { typeString: "object" },
-      { typeString: "function" }
+      { typeString: "function" },
     ] as const)(
       "$#: is(typeString: $typeString) has type description $typeString.",
       ({ typeString }) => {
         expect(is(typeString)[typeDescription]).toBe(typeString);
-      }
+      },
     );
   });
 
@@ -272,27 +286,29 @@ describe("type-guards", () => {
     }[] = [
       {
         value: 100,
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         value: "{string}",
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         value: false,
-        expectedOutcome: false
-      }
+        expectedOutcome: false,
+      },
     ];
 
     it.each(samples)(
-      "$#: or(is(\"number\"), is(\"string\"))(value: $value) -> $expectedOutcome",
+      '$#: or(is("number"), is("string"))(value: $value) -> $expectedOutcome',
       ({ expectedOutcome, value }) => {
         expect(or(is("number"), is("string"))(value)).toBe(expectedOutcome);
-      }
+      },
     );
 
     it("has the right type description.", () => {
-      expect(or(is("number"), is("string"))[typeDescription]).toBe("number | string");
+      expect(or(is("number"), is("string"))[typeDescription]).toBe(
+        "number | string",
+      );
     });
   });
 
@@ -303,39 +319,41 @@ describe("type-guards", () => {
     }[] = [
       {
         value: "one",
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         value: "two",
-        expectedOutcome: true
+        expectedOutcome: true,
       },
       {
         value: "three",
-        expectedOutcome: false
+        expectedOutcome: false,
       },
       {
         value: 100,
-        expectedOutcome: false
+        expectedOutcome: false,
       },
       {
         value: true,
-        expectedOutcome: false
+        expectedOutcome: false,
       },
       {
         value: {},
-        expectedOutcome: false
-      }
+        expectedOutcome: false,
+      },
     ];
 
     it.each(samples)(
-      "$#: isInPrimitiveUnion([\"one\", \"two\"])(value: $value) -> $expectedOutcome",
+      '$#: isInPrimitiveUnion(["one", "two"])(value: $value) -> $expectedOutcome',
       ({ expectedOutcome, value }) => {
         expect(isInPrimitiveUnion(["one", "two"])(value)).toBe(expectedOutcome);
-      }
+      },
     );
 
     it("has the right type description.", () => {
-      expect(isInPrimitiveUnion(["one", "two"])[typeDescription]).toBe("\"one\" | \"two\"");
+      expect(isInPrimitiveUnion(["one", "two"])[typeDescription]).toBe(
+        '"one" | "two"',
+      );
     });
   });
 });

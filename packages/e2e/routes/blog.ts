@@ -1,8 +1,12 @@
 import type { PostManifest, PostMetaData } from "@jaybeeuu/compost";
 import { assertIsNotNullish } from "@jaybeeuu/utilities";
 
-export const slugs = ["memoising-selectors", "module-spotting", "the-rewrite"] as const;
-export type PostSlug = typeof slugs[number];
+export const slugs = [
+  "memoising-selectors",
+  "module-spotting",
+  "the-rewrite",
+] as const;
+export type PostSlug = (typeof slugs)[number];
 
 export const withManifest = (): Cypress.Chainable<PostManifest> => {
   return cy.fixture("blog/manifest.json").then((manifest) => {
@@ -10,7 +14,9 @@ export const withManifest = (): Cypress.Chainable<PostManifest> => {
   });
 };
 
-export const withPostMetaData = (slug: PostSlug): Cypress.Chainable<PostMetaData> => {
+export const withPostMetaData = (
+  slug: PostSlug,
+): Cypress.Chainable<PostMetaData> => {
   return withManifest().then((manifest) => {
     const meta = manifest[slug];
     assertIsNotNullish(meta);
@@ -19,23 +25,21 @@ export const withPostMetaData = (slug: PostSlug): Cypress.Chainable<PostMetaData
 };
 
 export const getPostsAlias = <Route extends PostSlug | "manifest">(
-  route: Route
+  route: Route,
 ): `@get-blog-${Route}` => `@get-blog-${route}`;
 
 const registerPostRoute = (slug: PostSlug): void => {
   withPostMetaData(slug).then((postMetaData) => {
-    cy.intercept(
-      `/blog/${postMetaData.fileName}`,
-      { fixture: `blog/${postMetaData.fileName}` }
-    ).as(`get-blog-${postMetaData.slug}`);
+    cy.intercept(`/blog/${postMetaData.fileName}`, {
+      fixture: `blog/${postMetaData.fileName}`,
+    }).as(`get-blog-${postMetaData.slug}`);
   });
 };
 
 export const registerRoutes = (): void => {
-  cy.intercept(
-    "/blog/manifest.json",
-    { fixture: "blog/manifest.json" }
-  ).as("get-blog-manifest");
+  cy.intercept("/blog/manifest.json", { fixture: "blog/manifest.json" }).as(
+    "get-blog-manifest",
+  );
   registerPostRoute("memoising-selectors");
   registerPostRoute("module-spotting");
   registerPostRoute("the-rewrite");

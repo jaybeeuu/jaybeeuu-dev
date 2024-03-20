@@ -92,14 +92,23 @@ jobs:
           name: Lint
           command: pnpm lint
 
-  spellcheck:
+  format-check:
+    <<: *job-base
+
+    steps:
+      - setup_workspace
+      - run:
+          name: Format Check
+          command: pnpm format-check
+
+  spell-check:
     <<: *job-base
 
     steps:
       - setup_workspace
       - run:
           name: Spell Check
-          command: pnpm spellcheck
+          command: pnpm spell-check
 
   type-check:
     <<: *job-base
@@ -195,19 +204,22 @@ workflows:
   build:
     jobs:
       - checkout-install-build
+      - e2e:
+          requires:
+            - checkout-install-build
+      - format-check:
+          requires:
+            - checkout-install-build
       - lint:
           requires:
             - checkout-install-build
-      - spellcheck:
-          requires:
-            - checkout-install-build
-      - type-check:
+      - spell-check:
           requires:
             - checkout-install-build
       - test:
           requires:
             - checkout-install-build
-      - e2e:
+      - type-check:
           requires:
             - checkout-install-build
       - version:
@@ -217,11 +229,12 @@ workflows:
             tags:
               ignore: /.*/
           requires:
-            - lint
-            - spellcheck
-            - type-check
-            - test
             - e2e
+            - format-check
+            - lint
+            - spell-check
+            - test
+            - type-check
       - publish:
           filters:
             branches:
@@ -229,8 +242,9 @@ workflows:
             tags:
               ignore: /.*/
           requires:
-            - lint
-            - spellcheck
-            - type-check
-            - test
             - e2e
+            - format-check
+            - lint
+            - spell-check
+            - test
+            - type-check

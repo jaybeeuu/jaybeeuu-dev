@@ -8,18 +8,13 @@ const config = {
   //   "src/**"
   // ],
   transform: {
-    "^.+\\.(t|j)sx?$": "ts-jest"
+    "^.+\\.(t|j)sx?$": "ts-jest",
   },
-  testMatch: [
-    "**/*.spec.ts"
-  ],
-  testPathIgnorePatterns: [
-    "/node_modules/",
-    "/lib/"
-  ],
+  testMatch: ["**/*.spec.ts"],
+  testPathIgnorePatterns: ["/node_modules/", "/lib/"],
   moduleNameMapper: {
-    "(\\.\\.?/.*)\\.js$": "$1"
-  }
+    "(\\.\\.?/.*)\\.js$": "$1",
+  },
 };
 
 export default config;

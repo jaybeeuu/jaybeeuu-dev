@@ -12,10 +12,10 @@
   --colour-text-code: #d6deeb;
 
   --spinner-main: #dddddd;
-  --spinner-secondary:  rgba(255, 255, 255, .3);
+  --spinner-secondary: rgba(255, 255, 255, 0.3);
 
   --toggle-main: #dddddd;
-  --toggle-secondary:  rgba(255, 255, 255, .3);
+  --toggle-secondary: rgba(255, 255, 255, 0.3);
 
   --fill-icon: #dddddd;
   --border-colour-button: #dddddd;
@@ -35,10 +35,10 @@
   --colour-text-code: #343438;
 
   --spinner-main: #343438;
-  --spinner-secondary:  rgba(200, 200, 200, .6);
+  --spinner-secondary: rgba(200, 200, 200, 0.6);
 
   --toggle-main: #343438;
-  --toggle-secondary:  rgba(100, 100, 100, .4);
+  --toggle-secondary: rgba(100, 100, 100, 0.4);
 
   --fill-icon: #343438;
   --border-colour-button: #343438;

@@ -1,27 +1,24 @@
-type Hook<Block extends string> = `e2e__${Block}`
+type Hook<Block extends string> = `e2e__${Block}`;
 
 interface HookBlock<Block extends string> {
   (): Hook<Block>;
 
   element: <Element extends string>(
-    element: Element
+    element: Element,
   ) => `${Hook<Block>}__${Element}`;
 
-  modifiedElement: <
-    Element extends string,
-    Modifier extends string
-  >(
+  modifiedElement: <Element extends string, Modifier extends string>(
     element: Element,
-    modifier: Modifier
+    modifier: Modifier,
   ) => `${Hook<Block>}__${Element}--${Modifier}`;
 
   modifier: <Modifier extends string>(
-    modifier: Modifier
+    modifier: Modifier,
   ) => `${Hook<Block>}--${Modifier}`;
 }
 
 const makeHookBlock = <Block extends string>(
-  block: Block
+  block: Block,
 ): HookBlock<Block> => {
   const blockClass: Hook<Block> = `e2e__${block}`;
 
@@ -30,19 +27,17 @@ const makeHookBlock = <Block extends string>(
   };
 
   getBlock.element = <Element extends string>(
-    element: Element
+    element: Element,
   ): `${Hook<Block>}__${Element}` => `${blockClass}__${element}`;
 
-  getBlock.modifiedElement = <
-    Element extends string,
-    Modifier extends string
-  >(
+  getBlock.modifiedElement = <Element extends string, Modifier extends string>(
     element: Element,
-    modifier: Modifier
-  ): `${Hook<Block>}__${Element}--${Modifier}` => `${blockClass}__${element}--${modifier}`;
+    modifier: Modifier,
+  ): `${Hook<Block>}__${Element}--${Modifier}` =>
+    `${blockClass}__${element}--${modifier}`;
 
   getBlock.modifier = <Modifier extends string>(
-    modifier: Modifier
+    modifier: Modifier,
   ): `${Hook<Block>}--${Modifier}` => `${blockClass}--${modifier}`;
 
   return getBlock;
@@ -51,4 +46,3 @@ const makeHookBlock = <Block extends string>(
 const carouselBlock = makeHookBlock("carousel");
 
 const dotButton = carouselBlock.element("dot-button");
-

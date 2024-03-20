@@ -1,6 +1,6 @@
 {
   "extends": ["@jaybeeuu/eslint-config/base"],
-    "env": {
+  "env": {
     "browser": true
   }
 }

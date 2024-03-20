@@ -23,11 +23,11 @@ export interface ImageState {
 
 export const useImages = (
   backgrounds: BackgroundImages | null,
-  currentTheme: Theme
+  currentTheme: Theme,
 ): ImageState => {
   const [imageState, setImageState] = useState<ImageState>({
     previous: null,
-    current: null
+    current: null,
   });
 
   useEffect(() => {
@@ -45,20 +45,20 @@ export const useImages = (
         setImageState({ previous: imageState.current, current });
       }
     })();
-    return () => cancelled = true;
+    return () => (cancelled = true);
   }, [currentTheme, backgrounds]);
 
   return imageState;
 };
 
-export const Background = ({ children, className }: BackgroundProps): JSX.Element => {
+export const Background = ({
+  children,
+  className,
+}: BackgroundProps): JSX.Element => {
   const [currentTheme] = useValue(theme);
   const [backgrounds] = useValue(backgroundImages);
   const onScroll = useAction(onMainContentScroll);
-  const { current, previous } = useImages(
-    backgrounds,
-    currentTheme
-  );
+  const { current, previous } = useImages(backgrounds, currentTheme);
 
   return (
     <div className={classNames(className, css.componentRoot)}>
@@ -69,7 +69,7 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
               appearDone: css.opaque,
               enterDone: css.opaque,
               exit: css.opaque,
-              exitActive: css.transparentOut
+              exitActive: css.transparentOut,
             }}
             exit
             duration={500}
@@ -88,7 +88,7 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
               appearDone: css.opaque,
               enter: css.transparentIn,
               enterActive: css.opaque,
-              enterDone: css.opaque
+              enterDone: css.opaque,
             }}
             appear
             duration={500}
@@ -103,7 +103,7 @@ export const Background = ({ children, className }: BackgroundProps): JSX.Elemen
         onScroll={(event) => {
           onScroll({
             x: event.currentTarget.scrollLeft,
-            y: event.currentTarget.scrollTop
+            y: event.currentTarget.scrollTop,
           });
         }}
       >

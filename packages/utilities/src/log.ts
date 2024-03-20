@@ -9,10 +9,7 @@ export const getErrorMessage = (err: unknown): string => {
   }
 
   if (err instanceof Error) {
-    return [
-      err.message,
-      err.stack ?? "No Stack"
-    ].join("\n");
+    return [err.message, err.stack ?? "No Stack"].join("\n");
   }
 
   if (!err) {

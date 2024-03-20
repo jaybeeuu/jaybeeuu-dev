@@ -21,13 +21,13 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div
-      className={classNames(css.componentRoot, e2eHooks.block, className)}
-    >
+    <div className={classNames(css.componentRoot, e2eHooks.block, className)}>
       <Icon
         className={css.menuButton}
         name={"menu"}
-        onClick={() => { setIsOpen(!isOpen); }}
+        onClick={() => {
+          setIsOpen(!isOpen);
+        }}
         title={"Menu"}
       />
       <div className={classNames(css.optionsList, { [css.open]: isOpen })}>
@@ -35,17 +35,21 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
           activeClassName={css.active}
           className={classNames(css.link, e2eHooks.homeLink)}
           href={"/"}
-          onClick={() => { setIsOpen(false); }}
+          onClick={() => {
+            setIsOpen(false);
+          }}
         >
-            Home
+          Home
         </Link>
         <Link
           activeClassName={css.active}
           className={classNames(css.link, e2eHooks.postsListLink)}
           href={"/blog"}
-          onClick={() => { setIsOpen(false); }}
+          onClick={() => {
+            setIsOpen(false);
+          }}
         >
-            Blog
+          Blog
         </Link>
         <ImageLink
           className={e2eHooks.linkedInLink}
@@ -58,7 +62,7 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
           href={"https://github.com/jaybeeuu"}
           imageSrc={{
             light: githubDark,
-            dark: githubLight
+            dark: githubLight,
           }}
           title={"GitHub"}
         />
@@ -72,10 +76,11 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
       </div>
       <div
         className={classNames(css.dismissBox, { [css.open]: isOpen })}
-        onClick={() => { setIsOpen(false); }}
+        onClick={() => {
+          setIsOpen(false);
+        }}
       />
     </div>
   );
 };
-NavBar.displayName  = "NavBar";
-
+NavBar.displayName = "NavBar";

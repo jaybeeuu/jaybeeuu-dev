@@ -10,9 +10,11 @@ import css from "./image-link.module.css";
 interface ImageLinkProps {
   className?: string;
   href: string;
-  imageSrc: string | {
-    [theme in Theme]: string;
-  };
+  imageSrc:
+    | string
+    | {
+        [theme in Theme]: string;
+      };
   title: string;
 }
 
@@ -20,12 +22,11 @@ export const ImageLink = ({
   title,
   className,
   href,
-  imageSrc
+  imageSrc,
 }: ImageLinkProps): JSX.Element => {
   const [currentTheme] = useValue(theme);
-  const imageSrcToUse = typeof imageSrc === "string"
-    ? imageSrc
-    : imageSrc[currentTheme];
+  const imageSrcToUse =
+    typeof imageSrc === "string" ? imageSrc : imageSrc[currentTheme];
 
   return (
     <a
@@ -33,10 +34,7 @@ export const ImageLink = ({
       href={href}
       title={title}
     >
-      <img
-        alt={title}
-        src={imageSrcToUse}
-      />
+      <img alt={title} src={imageSrcToUse} />
     </a>
   );
 };

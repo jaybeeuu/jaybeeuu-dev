@@ -17,8 +17,8 @@ type FsModule = typeof fsModule;
 const fs = jest.createMockFromModule<FsModule>("fs");
 fs.promises = jest.createMockFromModule<FsModule["promises"]>("fs/promises");
 
-type StatsPropsType
-  = "file"
+type StatsPropsType =
+  | "file"
   | "directory"
   | "block-device"
   | "character-device"
@@ -139,7 +139,7 @@ interface File {
 const makeFile = (
   path: string,
   content: string,
-  stats: Partial<StatsProps> = {}
+  stats: Partial<StatsProps> = {},
 ): File => {
   return {
     type: "file",
@@ -161,23 +161,23 @@ const makeFile = (
       mtime: new Date(),
       ctime: new Date(),
       birthtime: new Date(),
-      ...stats
+      ...stats,
     }),
     update(newContent: string) {
       this.content = newContent;
       this.stats = new Stats({
         type: "file",
         ...this.stats,
-        mtime: new Date()
+        mtime: new Date(),
       });
     },
     logAccess() {
       this.stats = new Stats({
         type: "file",
         ...this.stats,
-        atime: new Date()
+        atime: new Date(),
       });
-    }
+    },
   };
 };
 
@@ -191,7 +191,7 @@ interface Directory {
 const makeDirectory = (
   path: string,
   entries: Directory["entries"],
-  stats: Partial<StatsProps> = {}
+  stats: Partial<StatsProps> = {},
 ): Directory => {
   return {
     type: "directory",
@@ -213,8 +213,8 @@ const makeDirectory = (
       mtime: new Date(),
       ctime: new Date(),
       birthtime: new Date(),
-      ...stats
-    })
+      ...stats,
+    }),
   };
 };
 
@@ -228,13 +228,15 @@ const resolvePath = (path: string): string => {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const draw = (entry: Directory | File, indentation: number = 0): string => {
-  const spaces = Array.from({ length: indentation}).join("  ");
+  const spaces = Array.from({ length: indentation }).join("  ");
 
   return [
     `${spaces} L ${pathUtils.basename(entry.path)}`,
-    ...entry.type === "directory"
-      ? Array.from(entry.entries.values()).map((subEntry) => draw(subEntry, indentation + 1))
-      : []
+    ...(entry.type === "directory"
+      ? Array.from(entry.entries.values()).map((subEntry) =>
+          draw(subEntry, indentation + 1),
+        )
+      : []),
   ].join("\n");
 };
 
@@ -256,35 +258,34 @@ type GetEntryResult = GetEntryFailed | GetEntrySuccess;
 const getEntry = (
   pathFragments: string[],
   directory: Directory,
-  pathToHere: string
+  pathToHere: string,
 ): GetEntryResult => {
   const [topPath = "", ...rest] = pathFragments;
   const currentEntryPath = pathUtils.join(pathToHere, topPath);
-  const currentEntry = topPath === "." || topPath === ""
-    ? directory
-    : directory.entries.get(topPath);
+  const currentEntry =
+    topPath === "." || topPath === ""
+      ? directory
+      : directory.entries.get(topPath);
 
   if (rest.length === 0 && currentEntry) {
     return {
       existed: true,
       parentDirectory: directory,
-      entry: currentEntry
+      entry: currentEntry,
     };
   }
 
   return typeof currentEntry === "undefined" || currentEntry.type === "file"
     ? {
-      existed: false,
-      failedPath: currentEntryPath,
-      parentDirectory: directory,
-      entry: currentEntry
-    }
+        existed: false,
+        failedPath: currentEntryPath,
+        parentDirectory: directory,
+        entry: currentEntry,
+      }
     : getEntry(rest, currentEntry, pathUtils.join(pathToHere, topPath));
 };
 
-const maybeGetEntry = (
-  path: string
-): GetEntryResult => {
+const maybeGetEntry = (path: string): GetEntryResult => {
   const resolvedPath = resolvePath(path);
   const directories = resolvedPath.split(pathUtils.sep);
   return getEntry(directories, root, "");
@@ -304,11 +305,11 @@ interface MaybeGetDirectoryFailure {
   parentDirectory: Directory;
 }
 
-type MaybeGetDirectoryResult = MaybeGetDirectorySuccess | MaybeGetDirectoryFailure;
+type MaybeGetDirectoryResult =
+  | MaybeGetDirectorySuccess
+  | MaybeGetDirectoryFailure;
 
-const maybeGetDirectory = (
-  path: string
-): MaybeGetDirectoryResult => {
+const maybeGetDirectory = (path: string): MaybeGetDirectoryResult => {
   const resolvedPath = resolvePath(path);
   const directories = resolvedPath.split(pathUtils.sep);
   const getEntryResult = getEntry(directories, root, "");
@@ -318,7 +319,7 @@ const maybeGetDirectory = (
     return {
       ...getEntryResult,
       existed: false,
-      message: `Could not get directory ${path}. Path ${getEntryResult.failedPath} ${wasAFile ? "was a file" : "did not exist."}`
+      message: `Could not get directory ${path}. Path ${getEntryResult.failedPath} ${wasAFile ? "was a file" : "did not exist."}`,
     };
   }
 
@@ -328,14 +329,14 @@ const maybeGetDirectory = (
       existed: false,
       failedPath: path,
       message: `Could not get directory ${path}. The path refers to a file.`,
-      parentDirectory: getEntryResult.parentDirectory
+      parentDirectory: getEntryResult.parentDirectory,
     };
   }
 
   return {
     directory: getEntryResult.entry,
     existed: true,
-    parentDirectory: getEntryResult.parentDirectory
+    parentDirectory: getEntryResult.parentDirectory,
   };
 };
 
@@ -353,12 +354,15 @@ const getDirectory = (path: string): Directory => {
   throw new Error(maybeGetDirectoryResult.message);
 };
 
-type MaybeGetFileResult
-  = { existed: true; file: File }
-  | { existed: false; failedPath: string; message: string, entry: File | Directory | undefined; };
-const maybeGetFile = (
-  path: string
-): MaybeGetFileResult => {
+type MaybeGetFileResult =
+  | { existed: true; file: File }
+  | {
+      existed: false;
+      failedPath: string;
+      message: string;
+      entry: File | Directory | undefined;
+    };
+const maybeGetFile = (path: string): MaybeGetFileResult => {
   const resolvedPath = resolvePath(path);
   const directories = resolvedPath.split(pathUtils.sep);
   const getEntryResult = getEntry(directories, root, "");
@@ -368,7 +372,7 @@ const maybeGetFile = (
     return {
       ...getEntryResult,
       existed: false,
-      message: `Could not get File ${path}. Path ${getEntryResult.failedPath} ${wasAFile ? "was a file" : "did not exist."}`
+      message: `Could not get File ${path}. Path ${getEntryResult.failedPath} ${wasAFile ? "was a file" : "did not exist."}`,
     };
   }
 
@@ -377,13 +381,13 @@ const maybeGetFile = (
       entry: getEntryResult.entry,
       failedPath: path,
       existed: false,
-      message: `Could not get File ${path}. The path refers to a directory.`
+      message: `Could not get File ${path}. The path refers to a directory.`,
     };
   }
 
   return {
     existed: true,
-    file: getEntryResult.entry
+    file: getEntryResult.entry,
   };
 };
 
@@ -395,64 +399,70 @@ const getFile = (path: string): File => {
   throw new Error(maybeGetFileResult.message);
 };
 
-const assertPathIsString: (path: fsModule.PathLike) => asserts path is string = (path) => {
+const assertPathIsString: (
+  path: fsModule.PathLike,
+) => asserts path is string = (path) => {
   if (typeof path !== "string") {
-    throw new Error("Cannot handle buffer paths - tht hasn't been jest.mocked.");
+    throw new Error(
+      "Cannot handle buffer paths - tht hasn't been jest.mocked.",
+    );
   }
 };
 
 const assertIsSupportedCopyFileArguments: (
-  args: Parameters<typeof fsModule.promises.copyFile>
+  args: Parameters<typeof fsModule.promises.copyFile>,
 ) => asserts args is [string, string, undefined] = (args) => {
   const [source, destination, flags] = args;
   if (
-    typeof source !== "string"
-    || typeof destination !== "string"
-    || typeof flags !== "undefined"
+    typeof source !== "string" ||
+    typeof destination !== "string" ||
+    typeof flags !== "undefined"
   ) {
-    throw new Error("copyFIle mock only supports string source and destination and undefined flags.");
+    throw new Error(
+      "copyFIle mock only supports string source and destination and undefined flags.",
+    );
   }
 };
 
-jest.mocked(
-  fs.promises.copyFile
-).mockImplementation(
-  async (...args) => {
-    assertIsSupportedCopyFileArguments(args);
-    const [source, destination] = args;
-    await Promise.resolve();
-    const resolvedSource = resolvePath(source);
-    const file = getFile(resolvedSource);
-    await fs.promises.writeFile(destination, file.content, "utf8");
-  }
-);
+jest.mocked(fs.promises.copyFile).mockImplementation(async (...args) => {
+  assertIsSupportedCopyFileArguments(args);
+  const [source, destination] = args;
+  await Promise.resolve();
+  const resolvedSource = resolvePath(source);
+  const file = getFile(resolvedSource);
+  await fs.promises.writeFile(destination, file.content, "utf8");
+});
 
 const assertIsSupportedAccessArguments: (
-  args: Parameters<typeof fs.promises.access>
-) => asserts args is [string, undefined] = (
-  args
-) => {
+  args: Parameters<typeof fs.promises.access>,
+) => asserts args is [string, undefined] = (args) => {
   const [path, mode] = args;
-  if (typeof path !== "string" && typeof mode === "undefined" ) {
-    throw new Error("Only string path, undefined mode is supported. other argument types have not been implemented.");
+  if (typeof path !== "string" && typeof mode === "undefined") {
+    throw new Error(
+      "Only string path, undefined mode is supported. other argument types have not been implemented.",
+    );
   }
 };
 
-jest.mocked(fs.promises.access).mockImplementation(async (...args): Promise<void> => {
-  assertIsSupportedAccessArguments(args);
-  await Promise.resolve();
-  const [path] = args;
-  const resolvedPath = resolvePath(path);
-  const parentDirName = pathUtils.dirname(resolvedPath);
-  const parentDir = getDirectory(parentDirName);
-  const fileOrDirName = pathUtils.basename(resolvedPath);
+jest
+  .mocked(fs.promises.access)
+  .mockImplementation(async (...args): Promise<void> => {
+    assertIsSupportedAccessArguments(args);
+    await Promise.resolve();
+    const [path] = args;
+    const resolvedPath = resolvePath(path);
+    const parentDirName = pathUtils.dirname(resolvedPath);
+    const parentDir = getDirectory(parentDirName);
+    const fileOrDirName = pathUtils.basename(resolvedPath);
 
-  if (parentDir.entries.has(fileOrDirName)) {
-    return;
-  }
+    if (parentDir.entries.has(fileOrDirName)) {
+      return;
+    }
 
-  throw new Error(`Could not access ${path}: Neither file nor directory called ${fileOrDirName} existed in ${parentDirName}`);
-});
+    throw new Error(
+      `Could not access ${path}: Neither file nor directory called ${fileOrDirName} existed in ${parentDirName}`,
+    );
+  });
 
 jest.mocked(fs.accessSync).mockImplementation((...args): void => {
   assertIsSupportedAccessArguments(args);
@@ -466,123 +476,152 @@ jest.mocked(fs.accessSync).mockImplementation((...args): void => {
     return;
   }
 
-  throw new Error(`Could not access ${path}: Neither file nor directory called ${fileOrDirName} existed in ${parentDirName}`);
+  throw new Error(
+    `Could not access ${path}: Neither file nor directory called ${fileOrDirName} existed in ${parentDirName}`,
+  );
 });
 
-type LstatOptions
-  = fsModule.StatOptions & { bigint?: false }
-  | fsModule.StatOptions & { bigint: true }
+type LstatOptions =
+  | (fsModule.StatOptions & { bigint?: false })
+  | (fsModule.StatOptions & { bigint: true })
   | fsModule.StatOptions;
 
 type Lstat = (
   path: fsModule.PathLike,
-  opts?: LstatOptions
-) => Promise<fsModule.Stats | fsModule.BigIntStats>
+  opts?: LstatOptions,
+) => Promise<fsModule.Stats | fsModule.BigIntStats>;
 
 const assertIsSupportedLstatArguments: (
-  args: Parameters<Lstat>
+  args: Parameters<Lstat>,
 ) => asserts args is [string, undefined] = (args) => {
   const [path, options] = args;
   const isValidOptions = typeof options === "undefined";
 
   if (typeof path !== "string" || !isValidOptions) {
-    throw new Error("Mkdir mock only supports string path and undefined options or the recursive option.");
+    throw new Error(
+      "Mkdir mock only supports string path and undefined options or the recursive option.",
+    );
   }
 };
 
-jest.mocked(fs.promises.lstat as Lstat).mockImplementation(async (
-  ...args
-): Promise<fsModule.Stats | fsModule.BigIntStats> => {
-  assertIsSupportedLstatArguments(args);
-  const [path] = args;
-  await Promise.resolve();
-  const maybeGetEntryResult = maybeGetEntry(path);
-  if (!maybeGetEntryResult.existed) {
-    throw new Error(`Could not lstat ${path}: Path ${maybeGetEntryResult.failedPath} ${maybeGetEntryResult.entry ? "was a file" : "did not exist"}.`);
-  }
-  return maybeGetEntryResult.entry.stats;
-});
+jest
+  .mocked(fs.promises.lstat as Lstat)
+  .mockImplementation(
+    async (...args): Promise<fsModule.Stats | fsModule.BigIntStats> => {
+      assertIsSupportedLstatArguments(args);
+      const [path] = args;
+      await Promise.resolve();
+      const maybeGetEntryResult = maybeGetEntry(path);
+      if (!maybeGetEntryResult.existed) {
+        throw new Error(
+          `Could not lstat ${path}: Path ${maybeGetEntryResult.failedPath} ${maybeGetEntryResult.entry ? "was a file" : "did not exist"}.`,
+        );
+      }
+      return maybeGetEntryResult.entry.stats;
+    },
+  );
 
-type MkdirOptions
-  = fsModule.MakeDirectoryOptions & { recursive: true; }
-  | fsModule.Mode | (fsModule.MakeDirectoryOptions & { recursive?: false; }
-  | fsModule.Mode | fsModule.MakeDirectoryOptions | null)
+type MkdirOptions =
+  | (fsModule.MakeDirectoryOptions & { recursive: true })
+  | fsModule.Mode
+  | (
+      | (fsModule.MakeDirectoryOptions & { recursive?: false })
+      | fsModule.Mode
+      | fsModule.MakeDirectoryOptions
+      | null
+    );
 
 type Mkdir = (
   path: fsModule.PathLike,
-  options?: MkdirOptions
+  options?: MkdirOptions,
 ) => Promise<string | string[] | undefined>;
 
 const assertIsSupportedMkdirArguments: (
-  args: Parameters<Mkdir>
+  args: Parameters<Mkdir>,
 ) => asserts args is [string, { recursive: boolean } | undefined] = (args) => {
   const [path, options] = args;
-  const isValidOptions = typeof options === "undefined"
-    || options
-      && typeof options === "object"
-      && Object.keys(options).length === 1
-      && typeof options.recursive === "boolean";
+  const isValidOptions =
+    typeof options === "undefined" ||
+    (options &&
+      typeof options === "object" &&
+      Object.keys(options).length === 1 &&
+      typeof options.recursive === "boolean");
 
   if (typeof path !== "string" || !isValidOptions) {
-    throw new Error("Mkdir mock only supports string path and undefined options or the recursive option.");
+    throw new Error(
+      "Mkdir mock only supports string path and undefined options or the recursive option.",
+    );
   }
 };
 
-jest.mocked(fs.promises.mkdir as Mkdir).mockImplementation(async (...args): Promise<string | string[] | undefined> => {
-  assertIsSupportedMkdirArguments(args);
-  const [path, options] = args;
-  await Promise.resolve();
-  const resolvedPath = resolvePath(path);
-  const parentDirName = pathUtils.dirname(resolvedPath);
-  const getParentDirResult = maybeGetDirectory(parentDirName);
+jest
+  .mocked(fs.promises.mkdir as Mkdir)
+  .mockImplementation(
+    async (...args): Promise<string | string[] | undefined> => {
+      assertIsSupportedMkdirArguments(args);
+      const [path, options] = args;
+      await Promise.resolve();
+      const resolvedPath = resolvePath(path);
+      const parentDirName = pathUtils.dirname(resolvedPath);
+      const getParentDirResult = maybeGetDirectory(parentDirName);
 
-  const targetDirName = pathUtils.basename(resolvedPath);
+      const targetDirName = pathUtils.basename(resolvedPath);
 
-  if (getParentDirResult.existed) {
-    const parentDir = getParentDirResult.directory;
-    const existingEntry = parentDir.entries.get(targetDirName);
+      if (getParentDirResult.existed) {
+        const parentDir = getParentDirResult.directory;
+        const existingEntry = parentDir.entries.get(targetDirName);
 
-    if (existingEntry) {
-      if (options?.recursive) {
-        return undefined;
+        if (existingEntry) {
+          if (options?.recursive) {
+            return undefined;
+          }
+          throw new Error(
+            `Could not make dir ${path}: ${parentDirName} already contains a ${existingEntry.type} called ${targetDirName}.`,
+          );
+        }
+
+        parentDir.entries.set(
+          targetDirName,
+          makeDirectory(
+            pathUtils.join(parentDir.path, targetDirName),
+            new Map(),
+          ),
+        );
+
+        return parentDirName;
       }
-      throw new Error(`Could not make dir ${path}: ${parentDirName} already contains a ${existingEntry.type} called ${targetDirName}.`);
-    }
 
-    parentDir.entries.set(targetDirName, makeDirectory(
-      pathUtils.join(parentDir.path, targetDirName),
-      new Map()
-    ));
+      if (getParentDirResult.entry) {
+        throw new Error(
+          `Could not make dir ${path}: ${getParentDirResult.failedPath} is a file.`,
+        );
+      }
 
-    return parentDirName;
-  }
+      if (!options?.recursive) {
+        throw new Error(
+          `Could not make dir ${path}: ${getParentDirResult.failedPath} does not exist. Did you mean to recurse?`,
+        );
+      }
 
-  if (getParentDirResult.entry) {
-    throw new Error(`Could not make dir ${path}: ${getParentDirResult.failedPath} is a file.`);
-  }
-
-  if (!options?.recursive) {
-    throw new Error(`Could not make dir ${path}: ${getParentDirResult.failedPath} does not exist. Did you mean to recurse?`);
-  }
-
-  const pathLeft = pathUtils.relative(getParentDirResult.parentDirectory.path, resolvedPath);
-  const segments = pathLeft.split(pathUtils.sep);
-  segments.reduce<Directory>(
-    (dir, segment) => {
-      const newDir = makeDirectory(
-        pathUtils.join(dir.path, segment),
-        new Map()
+      const pathLeft = pathUtils.relative(
+        getParentDirResult.parentDirectory.path,
+        resolvedPath,
       );
+      const segments = pathLeft.split(pathUtils.sep);
+      segments.reduce<Directory>((dir, segment) => {
+        const newDir = makeDirectory(
+          pathUtils.join(dir.path, segment),
+          new Map(),
+        );
 
-      dir.entries.set(segment, newDir);
+        dir.entries.set(segment, newDir);
 
-      return newDir;
+        return newDir;
+      }, getParentDirResult.parentDirectory);
+
+      return getParentDirResult.failedPath;
     },
-    getParentDirResult.parentDirectory
   );
-
-  return getParentDirResult.failedPath;
-});
 
 jest.mocked(fs.promises.rm).mockImplementation(async (path, options) => {
   assertPathIsString(path);
@@ -621,11 +660,10 @@ jest.mocked(fs.promises.rm).mockImplementation(async (path, options) => {
     return;
   }
 
-  if (
-    entry.entries.size
-    && !options?.recursive
-  ) {
-    throw new Error(`Unable to rm ${path}: the directory was not empty. Did you mean to recurse?`);
+  if (entry.entries.size && !options?.recursive) {
+    throw new Error(
+      `Unable to rm ${path}: the directory was not empty. Did you mean to recurse?`,
+    );
   }
 
   parentDir.entries.delete(fileOrDirName);
@@ -633,48 +671,50 @@ jest.mocked(fs.promises.rm).mockImplementation(async (path, options) => {
 
 type ReaddirOptions =
   | {
-    encoding: BufferEncoding | null;
-    withFileTypes?: false | undefined;
-  }
+      encoding: BufferEncoding | null;
+      withFileTypes?: false | undefined;
+    }
   | BufferEncoding
   | undefined
   | null;
 
 type Readdir = (
   path: fsModule.PathLike,
-  options?: ReaddirOptions
+  options?: ReaddirOptions,
 ) => Promise<string[] | Buffer[] | fsModule.Dirent[]>;
 
 const assertIsSupportedReaddirArguments: (
-  args: Parameters<Readdir>
+  args: Parameters<Readdir>,
 ) => asserts args is [string, undefined] = (args) => {
   const [path, options] = args;
   if (typeof path !== "string" || typeof options !== "undefined") {
-    throw new Error("Readdir mock only supports string path and undefined options");
+    throw new Error(
+      "Readdir mock only supports string path and undefined options",
+    );
   }
 };
 
-jest.mocked<Readdir>(
-  fs.promises.readdir as Readdir
-).mockImplementation(
-  async (...args) => {
+jest
+  .mocked<Readdir>(fs.promises.readdir as Readdir)
+  .mockImplementation(async (...args) => {
     assertIsSupportedReaddirArguments(args);
     const [path] = args;
     const resolvedPath = resolvePath(path);
     await Promise.resolve();
     const dir = getDirectory(resolvedPath);
     return Array.from(dir.entries.keys());
-  }
-);
+  });
 
 const assertIsSupportedReadFileArguments: (
-  args: Parameters<typeof fs.promises.readFile> | Parameters<typeof fs.readFileSync>
-) => asserts args is [string, "utf8"] = (
-  args
-) => {
+  args:
+    | Parameters<typeof fs.promises.readFile>
+    | Parameters<typeof fs.readFileSync>,
+) => asserts args is [string, "utf8"] = (args) => {
   const [path, options] = args;
-  if (typeof path !== "string" || options !== "utf8" ) {
-    throw new Error("Only string path and utf8 options is supported. other argument types have not been implemented.");
+  if (typeof path !== "string" || options !== "utf8") {
+    throw new Error(
+      "Only string path and utf8 options is supported. other argument types have not been implemented.",
+    );
   }
 };
 
@@ -697,13 +737,16 @@ jest.mocked(fs.promises.readFile).mockImplementation(async (...args) => {
 });
 
 const assertIsSupportedWriteFileArguments: (
-  args: Parameters<typeof fs.promises.writeFile>
-) => asserts args is [string, "utf8"] = (
-  args
-) => {
+  args: Parameters<typeof fs.promises.writeFile>,
+) => asserts args is [string, "utf8"] = (args) => {
   const [path, data, options] = args;
-  if (typeof path !== "string" && typeof data !== "string" || options !== "utf8" ) {
-    throw new Error("Only string path, string data and utf8 options is supported. other argument types have not been implemented.");
+  if (
+    (typeof path !== "string" && typeof data !== "string") ||
+    options !== "utf8"
+  ) {
+    throw new Error(
+      "Only string path, string data and utf8 options is supported. other argument types have not been implemented.",
+    );
   }
 };
 
@@ -718,16 +761,15 @@ jest.mocked(fs.promises.writeFile).mockImplementation(async (...args) => {
   const file = directory.entries.get(fileName);
 
   if (!file) {
-    directory.entries.set(fileName, makeFile(
-      resolvedPath,
-      data
-    ));
+    directory.entries.set(fileName, makeFile(resolvedPath, data));
 
     return;
   }
 
   if (file.type === "directory") {
-    throw new Error(`Failed to writeFile: ${resolvedPath} contains a directory called ${fileName}. You're not allowed to overwrite.`);
+    throw new Error(
+      `Failed to writeFile: ${resolvedPath} contains a directory called ${fileName}. You're not allowed to overwrite.`,
+    );
   }
 
   file.content = data;

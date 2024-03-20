@@ -42,14 +42,18 @@ export interface RecurseDirectoryOptions {
 const innerRecurseDir = async function* (
   absolutePath: string,
   relativePath: string,
-  options: RecurseDirectoryOptions = {}
+  options: RecurseDirectoryOptions = {},
 ): AsyncGenerator<FileInfo> {
-  const { exclude = [], include = []} = options;
+  const { exclude = [], include = [] } = options;
 
   const fileNames = await fs.promises.readdir(absolutePath);
   const excludeFile = (fileName: string): boolean => {
-
-    if (!(include.length && include.some((includeEntry) => includeEntry.exec(fileName)))) {
+    if (
+      !(
+        include.length &&
+        include.some((includeEntry) => includeEntry.exec(fileName))
+      )
+    ) {
       return true;
     }
 
@@ -57,11 +61,15 @@ const innerRecurseDir = async function* (
   };
 
   for (const fileName of fileNames) {
-    const filePath =  path.join(absolutePath, fileName);
+    const filePath = path.join(absolutePath, fileName);
     const stats = await fs.promises.lstat(filePath);
 
     if (stats.isDirectory()) {
-      yield* innerRecurseDir(filePath, path.join(relativePath, fileName), options);
+      yield* innerRecurseDir(
+        filePath,
+        path.join(relativePath, fileName),
+        options,
+      );
       continue;
     }
 
@@ -75,7 +83,7 @@ const innerRecurseDir = async function* (
       filePath,
       relativeFilePath: path.join(relativePath, fileName),
       relativePath,
-      stats
+      stats,
     };
 
     yield fileInfo;
@@ -85,7 +93,7 @@ const innerRecurseDir = async function* (
 // eslint-disable-next-line @typescript-eslint/require-await
 export const recurseDirectory = async function* (
   directory: string,
-  options?: RecurseDirectoryOptions
+  options?: RecurseDirectoryOptions,
 ): AsyncGenerator<FileInfo> {
   yield* innerRecurseDir(directory, "/", options);
 };

@@ -28,18 +28,18 @@ But it gets a little involved and only gives part of the story given the W3C API
 Perhaps its the subject of another post another time.
 Instead I'm going to present a slightly augmented version of a list you find on [w3schools](https://www.w3schools.com/js/js_this.asp).
 
-* Alone, `this` refers to the global object.
-* In a method, `this` refers to the owner object.
-* In a function, `this` refers to the global object.
-* In a function, in strict mode, `this` is `undefined`.
-* Methods like
-[`call`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call)
- and
-[`apply`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)
-can refer `this` to any object.
-* In a "bound" function `this` is the value of the first the argument of [`bind`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).
-* In a callback or event handler; consult the docs.
-* In an arrow function `this` gets it's value from the enclosing scope.
+- Alone, `this` refers to the global object.
+- In a method, `this` refers to the owner object.
+- In a function, `this` refers to the global object.
+- In a function, in strict mode, `this` is `undefined`.
+- Methods like
+  [`call`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call)
+  and
+  [`apply`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)
+  can refer `this` to any object.
+- In a "bound" function `this` is the value of the first the argument of [`bind`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).
+- In a callback or event handler; consult the docs.
+- In an arrow function `this` gets it's value from the enclosing scope.
 
 If that looks like a lot of rules, I agree.
 I also suspect this isn't all of them - one person I spoke to had heard there are 26 different values `this` can take.
@@ -143,7 +143,7 @@ For example:
 
 ```js
 const thing = {
-  other: 3
+  other: 3,
 };
 ```
 
@@ -153,9 +153,9 @@ Then it would be a method. For example:
 
 ```js
 const thing = {
-  other: function() {
+  other: function () {
     return 3;
-  }
+  },
 };
 ```
 
@@ -167,7 +167,7 @@ I could also have used the shorthand to define `other`. Like this:
 const thing = {
   other() {
     return 3;
-  }
+  },
 };
 ```
 
@@ -180,7 +180,7 @@ For example:
 const thing = {
   other() {
     return 3;
-  }
+  },
 };
 
 thing.other();
@@ -214,7 +214,7 @@ That's what is on the left of the `.` when we make our smoothie.
 So we get `"Banana Smoothie"` in the console. Yum.
 
 If you've worked with an OO language like C# or Java that is probably familiar.
-Less obvious is that this rule doesn't only *apply* to classes.
+Less obvious is that this rule doesn't only _apply_ to classes.
 It can mean anonymous objects:
 
 ```js
@@ -222,11 +222,9 @@ const apple = {
   type: "Apple",
   makeSmoothie() {
     return `${this.type} Smoothie`;
-  }
+  },
 };
-console.log(
-  apple.makeSmoothie()
-); // Prints "Apple Smoothie"
+console.log(apple.makeSmoothie()); // Prints "Apple Smoothie"
 ```
 
 More troublesome - the "Owner" is whoever **currently** has the reference to the function.
@@ -236,23 +234,21 @@ const apple = {
   type: "Apple",
   makeSmoothie() {
     return `${this.type} Smoothie`;
-  }
+  },
 };
 
 const carrot = { type: "Carrot" };
 carrot.makeSmoothie = apple.makeSmoothie;
 
-console.log(
-  carrot.makeSmoothie()
-); // Prints "Carrot Smoothie"
+console.log(carrot.makeSmoothie()); // Prints "Carrot Smoothie"
 ```
 
 That's not so bad, maybe a little weird though.
 Just by using a reference to the function we can change the value of `this`.
 
-Even worse by assigning a method to a variable or passing it as an `argument` to a function the method *becomes*
-a function  once more.
-i.e. the methodness or functionness is a property of *where the thing is stored*, not what is is or where it was written.
+Even worse by assigning a method to a variable or passing it as an `argument` to a function the method _becomes_
+a function once more.
+i.e. the methodness or functionness is a property of _where the thing is stored_, not what is is or where it was written.
 This has consequences...
 
 ```js
@@ -260,7 +256,7 @@ const strawberry = {
   type: "Strawberry",
   makeSmoothie() {
     return `${this.type} Smoothie`;
-  }
+  },
 };
 
 const vendingMachine = {
@@ -268,12 +264,10 @@ const vendingMachine = {
   placeOrder(money, makeOrder) {
     takings = this.takings + money;
     return makeOrder();
-  }
+  },
 };
 
-console.log(
-  vendingMachine.placeOrder(10, strawberry.makeSmoothie)
-); // Prints "undefined Smoothie"
+console.log(vendingMachine.placeOrder(10, strawberry.makeSmoothie)); // Prints "undefined Smoothie"
 ```
 
 No thanks.
@@ -326,10 +320,7 @@ function tellUsWhatYouLike(favoriteThings) {
   console.log(`${this.name} likes ${favoriteThings}`);
 }
 
-tellusWhatYouLike.call(
-  { name: "Samiam" },
-  "Green eggs and ham"
-);
+tellusWhatYouLike.call({ name: "Samiam" }, "Green eggs and ham");
 // logs "Samiam likes Green eggs and ham"
 ```
 
@@ -342,10 +333,9 @@ Effectively allowing us to pass it in as another argument.
 Apply is basically the same...
 
 ```js
-tellusWhatYouLike.apply(
-  { name: "Maria" },
-  ["Raindrops on roses and whiskers on kittens"]
-); // logs "Maria likes Raindrops on roses and whiskers on kittens​"
+tellusWhatYouLike.apply({ name: "Maria" }, [
+  "Raindrops on roses and whiskers on kittens",
+]); // logs "Maria likes Raindrops on roses and whiskers on kittens​"
 ```
 
 The difference is that `apply` takes an array of arguments after the `this` argument.
@@ -370,7 +360,7 @@ const strawberry = {
   type: "Strawberry",
   makeSmoothie() {
     return `${this.type} Smoothie`;
-  }
+  },
 };
 
 const vendingMachine = {
@@ -378,14 +368,11 @@ const vendingMachine = {
   placeOrder(money, makeOrder) {
     takings = this.takings + money;
     return makeOrder();
-  }
+  },
 };
 
 console.log(
-  vendingMachine.placeOrder(
-    10,
-    strawberry.makeSmoothie.bind(strawberry)
-  )
+  vendingMachine.placeOrder(10, strawberry.makeSmoothie.bind(strawberry)),
 ); // Prints "Strawberry Smoothie"
 ```
 
@@ -443,7 +430,7 @@ One of the key differences between arrow functions and normal `function`s is in 
 **They do not have their own binding to `this`.**
 
 If you refer to `this` in an arrow then the runtime will [look up through the
-*declaration* contexts](https://262.ecma-international.org/#sec-getthisenvironment) until it finds one with a `this` binding.
+_declaration_ contexts](https://262.ecma-international.org/#sec-getthisenvironment) until it finds one with a `this` binding.
 So when you are writing the function you know what `this` will be.
 Go up one scope, probably the line just before you started the arrow, and ask what `this` is there.
 That is your answer.
@@ -495,7 +482,7 @@ class Fruit {
   };
 }
 const apple = new Fruit("Apple");
-apple.press()
+apple.press();
 
 const doSomething = (callback) => {
   callback();
@@ -526,7 +513,7 @@ That's it.
 ### Don't use `this`
 
 OK, I'm being a bit flippant here but in general you should avoid using `this`.
-If you are inside a class then it might make sense, but I think that is the *only* time it really make sense.
+If you are inside a class then it might make sense, but I think that is the _only_ time it really make sense.
 In general arguments are a much better place for passing values into functions.
 They have names, they are easier to see & reason about.
 
@@ -580,11 +567,7 @@ So don't.
 Instead wrap it in an arrow function like this:
 
 ```js
-console.log(
-  placeOrder(
-    () => strawberry.makeSmoothie()
-  )
-);
+console.log(placeOrder(() => strawberry.makeSmoothie()));
 ```
 
 There are other reasons to do this.

@@ -1,7 +1,4 @@
-import {
-  failure,
-  success
-} from "./results.js";
+import { failure, success } from "./results.js";
 
 describe("success", () => {
   it("returns a success.", () => {

@@ -1,10 +1,10 @@
-import type { PostFile} from "./helpers";
+import type { PostFile } from "./helpers";
 import { writeOutputManifestFile as baseWriteOutputManifestFile } from "./helpers";
 import {
   cleanUpDirectories,
   compilePosts,
   getPostManifest,
-  writePostFile
+  writePostFile,
 } from "./helpers";
 
 import { advanceTo } from "jest-date-mock";
@@ -17,7 +17,7 @@ import readingTime from "reading-time";
 jest.mock("node-fetch");
 
 const writeOutputManifestFile = (
-  metaData: Pick<PostMetaData, "slug"> & Partial<Omit<PostMetaData, "slug">>
+  metaData: Pick<PostMetaData, "slug"> & Partial<Omit<PostMetaData, "slug">>,
 ): Promise<void> => {
   const defaultedManifest: PostManifest = {
     [metaData.slug]: {
@@ -30,8 +30,8 @@ const writeOutputManifestFile = (
       href: "{href}",
       readingTime: { minutes: 1, words: 1, text: "1 min read", time: 60000 },
       ...metaData,
-      slug: metaData.slug
-    }
+      slug: metaData.slug,
+    },
   };
 
   return baseWriteOutputManifestFile(defaultedManifest);
@@ -45,7 +45,7 @@ describe("manifest", () => {
       minutes: 20,
       text: "{reading time}",
       time: 120000,
-      words: 10
+      words: 10,
     });
 
     const publishDate = "2020-03-11";
@@ -54,12 +54,12 @@ describe("manifest", () => {
     const meta: PostMetaFileData = {
       title: "This is the first post",
       abstract: "This is the very first post.",
-      publish: true
+      publish: true,
     };
     await writePostFile({
       slug,
       meta,
-      content: "# This is the first post\n\nIt has some content."
+      content: "# This is the first post\n\nIt has some content.",
     });
 
     await compilePosts();
@@ -69,13 +69,22 @@ describe("manifest", () => {
     expect(manifest).toStrictEqual({
       [slug]: {
         ...meta,
-        fileName: expect.stringMatching(new RegExp(`${slug}-[A-z0-9]{6}.html`)) as unknown,
-        href: expect.stringMatching(new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`)) as unknown,
+        fileName: expect.stringMatching(
+          new RegExp(`${slug}-[A-z0-9]{6}.html`),
+        ) as unknown,
+        href: expect.stringMatching(
+          new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`),
+        ) as unknown,
         lastUpdateDate: null,
         publishDate: new Date(publishDate).toISOString(),
-        readingTime: { minutes: 20, text: "{reading time}", time: 120000, words: 10 },
-        slug
-      }
+        readingTime: {
+          minutes: 20,
+          text: "{reading time}",
+          time: 120000,
+          words: 10,
+        },
+        slug,
+      },
     });
   });
 
@@ -87,9 +96,9 @@ describe("manifest", () => {
       meta: {
         title: "This is the first post",
         abstract: "This is the very first post.",
-        publish: true
+        publish: true,
       },
-      content: "# This is the first post\n\nIt has some content."
+      content: "# This is the first post\n\nIt has some content.",
     });
     const hrefRoot = "posts";
     await compilePosts({ hrefRoot });
@@ -97,7 +106,9 @@ describe("manifest", () => {
     const manifest = await getPostManifest();
 
     expect(manifest[slug]?.href).toStrictEqual(
-      expect.stringMatching(new RegExp(`/${hrefRoot}/${slug}-[A-z0-9]{6}.html`)) as unknown
+      expect.stringMatching(
+        new RegExp(`/${hrefRoot}/${slug}-[A-z0-9]{6}.html`),
+      ) as unknown,
     );
   });
 
@@ -109,12 +120,9 @@ describe("manifest", () => {
       meta: {
         title: "This is the first post",
         abstract: "This is the very first post.",
-        publish: true
+        publish: true,
       },
-      content: [
-        "# This is the first post",
-        "It has some content."
-      ]
+      content: ["# This is the first post", "It has some content."],
     };
     await writePostFile(postFile);
 
@@ -124,10 +132,7 @@ describe("manifest", () => {
 
     await writePostFile({
       ...postFile,
-      content: [
-        ...postFile.content,
-        "some new content"
-      ]
+      content: [...postFile.content, "some new content"],
     });
 
     const updatedDate = "2020-03-12";
@@ -137,7 +142,7 @@ describe("manifest", () => {
     const manifest = await getPostManifest();
 
     expect(manifest[slug]?.publishDate).toStrictEqual(
-      new Date(publishDate).toISOString()
+      new Date(publishDate).toISOString(),
     );
   });
 
@@ -149,12 +154,9 @@ describe("manifest", () => {
       meta: {
         title: "This is the first post",
         abstract: "This is the very first post.",
-        publish: true
+        publish: true,
       },
-      content: [
-        "# This is the first post",
-        "It has some content."
-      ]
+      content: ["# This is the first post", "It has some content."],
     };
 
     await writePostFile(postFile);
@@ -166,10 +168,7 @@ describe("manifest", () => {
 
     await writePostFile({
       ...postFile,
-      content: [
-        ...postFile.content,
-        "some new content"
-      ]
+      content: [...postFile.content, "some new content"],
     });
 
     const updatedDate = "2020-03-12";
@@ -180,7 +179,7 @@ describe("manifest", () => {
     const manifest = await getPostManifest();
 
     expect(manifest[slug]?.lastUpdateDate).toStrictEqual(
-      new Date(updatedDate).toISOString()
+      new Date(updatedDate).toISOString(),
     );
   });
 
@@ -192,9 +191,9 @@ describe("manifest", () => {
       meta: {
         title: "This is the first post",
         abstract: "This is the very first post.",
-        publish: true
+        publish: true,
       },
-      content: "# This is the first post"
+      content: "# This is the first post",
     });
 
     const publishDate = "2020-03-11";
@@ -218,9 +217,9 @@ describe("manifest", () => {
       meta: {
         title: "This is the first post",
         abstract: "This is the very first post.",
-        publish: true
+        publish: true,
       },
-      content: "# This is the first post"
+      content: "# This is the first post",
     };
     await writePostFile(postFile);
 
@@ -230,10 +229,7 @@ describe("manifest", () => {
 
     await writePostFile({
       ...postFile,
-      content: [
-        ...postFile.content,
-        "some new content"
-      ]
+      content: [...postFile.content, "some new content"],
     });
 
     const updatedDate = "2020-03-12";
@@ -245,10 +241,8 @@ describe("manifest", () => {
 
     const manifest = await getPostManifest();
 
-    expect(
-      manifest[slug]?.lastUpdateDate
-    ).toStrictEqual(
-      new Date(updatedDate).toISOString()
+    expect(manifest[slug]?.lastUpdateDate).toStrictEqual(
+      new Date(updatedDate).toISOString(),
     );
   });
 
@@ -260,15 +254,15 @@ describe("manifest", () => {
       meta: {
         title: "This is the first post",
         abstract: "This is the very first post.",
-        publish: true
+        publish: true,
       },
-      content: "# This is the first post"
+      content: "# This is the first post",
     });
     await writeOutputManifestFile({
       fileName: "first-post-ulvbV2.html",
       lastUpdateDate: "Fri, 30 Jul 2021 20:18:43 GMT",
       publishDate: "Sun, 06 Jun 2021 22:08:34 GMT",
-      slug
+      slug,
     });
 
     await compilePosts();
@@ -287,9 +281,9 @@ describe("manifest", () => {
       meta: {
         title: "This is the first post",
         abstract: "This is the very first post.",
-        publish: true
+        publish: true,
       },
-      content: "# This is the first post"
+      content: "# This is the first post",
     };
     await writePostFile(postFile);
 
@@ -300,15 +294,12 @@ describe("manifest", () => {
     jest.mocked(fetch).mockResolvedValue({
       json: (): Promise<unknown> => {
         return Promise.resolve(manifest);
-      }
+      },
     } as unknown as Response);
 
     await writePostFile({
       ...postFile,
-      content: [
-        ...postFile.content,
-        "some new content"
-      ]
+      content: [...postFile.content, "some new content"],
     });
 
     const updatedDate = "2020-03-12";
@@ -319,7 +310,7 @@ describe("manifest", () => {
 
     const newManifest = await getPostManifest();
     expect(newManifest[slug]?.lastUpdateDate).toStrictEqual(
-      new Date(updatedDate).toISOString()
+      new Date(updatedDate).toISOString(),
     );
   });
 
@@ -331,29 +322,28 @@ describe("manifest", () => {
       meta: {
         title: "This is the first post",
         abstract: "This is the very first post.",
-        publish: true
+        publish: true,
       },
-      content: "# This is the first post"
+      content: "# This is the first post",
     };
     await writePostFile(postFile);
 
-    const oldManifestLocators = ["https://www.old-manifest.com", "https://www.new-old-manifest.com"];
+    const oldManifestLocators = [
+      "https://www.old-manifest.com",
+      "https://www.new-old-manifest.com",
+    ];
     await compilePosts({ oldManifestLocators });
     const manifest = await getPostManifest();
 
     jest.mocked(fetch).mockResolvedValue({
       json: (): Promise<unknown> => {
         return Promise.resolve(manifest);
-      }
-    } as unknown as Response
-    );
+      },
+    } as unknown as Response);
 
     await writePostFile({
       ...postFile,
-      content: [
-        ...postFile.content,
-        "some new content"
-      ]
+      content: [...postFile.content, "some new content"],
     });
 
     const updatedDate = "2020-03-12";
@@ -362,7 +352,7 @@ describe("manifest", () => {
 
     const newManifest = await getPostManifest();
     expect(newManifest[slug]?.lastUpdateDate).toStrictEqual(
-      new Date(updatedDate).toISOString()
+      new Date(updatedDate).toISOString(),
     );
   });
 
@@ -374,31 +364,32 @@ describe("manifest", () => {
       meta: {
         title: "This is the first post",
         abstract: "This is the very first post.",
-        publish: true
+        publish: true,
       },
-      content: "# This is the first post"
+      content: "# This is the first post",
     };
     await writePostFile(postFile);
 
-    const oldManifestLocators = ["https://www.old-manifest.com", "https://www.new-old-manifest.com"];
+    const oldManifestLocators = [
+      "https://www.old-manifest.com",
+      "https://www.new-old-manifest.com",
+    ];
 
     await compilePosts({ oldManifestLocators });
     const manifest = await getPostManifest();
 
-    jest.mocked(fetch)
+    jest
+      .mocked(fetch)
       .mockRejectedValueOnce(new Error("Whoops"))
       .mockResolvedValue({
         json: (): Promise<unknown> => {
           return Promise.resolve(manifest);
-        }
+        },
       } as unknown as Response);
 
     await writePostFile({
       ...postFile,
-      content: [
-        ...postFile.content,
-        "some new content"
-      ]
+      content: [...postFile.content, "some new content"],
     });
 
     const updatedDate = "2020-03-12";
@@ -407,7 +398,7 @@ describe("manifest", () => {
 
     const newManifest = await getPostManifest();
     expect(newManifest[slug]?.lastUpdateDate).toStrictEqual(
-      new Date(updatedDate).toISOString()
+      new Date(updatedDate).toISOString(),
     );
   });
 
@@ -418,9 +409,9 @@ describe("manifest", () => {
       meta: {
         title: "This is the first post",
         abstract: "This is the very first post.",
-        publish: true
+        publish: true,
       },
-      content: ["# A Post"]
+      content: ["# A Post"],
     });
     const result = await compilePosts({ requireOldManifest: true });
 

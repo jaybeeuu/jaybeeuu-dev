@@ -1,6 +1,6 @@
 import type { FeedOptions, Item as FeedItem } from "feed";
 import { Feed } from "feed";
-import type { Compiler} from "webpack";
+import type { Compiler } from "webpack";
 import { Compilation, sources } from "webpack";
 
 export { FeedItem, FeedOptions };
@@ -39,14 +39,14 @@ export class FeedWebpackPlugin {
     if (this.options.rssFileName) {
       compilation.emitAsset(
         this.options.rssFileName,
-        new sources.RawSource(feed.rss2())
+        new sources.RawSource(feed.rss2()),
       );
     }
 
     if (this.options.atomFileName) {
       compilation.emitAsset(
         this.options.atomFileName,
-        new sources.RawSource(feed.atom1())
+        new sources.RawSource(feed.atom1()),
       );
     }
 
@@ -63,9 +63,9 @@ export class FeedWebpackPlugin {
       compilation.hooks.processAssets.tap(
         {
           name: pluginName,
-          stage: Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE
+          stage: Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE,
         },
-        () => this.run(compilation)
+        () => this.run(compilation),
       );
     });
   }

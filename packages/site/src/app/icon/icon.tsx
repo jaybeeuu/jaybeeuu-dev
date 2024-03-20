@@ -5,12 +5,7 @@ import iconSprite from "./icons.sprite.svg";
 
 import css from "./icon.module.css";
 
-export type IconName
-  = "link"
-  | "menu"
-  | "moon"
-  | "rss_feed"
-  | "sun";
+export type IconName = "link" | "menu" | "moon" | "rss_feed" | "sun";
 
 export interface IconProps {
   className?: string;
@@ -23,7 +18,7 @@ export const Icon = ({
   className,
   name,
   onClick,
-  title
+  title,
 }: IconProps): JSX.Element => (
   <svg
     className={classNames(css.componentRoot, className)}

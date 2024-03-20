@@ -1,18 +1,17 @@
-
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
 import type { Response } from "node-fetch";
 import fetch, { FetchError } from "node-fetch";
 
-export type FetchJsonFileFailureReason
-  = "error"
+export type FetchJsonFileFailureReason =
+  | "error"
   | "fetch failed"
   | "parse error"
   | "validation failed";
 
 export const fetchJsonFile = async <T>(
   url: string,
-  isValid: (fileContent: unknown) => fileContent is T
+  isValid: (fileContent: unknown) => fileContent is T,
 ): Promise<Result<T, FetchJsonFileFailureReason>> => {
   let response: Response;
   try {
@@ -26,8 +25,8 @@ export const fetchJsonFile = async <T>(
           `ErrorNo: ${error.errno ?? "(no errno)"}`,
           `Type: ${error.type}`,
           `Message: ${error.message}`,
-          `Stack:\n${error.stack ?? "(no stack)"}`
-        ].join("\n")
+          `Stack:\n${error.stack ?? "(no stack)"}`,
+        ].join("\n"),
       );
     }
 

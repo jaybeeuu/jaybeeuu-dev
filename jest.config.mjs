@@ -8,7 +8,7 @@ const config = {
     "<rootDir>/packages/recoilless",
     "<rootDir>/packages/scripts",
     "<rootDir>/packages/site*",
-    "<rootDir>/packages/utilities"
+    "<rootDir>/packages/utilities",
   ],
   collectCoverage: true,
   coverageDirectory: "./coverage-reports/unit",
@@ -20,9 +20,9 @@ const config = {
         suiteName: "Unit Tests",
         outputDirectory: "./test-reports",
         outputName: "unit.xml",
-      }
-    ]
-  ]
+      },
+    ],
+  ],
 };
 
 export default config;

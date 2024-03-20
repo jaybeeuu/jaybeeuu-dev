@@ -1,9 +1,6 @@
 {
-  "extends": [
-    "@jaybeeuu/eslint-config/base",
-    "@jaybeeuu/eslint-config/jest"
-  ],
-    "env": {
+  "extends": ["@jaybeeuu/eslint-config/base", "@jaybeeuu/eslint-config/jest"],
+  "env": {
     "browser": true
   },
   "rules": {

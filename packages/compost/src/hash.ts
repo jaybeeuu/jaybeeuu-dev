@@ -13,20 +13,19 @@ export interface HashOptions {
 
 const defaultHashOptions: HashOptions = {
   length: 6,
-  allowedChars: "0-9A-z"
+  allowedChars: "0-9A-z",
 };
 
 export const getHash = (
   data: string,
-  userOptions: Partial<HashOptions> = {}
+  userOptions: Partial<HashOptions> = {},
 ): string => {
   const options = {
     ...defaultHashOptions,
-    ...userOptions
+    ...userOptions,
   };
   const hash = getSha1Hash(data);
-  return hash.replace(
-    new RegExp(`[^${options.allowedChars}]`, "g"),
-    ""
-  ).substring(0, options.length);
+  return hash
+    .replace(new RegExp(`[^${options.allowedChars}]`, "g"), "")
+    .substring(0, options.length);
 };

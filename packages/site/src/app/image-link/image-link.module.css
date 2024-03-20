@@ -6,7 +6,10 @@
   border: none;
 }
 
-.component-root:link, .component-root:visited, .component-root:hover, .component-root:active {
+.component-root:link,
+.component-root:visited,
+.component-root:hover,
+.component-root:active {
   text-decoration: none;
 }
 

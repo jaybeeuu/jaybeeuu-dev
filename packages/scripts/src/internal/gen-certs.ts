@@ -2,7 +2,7 @@ import path from "path";
 import * as fs from "fs";
 import { certificateFor, uninstall as baseUninstall } from "devcert";
 
-export const uninstall  = (): void => {
+export const uninstall = (): void => {
   console.log("Uninstalling CA...");
   baseUninstall();
   console.log("Done.");
@@ -22,16 +22,13 @@ interface Paths {
 }
 
 const getPaths = (options: PathOptions): Paths => {
-  const resolveToOutDir = (...pathSegments: string[]): string => path.resolve(
-    process.cwd(),
-    options.directory,
-    ...pathSegments
-  );
+  const resolveToOutDir = (...pathSegments: string[]): string =>
+    path.resolve(process.cwd(), options.directory, ...pathSegments);
 
   return {
     certFilePath: resolveToOutDir(options.certName),
     keyFilePath: resolveToOutDir(options.keyName),
-    caFilePath: resolveToOutDir(options.caName)
+    caFilePath: resolveToOutDir(options.caName),
   };
 };
 
@@ -53,14 +50,16 @@ export const genCerts = async (options: GenCertsOptions): Promise<void> => {
   await Promise.all([
     writePem(paths.certFilePath, ssl.cert),
     fs.promises.writeFile(paths.keyFilePath, ssl.key),
-    fs.promises.writeFile(paths.caFilePath, ssl.ca)
+    fs.promises.writeFile(paths.caFilePath, ssl.ca),
   ]);
 
-  console.log([
-    "Certificates generated at:",
-    "",
-    paths.caFilePath,
-    paths.certFilePath,
-    paths.keyFilePath
-  ].join("\n"));
+  console.log(
+    [
+      "Certificates generated at:",
+      "",
+      paths.caFilePath,
+      paths.certFilePath,
+      paths.keyFilePath,
+    ].join("\n"),
+  );
 };

@@ -1,9 +1,10 @@
-code, pre, :not(pre) > code {
+code,
+pre,
+:not(pre) > code {
   color: var(--highlight-colour);
   background-color: var(--highlight-background-colour);
   transition: var(--transition-theme);
 }
-
 
 .line-numbers .line-number-rows,
 .line-number-rows > span::before {

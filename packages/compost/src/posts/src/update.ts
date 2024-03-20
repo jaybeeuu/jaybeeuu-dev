@@ -7,18 +7,16 @@ import {
   readTextFile,
   recurseDirectory,
   writeJsonFile,
-  writeTextFile
+  writeTextFile,
 } from "../../files/index.js";
 import type { CompileFailureReason as CompileFailureReason } from "./compile.js";
 import { compilePost } from "./compile.js";
-import type {
-  ValidateSlugFailureReason as ValidateSlugFailureReason
-} from "./file-paths.js";
+import type { ValidateSlugFailureReason as ValidateSlugFailureReason } from "./file-paths.js";
 import {
   getCompiledPostFileName,
   getPostMarkdownFilePath,
   getSlug,
-  validateSlug
+  validateSlug,
 } from "./file-paths.js";
 import type { GetOldManifestFailureReason } from "./manifest.js";
 import { getOldManifest } from "./manifest.js";
@@ -27,16 +25,18 @@ import { getMetaFileContent } from "./metafile.js";
 import type { OldPostManifest, PostManifest, UpdateOptions } from "./types.js";
 import getReadingTime from "reading-time";
 
-export type UpdateFailureReason
- = CompileFailureReason
- | ValidateSlugFailureReason
- | GetOldManifestFailureReason
- | GetMetaFileContentFailureReason
- | LoadSourceFailureReason;
+export type UpdateFailureReason =
+  | CompileFailureReason
+  | ValidateSlugFailureReason
+  | GetOldManifestFailureReason
+  | GetMetaFileContentFailureReason
+  | LoadSourceFailureReason;
 
 export type LoadSourceFailureReason = `Failed to load file ${string}`;
 
-const loadPostSourceText = async (sourceFilePath: string): Promise<Result<string, LoadSourceFailureReason>> => {
+const loadPostSourceText = async (
+  sourceFilePath: string,
+): Promise<Result<string, LoadSourceFailureReason>> => {
   try {
     const postText = await readTextFile(sourceFilePath);
 
@@ -47,11 +47,11 @@ const loadPostSourceText = async (sourceFilePath: string): Promise<Result<string
 };
 
 export const update = async (
-  options: UpdateOptions
+  options: UpdateOptions,
 ): Promise<Result<PostManifest, UpdateFailureReason>> => {
   const oldManifestReadResult = await getOldManifest(
     path.join(options.outputDir, options.manifestFileName),
-    options.oldManifestLocators
+    options.oldManifestLocators,
   );
   if (!oldManifestReadResult.success) {
     if (options.requireOldManifest) {
@@ -70,10 +70,9 @@ export const update = async (
 
   await deleteDirectories(resolvedOutputDir);
 
-  for await (const metadataFileInfo of recurseDirectory(
-    resolvedSourceDir,
-    { include: [/.post.json$/] })
-  ) {
+  for await (const metadataFileInfo of recurseDirectory(resolvedSourceDir, {
+    include: [/.post.json$/],
+  })) {
     const slug = getSlug(metadataFileInfo.relativeFilePath);
     const slugValidation = validateSlug(slug);
 
@@ -87,11 +86,14 @@ export const update = async (
     }
 
     const metaData = metaFileContentResult.value;
-    if (!metaData.publish && !options.includeUnpublished){
+    if (!metaData.publish && !options.includeUnpublished) {
       continue;
     }
 
-    const postMarkdownFilePath = getPostMarkdownFilePath(metadataFileInfo.absolutePath, slug);
+    const postMarkdownFilePath = getPostMarkdownFilePath(
+      metadataFileInfo.absolutePath,
+      slug,
+    );
 
     const sourceFileText = await loadPostSourceText(postMarkdownFilePath);
     if (!sourceFileText.success) {
@@ -103,7 +105,7 @@ export const update = async (
       hrefRoot: options.hrefRoot,
       removeH1: options.removeH1,
       sourceFilePath: postMarkdownFilePath,
-      sourceFileText: sourceFileText.value
+      sourceFileText: sourceFileText.value,
     });
 
     if (!compiledPostResult.success) {
@@ -117,19 +119,24 @@ export const update = async (
 
     await Promise.all([
       writeTextFile(compiledFilePath, compiledPost),
-      ...assets.map((asset) => copyFile(
-        asset.sourcePath,
-        path.join(options.outputDir, asset.destinationPath)
-      ))
+      ...assets.map((asset) =>
+        copyFile(
+          asset.sourcePath,
+          path.join(options.outputDir, asset.destinationPath),
+        ),
+      ),
     ]);
 
     const href = joinUrlPath(options.hrefRoot, compiledFileName);
 
     const originalRecord = oldManifest[slug];
 
-    const publishDate = new Date(originalRecord?.publishDate ?? new Date()).toISOString();
+    const publishDate = new Date(
+      originalRecord?.publishDate ?? new Date(),
+    ).toISOString();
 
-    const hasBeenUpdated = originalRecord && originalRecord.fileName !== compiledFileName;
+    const hasBeenUpdated =
+      originalRecord && originalRecord.fileName !== compiledFileName;
     const lastUpdateDate = hasBeenUpdated
       ? new Date().toISOString()
       : originalRecord?.lastUpdateDate
@@ -145,13 +152,13 @@ export const update = async (
       lastUpdateDate,
       publishDate,
       readingTime,
-      slug
+      slug,
     };
   }
 
   await writeJsonFile(
     path.resolve(options.outputDir, options.manifestFileName),
-    newManifest
+    newManifest,
   );
 
   return success(newManifest);

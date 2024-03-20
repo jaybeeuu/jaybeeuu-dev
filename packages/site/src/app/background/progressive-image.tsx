@@ -16,13 +16,13 @@ export const ProgressiveImage = ({
   className,
   src,
   placeholder,
-  position = "50% 100%"
+  position = "50% 100%",
 }: ProgressiveImageProps): JSX.Element => (
   <div
     className={classNames(css.backgroundPicture, className)}
     style={{
       backgroundImage: `url(${placeholder})`,
-      backgroundPosition: position
+      backgroundPosition: position,
     }}
   >
     <img

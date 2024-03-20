@@ -5,11 +5,9 @@ const { howDoYeHail } = await yargs(process.argv.slice(2))
     alias: "h",
     demandOption: true,
     describe: "What should I call you?",
-    type: "string"
+    type: "string",
   })
   .help()
   .parse();
 
-console.log(
-  `Avast there! Welcome ${howDoYeHail}`
-);
+console.log(`Avast there! Welcome ${howDoYeHail}`);

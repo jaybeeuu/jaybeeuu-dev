@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "@jaybeeuu/eslint-config/jest",
-    "@jaybeeuu/eslint-config/base"
-  ],
+  "extends": ["@jaybeeuu/eslint-config/jest", "@jaybeeuu/eslint-config/base"],
   "env": {
     "node": true
   }

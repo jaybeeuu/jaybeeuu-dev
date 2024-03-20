@@ -1,0 +1,6 @@
+lib/
+dist/
+pnpm-lock.yaml
+
+packages/e2e/fixtures/blog/
+packages/site/**/*.module.css.d.ts

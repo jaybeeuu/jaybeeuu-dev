@@ -25,19 +25,17 @@ describe("log", () => {
 
   describe("getErrorMessage", () => {
     const samples: {
-      args: Parameters<typeof log.getErrorMessage>,
-      expectedOutput: string
+      args: Parameters<typeof log.getErrorMessage>;
+      expectedOutput: string;
     }[] = [
       {
-        args: [
-          { message: "{error message}", stack: "{stack}" }
-        ],
+        args: [{ message: "{error message}", stack: "{stack}" }],
         expectedOutput: [
           "{",
-          "  \"message\": \"{error message}\",",
-          "  \"stack\": \"{stack}\"",
-          "}"
-        ].join("\n")
+          '  "message": "{error message}",',
+          '  "stack": "{stack}"',
+          "}",
+        ].join("\n"),
       },
       {
         args: [
@@ -45,9 +43,9 @@ describe("log", () => {
             const error = new Error("{error message}");
             error.stack = "{stack}";
             return error;
-          })()
+          })(),
         ],
-        expectedOutput: "{error message}\n{stack}"
+        expectedOutput: "{error message}\n{stack}",
       },
       {
         args: [
@@ -55,28 +53,22 @@ describe("log", () => {
             const error = new Error("{error message}");
             error.stack = undefined;
             return error;
-          })()
+          })(),
         ],
-        expectedOutput: "{error message}\nNo Stack"
+        expectedOutput: "{error message}\nNo Stack",
       },
       {
-        args: [
-          ""
-        ],
-        expectedOutput: "{empty string}"
+        args: [""],
+        expectedOutput: "{empty string}",
       },
       {
-        args: [
-          null
-        ],
-        expectedOutput: "null"
+        args: [null],
+        expectedOutput: "null",
       },
       {
-        args: [
-          undefined
-        ],
-        expectedOutput: "undefined"
-      }
+        args: [undefined],
+        expectedOutput: "undefined",
+      },
     ];
     it.each(samples)(
       "$#: should return $expectedOutput when passed args: $args",
@@ -84,7 +76,7 @@ describe("log", () => {
         const result = log.getErrorMessage(...args);
 
         expect(result).toBe(expectedOutput);
-      }
+      },
     );
   });
 });

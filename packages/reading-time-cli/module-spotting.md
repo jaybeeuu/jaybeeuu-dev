@@ -103,25 +103,23 @@ Here's what an AMD module looks like:
 
 ```js
 // Cat.js
-define(["movement/prowl", "noises/miaow"],
-  function (prowl, miaow) {
-    class Cat {
-      speak() {
-        miaow();
-      }
-
-      move() {
-        prowl();
-      }
-
-      isBetterThanADog() {
-        return true;
-      }
+define(["movement/prowl", "noises/miaow"], function (prowl, miaow) {
+  class Cat {
+    speak() {
+      miaow();
     }
 
-    return Cat;
+    move() {
+      prowl();
+    }
+
+    isBetterThanADog() {
+      return true;
+    }
   }
-);
+
+  return Cat;
+});
 ```
 
 The key here is the `define` function on line 1.
@@ -190,7 +188,7 @@ Lets have a look at the other end of this and see how the modules are consumed:
 
 ```js
 // index.js
-const circle = require('./circle.js');
+const circle = require("./circle.js");
 console.log(`The area of a circle of radius 4 is ${circle.area(4)}`);
 ```
 
@@ -224,7 +222,7 @@ So when the module is required the class can be accessed directly:
 
 ```js
 // index.js
-const Square = require('./square.js');
+const Square = require("./square.js");
 const square = new Square(2);
 console.log(`The area of a square with width 2 is ${square.area()}`);
 ```
@@ -238,31 +236,31 @@ Therefore if you overwrite it, anything which is written to `exports` will be ig
 // missing-module.js
 
 exports.a = function () {
-  console.log('Can\'t touch this');
+  console.log("Can't touch this");
 };
 module.exports.b = function () {
-  console.log('Nah na na na, nah na, nah na');
+  console.log("Nah na na na, nah na, nah na");
 };
 
 module.exports = {
-  c: function() {
-    console.log('This had better do all those other things...');
-  }
+  c: function () {
+    console.log("This had better do all those other things...");
+  },
 };
 
-module.exports.d = function() {
-  console.log('hmmm... something\'s missing.');
-}
-exports.e = 'An important message.';
+module.exports.d = function () {
+  console.log("hmmm... something's missing.");
+};
+exports.e = "An important message.";
 ```
 
 In this case any module importing `missing-module` will only be able to use `c` and `d`.
 `a`, `b` and (surprisingly?) `e`
-(remember `export` is the *starting* value of `module.exports` but `module.exports` is what is actually used)
+(remember `export` is the _starting_ value of `module.exports` but `module.exports` is what is actually used)
 were defined on an object which will have been tied up by the garbage collector...
 For this reason you should be cautious about mixing `module.exports` and `exports`
 and in general only use one or the other.
-You might also see this: `module.exports = exports = ...` which allows `exports` to be used *after*
+You might also see this: `module.exports = exports = ...` which allows `exports` to be used _after_
 `module.exports` has been set.
 Still anything written to it before will be lost.
 
@@ -295,33 +293,28 @@ Here's an example ([commonjsStrictGlobal.js](https://github.com/umdjs/umd/blob/m
 
 ```js
 (function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['exports', 'b'], function (exports, b) {
-            factory((root.commonJsStrictGlobal = exports), b);
-        });
-    } else if (
-      typeof exports === 'object'
-      && typeof exports.nodeName !== 'string'
-    ) {
-        // CommonJS
-        factory(exports, require('b'));
-    } else {
-        // Browser globals
-        factory((root.commonJsStrictGlobal = {}), root.b);
-    }
-}(
-  typeof self !== 'undefined'
-    ? self
-    : this,
-  function (exports, b) {
-    // Use b in some fashion.
-
-    // attach properties to the exports object to define
-    // the exported module properties.
-    exports.action = function () {};
+  if (typeof define === "function" && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(["exports", "b"], function (exports, b) {
+      factory((root.commonJsStrictGlobal = exports), b);
+    });
+  } else if (
+    typeof exports === "object" &&
+    typeof exports.nodeName !== "string"
+  ) {
+    // CommonJS
+    factory(exports, require("b"));
+  } else {
+    // Browser globals
+    factory((root.commonJsStrictGlobal = {}), root.b);
   }
-));
+})(typeof self !== "undefined" ? self : this, function (exports, b) {
+  // Use b in some fashion.
+
+  // attach properties to the exports object to define
+  // the exported module properties.
+  exports.action = function () {};
+});
 ```
 
 So the wrapper is a function (this is JavaScript after all). You can see it defined on lines 1-16.
@@ -369,20 +362,16 @@ export const diameter = (r) => 2 * r;
 ```
 
 In this adaptation of the circle example I showed in [CommonJS](#commonjs) you can see 3 things being exported.
-The `area`, `circumference` and `diameter` functions are *named exports* from this module to access them
+The `area`, `circumference` and `diameter` functions are _named exports_ from this module to access them
 you must use curly braces in your `import` statement.
 Like this:
 
 ```js
-import { circumference, diameter } from './circle.js'
+import { circumference, diameter } from "./circle.js";
 
-console.log(
-  `The circumference of a circle of radius 4 is ${circumference(4)}`
-);
+console.log(`The circumference of a circle of radius 4 is ${circumference(4)}`);
 
-console.log(
-  `The circumference of a circle of radius 2 is ${diameter(2)}`
-);
+console.log(`The circumference of a circle of radius 2 is ${diameter(2)}`);
 ```
 
 I `import` more than one named export by using a comma.
@@ -393,13 +382,13 @@ In the case of this module we only need `circumference` and `diameter` so those 
 If you just want everything you can do that too with a `* as`:
 
 ```js
-import * as circle from './circle.js'
+import * as circle from "./circle.js";
 
 console.log(
-  `The circumference of a circle of radius 4 is ${circle.circumference(4)}`
+  `The circumference of a circle of radius 4 is ${circle.circumference(4)}`,
 );
 console.log(
-  `The circumference of a circle of radius 2 is ${circle.diameter(2)}`
+  `The circumference of a circle of radius 2 is ${circle.diameter(2)}`,
 );
 ```
 
@@ -407,20 +396,16 @@ If I want to use a different name (perhaps to avoid a collision with another mod
 I can do that too - but the syntax diverges from the object destructuring syntax:
 
 ```js
-import { area as circleArea } from './circle.js';
-import { area as triangleArea } from './triangle.js';
+import { area as circleArea } from "./circle.js";
+import { area as triangleArea } from "./triangle.js";
 
-console.log(
-  `The area of a circle of radius 4 is ${circleArea(4)}`
-);
-console.log(
-  `The area of a 4 x 2 triangle is ${triangleArea(4, 2)}`
-);
+console.log(`The area of a circle of radius 4 is ${circleArea(4)}`);
+console.log(`The area of a 4 x 2 triangle is ${triangleArea(4, 2)}`);
 ```
 
 OK that's named exports and imports. Defaults...
 
-We can define a *default export* for the module.
+We can define a _default export_ for the module.
 The `square` module below does that:
 
 ```js
@@ -433,7 +418,7 @@ class Square {
   area() {
     return this.width ** 2;
   }
-};
+}
 
 export default Square;
 ```
@@ -442,7 +427,7 @@ Here the `default` keyword has been used as well as `export`.
 Importing the default is simple too - just omit the curly braces and you get the default:.
 
 ```js
-import Square from './circle.js'
+import Square from "./circle.js";
 
 const square = new Square(2);
 console.log(`The area of a square with width 2 is ${square.area()}`);
@@ -455,12 +440,12 @@ module below...
 
 ```js
 // triangle.js
-export const area = (base, height) => 1/2 * b * h
+export const area = (base, height) => (1 / 2) * b * h;
 
 class Triangle {
   constructor(base, height) {
-    this.base = base
-    this.height = height
+    this.base = base;
+    this.height = height;
   }
   area() {
     return area(this.base, this.height);
@@ -472,15 +457,11 @@ export default Triangle;
 
 ```js
 // main.js
-import Triangle, { area } from './triangle.js';
+import Triangle, { area } from "./triangle.js";
 
 const triangle = new Triangle(4, 2);
-console.log(
-  `The area of a 4 x 2 triangle is ${area(4, 2)}`
-);
-console.log(
-  `The area of a 4 x 2 triangle is ${triangle.area()}`
-);
+console.log(`The area of a 4 x 2 triangle is ${area(4, 2)}`);
+console.log(`The area of a 4 x 2 triangle is ${triangle.area()}`);
 ```
 
 Again you don't have to import everything so if you only want either default or named exports then that is fine.

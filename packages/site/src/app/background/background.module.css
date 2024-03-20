@@ -30,7 +30,9 @@
   position: absolute;
   height: 100%;
   width: 100%;
-  transition: var(--transition-theme), opacity var(--transition-theme-timing);
+  transition:
+    var(--transition-theme),
+    opacity var(--transition-theme-timing);
 }
 
 .background-image {

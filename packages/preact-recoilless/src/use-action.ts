@@ -3,11 +3,8 @@ import { useMemo } from "preact/hooks";
 import { useStore } from "./store-provider.js";
 
 export const useAction = <Args extends unknown[]>(
-  action: Action<Args>
-): (...args: Args) => void => {
+  action: Action<Args>,
+): ((...args: Args) => void) => {
   const store = useStore();
-  return useMemo(
-    () => store.getActor(action),
-    [store]
-  );
+  return useMemo(() => store.getActor(action), [store]);
 };

@@ -1,4 +1,3 @@
-
 # We are introducing redux - should we rewrite the whole thing?
 
 My advice is always not to rewrite your application all in one go.
@@ -13,7 +12,7 @@ A much better approach is to agree an approach with the whole team. Choose a tar
 
 Once you have done that start applying it to every new feature you write - the rest is tech debt, i.e. you borrowed some time you will have to pay back at some point.
 
-It is your choice  how you deal with tech debt. Generally speaking it is better to tackle it as quickly as you can. But as quick as you can has different definitions depending on the project. In some projects where time, money and people are infinite you could probably set to and just bosh it out. however - that is never the case. your PO will still want features developed. So the grand rewrite is impossible. Instead aim for the more pragmatic approach:
+It is your choice how you deal with tech debt. Generally speaking it is better to tackle it as quickly as you can. But as quick as you can has different definitions depending on the project. In some projects where time, money and people are infinite you could probably set to and just bosh it out. however - that is never the case. your PO will still want features developed. So the grand rewrite is impossible. Instead aim for the more pragmatic approach:
 
 1. Be A Good Scout - leave things tidier than you found it. So anything you touch during your stories should move to redux if it's relevant and doesn't take too long to do. If it would slow you down too much then make a story. (this applies to everything in your coding life, from unit tests, to refactoring to documentation. You should aim to increase value every time you touch a codebase. and a well maintained, tidy, codebase has more value than the other kind.)
 2. Pull stories in when you have time. This is where keeping your PO happy comes in. Generally they don't care about technical details and are feature/user focussed. So you will have to make your case about why you are doing it, ensure buy in and then keep it efficient and keep delivering. If they still get the features they need then they will stay happy for you to keep pulling stuff in that seems irrelevant. If you can demonstrate that it is speeding up the feature dev then even better.

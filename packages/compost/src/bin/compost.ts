@@ -10,17 +10,19 @@ import type { UpdateFailureReason } from "../posts/src/update.js";
 const yargs = yargsFactory(hideBin(process.argv));
 
 const run = async (
-  options: UpdateOptions
+  options: UpdateOptions,
 ): Promise<Result<never, "error" | UpdateFailureReason>> => {
   try {
     log.info("Composting...");
     const result = await update(options);
     if (result.success) {
-      log.info(`Complete:\n\n${
-        Object.entries(result.value).map(([slug, postMeta]) => {
-          return `    ${slug}: ${postMeta.fileName}`;
-        }).join("\n")
-      }`);
+      log.info(
+        `Complete:\n\n${Object.entries(result.value)
+          .map(([slug, postMeta]) => {
+            return `    ${slug}: ${postMeta.fileName}`;
+          })
+          .join("\n")}`,
+      );
       return success();
     } else {
       log.error(`Failed to compost: ${result.message}`);
@@ -28,13 +30,11 @@ const run = async (
     }
   } catch (err) {
     log.error("Failed to compost", err);
-    return failure( "error", log.getErrorMessage(err));
+    return failure("error", log.getErrorMessage(err));
   }
 };
 
-const watch = (
-  options: UpdateOptions
-): void => {
+const watch = (options: UpdateOptions): void => {
   log.info("Starting compost in watch mode...");
   const debouncedRun = debounce(async () => {
     await run(options);
@@ -42,7 +42,7 @@ const watch = (
   }, 250);
   const watchPaths = [
     options.sourceDir,
-    ...options.additionalWatchPaths
+    ...options.additionalWatchPaths,
   ].filter(Boolean);
   chokidar.watch(watchPaths).on("all", debouncedRun);
 };
@@ -51,75 +51,82 @@ yargs.command(
   "$0",
   "Here we go!",
   {
-    "hrefRoot": {
+    hrefRoot: {
       type: "string",
       default: "/",
       alias: ["r"],
-      description: "The root path to apply when compiling hrefs (e.g. links)."
+      description: "The root path to apply when compiling hrefs (e.g. links).",
     },
-    "additionalWatchPaths": {
+    additionalWatchPaths: {
       alias: ["a"],
       description: "Paths other than --source-dir to watch when in watch mode.",
       implies: "watch",
       type: "string",
-      array: true
+      array: true,
     },
-    "includeUnpublished": {
+    includeUnpublished: {
       alias: ["u"],
-      description: "Whether or not to compile posts not marked as published in their metadata.json file.",
+      description:
+        "Whether or not to compile posts not marked as published in their metadata.json file.",
       type: "boolean",
-      default: false
+      default: false,
     },
-    "manifestFileName": {
+    manifestFileName: {
       alias: ["m"],
       description: "The nam of the output JSON manifest file.",
       type: "string",
-      default: "manifest.json"
+      default: "manifest.json",
     },
-    "codeLineNumbers": {
-      description: "Include tags and classes in code blocks that can be styled to show line numbers with the Prism line number styles.",
+    codeLineNumbers: {
+      description:
+        "Include tags and classes in code blocks that can be styled to show line numbers with the Prism line number styles.",
       type: "boolean",
-      default: false
+      default: false,
     },
-    "oldManifestLocator": {
-      description: "The path or URL of the old manifest. If none is given then the output-dir and manifest-file-name options will be used to infer the location. If this option is given and no manifest is found compost will fail.",
+    oldManifestLocator: {
+      description:
+        "The path or URL of the old manifest. If none is given then the output-dir and manifest-file-name options will be used to infer the location. If this option is given and no manifest is found compost will fail.",
       type: "string",
-      array: true
+      array: true,
     },
-    "outputDir": {
+    outputDir: {
       alias: ["o"],
-      description: "The directory into which the compiled files should be written.",
+      description:
+        "The directory into which the compiled files should be written.",
       type: "string",
-      default: "./lib"
+      default: "./lib",
     },
-    "removeH1": {
-      description: "Indicates whether the process will remove H1 (#) headings. Useful if you will render that with a custom heading in your page.",
+    removeH1: {
+      description:
+        "Indicates whether the process will remove H1 (#) headings. Useful if you will render that with a custom heading in your page.",
       type: "boolean",
-      default: false
+      default: false,
     },
-    "requireOldManifest": {
-      description: "Indicates whether the process will fail if the old manifest is not found.",
+    requireOldManifest: {
+      description:
+        "Indicates whether the process will fail if the old manifest is not found.",
       type: "boolean",
-      default: false
+      default: false,
     },
-    "sourceDir": {
+    sourceDir: {
       alias: ["s"],
       description: "The directory containing the source files.",
       type: "string",
-      default: "./src"
+      default: "./src",
     },
-    "watch": {
+    watch: {
       alias: ["w"],
-      description: "Watch the source files and recompile the posts when changes occur.",
+      description:
+        "Watch the source files and recompile the posts when changes occur.",
       type: "boolean",
-      default: false
-    }
+      default: false,
+    },
   },
   async (rawOptions) => {
     const options: UpdateOptions = {
       ...rawOptions,
       oldManifestLocators: rawOptions.oldManifestLocator ?? [],
-      additionalWatchPaths: rawOptions.additionalWatchPaths ?? []
+      additionalWatchPaths: rawOptions.additionalWatchPaths ?? [],
     };
 
     if (options.watch) {
@@ -135,10 +142,11 @@ yargs.command(
         yargs.exit(1, result);
       }
     }
-  }
+  },
 );
 
-yargs.help("help")
+yargs
+  .help("help")
   .alias("h", "help")
   .showHelpOnFail(false, "Specify --help for available options");
 yargs.demandCommand();

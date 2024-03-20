@@ -1,5 +1,7 @@
-code, pre {
-  font-family: Menlo, Monaco, Consolas, "Andale Mono", "Ubuntu Mono", "Courier New", monospace;
+code,
+pre {
+  font-family: Menlo, Monaco, Consolas, "Andale Mono", "Ubuntu Mono",
+    "Courier New", monospace;
   text-align: left;
   white-space: pre;
   word-spacing: normal;
@@ -10,7 +12,8 @@ code, pre {
 }
 
 @media print {
-  code, pre {
+  code,
+  pre {
     text-shadow: none;
   }
 }
@@ -19,7 +22,7 @@ pre {
   overflow-x: auto;
   padding: 1.5rem;
   border-radius: 0.5rem;
-  font-size: 0.80em;
+  font-size: 0.8em;
 }
 
 :not(pre) > code {
@@ -29,7 +32,8 @@ pre {
   font-size: 0.85em;
 }
 
-.token.bold, .token.important {
+.token.bold,
+.token.important {
   font-weight: 700;
 }
 

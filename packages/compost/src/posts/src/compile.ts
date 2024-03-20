@@ -5,11 +5,9 @@ import {
   assertIsNotNullish,
   failure,
   joinUrlPath,
-  success
+  success,
 } from "@jaybeeuu/utilities";
-import type {
-  MarkedOptions
-} from "marked";
+import type { MarkedOptions } from "marked";
 import { marked } from "marked";
 import { gfmHeadingId } from "marked-gfm-heading-id";
 import type { SynchronousOptions } from "marked-highlight";
@@ -65,20 +63,18 @@ const isPostHref = (href: string): href is string => {
 
 const getAssetDetails = (
   resolvedFilePath: string,
-  hrefRoot: string
-): { hashedFileName: string; href: string; } => {
+  hrefRoot: string,
+): { hashedFileName: string; href: string } => {
   if (!canAccessSync(resolvedFilePath, "read")) {
     throw new Error(`Unable to access file: ${resolvedFilePath}`);
   }
 
   const fileContent = readTextFileSync(resolvedFilePath);
   const fileHash = getHash(fileContent);
-  const { name: imageFileName, ext: imageFileExtension } = path.parse(resolvedFilePath);
+  const { name: imageFileName, ext: imageFileExtension } =
+    path.parse(resolvedFilePath);
   const hashedFileName = `${imageFileName}-${fileHash}${imageFileExtension}`;
-  const href = joinUrlPath(
-    hrefRoot,
-    hashedFileName
-  );
+  const href = joinUrlPath(hrefRoot, hashedFileName);
 
   return { href, hashedFileName };
 };
@@ -122,27 +118,28 @@ class CustomRenderer extends marked.Renderer {
   private innerCode(
     code: string,
     language: string | undefined,
-    isEscaped: boolean
+    isEscaped: boolean,
   ): string {
-    const rendered = super.code(
-      code,
-      language,
-      isEscaped
-    );
+    const rendered = super.code(code, language, isEscaped);
 
     const preClasses = [
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       `language-${language || "none"}`,
-      this.#renderContext.codeLineNumbers && "line-numbers"
-    ].filter(Boolean).join(" ");
+      this.#renderContext.codeLineNumbers && "line-numbers",
+    ]
+      .filter(Boolean)
+      .join(" ");
 
     const adjusted = rendered.replace(/<pre>/, `<pre class="${preClasses}">`);
 
     if (this.#renderContext.codeLineNumbers) {
       const lineNumberRows = [
-        "<span aria-hidden=\"true\" class=\"line-number-rows\">",
-        ...Array.from({ length: code.split("\n").length }, () => "<span></span>"),
-        "</span>"
+        '<span aria-hidden="true" class="line-number-rows">',
+        ...Array.from(
+          { length: code.split("\n").length },
+          () => "<span></span>",
+        ),
+        "</span>",
       ].join("");
 
       return adjusted.replace(/<\/code>/, `${lineNumberRows}</code>`);
@@ -154,39 +151,30 @@ class CustomRenderer extends marked.Renderer {
   private innerImage(
     href: string | null,
     title: string | null,
-    text: string
+    text: string,
   ): string {
     assertIsNotNullish(href);
 
     if (href.startsWith("https:") || href.startsWith("http:")) {
-      return super.image(
-        href,
-        title,
-        text
-      );
-
+      return super.image(href, title, text);
     }
 
     const resolvedImagePath = path.resolve(
       path.dirname(this.#renderContext.sourceFilePath),
-      href
+      href,
     );
 
     const { href: transformedHref, hashedFileName } = getAssetDetails(
       resolvedImagePath,
-      this.#renderContext.hrefRoot
+      this.#renderContext.hrefRoot,
     );
 
     this.assets.push({
       sourcePath: resolvedImagePath,
-      destinationPath: hashedFileName
+      destinationPath: hashedFileName,
     });
 
-    return super.image(
-      transformedHref,
-      title,
-      text
-    );
+    return super.image(transformedHref, title, text);
   }
 
   heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6): string {
@@ -203,39 +191,39 @@ class CustomRenderer extends marked.Renderer {
       `<h${level} id="${headerSlug}">`,
       `  ${text}`,
       `  <a class="hash-link" title="${htmlContent}" href="${href}"></a>`,
-      `</h${level}>`
+      `</h${level}>`,
     ].join("\n");
   }
 
-  link(
-    href: string,
-    title: string | null,
-    text: string
-  ): string {
+  link(href: string, title: string | null, text: string): string {
     const resolvedHrefPath = path.resolve(
       path.dirname(this.#renderContext.sourceFilePath),
-      href
+      href,
     );
 
     switch (true) {
-      case isPostHref(resolvedHrefPath):{
+      case isPostHref(resolvedHrefPath): {
         return super.link(
           joinUrlPath(this.#renderContext.hrefRoot, getSlug(resolvedHrefPath)),
           title,
-          text
+          text,
         );
       }
       case href.startsWith("."): {
-        const asset = getAssetDetails(resolvedHrefPath, this.#renderContext.hrefRoot);
+        const asset = getAssetDetails(
+          resolvedHrefPath,
+          this.#renderContext.hrefRoot,
+        );
 
         this.assets.push({
           sourcePath: resolvedHrefPath,
-          destinationPath: asset.hashedFileName
+          destinationPath: asset.hashedFileName,
         });
 
         return super.link(asset.href, title, text);
       }
-      default: return super.link(href, title, text);
+      default:
+        return super.link(href, title, text);
     }
   }
 }
@@ -245,12 +233,12 @@ const markedOptions = {
   sanitize: false,
   smartLists: true,
   smartypants: false,
-  xhtml: false
+  xhtml: false,
 };
 
 const markedHighlightOptions: SynchronousOptions = {
   highlight: (code: string, language: string): string => {
-    if (!language ) {
+    if (!language) {
       return code;
     }
 
@@ -260,26 +248,34 @@ const markedHighlightOptions: SynchronousOptions = {
     const highlighted = Prism.highlight(code, prismLanguage, "language");
 
     return highlighted;
-  }
+  },
 };
 
 const sanitizeOptions: IOptions = {
   ...sanitizeHtml.defaults,
-  disallowedTagsMode: process.env.NODE_ENV === "production" ? "discard" : "recursiveEscape",
-  allowedTags: [ ...sanitizeHtml.defaults.allowedTags, "img", "h1", "h2", "span", "del" ],
+  disallowedTagsMode:
+    process.env.NODE_ENV === "production" ? "discard" : "recursiveEscape",
+  allowedTags: [
+    ...sanitizeHtml.defaults.allowedTags,
+    "img",
+    "h1",
+    "h2",
+    "span",
+    "del",
+  ],
   allowedAttributes: {
     ...sanitizeHtml.defaults.allowedAttributes,
-    a: ["class", "title", ...sanitizeHtml.defaults.allowedAttributes.a ?? []],
+    a: ["class", "title", ...(sanitizeHtml.defaults.allowedAttributes.a ?? [])],
     h1: ["id"],
     h2: ["id"],
     h3: ["id"],
     h4: ["id"],
     h5: ["id"],
     h6: ["id"],
-    img: ["alt", ...sanitizeHtml.defaults.allowedAttributes.img ?? []],
+    img: ["alt", ...(sanitizeHtml.defaults.allowedAttributes.img ?? [])],
     pre: ["class"],
-    span: ["class", "aria-hidden"]
-  }
+    span: ["class", "aria-hidden"],
+  },
 };
 
 export type CompileFailureReason = `Failed to compile ${string}`;
@@ -289,26 +285,22 @@ export interface CompiledPost {
   assets: Assets[];
 }
 
-marked.use(
-  mangle(),
-  gfmHeadingId(),
-  markedHighlight(markedHighlightOptions)
-);
+marked.use(mangle(), gfmHeadingId(), markedHighlight(markedHighlightOptions));
 
 export const compilePost = async (
-  renderContext: RenderContext
+  renderContext: RenderContext,
 ): Promise<Result<CompiledPost, CompileFailureReason>> => {
   try {
     const renderer = new CustomRenderer(renderContext);
 
-    const html = await marked.parse(
-      renderContext.sourceFileText,
-      { renderer, ...markedOptions }
-    );
+    const html = await marked.parse(renderContext.sourceFileText, {
+      renderer,
+      ...markedOptions,
+    });
     const sanitized = sanitizeHtml(html, sanitizeOptions);
     return success({
       html: sanitized,
-      assets: renderer.assets
+      assets: renderer.assets,
     });
   } catch (error) {
     return failure(`Failed to compile ${renderContext.sourceFilePath}`, error);

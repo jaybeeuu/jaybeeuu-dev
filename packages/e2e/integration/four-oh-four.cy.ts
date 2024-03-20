@@ -3,7 +3,7 @@ import * as postList from "../features/post-list";
 import {
   getPostsAlias,
   registerEmptyRoutes,
-  registerRoutes
+  registerRoutes,
 } from "../routes/blog";
 
 context("Empty Post List", () => {
@@ -15,7 +15,9 @@ context("Empty Post List", () => {
     registerEmptyRoutes();
     postList.openList();
     cy.wait(getPostsAlias("manifest"));
-    postList.get().should("contain.text", "Nothing to see? Write some posts...");
+    postList
+      .get()
+      .should("contain.text", "Nothing to see? Write some posts...");
   });
 });
 
