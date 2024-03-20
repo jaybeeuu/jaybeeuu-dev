@@ -5,11 +5,10 @@ orbs:
 
 src-dir: &src-dir ~/src
 
-
 job-base: &job-base
   resource_class: large
   docker:
-    - image: cimg/node:18.18.2
+    - image: cimg/node:20.11.1
       auth:
         username: $DOCKERHUB_USERNAME
         password: $DOCKERHUB_PASSWORD
@@ -57,7 +56,6 @@ commands:
           command: ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 
 jobs:
-
   checkout-install-build:
     <<: *job-base
 
@@ -127,7 +125,7 @@ jobs:
   e2e:
     <<: *job-base
     docker:
-      - image: cypress/included:13.3.2
+      - image: cypress/included:13.7.0
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD

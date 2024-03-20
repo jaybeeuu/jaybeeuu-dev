@@ -98,7 +98,7 @@ export const update = async (
       return sourceFileText;
     }
 
-    const compiledPostResult = compilePost({
+    const compiledPostResult = await compilePost({
       codeLineNumbers: options.codeLineNumbers,
       hrefRoot: options.hrefRoot,
       removeH1: options.removeH1,

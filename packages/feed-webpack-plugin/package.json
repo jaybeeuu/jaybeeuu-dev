@@ -42,9 +42,9 @@
   },
   "devDependencies": {
     "@jaybeeuu/eslint-config": "workspace:*",
-    "@types/node": "^20.8.7",
-    "eslint": "^8.52.0",
-    "typescript": "^5.2.2",
-    "webpack": "^5.89.0"
+    "@types/node": "^20.11.28",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.2",
+    "webpack": "^5.90.3"
   }
 }

@@ -1,7 +1,7 @@
 {
   "terminal.integrated.shell.linux": "/bin/bash",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   "eslint.packageManager": "pnpm",
   "eslint.workingDirectories": [{ "pattern": "./packages/*/" }],

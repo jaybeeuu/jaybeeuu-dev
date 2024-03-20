@@ -295,13 +295,13 @@ marked.use(
   markedHighlight(markedHighlightOptions)
 );
 
-export const compilePost = (
+export const compilePost = async (
   renderContext: RenderContext
-): Result<CompiledPost, CompileFailureReason> => {
+): Promise<Result<CompiledPost, CompileFailureReason>> => {
   try {
     const renderer = new CustomRenderer(renderContext);
 
-    const html = marked.parse(
+    const html = await marked.parse(
       renderContext.sourceFileText,
       { renderer, ...markedOptions }
     );
