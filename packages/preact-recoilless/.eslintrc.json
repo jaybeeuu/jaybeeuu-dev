@@ -1,8 +1,8 @@
 {
   "extends": [
+    "plugin:react/recommended",
     "@jaybeeuu/eslint-config/base",
-    "@jaybeeuu/eslint-config/jest",
-    "plugin:react/recommended"
+    "@jaybeeuu/eslint-config/jest"
   ],
   "env": {
     "browser": true
