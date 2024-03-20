@@ -89,7 +89,7 @@ export default {
     main: paths.srcIndex
   },
   output: {
-    assetModuleFilename: "static/[name].[contenthash][ext]",
+    assetModuleFilename: "static/[name].[contenthash][ext][query]",
     clean: true,
     filename: "main.[contenthash].js",
     path: paths.dist,
@@ -160,7 +160,7 @@ export default {
                   adapter: sharpAdapter,
                   format: "jpg",
                   progressive: true,
-                  name: "[name]-[hash]-[width].[ext]",
+                  name: "static/[name]-[hash]-[width].[ext]",
                   placeholder: true,
                   placeholderSize: 100,
                   sizes: [1800]
@@ -169,15 +169,17 @@ export default {
             ]
           },
           {
-            test: [/\.(bmp|gif|jpe?g|png|svg)$/],
-            type: "asset"
+            test: [/\.sprite.svg$/],
+            type: "asset/resource"
           },
           {
-            exclude: [/\.(ts|tsx|js|jsx|mjs)$/, /\.css$/, /\.html$/, /\.json$/, /\.(bmp|gif|jpe?g|png|svg)$/],
-            loader: "file-loader",
-            options: {
-              name: "static/[name].[contenthash].[ext]"
-            }
+            exclude: [
+              /\.(ts|tsx|js|jsx|mjs)$/,
+              /\.css$/,
+              /\.html$/,
+              /\.json$/
+            ],
+            type: "asset"
           }
         ]
       }
@@ -206,18 +208,6 @@ export default {
                 png: {
                   progressive: true
                 }
-              }
-            }
-          },
-          {
-            implementation: ImageMinimizerPlugin.svgoMinify,
-            filter: (source, sourcePath) => !(/\.sprite\.svg$/i.test(sourcePath)),
-            options: {
-              encodeOptions: {
-                multipass: true,
-                plugins: [
-                  "preset-default"
-                ]
               }
             }
           }
