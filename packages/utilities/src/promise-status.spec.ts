@@ -66,10 +66,13 @@ describe("monitorPromise", () => {
     ).rejects.toStrictEqual(new Error("Iterator is done."));
   });
 
-  it("returns an error if the request fails.", async () => {
+  it("returns an error if the request fails.Converting the reason to an error along the way.", async () => {
     const errorResponse = { message: "Whoops!" };
 
-    const requestIterator = getPromiseStatusIterator(Promise.reject(errorResponse));
+    const requestIterator = getPromiseStatusIterator(
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+      Promise.reject(errorResponse)
+    );
 
     const result = await getNextValue(requestIterator);
     expect(result).toStrictEqual({

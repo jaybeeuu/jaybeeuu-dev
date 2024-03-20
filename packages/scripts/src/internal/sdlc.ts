@@ -79,12 +79,12 @@ const executeCommand = (
   command: string,
   options: SpawnOptions
 ): Promise<void> => {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     const process = child_process.spawn(command, options);
 
     process.on("exit", (exitCode, signalCode) => {
       if ((exitCode ?? 0) > 0 || signalCode) {
-        reject("Process failed.");
+        reject(new Error("Process failed."));
       } else {
         resolve();
       }

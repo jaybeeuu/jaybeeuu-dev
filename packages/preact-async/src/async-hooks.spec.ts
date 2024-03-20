@@ -186,8 +186,9 @@ describe("async-hooks", () => {
       });
     });
 
-    it("returns error after the promise rejects.", async () => {
+    it("returns error after the promise rejects. Converting the reason to an error along the way.", async () => {
       const { result } = renderHook(() => usePromise(
+        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
         () => Promise.reject("Whoops!"),
         []
       ));
@@ -207,7 +208,7 @@ describe("async-hooks", () => {
           const promise = new ControllablePromise();
           abortSignal.onabort = () => {
             abortedRef.current = true;
-            promise.reject("aborted");
+            promise.reject(new Error("aborted"));
           };
           return promise;
         },
@@ -228,7 +229,7 @@ describe("async-hooks", () => {
           const promise = new ControllablePromise();
           abortSignal.onabort = () => {
             abortedRef.current = true;
-            promise.reject(`aborted ${value}`);
+            promise.reject(new Error(`aborted ${value}`));
           };
           return promise;
         },
@@ -246,10 +247,10 @@ describe("async-hooks", () => {
       const abortedRef: { current: boolean; } = { current: false };
       const { result } = renderHook(({ value }) => usePromise(
         ({ abortSignal }) => {
-          const promise = new ControllablePromise();
+          const promise = new ControllablePromise<void>();
           abortSignal.onabort = () => {
             abortedRef.current = true;
-            promise.reject(`aborted ${value}`);
+            promise.reject(new Error(`aborted ${value}`));
           };
           return promise;
         },

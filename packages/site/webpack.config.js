@@ -65,9 +65,12 @@ export default {
       disableDotRule: true
     },
     host: env.CLIENT_HOST_NAME,
-    https: {
-      key: fs.readFileSync(paths.certs.key),
-      cert: fs.readFileSync(paths.certs.certificate)
+    server:{
+      type: "https",
+      options: {
+        key: fs.readFileSync(paths.certs.key),
+        cert: fs.readFileSync(paths.certs.certificate)
+      }
     },
     client: {
       logging: "info",
