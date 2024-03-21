@@ -15,20 +15,22 @@
     "lib"
   ],
   "scripts": {
-    "start": "compost --watch --href-root blog --include-unpublished --remove-h1 --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\"",
+    "build": "compost --href-root blog --code-line-numbers --remove-h1 --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\"",
+    "lint": "markdownlint \"**/*.md\" --ignore node_modules",
     "spell-check-interactive": "mdspell --en-GB --ignore-numbers \"**/*.md\" \"!**/node_modules/**/*.md\"",
     "spell-check": "pnpm run spell-check-interactive --report",
-    "build": "compost --href-root blog --code-line-numbers --remove-h1 --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\"",
-    "example": "nodemon --exec \"node ./node_modules/ts-node/dist/bin.js --esm\""
+    "start": "compost --watch --href-root blog --include-unpublished --remove-h1 --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\""
   },
   "devDependencies": {
     "@jaybeeuu/compost": "workspace:*",
-    "@types/node": "^20.11.28",
+    "@types/node": "^20.11.30",
     "@types/yargs": "^17.0.32",
     "markdown-spellcheck": "^1.3.1",
+    "markdownlint-cli": "^0.39.0",
+    "markdownlint": "^0.34.0",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.2",
+    "typescript": "^5.4.3",
     "yargs": "^17.7.2"
   }
 }
