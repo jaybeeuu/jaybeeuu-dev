@@ -14,6 +14,7 @@ module.exports = {
     "no-console": "error",
     "no-shadow": "error",
     "no-unused-vars": "off",
+    "no-constant-condition": ["error", { checkLoops: false }],
   },
   overrides: [
     {
@@ -52,6 +53,16 @@ module.exports = {
           { ignoreRestSiblings: true },
         ],
         "@typescript-eslint/switch-exhaustiveness-check": "error",
+        "@typescript-eslint/restrict-template-expressions": [
+          "error",
+          {
+            allowAny: false,
+            allowBoolean: true,
+            allowNullish: true,
+            allowNumber: true,
+            allowRegExp: true,
+          },
+        ],
         "no-shadow": "off",
         "no-unused-vars": "off",
       },
