@@ -1,5 +1,17 @@
 # @jaybeeuu/site
 
+## 0.0.14
+
+### Patch Changes
+
+- Updated dependencies [[`21560b4`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/21560b43ec34fe5e036f15e66001b2def2fd94f6)]:
+  - @jaybeeuu/preact-recoilless@7.0.3
+  - @jaybeeuu/preact-async@5.0.3
+  - @jaybeeuu/recoilless@7.0.3
+  - @jaybeeuu/utilities@3.0.3
+  - @jaybeeuu/e2e-hooks@0.0.2
+  - @jaybeeuu/posts@0.0.0
+
 ## 0.0.13
 
 ### Patch Changes

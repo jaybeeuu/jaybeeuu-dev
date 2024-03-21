@@ -1,5 +1,11 @@
 # @jaybeeuu/compost
 
+## 0.2.3
+
+### Patch Changes
+
+- [#158](https://github.com/jaybeeuu/jaybeeuu-dev/pull/158) [`21560b4`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/21560b43ec34fe5e036f15e66001b2def2fd94f6) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Update dependencies
+
 ## 0.2.2
 
 ### Patch Changes
