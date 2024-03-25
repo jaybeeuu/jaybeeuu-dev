@@ -5,6 +5,12 @@ export interface TypePredicate<T> {
   [typeDescription]: string;
 }
 
+export const isType = <Type>(
+  predicate: (candidate: unknown) => candidate is Type,
+  typeDesc: string,
+): TypePredicate<Type> =>
+  Object.assign(predicate, { [typeDescription]: typeDesc });
+
 const hasOwnProperty = <Obj extends object, Property extends PropertyKey>(
   obj: Obj,
   prop: Property,
@@ -12,20 +18,10 @@ const hasOwnProperty = <Obj extends object, Property extends PropertyKey>(
   return Object.prototype.hasOwnProperty.call(obj, prop);
 };
 
-export type TypeString =
-  | "string"
-  | "number"
-  | "bigint"
-  | "boolean"
-  | "symbol"
-  | "undefined"
-  | "object"
-  | "function";
-
 export const isObject = <Obj extends object>(properties: {
   [key in keyof Obj]: TypePredicate<Obj[key]>;
 }): TypePredicate<Obj> =>
-  Object.assign(
+  isType(
     (candidate: unknown): candidate is Obj => {
       if (typeof candidate !== "object") {
         return false;
@@ -42,11 +38,9 @@ export const isObject = <Obj extends object>(properties: {
         );
       });
     },
-    {
-      [typeDescription]: `{ ${Object.entries<TypePredicate<unknown>>(properties)
-        .map(([key, predicate]) => `${key}: ${predicate[typeDescription]};`)
-        .join(" ")} }`,
-    },
+    `{ ${Object.entries<TypePredicate<unknown>>(properties)
+      .map(([key, predicate]) => `${key}: ${predicate[typeDescription]};`)
+      .join(" ")} }`,
   );
 
 export type ElementOfArray<Arr> = Arr extends (infer Element)[]
@@ -56,15 +50,12 @@ export type ElementOfArray<Arr> = Arr extends (infer Element)[]
 export const isArrayOf = <Element>(
   isElement: TypePredicate<Element>,
 ): TypePredicate<Element[]> =>
-  Object.assign(
-    (candidate: unknown): candidate is Element[] => {
-      return (
-        Array.isArray(candidate) &&
-        candidate.every((element) => isElement(element))
-      );
-    },
-    { [typeDescription]: `${isElement[typeDescription]}[]` },
-  );
+  isType((candidate: unknown): candidate is Element[] => {
+    return (
+      Array.isArray(candidate) &&
+      candidate.every((element) => isElement(element))
+    );
+  }, `${isElement[typeDescription]}[]`);
 
 export type RecordValue<Rec> = Rec extends { [key: string]: infer Value }
   ? Value
@@ -73,20 +64,32 @@ export type RecordValue<Rec> = Rec extends { [key: string]: infer Value }
 export const isRecordOf = <Rec extends { [key: string]: unknown }>(
   isValue: TypePredicate<RecordValue<Rec>>,
 ): TypePredicate<Rec> =>
-  Object.assign(
-    (candidate: unknown): candidate is Rec => {
-      if (typeof candidate !== "object") {
-        return false;
-      }
+  isType((candidate: unknown): candidate is Rec => {
+    if (typeof candidate !== "object") {
+      return false;
+    }
 
-      if (candidate === null) {
-        return false;
-      }
+    if (candidate === null) {
+      return false;
+    }
 
-      return Object.values(candidate).every((value) => isValue(value));
-    },
-    { [typeDescription]: `{ [key: string]: ${isValue[typeDescription]}; }` },
-  );
+    return Object.values(candidate).every((value) => isValue(value));
+  }, `{ [key: string]: ${isValue[typeDescription]}; }`);
+
+export const typeStrings = [
+  "string",
+  "number",
+  "bigint",
+  "boolean",
+  "symbol",
+  "undefined",
+  "object",
+  "function",
+] as const;
+export type TypeString = (typeof typeStrings)[number];
+const isTypeString = (candidate: string): candidate is TypeString => {
+  return (typeStrings as readonly string[]).includes(candidate);
+};
 
 export interface TypeStringPrimitiveTypeMap {
   string: string;
@@ -100,29 +103,52 @@ export interface TypeStringPrimitiveTypeMap {
   null: null;
 }
 
-export const is = <Type extends TypeString | "null">(
+export const is = <Type extends string | number | boolean>(
   typeString: Type,
-): TypePredicate<TypeStringPrimitiveTypeMap[Type]> =>
-  Object.assign(
-    (candidate: unknown): candidate is TypeStringPrimitiveTypeMap[Type] => {
+): TypePredicate<
+  Type extends keyof TypeStringPrimitiveTypeMap
+    ? TypeStringPrimitiveTypeMap[Type]
+    : Type
+> =>
+  isType(
+    (
+      candidate: unknown,
+    ): candidate is Type extends keyof TypeStringPrimitiveTypeMap
+      ? TypeStringPrimitiveTypeMap[Type]
+      : Type => {
       if (typeString === "null") {
         return candidate === null;
       }
-      return typeof candidate === typeString;
+      if (typeof typeString === "string" && isTypeString(typeString)) {
+        return typeof candidate === typeString;
+      }
+      return candidate === typeString;
     },
-    { [typeDescription]: typeString },
+    `${typeString}`,
   );
 
 export const or = <T, U>(
   isT: TypePredicate<T>,
   isU: TypePredicate<U>,
 ): TypePredicate<T | U> =>
-  Object.assign(
-    (candidate: unknown): candidate is T | U => {
-      return isT(candidate) || isU(candidate);
+  isType((candidate: unknown): candidate is T | U => {
+    return isT(candidate) || isU(candidate);
+  }, `${isT[typeDescription]} | ${isU[typeDescription]}`);
+
+export const exclude = <T, U>(
+  isT: TypePredicate<T>,
+  isU: TypePredicate<U>,
+): TypePredicate<Exclude<T, U>> => {
+  const excludedTypeDescRegexp = new RegExp(`(^| \\| )${isU[typeDescription]}`);
+  return isType(
+    (candidate: unknown): candidate is Exclude<T, U> => {
+      return isT(candidate) && !isU(candidate);
     },
-    { [typeDescription]: `${isT[typeDescription]} | ${isU[typeDescription]}` },
+    excludedTypeDescRegexp.test(isT[typeDescription])
+      ? isT[typeDescription].replace(excludedTypeDescRegexp, "")
+      : `${isT[typeDescription]} | !${isU[typeDescription]}`,
   );
+};
 
 export const isNullish = or(is("null"), is("undefined"));
 
@@ -133,14 +159,10 @@ export const isInPrimitiveUnion = <
 ): TypePredicate<UnionMembers[number]> => {
   const isPrimitive = or(or(is("boolean"), is("string")), is("number"));
 
-  return Object.assign(
+  return isType(
     (candidate: unknown): candidate is UnionMembers[number] => {
       return isPrimitive(candidate) && unionMembers.includes(candidate);
     },
-    {
-      [typeDescription]: unionMembers
-        .map((elem) => JSON.stringify(elem))
-        .join(" | "),
-    },
+    unionMembers.map((elem) => JSON.stringify(elem)).join(" | "),
   );
 };
