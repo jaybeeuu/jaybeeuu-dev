@@ -1,4 +1,4 @@
-import { typeDescription, type TypeString } from "./type-guards";
+import { typeDescription } from "./type-guards";
 import {
   is,
   isArrayOf,
@@ -7,6 +7,7 @@ import {
   isObject,
   isRecordOf,
   or,
+  exclude,
 } from "./index";
 
 describe("type-guards", () => {
@@ -164,7 +165,7 @@ describe("type-guards", () => {
 
   describe("is", () => {
     const samples: {
-      typeString: TypeString | "null";
+      typeString: string | number | boolean;
       value: unknown;
       expectedOutcome: boolean;
     }[] = [
@@ -253,6 +254,36 @@ describe("type-guards", () => {
         value: {},
         expectedOutcome: false,
       },
+      {
+        typeString: "literal",
+        value: "literal",
+        expectedOutcome: true,
+      },
+      {
+        typeString: "literal",
+        value: "thing",
+        expectedOutcome: false,
+      },
+      {
+        typeString: 10,
+        value: 10,
+        expectedOutcome: true,
+      },
+      {
+        typeString: 10,
+        value: 11,
+        expectedOutcome: false,
+      },
+      {
+        typeString: false,
+        value: false,
+        expectedOutcome: true,
+      },
+      {
+        typeString: true,
+        value: true,
+        expectedOutcome: true,
+      },
     ];
 
     it.each(samples)(
@@ -271,6 +302,7 @@ describe("type-guards", () => {
       { typeString: "undefined" },
       { typeString: "object" },
       { typeString: "function" },
+      { typeString: "thing" },
     ] as const)(
       "$#: is(typeString: $typeString) has type description $typeString.",
       ({ typeString }) => {
@@ -309,6 +341,39 @@ describe("type-guards", () => {
       expect(or(is("number"), is("string"))[typeDescription]).toBe(
         "number | string",
       );
+    });
+  });
+
+  describe("exclude", () => {
+    const samples: {
+      value: unknown;
+      expectedOutcome: boolean;
+    }[] = [
+      {
+        value: undefined,
+        expectedOutcome: false,
+      },
+      {
+        value: 10,
+        expectedOutcome: true,
+      },
+    ];
+
+    it.each(samples)(
+      '$#: exclude(or(is("number"), is("undefined")), is("undefined"))(value: $value) -> $expectedOutcome',
+      ({ expectedOutcome, value }) => {
+        expect(
+          exclude(or(is("number"), is("undefined")), is("undefined"))(value),
+        ).toBe(expectedOutcome);
+      },
+    );
+
+    it("has the right type description.", () => {
+      expect(
+        exclude(or(is("number"), is("undefined")), is("undefined"))[
+          typeDescription
+        ],
+      ).toBe("number");
     });
   });
 
