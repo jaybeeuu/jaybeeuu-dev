@@ -1,13 +1,15 @@
 import { typeDescription } from "./type-guards";
 import {
+  type TypeString,
   is,
+  isLiteral,
   isArrayOf,
-  isInPrimitiveUnion,
   isNullish,
   isObject,
   isRecordOf,
-  or,
-  exclude,
+  isUnion,
+  isIntersection,
+  isTuple,
 } from "./index";
 
 describe("type-guards", () => {
@@ -165,7 +167,7 @@ describe("type-guards", () => {
 
   describe("is", () => {
     const samples: {
-      typeString: string | number | boolean;
+      typeString: TypeString | "null";
       value: unknown;
       expectedOutcome: boolean;
     }[] = [
@@ -254,36 +256,6 @@ describe("type-guards", () => {
         value: {},
         expectedOutcome: false,
       },
-      {
-        typeString: "literal",
-        value: "literal",
-        expectedOutcome: true,
-      },
-      {
-        typeString: "literal",
-        value: "thing",
-        expectedOutcome: false,
-      },
-      {
-        typeString: 10,
-        value: 10,
-        expectedOutcome: true,
-      },
-      {
-        typeString: 10,
-        value: 11,
-        expectedOutcome: false,
-      },
-      {
-        typeString: false,
-        value: false,
-        expectedOutcome: true,
-      },
-      {
-        typeString: true,
-        value: true,
-        expectedOutcome: true,
-      },
     ];
 
     it.each(samples)(
@@ -302,7 +274,7 @@ describe("type-guards", () => {
       { typeString: "undefined" },
       { typeString: "object" },
       { typeString: "function" },
-      { typeString: "thing" },
+      { typeString: "null" },
     ] as const)(
       "$#: is(typeString: $typeString) has type description $typeString.",
       ({ typeString }) => {
@@ -311,7 +283,60 @@ describe("type-guards", () => {
     );
   });
 
-  describe("or", () => {
+  describe("isLiteral", () => {
+    const samples: {
+      type: string | number | boolean;
+      value: unknown;
+      expectedOutcome: boolean;
+    }[] = [
+      {
+        type: "literal",
+        value: "literal",
+        expectedOutcome: true,
+      },
+      {
+        type: "literal",
+        value: "thing",
+        expectedOutcome: false,
+      },
+      {
+        type: 10,
+        value: 10,
+        expectedOutcome: true,
+      },
+      {
+        type: 10,
+        value: 11,
+        expectedOutcome: false,
+      },
+      {
+        type: false,
+        value: false,
+        expectedOutcome: true,
+      },
+      {
+        type: true,
+        value: true,
+        expectedOutcome: true,
+      },
+    ];
+
+    it.each(samples)(
+      "$#: isLiteral(type: $type)(value: $value) -> $expectedOutcome;",
+      ({ expectedOutcome, type, value }) => {
+        expect(isLiteral(type)(value)).toBe(expectedOutcome);
+      },
+    );
+
+    it.each([{ type: "literal" }, { type: 1 }, { type: true }] as const)(
+      "$#: isLiteral(type: $type) has type description $type.",
+      ({ type }) => {
+        expect(isLiteral(type)[typeDescription]).toBe(String(type));
+      },
+    );
+  });
+
+  describe("isUnion", () => {
     const samples: {
       value: unknown;
       expectedOutcome: boolean;
@@ -321,7 +346,7 @@ describe("type-guards", () => {
         expectedOutcome: true,
       },
       {
-        value: "{string}",
+        value: "apple",
         expectedOutcome: true,
       },
       {
@@ -331,93 +356,97 @@ describe("type-guards", () => {
     ];
 
     it.each(samples)(
-      '$#: or(is("number"), is("string"))(value: $value) -> $expectedOutcome',
+      '$#: isUnion(is("number"), is("string"))(value: $value) -> $expectedOutcome',
       ({ expectedOutcome, value }) => {
-        expect(or(is("number"), is("string"))(value)).toBe(expectedOutcome);
+        expect(
+          isUnion(is("number"), isLiteral("banana"), isLiteral("apple"))(value),
+        ).toBe(expectedOutcome);
       },
     );
 
     it("has the right type description.", () => {
-      expect(or(is("number"), is("string"))[typeDescription]).toBe(
+      expect(isUnion(is("number"), is("string"))[typeDescription]).toBe(
         "number | string",
       );
     });
   });
 
-  describe("exclude", () => {
+  describe("isIntersection", () => {
     const samples: {
       value: unknown;
       expectedOutcome: boolean;
     }[] = [
       {
-        value: undefined,
+        value: { a: "{string}", b: 10 },
+        expectedOutcome: true,
+      },
+      {
+        value: { a: 10, b: 10 },
         expectedOutcome: false,
       },
       {
-        value: 10,
-        expectedOutcome: true,
+        value: { a: "{string}", b: "{string}" },
+        expectedOutcome: false,
       },
     ];
 
     it.each(samples)(
-      '$#: exclude(or(is("number"), is("undefined")), is("undefined"))(value: $value) -> $expectedOutcome',
+      '$#: isIntersection(isObject({ a: is("string") }), isObject({ b: is("number") }))(value: $value) -> $expectedOutcome',
       ({ expectedOutcome, value }) => {
         expect(
-          exclude(or(is("number"), is("undefined")), is("undefined"))(value),
+          isIntersection(
+            isObject({ a: is("string") }),
+            isObject({ b: is("number") }),
+          )(value),
         ).toBe(expectedOutcome);
       },
     );
 
     it("has the right type description.", () => {
       expect(
-        exclude(or(is("number"), is("undefined")), is("undefined"))[
-          typeDescription
-        ],
-      ).toBe("number");
+        isIntersection(
+          isObject({ a: is("string") }),
+          isObject({ b: is("number") }),
+        )[typeDescription],
+      ).toBe("{ a: string; } & { b: number; }");
     });
   });
 
-  describe("isInPrimitiveUnion", () => {
+  describe("isTuple", () => {
     const samples: {
       value: unknown;
       expectedOutcome: boolean;
     }[] = [
       {
-        value: "one",
+        value: ["{string}", 10],
         expectedOutcome: true,
       },
       {
-        value: "two",
-        expectedOutcome: true,
-      },
-      {
-        value: "three",
+        value: [10, 10],
         expectedOutcome: false,
       },
       {
-        value: 100,
+        value: ["{string}", "{string}"],
         expectedOutcome: false,
       },
       {
-        value: true,
-        expectedOutcome: false,
-      },
-      {
-        value: {},
+        value: "{not an array}",
         expectedOutcome: false,
       },
     ];
 
     it.each(samples)(
-      '$#: isInPrimitiveUnion(["one", "two"])(value: $value) -> $expectedOutcome',
+      '$#: isTuple(is("string"), is("number"))(value: $value) -> $expectedOutcome',
       ({ expectedOutcome, value }) => {
-        expect(isInPrimitiveUnion(["one", "two"])(value)).toBe(expectedOutcome);
+        expect(isTuple(is("string"), is("number"))(value)).toBe(
+          expectedOutcome,
+        );
       },
     );
 
     it("has the right type description.", () => {
-      expect(isInPrimitiveUnion(["one", "two"])[typeDescription]).toBe(
-        '"one" | "two"',
+      expect(isTuple(is("string"), is("number"))[typeDescription]).toBe(
+        "[string, number]",
       );
     });
   });

@@ -1,19 +1,17 @@
-import type { TypeAssertion } from "@jaybeeuu/utilities";
-import { assert, is, isInPrimitiveUnion, or } from "@jaybeeuu/utilities";
+import type { TypeAssertion, CheckedBy } from "@jaybeeuu/utilities";
+import { assert, is, isLiteral, isUnion } from "@jaybeeuu/utilities";
 
-const themes = ["light", "dark"] as const;
-export type Theme = (typeof themes)[number];
-
-const isTheme = isInPrimitiveUnion(themes);
+const isTheme = isUnion(isLiteral("light"), isLiteral("dark"));
+export type Theme = CheckedBy<typeof isTheme>;
 
 type MediaThemeListener = (newTheme: Theme) => void;
 type Unsubscribe = () => void;
 
+const themeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
 const themeFromQueryMatch = (matches: boolean): Theme => {
   return matches ? "dark" : "light";
 };
-
-const themeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
 export const getMediaTheme = (): Theme => {
   return themeFromQueryMatch(themeMediaQuery.matches);
@@ -59,7 +57,7 @@ const localStorageValue = <Value extends string>(
 export const persistedTheme = (() => {
   const storageValue = localStorageValue<Theme>(
     "THEME",
-    assert(or(isTheme, is("null"))),
+    assert(isUnion(isTheme, is("null"))),
   );
   return {
     set: (newTheme: Theme): void => {
