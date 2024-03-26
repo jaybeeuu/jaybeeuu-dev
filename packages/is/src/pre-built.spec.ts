@@ -1,5 +1,4 @@
-import type { TypeAssertion } from "./index";
-import { is, assert, assertIsNotNullish } from "./index";
+import { assertIsNotNullish } from "./index";
 
 describe("pre-built", () => {
   describe("assertIsNotNullish", () => {
@@ -9,9 +8,9 @@ describe("pre-built", () => {
         expect(() => {
           assertIsNotNullish(candidate);
         }).toThrow(
-          new TypeError(`Encountered unexpected ${String(candidate)}.`),
+          new TypeError(`Encountered unexpected ${String(candidate)}.`)
         );
-      },
+      }
     );
 
     it("doesn't throw when the candidate is not null or undefined.", () => {
