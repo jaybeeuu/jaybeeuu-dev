@@ -1,26 +1,26 @@
-import type { TypeAssertion } from "./assertions.js";
-import type { TypePredicate } from "./type-guards.js";
+import type { TypeAssertion, TypePredicate } from "./core.js";
 
 export {
+  assert,
+  isType,
+  type TypeAssertion,
   type TypePredicate,
-  type TypeString,
+} from "./core.js";
+
+export {
+  assertIsNotNullish,
   is,
   isArrayOf,
+  isInstanceOf,
   isIntersection,
   isLiteral,
   isNullish,
   isObject,
   isRecordOf,
   isTuple,
-  isType,
   isUnion,
-  isInstanceOf,
+  type TypeString,
 } from "./type-guards.js";
-export {
-  type TypeAssertion,
-  assert,
-  assertIsNotNullish,
-} from "./assertions.js";
 
 export type CheckedBy<
   Predicate extends TypePredicate<unknown> | TypeAssertion<unknown>,

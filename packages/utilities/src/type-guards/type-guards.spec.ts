@@ -1,15 +1,16 @@
-import { isInstanceOf, typeDescription } from "./type-guards";
+import { typeDescription } from "./core.js";
 import {
-  type TypeString,
   is,
-  isLiteral,
   isArrayOf,
+  isInstanceOf,
+  isIntersection,
+  isLiteral,
   isNullish,
   isObject,
   isRecordOf,
-  isUnion,
-  isIntersection,
   isTuple,
+  isUnion,
+  type TypeString,
 } from "./index";
 
 describe("type-guards", () => {
