@@ -1,15 +1,5 @@
-export const typeDescription = Symbol.for("type-description");
-
-export interface TypePredicate<T> {
-  (candidate: unknown): candidate is T;
-  [typeDescription]: string;
-}
-
-export const isType = <Type>(
-  predicate: (candidate: unknown) => candidate is Type,
-  typeDesc: string,
-): TypePredicate<Type> =>
-  Object.assign(predicate, { [typeDescription]: typeDesc });
+import type { TypePredicate } from "./core.js";
+import { isType, typeDescription } from "./core.js";
 
 const hasOwnProperty = <Obj extends object, Property extends PropertyKey>(
   obj: Obj,
@@ -179,4 +169,31 @@ export const isIntersection = <Predicates extends TypePredicate<unknown>[]>(
     predicates.map((predicate) => predicate[typeDescription]).join(" & "),
   );
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyConstructor = abstract new (...args: any) => any;
+
+export const isInstanceOf = <Type extends AnyConstructor>(
+  constructor: Type,
+): TypePredicate<InstanceType<Type>> => {
+  return isType(
+    (candidate: unknown): candidate is InstanceType<Type> =>
+      candidate instanceof constructor,
+    `instanceof(${constructor.name})`,
+  );
+};
+
 export const isNullish = isUnion(is("null"), is("undefined"));
+
+export const assertIsNotNullish: <Type>(
+  candidate: Type,
+  message?: string,
+) => asserts candidate is Exclude<Type, null | undefined> = (
+  candidate,
+  message,
+) => {
+  if (isNullish(candidate)) {
+    throw new TypeError(
+      message ?? `Encountered unexpected ${String(candidate)}.`,
+    );
+  }
+};

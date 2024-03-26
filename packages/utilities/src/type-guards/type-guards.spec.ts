@@ -1,15 +1,16 @@
-import { typeDescription } from "./type-guards";
+import { typeDescription } from "./core.js";
 import {
-  type TypeString,
   is,
-  isLiteral,
   isArrayOf,
+  isInstanceOf,
+  isIntersection,
+  isLiteral,
   isNullish,
   isObject,
   isRecordOf,
-  isUnion,
-  isIntersection,
   isTuple,
+  isUnion,
+  type TypeString,
 } from "./index";
 
 describe("type-guards", () => {
@@ -237,6 +238,11 @@ describe("type-guards", () => {
         expectedOutcome: true,
       },
       {
+        typeString: "string",
+        value: 10,
+        expectedOutcome: false,
+      },
+      {
         typeString: "symbol",
         value: Symbol.for("thing"),
         expectedOutcome: true,
@@ -448,6 +454,54 @@ describe("type-guards", () => {
       expect(isTuple(is("string"), is("number"))[typeDescription]).toBe(
         "[string, number]",
       );
+    });
+  });
+
+  describe("isInstanceOf", () => {
+    class A {
+      toJSON(): string {
+        return "new A()";
+      }
+    }
+
+    class B extends A {
+      toJSON(): string {
+        return "new B()";
+      }
+    }
+    class C {
+      toJSON(): string {
+        return "new C()";
+      }
+    }
+
+    const samples: {
+      value: unknown;
+      expectedOutcome: boolean;
+    }[] = [
+      {
+        value: new A(),
+        expectedOutcome: true,
+      },
+      {
+        value: new B(),
+        expectedOutcome: true,
+      },
+      {
+        value: new C(),
+        expectedOutcome: false,
+      },
+    ];
+
+    it.each(samples)(
+      "$#: isInstanceOf(A)(value: $value) -> $expectedOutcome",
+      ({ expectedOutcome, value }) => {
+        expect(isInstanceOf(A)(value)).toBe(expectedOutcome);
+      },
+    );
+
+    it("has the right type description.", () => {
+      expect(isInstanceOf(A)[typeDescription]).toBe("instanceof(A)");
     });
   });
 });
