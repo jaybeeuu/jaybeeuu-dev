@@ -1,4 +1,4 @@
-import { isInstanceOf, typeDescription } from "./type-guards";
+import { typeDescription } from "./core.js";
 import {
   is,
   isArrayOf,
@@ -9,6 +9,7 @@ import {
   isObject,
   isRecordOf,
   isUnionOf,
+  isInstanceOf,
   isIntersectionOf,
   isTuple,
   isUnion,

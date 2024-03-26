@@ -1,29 +1,5 @@
-import type { UnassertedTypePredicate } from "./assertions.js";
-import { assert, type TypeAssertion } from "./assertions.js";
-
-export const typeDescription = Symbol.for("type-description");
-
-export interface TypePredicate<Type> extends UnassertedTypePredicate<Type> {
-  assert: TypeAssertion<Type>;
-  check: (candidate: unknown) => Type;
-}
-
-export const isType = <Type>(
-  predicate: (candidate: unknown) => candidate is Type,
-  typeDesc: string
-): TypePredicate<Type> => {
-  const pred = Object.assign(predicate, {
-    [typeDescription]: typeDesc,
-  });
-  const doAssert: TypeAssertion<Type> = assert(pred);
-  return Object.assign(pred, {
-    assert: doAssert,
-    check: (candidate: unknown): Type => {
-      doAssert(candidate);
-      return candidate;
-    },
-  });
-};
+import type { TypePredicate } from "./core.js";
+import { isType, typeDescription } from "./core.js";
 
 const hasOwnProperty = <Obj extends object, Property extends PropertyKey>(
   obj: Obj,
@@ -206,5 +182,3 @@ export const isInstanceOf = <Type extends AnyConstructor>(
     `instanceof(${constructor.name})`
   );
 };
-
-export const isNullish = isUnionOf(is("null"), is("undefined"));
