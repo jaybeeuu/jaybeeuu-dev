@@ -1,5 +1,12 @@
 # @jaybeeuu/utilities
 
+## 4.0.0
+
+### Major Changes
+
+- [#160](https://github.com/jaybeeuu/jaybeeuu-dev/pull/160) [`b46885e`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/b46885ea1ad24a58544129c4b8a88f23a122b623) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Add `isLiteral`, change `or` to `isUnion` and add `isTuple` and `isIntersection`.
+  `isUnion` and `isIntersection` accept `...args`.
+
 ## 3.0.3
 
 ### Patch Changes
