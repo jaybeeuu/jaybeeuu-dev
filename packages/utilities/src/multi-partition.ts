@@ -1,13 +1,13 @@
 import { assertIsNotNullish } from "@jaybeeuu/is";
 
 type Is<PossibleValues, Target extends PossibleValues> = (
-  candidate: PossibleValues
+  candidate: PossibleValues,
 ) => candidate is Target;
 
 export function multiPartition<Values, T1 extends Values, T2 extends Values>(
   array: Values[],
   isT1: Is<Values, T1>,
-  isT2: Is<Values, T2>
+  isT2: Is<Values, T2>,
 ): [T1[], T2[]];
 export function multiPartition<
   Values,
@@ -18,7 +18,7 @@ export function multiPartition<
   array: Values[],
   isT1: Is<Values, T1>,
   isT2: Is<Values, T2>,
-  isT3: Is<Values, T3>
+  isT3: Is<Values, T3>,
 ): [T1[], T2[], T3[]];
 export function multiPartition<
   Values,
@@ -31,7 +31,7 @@ export function multiPartition<
   isT1: Is<Values, T1>,
   isT2: Is<Values, T2>,
   isT3: Is<Values, T3>,
-  isT4: Is<Values, T4>
+  isT4: Is<Values, T4>,
 ): [T1[], T2[], T3[], T4[]];
 export function multiPartition<
   Values,
@@ -46,7 +46,7 @@ export function multiPartition<
   isT2: Is<Values, T2>,
   isT3: Is<Values, T3>,
   isT4: Is<Values, T4>,
-  isT5: Is<Values, T5>
+  isT5: Is<Values, T5>,
 ): [T1[], T2[], T3[], T4[], T5[]];
 export function multiPartition(
   array: unknown[],
@@ -66,6 +66,6 @@ export function multiPartition(
       }
       return acc;
     },
-    Array.from({ length: predicates.length }, () => [])
+    Array.from({ length: predicates.length }, () => []),
   );
 }

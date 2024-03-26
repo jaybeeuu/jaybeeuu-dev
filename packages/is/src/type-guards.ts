@@ -3,7 +3,7 @@ import { isType, typeDescription } from "./core.js";
 
 const hasOwnProperty = <Obj extends object, Property extends PropertyKey>(
   obj: Obj,
-  prop: Property
+  prop: Property,
 ): obj is Obj & { [key in Property]: unknown } => {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 };
@@ -30,7 +30,7 @@ export const isObject = <Obj extends object>(properties: {
     },
     `{ ${Object.entries<TypePredicate<unknown>>(properties)
       .map(([key, predicate]) => `${key}: ${predicate[typeDescription]};`)
-      .join(" ")} }`
+      .join(" ")} }`,
   );
 
 export type ElementOfArray<Arr> = Arr extends (infer Element)[]
@@ -38,7 +38,7 @@ export type ElementOfArray<Arr> = Arr extends (infer Element)[]
   : never;
 
 export const isArrayOf = <Element>(
-  isElement: TypePredicate<Element>
+  isElement: TypePredicate<Element>,
 ): TypePredicate<Element[]> =>
   isType((candidate: unknown): candidate is Element[] => {
     return (
@@ -48,7 +48,7 @@ export const isArrayOf = <Element>(
   }, `${isElement[typeDescription]}[]`);
 
 export const isRecordOf = <RecordValue>(
-  isValue: TypePredicate<RecordValue>
+  isValue: TypePredicate<RecordValue>,
 ): TypePredicate<{ [key: string]: RecordValue }> =>
   isType((candidate: unknown): candidate is { [key: string]: RecordValue } => {
     if (typeof candidate !== "object") {
@@ -63,7 +63,7 @@ export const isRecordOf = <RecordValue>(
   }, `{ [key: string]: ${isValue[typeDescription]}; }`);
 
 export const isLiteral = <Type extends string | number | boolean>(
-  type: Type
+  type: Type,
 ): TypePredicate<Type> =>
   isType((candidate: unknown): candidate is Type => {
     return candidate === type;
@@ -92,13 +92,13 @@ export interface TypeStringPrimitiveTypeMap {
 }
 
 export const is = <Type extends TypeString | "null">(
-  typeString: Type
+  typeString: Type,
 ): TypePredicate<
   Type extends TypeString ? TypeStringPrimitiveTypeMap[Type] : null
 > =>
   isType(
     (
-      candidate: unknown
+      candidate: unknown,
     ): candidate is Type extends TypeString
       ? TypeStringPrimitiveTypeMap[Type]
       : null => {
@@ -106,7 +106,7 @@ export const is = <Type extends TypeString | "null">(
         ? candidate === null
         : typeof candidate === typeString;
     },
-    typeString
+    typeString,
   );
 
 export type ExtractTypesFromPredicates<
@@ -120,14 +120,14 @@ export const isTuple = <
 ): TypePredicate<ExtractTypesFromPredicates<Predicates>> =>
   isType(
     (
-      candidate: unknown
+      candidate: unknown,
     ): candidate is ExtractTypesFromPredicates<Predicates> => {
       return (
         Array.isArray(candidate) &&
         predicates.every((predicate, i) => predicate(candidate[i]))
       );
     },
-    `[${predicates.map((predicate) => predicate[typeDescription]).join(", ")}]`
+    `[${predicates.map((predicate) => predicate[typeDescription]).join(", ")}]`,
   );
 
 export const isUnionOf = <Predicates extends TypePredicate<unknown>[]>(
@@ -137,13 +137,13 @@ export const isUnionOf = <Predicates extends TypePredicate<unknown>[]>(
 > =>
   isType(
     (
-      candidate: unknown
+      candidate: unknown,
     ): candidate is Predicates[number] extends TypePredicate<infer Type>
       ? Type
       : never => {
       return predicates.some((predicate) => predicate(candidate));
     },
-    predicates.map((predicate) => predicate[typeDescription]).join(" | ")
+    predicates.map((predicate) => predicate[typeDescription]).join(" | "),
   );
 
 type UnionToIntersection<Union> = (
@@ -161,24 +161,24 @@ export const isIntersectionOf = <Predicates extends TypePredicate<unknown>[]>(
 > =>
   isType(
     (
-      candidate: unknown
+      candidate: unknown,
     ): candidate is UnionToIntersection<
       Predicates[number] extends TypePredicate<infer Type> ? Type : never
     > => {
       return predicates.every((predicate) => predicate(candidate));
     },
-    predicates.map((predicate) => predicate[typeDescription]).join(" & ")
+    predicates.map((predicate) => predicate[typeDescription]).join(" & "),
   );
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyConstructor = abstract new (...args: any) => any;
 
 export const isInstanceOf = <Type extends AnyConstructor>(
-  constructor: Type
+  constructor: Type,
 ): TypePredicate<InstanceType<Type>> => {
   return isType(
     (candidate: unknown): candidate is InstanceType<Type> =>
       candidate instanceof constructor,
-    `instanceof(${constructor.name})`
+    `instanceof(${constructor.name})`,
   );
 };

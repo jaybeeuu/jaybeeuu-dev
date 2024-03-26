@@ -26,7 +26,7 @@ const assertIsString: TypeAssertion<string> = assert(is("string"));
 
 const useHashLinks = (
   postHtml: string,
-  articleRef: RefObject<HTMLElement>
+  articleRef: RefObject<HTMLElement>,
 ): void => {
   const hideTitleBar = useAction(hideTitleBarAction);
   useLayoutEffect(() => {
@@ -89,7 +89,7 @@ const Post = withPromise(
                 <span>
                   <time
                     dateTime={new Date(
-                      postMeta.publishDate
+                      postMeta.publishDate,
                     ).toLocaleDateString()}
                   >
                     {new Date(postMeta.publishDate).toLocaleDateString()}
@@ -118,7 +118,7 @@ const Post = withPromise(
         </div>
       </div>
     );
-  }
+  },
 );
 Post.displayName = "PostComponent";
 
@@ -142,7 +142,7 @@ const PostLookupResult = withPromise(
     }
 
     return <FouOhFour />;
-  }
+  },
 );
 PostLookupResult.displayName = "PostLookupResult";
 

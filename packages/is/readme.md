@@ -28,7 +28,7 @@ const isRank = isUnionOf(
   isLiteral("captain"),
   isLiteral("first mate"),
   isLiteral("officer"),
-  isLiteral("ensign")
+  isLiteral("ensign"),
 );
 
 const isCrewMember = isObject({

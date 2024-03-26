@@ -6,7 +6,7 @@ export interface UnassertedTypePredicate<T> {
 }
 
 export type TypeAssertion<Type> = (
-  candidate: unknown
+  candidate: unknown,
 ) => asserts candidate is Type;
 
 export const assert =
@@ -14,7 +14,7 @@ export const assert =
   (candidate): asserts candidate is Type => {
     if (!typePredicate(candidate)) {
       throw new TypeError(
-        `Expected a ${typePredicate[typeDescription]} but got a ${typeof candidate}.`
+        `Expected a ${typePredicate[typeDescription]} but got a ${typeof candidate}.`,
       );
     }
   };
@@ -26,7 +26,7 @@ export interface TypePredicate<Type> extends UnassertedTypePredicate<Type> {
 
 export const isType = <Type>(
   predicate: (candidate: unknown) => candidate is Type,
-  typeDesc: string
+  typeDesc: string,
 ): TypePredicate<Type> => {
   const pred = Object.assign(predicate, {
     [typeDescription]: typeDesc,

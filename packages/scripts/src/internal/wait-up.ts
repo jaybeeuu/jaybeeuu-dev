@@ -33,7 +33,7 @@ const getCacheBustedUrl = (url: string): string => {
 const getVersion = async (
   url: string,
   abortSignal: AbortSignal,
-  insecureSSL: boolean
+  insecureSSL: boolean,
 ): Promise<Version> => {
   const cacheBustedUrl = getCacheBustedUrl(url);
   const agent = new Agent({
@@ -54,7 +54,7 @@ const pollForCommitHash = async (
   commitHash: string,
   pollTime: number,
   abortSignal: AbortSignal,
-  insecureSSL: boolean
+  insecureSSL: boolean,
 ): Promise<Version> => {
   while (!abortSignal.aborted) {
     try {
@@ -93,7 +93,7 @@ export const waitUp = async ({
     commitHash,
     pollTime,
     abortController.signal,
-    insecureSSL
+    insecureSSL,
   );
 
   const startTime = Date.now();
@@ -109,7 +109,7 @@ export const waitUp = async ({
       case "complete": {
         console.log(
           `Found expected version in ${Date.now() - startTime}ms.\n`,
-          promise.value
+          promise.value,
         );
         return;
       }
@@ -117,7 +117,7 @@ export const waitUp = async ({
         throw new Error(
           typeof promise.error.message === "string"
             ? promise.error.message
-            : promise.error.message.message
+            : promise.error.message.message,
         );
       }
     }
