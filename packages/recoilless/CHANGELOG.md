@@ -1,5 +1,12 @@
 # @jaybeeuu/recoilless
 
+## 9.0.0
+
+### Patch Changes
+
+- Updated dependencies [[`0a9a96e`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/0a9a96e3be44a79d4782d089d23c6271fc245498)]:
+  - @jaybeeuu/is@1.0.0
+
 ## 8.0.0
 
 ### Patch Changes
