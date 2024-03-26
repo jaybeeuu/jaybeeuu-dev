@@ -8,9 +8,9 @@ describe("pre-built", () => {
         expect(() => {
           assertIsNotNullish(candidate);
         }).toThrow(
-          new TypeError(`Encountered unexpected ${String(candidate)}.`)
+          new TypeError(`Encountered unexpected ${String(candidate)}.`),
         );
-      }
+      },
     );
 
     it("doesn't throw when the candidate is not null or undefined.", () => {
