@@ -1,16 +1,33 @@
-import type { TypePredicate } from "./core";
-import { isType, typeDescription } from "./core";
+import { typeDescription } from "./core.js";
+import { assert, isType, is } from "./index.js";
+import type { TypeAssertion, TypePredicate } from "./index.js";
+
+describe("assert", () => {
+  it("throws when the candidate does not match the type guard.", () => {
+    const assertIsString: TypeAssertion<string> = assert(is("string"));
+    expect(() => {
+      assertIsString(100);
+    }).toThrow(new TypeError("Expected a string but got a number."));
+  });
+
+  it("doesn't throw when the candidate matches the type guard.", () => {
+    const assertIsString: TypeAssertion<string> = assert(is("string"));
+    expect(() => {
+      assertIsString("100");
+    }).not.toThrow();
+  });
+});
 
 describe("isType", () => {
   it("returns a function that executes the function passed in.", () => {
     const predicate = (candidate: unknown): candidate is string => true;
-    const is = isType(predicate, "{description}");
-    expect(is("thing")).toBe(true);
+    const isString = isType(predicate, "{description}");
+    expect(isString("thing")).toBe(true);
   });
   it("attaches a description that matches the description passed in.", () => {
     const predicate = (candidate: unknown): candidate is string => true;
-    const is = isType(predicate, "{description}");
-    expect(is[typeDescription]).toBe("{description}");
+    const isString = isType(predicate, "{description}");
+    expect(isString[typeDescription]).toBe("{description}");
   });
 
   describe("check", () => {

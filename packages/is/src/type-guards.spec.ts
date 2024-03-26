@@ -36,7 +36,7 @@ describe("type-guards", () => {
       "$#: isNull(value: $value) -> $expectedOutcome",
       ({ expectedOutcome, value }) => {
         expect(isNullish(value)).toBe(expectedOutcome);
-      }
+      },
     );
 
     it("has the right type description.", () => {
@@ -78,9 +78,9 @@ describe("type-guards", () => {
           isObject({
             a: is("string"),
             b: is("number"),
-          })(value)
+          })(value),
         ).toBe(expectedOutcome);
-      }
+      },
     );
 
     it("has the right type description.", () => {
@@ -88,7 +88,7 @@ describe("type-guards", () => {
         isObject({
           a: is("string"),
           b: is("number"),
-        })[typeDescription]
+        })[typeDescription],
       ).toBe("{ a: string; b: number; }");
     });
   });
@@ -121,7 +121,7 @@ describe("type-guards", () => {
       ({ expectedOutcome, value }) => {
         const predicate = isArrayOf(is("number"));
         expect(predicate(value)).toBe(expectedOutcome);
-      }
+      },
     );
 
     it("has the right type description.", () => {
@@ -156,12 +156,12 @@ describe("type-guards", () => {
       '$#: isRecordOf(is("number"))(value: $value) -> $expectedOutcome',
       ({ expectedOutcome, value }) => {
         expect(isRecordOf(is("number"))(value)).toBe(expectedOutcome);
-      }
+      },
     );
 
     it("has the right type description.", () => {
       expect(isRecordOf(is("number"))[typeDescription]).toBe(
-        "{ [key: string]: number; }"
+        "{ [key: string]: number; }",
       );
     });
   });
@@ -268,7 +268,7 @@ describe("type-guards", () => {
       "$#: is(typeString: $typeString)(value: $value) -> $expectedOutcome;",
       ({ expectedOutcome, typeString, value }) => {
         expect(is(typeString)(value)).toBe(expectedOutcome);
-      }
+      },
     );
 
     it.each([
@@ -285,7 +285,7 @@ describe("type-guards", () => {
       "$#: is(typeString: $typeString) has type description $typeString.",
       ({ typeString }) => {
         expect(is(typeString)[typeDescription]).toBe(typeString);
-      }
+      },
     );
   });
 
@@ -331,14 +331,14 @@ describe("type-guards", () => {
       "$#: isLiteral(type: $type)(value: $value) -> $expectedOutcome;",
       ({ expectedOutcome, type, value }) => {
         expect(isLiteral(type)(value)).toBe(expectedOutcome);
-      }
+      },
     );
 
     it.each([{ type: "literal" }, { type: 1 }, { type: true }] as const)(
       "$#: isLiteral(type: $type) has type description $type.",
       ({ type }) => {
         expect(isLiteral(type)[typeDescription]).toBe(String(type));
-      }
+      },
     );
   });
 
@@ -368,15 +368,15 @@ describe("type-guards", () => {
           isUnionOf(
             is("number"),
             isLiteral("banana"),
-            isLiteral("apple")
-          )(value)
+            isLiteral("apple"),
+          )(value),
         ).toBe(expectedOutcome);
-      }
+      },
     );
 
     it("has the right type description.", () => {
       expect(isUnionOf(is("number"), is("string"))[typeDescription]).toBe(
-        "number | string"
+        "number | string",
       );
     });
   });
@@ -406,18 +406,18 @@ describe("type-guards", () => {
         expect(
           isIntersectionOf(
             isObject({ a: is("string") }),
-            isObject({ b: is("number") })
-          )(value)
+            isObject({ b: is("number") }),
+          )(value),
         ).toBe(expectedOutcome);
-      }
+      },
     );
 
     it("has the right type description.", () => {
       expect(
         isIntersectionOf(
           isObject({ a: is("string") }),
-          isObject({ b: is("number") })
-        )[typeDescription]
+          isObject({ b: is("number") }),
+        )[typeDescription],
       ).toBe("{ a: string; } & { b: number; }");
     });
   });
@@ -449,14 +449,14 @@ describe("type-guards", () => {
       '$#: isTuple(is("string"), is("number"))(value: $value) -> $expectedOutcome',
       ({ expectedOutcome, value }) => {
         expect(isTuple(is("string"), is("number"))(value)).toBe(
-          expectedOutcome
+          expectedOutcome,
         );
-      }
+      },
     );
 
     it("has the right type description.", () => {
       expect(isTuple(is("string"), is("number"))[typeDescription]).toBe(
-        "[string, number]"
+        "[string, number]",
       );
     });
   });
@@ -501,7 +501,7 @@ describe("type-guards", () => {
       "$#: isInstanceOf(A)(value: $value) -> $expectedOutcome",
       ({ expectedOutcome, value }) => {
         expect(isInstanceOf(A)(value)).toBe(expectedOutcome);
-      }
+      },
     );
 
     it("has the right type description.", () => {
