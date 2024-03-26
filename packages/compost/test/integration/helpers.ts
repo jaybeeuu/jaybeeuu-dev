@@ -58,7 +58,7 @@ export interface PostFile {
 }
 
 const getDefaultedUpdateOptions = (
-  options: Partial<UpdateOptions> = {},
+  options: Partial<UpdateOptions> = {}
 ): UpdateOptions => {
   const defaultedHrefRoot = options.hrefRoot ?? "posts";
   return {
@@ -79,21 +79,21 @@ const getDefaultedUpdateOptions = (
 
 export const writeOutputManifestFile = async (
   manifest: PostManifest,
-  options: Partial<UpdateOptions> = {},
+  options: Partial<UpdateOptions> = {}
 ): Promise<void> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
   await writeJsonFile(
     path.join(
       defaultedUpdateOptions.outputDir,
-      defaultedUpdateOptions.manifestFileName,
+      defaultedUpdateOptions.manifestFileName
     ),
-    manifest,
+    manifest
   );
 };
 
 export const writePostFile = async (
   postFile: PostFile,
-  options: Partial<UpdateOptions> = {},
+  options: Partial<UpdateOptions> = {}
 ): Promise<void> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
 
@@ -118,38 +118,38 @@ export const writePostFile = async (
       })) ?? []),
     ].filter((member: File | null): member is File => {
       return member !== null;
-    }),
+    })
   );
 };
 
 export const getOutputFile = async (
   filePath: string,
-  options: Partial<UpdateOptions> = {},
+  options: Partial<UpdateOptions> = {}
 ): Promise<string> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
   const resolvedFilePath = path.join(
     defaultedUpdateOptions.outputDir,
-    filePath,
+    filePath
   );
 
   return readTextFile(resolvedFilePath);
 };
 
 export const getPostManifest = async (
-  options: Partial<UpdateOptions> = {},
+  options: Partial<UpdateOptions> = {}
 ): Promise<PostManifest> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
 
   const fileContent = await getOutputFile(
     defaultedUpdateOptions.manifestFileName,
-    defaultedUpdateOptions,
+    defaultedUpdateOptions
   );
   return JSON.parse(fileContent) as PostManifest;
 };
 
 export const getPost = async (
   slug: string,
-  options: Partial<UpdateOptions> = {},
+  options: Partial<UpdateOptions> = {}
 ): Promise<string> => {
   const manifest = await getPostManifest(options);
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
@@ -158,14 +158,14 @@ export const getPost = async (
 
   const relativePath = path.relative(
     defaultedUpdateOptions.hrefRoot,
-    `.${manifestEntry.href}`,
+    `.${manifestEntry.href}`
   );
 
   return await getOutputFile(relativePath, options);
 };
 
 export const compilePosts = async (
-  options?: Partial<UpdateOptions>,
+  options?: Partial<UpdateOptions>
 ): Promise<Result<PostManifest, UpdateFailureReason>> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
   return update(defaultedUpdateOptions);
@@ -173,7 +173,7 @@ export const compilePosts = async (
 
 export const getCompiledPostWithContent = async (
   contentOrPost: string[] | RecursivePartial<PostFile>,
-  options: Partial<UpdateOptions> = {},
+  options: Partial<UpdateOptions> = {}
 ): Promise<string> => {
   await cleanUpDirectories();
 

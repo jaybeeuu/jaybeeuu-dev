@@ -1,7 +1,7 @@
-import type { TypeAssertion, CheckedBy } from "@jaybeeuu/utilities";
-import { assert, is, isLiteral, isUnion } from "@jaybeeuu/utilities";
+import type { TypeAssertion, CheckedBy } from "@jaybeeuu/is";
+import { assert, is, isLiteral, isUnionOf } from "@jaybeeuu/is";
 
-const isTheme = isUnion(isLiteral("light"), isLiteral("dark"));
+const isTheme = isUnionOf(isLiteral("light"), isLiteral("dark"));
 export type Theme = CheckedBy<typeof isTheme>;
 
 type MediaThemeListener = (newTheme: Theme) => void;
@@ -18,7 +18,7 @@ export const getMediaTheme = (): Theme => {
 };
 
 export const listenToMediaTheme = (
-  listener: MediaThemeListener,
+  listener: MediaThemeListener
 ): Unsubscribe => {
   const handler = (event: MediaQueryListEvent): void => {
     const newTheme = themeFromQueryMatch(event.matches);
@@ -33,7 +33,7 @@ export const listenToMediaTheme = (
 
 const localStorageValue = <Value extends string>(
   key: string,
-  assertIsValue: TypeAssertion<Value | null>,
+  assertIsValue: TypeAssertion<Value | null>
 ): {
   set: (value: Value) => void;
   get: () => Value | null;
@@ -57,7 +57,7 @@ const localStorageValue = <Value extends string>(
 export const persistedTheme = (() => {
   const storageValue = localStorageValue<Theme>(
     "THEME",
-    assert(isUnion(isTheme, is("null"))),
+    assert(isUnionOf(isTheme, is("null")))
   );
   return {
     set: (newTheme: Theme): void => {

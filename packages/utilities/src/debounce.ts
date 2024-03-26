@@ -1,4 +1,4 @@
-import { assertIsNotNullish } from "./type-guards/index.js";
+import { assertIsNotNullish } from "@jaybeeuu/is";
 
 export interface DebounceOptions {
   delay: number;
@@ -9,7 +9,7 @@ export type UserDebounceOptions = Partial<DebounceOptions> &
   Pick<DebounceOptions, "delay">;
 
 const normalisedOptions = (
-  optionsOrDelay: number | UserDebounceOptions,
+  optionsOrDelay: number | UserDebounceOptions
 ): DebounceOptions => {
   const userOptions =
     typeof optionsOrDelay === "number"
@@ -24,7 +24,7 @@ const normalisedOptions = (
 
 export const debounce = <Args extends unknown[]>(
   actor: (...args: Args) => void,
-  optionsOrDelay: number | UserDebounceOptions,
+  optionsOrDelay: number | UserDebounceOptions
 ): ((...args: Args) => void) => {
   const options = normalisedOptions(optionsOrDelay);
   let latestArgs: Args | null = null;

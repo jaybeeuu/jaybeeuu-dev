@@ -4,6 +4,7 @@ packages:
   - "packages/e2e"
   - "packages/eslint-config"
   - "packages/feed-webpack-plugin"
+  - "packages/is"
   - "packages/posts"
   - "packages/preact-async"
   - "packages/preact-recoilless"

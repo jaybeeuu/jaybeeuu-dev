@@ -126,7 +126,7 @@ The runtime takes the string,
 and applies a module resolution algorithm to it to discover the JavaScript file it relates to.
 In this case the algorithm is node's, so in npmland `"chalk"` get's resolved to something like this:
 
-```plaintext
+```txt
 path/to/your/project/node_modules/chalk/source/index.js
 ```
 
@@ -137,7 +137,7 @@ passes it to babel to transform into CommonJS (not confusing at all).
 Except I'm using pnpm so that's not what `"chalk"` resolves to.
 Instead I get this:
 
-```plaintext
+```txt
 path/to/your/project/node_modules/.pnpm/chalk@5.2.0/node_modules/chalk/source/index.js
 ```
 

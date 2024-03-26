@@ -1,15 +1,19 @@
 {
-  "name": "@jaybeeuu/utilities",
-  "version": "4.0.0",
+  "name": "@jaybeeuu/is",
+  "version": "0.0.0",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
   "description": "The utility functions used by my application",
   "keywords": [
     "Bickley-Wallace",
     "Josh",
-    "Utilities"
+    "jaybeeuu",
+    "is",
+    "type checking",
+    "data validation",
+    "edge validation"
   ],
-  "homepage": "https://github.com/jaybeeuu/jaybeeuu-dev/tree/main/packages/utilities#readme",
+  "homepage": "https://github.com/jaybeeuu/jaybeeuu-dev/tree/main/packages/is#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/jaybeeuu/jaybeeuu-dev.git"
@@ -25,18 +29,8 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "exports": {
-    "./test": {
-      "default": "./lib/test/index.js"
-    },
     ".": {
       "default": "./lib/index.js"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "test": [
-        "./lib/test"
-      ]
     }
   },
   "scripts": {
@@ -52,7 +46,6 @@
   },
   "devDependencies": {
     "@jaybeeuu/eslint-config": "workspace:*",
-    "@jaybeeuu/is": "workspace:*",
     "@types/jest": "^29.5.12",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "@typescript-eslint/parser": "^7.3.1",

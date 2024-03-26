@@ -1,23 +1,16 @@
+import type { CheckedBy, TypeAssertion } from "@jaybeeuu/is";
+import { assert, is, isObject } from "@jaybeeuu/is";
+import { delay, monitorPromise } from "@jaybeeuu/utilities";
 import fetch from "node-fetch";
 import { Agent } from "node:https";
-import type { TypeAssertion } from "@jaybeeuu/utilities";
-import { monitorPromise } from "@jaybeeuu/utilities";
-import { delay } from "@jaybeeuu/utilities";
-import { assert, is, isObject } from "@jaybeeuu/utilities";
-export interface Version {
-  commit: string;
-  branch: string;
-  commitDateTime: string;
-  buildMode: string;
-}
 
-const isVersion = isObject<Version>({
+const isVersion = isObject({
   commit: is("string"),
   branch: is("string"),
   commitDateTime: is("string"),
   buildMode: is("string"),
 });
-
+export type Version = CheckedBy<typeof isVersion>;
 const assertIsVersion: TypeAssertion<Version> = assert(isVersion);
 
 const assertValueURL = (url: string): void => {
@@ -40,7 +33,7 @@ const getCacheBustedUrl = (url: string): string => {
 const getVersion = async (
   url: string,
   abortSignal: AbortSignal,
-  insecureSSL: boolean,
+  insecureSSL: boolean
 ): Promise<Version> => {
   const cacheBustedUrl = getCacheBustedUrl(url);
   const agent = new Agent({
@@ -61,7 +54,7 @@ const pollForCommitHash = async (
   commitHash: string,
   pollTime: number,
   abortSignal: AbortSignal,
-  insecureSSL: boolean,
+  insecureSSL: boolean
 ): Promise<Version> => {
   while (!abortSignal.aborted) {
     try {
@@ -100,7 +93,7 @@ export const waitUp = async ({
     commitHash,
     pollTime,
     abortController.signal,
-    insecureSSL,
+    insecureSSL
   );
 
   const startTime = Date.now();
@@ -116,7 +109,7 @@ export const waitUp = async ({
       case "complete": {
         console.log(
           `Found expected version in ${Date.now() - startTime}ms.\n`,
-          promise.value,
+          promise.value
         );
         return;
       }
@@ -124,7 +117,7 @@ export const waitUp = async ({
         throw new Error(
           typeof promise.error.message === "string"
             ? promise.error.message
-            : promise.error.message.message,
+            : promise.error.message.message
         );
       }
     }

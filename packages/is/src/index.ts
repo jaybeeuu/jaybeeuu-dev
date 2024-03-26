@@ -12,14 +12,15 @@ export {
   is,
   isArrayOf,
   isInstanceOf,
-  isIntersection,
+  isIntersectionOf,
   isLiteral,
   isNullish,
   isObject,
   isRecordOf,
   isTuple,
-  isUnion,
   type TypeString,
+  isUnionOf,
+  isInstanceOf,
 } from "./type-guards.js";
 
 export type CheckedBy<

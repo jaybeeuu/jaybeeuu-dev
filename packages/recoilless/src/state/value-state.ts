@@ -1,4 +1,4 @@
-import { is, isObject } from "@jaybeeuu/utilities";
+import { is, isObject } from "@jaybeeuu/is";
 
 export type Listener<Val> = (value: Val) => void;
 export type Unsubscribe = () => void;
@@ -14,7 +14,7 @@ export interface SettableValueState<Val> extends ValueState<Val> {
 }
 
 export const assertIsSettableValueState: <Val>(
-  candidate: ValueState<Val>,
+  candidate: ValueState<Val>
 ) => asserts candidate is SettableValueState<Val> = (candidate) => {
   if (!isObject({ set: is("function") })(candidate)) {
     throw new TypeError(`Value ${candidate.name} is not settable.`);

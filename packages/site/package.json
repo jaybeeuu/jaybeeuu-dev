@@ -75,6 +75,7 @@
   "dependencies": {
     "@babel/runtime": "^7.24.1",
     "@jaybeeuu/e2e-hooks": "workspace:*",
+    "@jaybeeuu/is": "workspace:*",
     "@jaybeeuu/posts": "workspace:*",
     "@jaybeeuu/preact-async": "workspace:*",
     "@jaybeeuu/preact-recoilless": "workspace:*",
@@ -83,9 +84,9 @@
     "classnames": "^2.5.1",
     "core-js": "^3.36.1",
     "image-minimizer-webpack-plugin": "^4.0.0",
-    "preact": "^10.20.0",
     "preact-router": "^4.1.2",
     "preact-transitioning": "^1.4.0",
+    "preact": "^10.20.0",
     "prism-theme-night-owl": "^1.4.0",
     "prism-theme-one-light-dark": "^1.0.4",
     "prism-theme-vars": "^0.2.4",

@@ -1,9 +1,33 @@
-import type { TypePredicate } from "./core.js";
-import { isType, typeDescription } from "./core.js";
+import type { UnassertedTypePredicate } from "./assertions.js";
+import { assert, type TypeAssertion } from "./assertions.js";
+
+export const typeDescription = Symbol.for("type-description");
+
+export interface TypePredicate<Type> extends UnassertedTypePredicate<Type> {
+  assert: TypeAssertion<Type>;
+  check: (candidate: unknown) => Type;
+}
+
+export const isType = <Type>(
+  predicate: (candidate: unknown) => candidate is Type,
+  typeDesc: string
+): TypePredicate<Type> => {
+  const pred = Object.assign(predicate, {
+    [typeDescription]: typeDesc,
+  });
+  const doAssert: TypeAssertion<Type> = assert(pred);
+  return Object.assign(pred, {
+    assert: doAssert,
+    check: (candidate: unknown): Type => {
+      doAssert(candidate);
+      return candidate;
+    },
+  });
+};
 
 const hasOwnProperty = <Obj extends object, Property extends PropertyKey>(
   obj: Obj,
-  prop: Property,
+  prop: Property
 ): obj is Obj & { [key in Property]: unknown } => {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 };
@@ -30,7 +54,7 @@ export const isObject = <Obj extends object>(properties: {
     },
     `{ ${Object.entries<TypePredicate<unknown>>(properties)
       .map(([key, predicate]) => `${key}: ${predicate[typeDescription]};`)
-      .join(" ")} }`,
+      .join(" ")} }`
   );
 
 export type ElementOfArray<Arr> = Arr extends (infer Element)[]
@@ -38,7 +62,7 @@ export type ElementOfArray<Arr> = Arr extends (infer Element)[]
   : never;
 
 export const isArrayOf = <Element>(
-  isElement: TypePredicate<Element>,
+  isElement: TypePredicate<Element>
 ): TypePredicate<Element[]> =>
   isType((candidate: unknown): candidate is Element[] => {
     return (
@@ -48,7 +72,7 @@ export const isArrayOf = <Element>(
   }, `${isElement[typeDescription]}[]`);
 
 export const isRecordOf = <RecordValue>(
-  isValue: TypePredicate<RecordValue>,
+  isValue: TypePredicate<RecordValue>
 ): TypePredicate<{ [key: string]: RecordValue }> =>
   isType((candidate: unknown): candidate is { [key: string]: RecordValue } => {
     if (typeof candidate !== "object") {
@@ -63,7 +87,7 @@ export const isRecordOf = <RecordValue>(
   }, `{ [key: string]: ${isValue[typeDescription]}; }`);
 
 export const isLiteral = <Type extends string | number | boolean>(
-  type: Type,
+  type: Type
 ): TypePredicate<Type> =>
   isType((candidate: unknown): candidate is Type => {
     return candidate === type;
@@ -87,17 +111,18 @@ export interface TypeStringPrimitiveTypeMap {
   symbol: symbol;
   undefined: undefined;
   object: object;
-  function: AnyFunction;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function: (...args: any[]) => any;
 }
 
 export const is = <Type extends TypeString | "null">(
-  typeString: Type,
+  typeString: Type
 ): TypePredicate<
   Type extends TypeString ? TypeStringPrimitiveTypeMap[Type] : null
 > =>
   isType(
     (
-      candidate: unknown,
+      candidate: unknown
     ): candidate is Type extends TypeString
       ? TypeStringPrimitiveTypeMap[Type]
       : null => {
@@ -105,7 +130,7 @@ export const is = <Type extends TypeString | "null">(
         ? candidate === null
         : typeof candidate === typeString;
     },
-    typeString,
+    typeString
   );
 
 export type ExtractTypesFromPredicates<
@@ -119,30 +144,30 @@ export const isTuple = <
 ): TypePredicate<ExtractTypesFromPredicates<Predicates>> =>
   isType(
     (
-      candidate: unknown,
+      candidate: unknown
     ): candidate is ExtractTypesFromPredicates<Predicates> => {
       return (
         Array.isArray(candidate) &&
         predicates.every((predicate, i) => predicate(candidate[i]))
       );
     },
-    `[${predicates.map((predicate) => predicate[typeDescription]).join(", ")}]`,
+    `[${predicates.map((predicate) => predicate[typeDescription]).join(", ")}]`
   );
 
-export const isUnion = <Predicates extends TypePredicate<unknown>[]>(
+export const isUnionOf = <Predicates extends TypePredicate<unknown>[]>(
   ...predicates: Predicates
 ): TypePredicate<
   Predicates[number] extends TypePredicate<infer Type> ? Type : never
 > =>
   isType(
     (
-      candidate: unknown,
+      candidate: unknown
     ): candidate is Predicates[number] extends TypePredicate<infer Type>
       ? Type
       : never => {
       return predicates.some((predicate) => predicate(candidate));
     },
-    predicates.map((predicate) => predicate[typeDescription]).join(" | "),
+    predicates.map((predicate) => predicate[typeDescription]).join(" | ")
   );
 
 type UnionToIntersection<Union> = (
@@ -151,7 +176,7 @@ type UnionToIntersection<Union> = (
   ? Intersection
   : never;
 
-export const isIntersection = <Predicates extends TypePredicate<unknown>[]>(
+export const isIntersectionOf = <Predicates extends TypePredicate<unknown>[]>(
   ...predicates: Predicates
 ): TypePredicate<
   UnionToIntersection<
@@ -160,40 +185,26 @@ export const isIntersection = <Predicates extends TypePredicate<unknown>[]>(
 > =>
   isType(
     (
-      candidate: unknown,
+      candidate: unknown
     ): candidate is UnionToIntersection<
       Predicates[number] extends TypePredicate<infer Type> ? Type : never
     > => {
       return predicates.every((predicate) => predicate(candidate));
     },
-    predicates.map((predicate) => predicate[typeDescription]).join(" & "),
+    predicates.map((predicate) => predicate[typeDescription]).join(" & ")
   );
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyConstructor = abstract new (...args: any) => any;
 
 export const isInstanceOf = <Type extends AnyConstructor>(
-  constructor: Type,
+  constructor: Type
 ): TypePredicate<InstanceType<Type>> => {
   return isType(
     (candidate: unknown): candidate is InstanceType<Type> =>
       candidate instanceof constructor,
-    `instanceof(${constructor.name})`,
+    `instanceof(${constructor.name})`
   );
 };
 
-export const isNullish = isUnion(is("null"), is("undefined"));
-
-export const assertIsNotNullish: <Type>(
-  candidate: Type,
-  message?: string,
-) => asserts candidate is Exclude<Type, null | undefined> = (
-  candidate,
-  message,
-) => {
-  if (isNullish(candidate)) {
-    throw new TypeError(
-      message ?? `Encountered unexpected ${String(candidate)}.`,
-    );
-  }
-};
+export const isNullish = isUnionOf(is("null"), is("undefined"));

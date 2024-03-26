@@ -1,4 +1,4 @@
-import { assertIsNotNullish } from "./type-guards/index.js";
+import { assertIsNotNullish } from "@jaybeeuu/is";
 
 export interface Success<Value> {
   success: true;
@@ -31,12 +31,12 @@ export class Failure<Reason extends string> extends Error {
   constructor(
     reason: Reason,
     messageOrError: unknown,
-    framesSincePublic: number,
+    framesSincePublic: number
   ) {
     super(
       messageOrError instanceof Error
         ? messageOrError.message
-        : String(messageOrError),
+        : String(messageOrError)
     );
     this.messageOrError = messageOrError;
     this.name = `Failure(${reason})`;
@@ -67,12 +67,12 @@ export function success<Value>(value?: Value): Success<Value> {
 const failure = <Reason extends string>(
   reason: Reason,
   messageOrError?: unknown,
-  framesSincePublic: number = 1,
+  framesSincePublic: number = 1
 ): Failure<Reason> => {
   return new Failure(
     reason,
     messageOrError ?? "{No message}",
-    framesSincePublic,
+    framesSincePublic
   );
 };
 
@@ -80,24 +80,24 @@ const repackError = <Value, FailureReason extends string>(
   result: Result<Value, string>,
   newFailureReasons: FailureReason,
   failureMessagePrefix: string,
-  framesSincePublic: number = 1,
+  framesSincePublic: number = 1
 ): Result<Value, FailureReason> => {
   return result.success
     ? result
     : failure(
         newFailureReasons,
         `${failureMessagePrefix}\n${result.reason}: ${result.message}`,
-        framesSincePublic + 1,
+        framesSincePublic + 1
       );
 };
 
 const exportedFailure: <Reason extends string>(
   reason: Reason,
-  messageOrError?: unknown,
+  messageOrError?: unknown
 ) => Failure<Reason> = failure;
 const exportedRepackError: <Value, FailureReason extends string>(
   result: Result<Value, string>,
   newFailureReasons: FailureReason,
-  failureMessagePrefix: string,
+  failureMessagePrefix: string
 ) => Result<Value, FailureReason> = repackError;
 export { exportedFailure as failure, exportedRepackError as repackError };

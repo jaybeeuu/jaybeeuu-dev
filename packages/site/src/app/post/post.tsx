@@ -1,8 +1,8 @@
 import type { PostMetaData } from "@jaybeeuu/compost";
 import { post as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import { useAction, useValue } from "@jaybeeuu/preact-recoilless";
-import type { TypeAssertion } from "@jaybeeuu/utilities";
-import { assert, assertIsNotNullish, is } from "@jaybeeuu/utilities";
+import type { TypeAssertion } from "@jaybeeuu/is";
+import { assert, assertIsNotNullish, is } from "@jaybeeuu/is";
 import classNames from "classnames";
 import type { JSX, RefObject } from "preact";
 import { createRef, h, render, Fragment } from "preact";
@@ -26,7 +26,7 @@ const assertIsString: TypeAssertion<string> = assert(is("string"));
 
 const useHashLinks = (
   postHtml: string,
-  articleRef: RefObject<HTMLElement>,
+  articleRef: RefObject<HTMLElement>
 ): void => {
   const hideTitleBar = useAction(hideTitleBarAction);
   useLayoutEffect(() => {
@@ -89,7 +89,7 @@ const Post = withPromise(
                 <span>
                   <time
                     dateTime={new Date(
-                      postMeta.publishDate,
+                      postMeta.publishDate
                     ).toLocaleDateString()}
                   >
                     {new Date(postMeta.publishDate).toLocaleDateString()}
@@ -118,7 +118,7 @@ const Post = withPromise(
         </div>
       </div>
     );
-  },
+  }
 );
 Post.displayName = "PostComponent";
 
@@ -142,7 +142,7 @@ const PostLookupResult = withPromise(
     }
 
     return <FouOhFour />;
-  },
+  }
 );
 PostLookupResult.displayName = "PostLookupResult";
 
