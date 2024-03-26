@@ -1,5 +1,14 @@
 # @jaybeeuu/preact-recoilless
 
+## 8.0.0
+
+### Patch Changes
+
+- Updated dependencies [[`b46885e`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/b46885ea1ad24a58544129c4b8a88f23a122b623)]:
+  - @jaybeeuu/utilities@4.0.0
+  - @jaybeeuu/preact-async@6.0.0
+  - @jaybeeuu/recoilless@8.0.0
+
 ## 7.0.3
 
 ### Patch Changes
