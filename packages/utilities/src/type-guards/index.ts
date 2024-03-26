@@ -14,6 +14,7 @@ export {
   isTuple,
   isType,
   isUnion,
+  isInstanceOf,
 } from "./type-guards.js";
 export {
   type TypeAssertion,

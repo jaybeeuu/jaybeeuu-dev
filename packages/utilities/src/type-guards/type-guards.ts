@@ -1,15 +1,29 @@
+import type { UnassertedTypePredicate } from "./assertions.js";
+import { assert, type TypeAssertion } from "./assertions.js";
+
 export const typeDescription = Symbol.for("type-description");
 
-export interface TypePredicate<T> {
-  (candidate: unknown): candidate is T;
-  [typeDescription]: string;
+export interface TypePredicate<Type> extends UnassertedTypePredicate<Type> {
+  assert: TypeAssertion<Type>;
+  check: (candidate: unknown) => Type;
 }
 
 export const isType = <Type>(
   predicate: (candidate: unknown) => candidate is Type,
   typeDesc: string,
-): TypePredicate<Type> =>
-  Object.assign(predicate, { [typeDescription]: typeDesc });
+): TypePredicate<Type> => {
+  const pred = Object.assign(predicate, {
+    [typeDescription]: typeDesc,
+  });
+  const doAssert: TypeAssertion<Type> = assert(pred);
+  return Object.assign(pred, {
+    assert: doAssert,
+    check: (candidate: unknown): Type => {
+      doAssert(candidate);
+      return candidate;
+    },
+  });
+};
 
 const hasOwnProperty = <Obj extends object, Property extends PropertyKey>(
   obj: Obj,
@@ -178,5 +192,18 @@ export const isIntersection = <Predicates extends TypePredicate<unknown>[]>(
     },
     predicates.map((predicate) => predicate[typeDescription]).join(" & "),
   );
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyConstructor = abstract new (...args: any) => any;
+
+export const isInstanceOf = <Type extends AnyConstructor>(
+  constructor: Type,
+): TypePredicate<InstanceType<Type>> => {
+  return isType(
+    (candidate: unknown): candidate is InstanceType<Type> =>
+      candidate instanceof constructor,
+    `instanceof(${constructor.name})`,
+  );
+};
 
 export const isNullish = isUnion(is("null"), is("undefined"));

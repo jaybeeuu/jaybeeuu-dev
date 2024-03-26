@@ -1,12 +1,16 @@
-import type { TypePredicate } from "./type-guards.js";
 import { isNullish, typeDescription } from "./type-guards.js";
+
+export interface UnassertedTypePredicate<T> {
+  (candidate: unknown): candidate is T;
+  [typeDescription]: string;
+}
 
 export type TypeAssertion<Type> = (
   candidate: unknown,
 ) => asserts candidate is Type;
 
 export const assert =
-  <Type>(typePredicate: TypePredicate<Type>): TypeAssertion<Type> =>
+  <Type>(typePredicate: UnassertedTypePredicate<Type>): TypeAssertion<Type> =>
   (candidate): asserts candidate is Type => {
     if (!typePredicate(candidate)) {
       throw new TypeError(
