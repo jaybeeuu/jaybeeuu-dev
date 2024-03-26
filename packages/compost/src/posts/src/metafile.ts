@@ -1,5 +1,6 @@
+import { is, isObject } from "@jaybeeuu/is";
 import type { Result } from "@jaybeeuu/utilities";
-import { is, isObject, repackError } from "@jaybeeuu/utilities";
+import { repackError } from "@jaybeeuu/utilities";
 import type { FileInfo } from "../../files/index.js";
 import { readJsonFile } from "../../files/index.js";
 import type { PostMetaData } from "./types.js";

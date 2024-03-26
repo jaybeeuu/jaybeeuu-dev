@@ -1,16 +1,19 @@
 {
-  "name": "@jaybeeuu/recoilless",
-  "version": "8.0.0",
+  "name": "@jaybeeuu/is",
+  "version": "0.0.0",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
-  "homepage": "https://github.com/jaybeeuu/jaybeeuu-dev/tree/main/packages/recoilless#readme",
-  "description": "Home grown own state management... of course.",
+  "description": "The utility functions used by my application",
   "keywords": [
-    "recoil",
-    "state",
-    "management",
-    "experimental"
+    "Bickley-Wallace",
+    "Josh",
+    "jaybeeuu",
+    "is",
+    "type checking",
+    "data validation",
+    "edge validation"
   ],
+  "homepage": "https://github.com/jaybeeuu/jaybeeuu-dev/tree/main/packages/is#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/jaybeeuu/jaybeeuu-dev.git"
@@ -19,14 +22,17 @@
     "url": "https://github.com/jaybeeuu/jaybeeuu-dev/issues"
   },
   "type": "module",
-  "main": "./lib/index.js",
-  "files": [
-    "./lib"
-  ],
-  "exports": {
-    ".": "./lib/index.js"
-  },
   "sideEffects": false,
+  "files": [
+    "lib"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json --pretty",
     "lint": "eslint --ext .js,.ts --format codeframe .",
@@ -35,23 +41,18 @@
     "test:watch": "jest --watch  --no-cache --runInBand",
     "type-check": "tsc --noEmit --pretty"
   },
-  "peerDependencies": {
-    "@jaybeeuu/is": "workspace:*",
-    "tslib": "^2.4.0"
+  "dependencies": {
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@jaybeeuu/eslint-config": "workspace:*",
-    "@jaybeeuu/is": "workspace:*",
-    "@jaybeeuu/utilities": "workspace:*",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.11.30",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "@typescript-eslint/parser": "^7.3.1",
     "eslint": "^8.57.0",
     "eslint-plugin-jest": "^27.9.0",
-    "eslint-plugin-react": "^7.34.1",
     "jest": "^29.7.0",
-    "tslib": "^2.6.2",
+    "ts-jest": "^29.1.2",
     "typescript": "^5.4.3"
   }
 }

@@ -69,6 +69,9 @@ importers:
       '@jaybeeuu/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@jaybeeuu/is':
+        specifier: workspace:*
+        version: link:../is
       '@jaybeeuu/utilities':
         specifier: workspace:*
         version: link:../utilities
@@ -234,6 +237,40 @@ importers:
       webpack:
         specifier: ^5.91.0
         version: 5.91.0(webpack-cli@5.1.4)
+
+  packages/is:
+    dependencies:
+      tslib:
+        specifier: ^2.6.2
+        version: 2.6.2
+    devDependencies:
+      '@jaybeeuu/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@types/jest':
+        specifier: ^29.5.12
+        version: 29.5.12
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^7.3.1
+        version: 7.3.1(@typescript-eslint/parser@7.3.1)(eslint@8.57.0)(typescript@5.4.3)
+      '@typescript-eslint/parser':
+        specifier: ^7.3.1
+        version: 7.3.1(eslint@8.57.0)(typescript@5.4.3)
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      eslint-plugin-jest:
+        specifier: ^27.9.0
+        version: 27.9.0(@typescript-eslint/eslint-plugin@7.3.1)(eslint@8.57.0)(jest@29.7.0)(typescript@5.4.3)
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.11.30)(ts-node@10.9.2)
+      ts-jest:
+        specifier: ^29.1.2
+        version: 29.1.2(@babel/core@7.24.3)(babel-jest@29.7.0)(jest@29.7.0)(typescript@5.4.3)
+      typescript:
+        specifier: ^5.4.3
+        version: 5.4.3
 
   packages/posts:
     devDependencies:
@@ -424,6 +461,9 @@ importers:
       '@jaybeeuu/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@jaybeeuu/is':
+        specifier: workspace:*
+        version: link:../is
       '@jaybeeuu/utilities':
         specifier: workspace:*
         version: link:../utilities
@@ -466,6 +506,9 @@ importers:
       '@changesets/cli':
         specifier: ^2.27.1
         version: 2.27.1
+      '@jaybeeuu/is':
+        specifier: workspace:*
+        version: link:../is
       '@jaybeeuu/utilities':
         specifier: workspace:*
         version: link:../utilities
@@ -518,6 +561,9 @@ importers:
       '@jaybeeuu/e2e-hooks':
         specifier: workspace:*
         version: link:../e2e-hooks
+      '@jaybeeuu/is':
+        specifier: workspace:*
+        version: link:../is
       '@jaybeeuu/posts':
         specifier: workspace:*
         version: link:../posts
@@ -724,6 +770,9 @@ importers:
       '@jaybeeuu/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@jaybeeuu/is':
+        specifier: workspace:*
+        version: link:../is
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12

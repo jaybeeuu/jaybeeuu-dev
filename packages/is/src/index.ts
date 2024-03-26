@@ -7,18 +7,18 @@ export {
   type TypePredicate,
 } from "./core.js";
 
+export { assertIsNotNullish, isNullish } from "./pre-built.js";
+
 export {
-  assertIsNotNullish,
   is,
   isArrayOf,
   isInstanceOf,
-  isIntersection,
+  isIntersectionOf,
   isLiteral,
-  isNullish,
   isObject,
   isRecordOf,
   isTuple,
-  isUnion,
+  isUnionOf,
   type TypeString,
 } from "./type-guards.js";
 

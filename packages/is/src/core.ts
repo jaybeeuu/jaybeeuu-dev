@@ -1,3 +1,5 @@
+export const typeDescription = Symbol.for("type-description");
+
 export interface UnassertedTypePredicate<T> {
   (candidate: unknown): candidate is T;
   [typeDescription]: string;
@@ -16,8 +18,6 @@ export const assert =
       );
     }
   };
-
-export const typeDescription = Symbol.for("type-description");
 
 export interface TypePredicate<Type> extends UnassertedTypePredicate<Type> {
   assert: TypeAssertion<Type>;

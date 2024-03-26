@@ -1,4 +1,4 @@
-import { assertIsNotNullish } from "./type-guards/index.js";
+import { assertIsNotNullish } from "@jaybeeuu/is";
 
 export interface DebounceOptions {
   delay: number;

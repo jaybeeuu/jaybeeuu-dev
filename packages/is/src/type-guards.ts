@@ -87,7 +87,8 @@ export interface TypeStringPrimitiveTypeMap {
   symbol: symbol;
   undefined: undefined;
   object: object;
-  function: AnyFunction;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function: (...args: any[]) => any;
 }
 
 export const is = <Type extends TypeString | "null">(
@@ -129,7 +130,7 @@ export const isTuple = <
     `[${predicates.map((predicate) => predicate[typeDescription]).join(", ")}]`,
   );
 
-export const isUnion = <Predicates extends TypePredicate<unknown>[]>(
+export const isUnionOf = <Predicates extends TypePredicate<unknown>[]>(
   ...predicates: Predicates
 ): TypePredicate<
   Predicates[number] extends TypePredicate<infer Type> ? Type : never
@@ -151,7 +152,7 @@ type UnionToIntersection<Union> = (
   ? Intersection
   : never;
 
-export const isIntersection = <Predicates extends TypePredicate<unknown>[]>(
+export const isIntersectionOf = <Predicates extends TypePredicate<unknown>[]>(
   ...predicates: Predicates
 ): TypePredicate<
   UnionToIntersection<
@@ -180,20 +181,4 @@ export const isInstanceOf = <Type extends AnyConstructor>(
       candidate instanceof constructor,
     `instanceof(${constructor.name})`,
   );
-};
-
-export const isNullish = isUnion(is("null"), is("undefined"));
-
-export const assertIsNotNullish: <Type>(
-  candidate: Type,
-  message?: string,
-) => asserts candidate is Exclude<Type, null | undefined> = (
-  candidate,
-  message,
-) => {
-  if (isNullish(candidate)) {
-    throw new TypeError(
-      message ?? `Encountered unexpected ${String(candidate)}.`,
-    );
-  }
 };

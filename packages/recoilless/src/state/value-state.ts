@@ -1,4 +1,4 @@
-import { is, isObject } from "@jaybeeuu/utilities";
+import { is, isObject } from "@jaybeeuu/is";
 
 export type Listener<Val> = (value: Val) => void;
 export type Unsubscribe = () => void;

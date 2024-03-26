@@ -1,5 +1,5 @@
-import type { CheckedBy } from "@jaybeeuu/utilities";
-import { is, isObject, isUnion, isRecordOf } from "@jaybeeuu/utilities";
+import type { CheckedBy } from "@jaybeeuu/is";
+import { is, isObject, isUnionOf, isRecordOf } from "@jaybeeuu/is";
 
 export interface ReadingTime {
   text: string;
@@ -31,7 +31,7 @@ export type OldPostMetaData = Pick<
 
 const isOldPostMetaData = isObject<OldPostMetaData>({
   fileName: is("string"),
-  lastUpdateDate: isUnion(is("string"), is("null")),
+  lastUpdateDate: isUnionOf(is("string"), is("null")),
   publishDate: is("string"),
 });
 

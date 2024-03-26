@@ -14,4 +14,4 @@ export { multiPartition } from "./multi-partition.js";
 export * from "./promise-status.js";
 export * from "./results.js";
 export * from "./title-case.js";
-export * from "./type-guards/index.js";
+export { assertIsNotNullish } from "@jaybeeuu/is";

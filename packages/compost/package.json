@@ -55,6 +55,7 @@
   },
   "devDependencies": {
     "@jaybeeuu/eslint-config": "workspace:*",
+    "@jaybeeuu/is": "workspace:*",
     "@jaybeeuu/utilities": "workspace:*",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.30",

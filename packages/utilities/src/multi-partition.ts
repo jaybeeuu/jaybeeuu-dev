@@ -1,4 +1,4 @@
-import { assertIsNotNullish } from "./type-guards/index.js";
+import { assertIsNotNullish } from "@jaybeeuu/is";
 
 type Is<PossibleValues, Target extends PossibleValues> = (
   candidate: PossibleValues,

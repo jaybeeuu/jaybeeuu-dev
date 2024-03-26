@@ -1,23 +1,16 @@
+import type { CheckedBy, TypeAssertion } from "@jaybeeuu/is";
+import { assert, is, isObject } from "@jaybeeuu/is";
+import { delay, monitorPromise } from "@jaybeeuu/utilities";
 import fetch from "node-fetch";
 import { Agent } from "node:https";
-import type { TypeAssertion } from "@jaybeeuu/utilities";
-import { monitorPromise } from "@jaybeeuu/utilities";
-import { delay } from "@jaybeeuu/utilities";
-import { assert, is, isObject } from "@jaybeeuu/utilities";
-export interface Version {
-  commit: string;
-  branch: string;
-  commitDateTime: string;
-  buildMode: string;
-}
 
-const isVersion = isObject<Version>({
+const isVersion = isObject({
   commit: is("string"),
   branch: is("string"),
   commitDateTime: is("string"),
   buildMode: is("string"),
 });
-
+export type Version = CheckedBy<typeof isVersion>;
 const assertIsVersion: TypeAssertion<Version> = assert(isVersion);
 
 const assertValueURL = (url: string): void => {

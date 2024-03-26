@@ -3,13 +3,13 @@ import {
   is,
   isArrayOf,
   isInstanceOf,
-  isIntersection,
+  isIntersectionOf,
   isLiteral,
   isNullish,
   isObject,
   isRecordOf,
   isTuple,
-  isUnion,
+  isUnionOf,
   type TypeString,
 } from "./index";
 
@@ -93,7 +93,7 @@ describe("type-guards", () => {
     });
   });
 
-  describe("isArray", () => {
+  describe("isArrayOf", () => {
     const samples: {
       value: unknown;
       expectedOutcome: boolean;
@@ -117,7 +117,7 @@ describe("type-guards", () => {
     ];
 
     it.each(samples)(
-      '$#: isArray(is("number"))(value: $value) -> $expectedOutcome',
+      '$#: isArrayOf(is("number"))(value: $value) -> $expectedOutcome',
       ({ expectedOutcome, value }) => {
         const predicate = isArrayOf(is("number"));
         expect(predicate(value)).toBe(expectedOutcome);
@@ -342,7 +342,7 @@ describe("type-guards", () => {
     );
   });
 
-  describe("isUnion", () => {
+  describe("isUnionOf", () => {
     const samples: {
       value: unknown;
       expectedOutcome: boolean;
@@ -362,22 +362,26 @@ describe("type-guards", () => {
     ];
 
     it.each(samples)(
-      '$#: isUnion(is("number"), is("string"))(value: $value) -> $expectedOutcome',
+      '$#: isUnionOf(is("number"), is("string"))(value: $value) -> $expectedOutcome',
       ({ expectedOutcome, value }) => {
         expect(
-          isUnion(is("number"), isLiteral("banana"), isLiteral("apple"))(value),
+          isUnionOf(
+            is("number"),
+            isLiteral("banana"),
+            isLiteral("apple"),
+          )(value),
         ).toBe(expectedOutcome);
       },
     );
 
     it("has the right type description.", () => {
-      expect(isUnion(is("number"), is("string"))[typeDescription]).toBe(
+      expect(isUnionOf(is("number"), is("string"))[typeDescription]).toBe(
         "number | string",
       );
     });
   });
 
-  describe("isIntersection", () => {
+  describe("isIntersectionOf", () => {
     const samples: {
       value: unknown;
       expectedOutcome: boolean;
@@ -397,10 +401,10 @@ describe("type-guards", () => {
     ];
 
     it.each(samples)(
-      '$#: isIntersection(isObject({ a: is("string") }), isObject({ b: is("number") }))(value: $value) -> $expectedOutcome',
+      '$#: isIntersectionOf(isObject({ a: is("string") }), isObject({ b: is("number") }))(value: $value) -> $expectedOutcome',
       ({ expectedOutcome, value }) => {
         expect(
-          isIntersection(
+          isIntersectionOf(
             isObject({ a: is("string") }),
             isObject({ b: is("number") }),
           )(value),
@@ -410,7 +414,7 @@ describe("type-guards", () => {
 
     it("has the right type description.", () => {
       expect(
-        isIntersection(
+        isIntersectionOf(
           isObject({ a: is("string") }),
           isObject({ b: is("number") }),
         )[typeDescription],

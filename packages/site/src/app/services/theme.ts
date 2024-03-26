@@ -1,7 +1,7 @@
-import type { TypeAssertion, CheckedBy } from "@jaybeeuu/utilities";
-import { assert, is, isLiteral, isUnion } from "@jaybeeuu/utilities";
+import type { TypeAssertion, CheckedBy } from "@jaybeeuu/is";
+import { assert, is, isLiteral, isUnionOf } from "@jaybeeuu/is";
 
-const isTheme = isUnion(isLiteral("light"), isLiteral("dark"));
+const isTheme = isUnionOf(isLiteral("light"), isLiteral("dark"));
 export type Theme = CheckedBy<typeof isTheme>;
 
 type MediaThemeListener = (newTheme: Theme) => void;
@@ -57,7 +57,7 @@ const localStorageValue = <Value extends string>(
 export const persistedTheme = (() => {
   const storageValue = localStorageValue<Theme>(
     "THEME",
-    assert(isUnion(isTheme, is("null"))),
+    assert(isUnionOf(isTheme, is("null"))),
   );
   return {
     set: (newTheme: Theme): void => {
