@@ -1,19 +1,11 @@
 import type { Failure, Result } from "@jaybeeuu/utilities";
-import { failure, is, isObject, isRecordOf, or } from "@jaybeeuu/utilities";
+import { failure } from "@jaybeeuu/utilities";
 import type {
   FetchJsonFileFailureReason,
   ReadJsonFileFailureReason,
 } from "../../files/index.js";
 import { fetchJsonFile, readJsonFile } from "../../files/index.js";
-import type { OldPostManifest, OldPostMetaData } from "./types.js";
-
-const isOldPostMetaData = isObject<OldPostMetaData>({
-  fileName: is("string"),
-  lastUpdateDate: or(is("string"), is("null")),
-  publishDate: is("string"),
-});
-
-const isOldManifest = isRecordOf<OldPostManifest>(isOldPostMetaData);
+import { isOldManifest, type OldPostManifest } from "./types.js";
 
 export type GetOldManifestFailureReason = "read manifest failed";
 

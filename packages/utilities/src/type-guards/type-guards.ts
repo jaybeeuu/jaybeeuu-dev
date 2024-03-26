@@ -57,14 +57,10 @@ export const isArrayOf = <Element>(
     );
   }, `${isElement[typeDescription]}[]`);
 
-export type RecordValue<Rec> = Rec extends { [key: string]: infer Value }
-  ? Value
-  : never;
-
-export const isRecordOf = <Rec extends { [key: string]: unknown }>(
-  isValue: TypePredicate<RecordValue<Rec>>,
-): TypePredicate<Rec> =>
-  isType((candidate: unknown): candidate is Rec => {
+export const isRecordOf = <RecordValue>(
+  isValue: TypePredicate<RecordValue>,
+): TypePredicate<{ [key: string]: RecordValue }> =>
+  isType((candidate: unknown): candidate is { [key: string]: RecordValue } => {
     if (typeof candidate !== "object") {
       return false;
     }
@@ -76,20 +72,22 @@ export const isRecordOf = <Rec extends { [key: string]: unknown }>(
     return Object.values(candidate).every((value) => isValue(value));
   }, `{ [key: string]: ${isValue[typeDescription]}; }`);
 
-export const typeStrings = [
-  "string",
-  "number",
-  "bigint",
-  "boolean",
-  "symbol",
-  "undefined",
-  "object",
-  "function",
-] as const;
-export type TypeString = (typeof typeStrings)[number];
-const isTypeString = (candidate: string): candidate is TypeString => {
-  return (typeStrings as readonly string[]).includes(candidate);
-};
+export const isLiteral = <Type extends string | number | boolean>(
+  type: Type,
+): TypePredicate<Type> =>
+  isType((candidate: unknown): candidate is Type => {
+    return candidate === type;
+  }, String(type));
+
+export type TypeString =
+  | "string"
+  | "number"
+  | "bigint"
+  | "boolean"
+  | "symbol"
+  | "undefined"
+  | "object"
+  | "function";
 
 export interface TypeStringPrimitiveTypeMap {
   string: string;
@@ -100,69 +98,85 @@ export interface TypeStringPrimitiveTypeMap {
   undefined: undefined;
   object: object;
   function: AnyFunction;
-  null: null;
 }
 
-export const is = <Type extends string | number | boolean>(
+export const is = <Type extends TypeString | "null">(
   typeString: Type,
 ): TypePredicate<
-  Type extends keyof TypeStringPrimitiveTypeMap
-    ? TypeStringPrimitiveTypeMap[Type]
-    : Type
+  Type extends TypeString ? TypeStringPrimitiveTypeMap[Type] : null
 > =>
   isType(
     (
       candidate: unknown,
-    ): candidate is Type extends keyof TypeStringPrimitiveTypeMap
+    ): candidate is Type extends TypeString
       ? TypeStringPrimitiveTypeMap[Type]
-      : Type => {
-      if (typeString === "null") {
-        return candidate === null;
-      }
-      if (typeof typeString === "string" && isTypeString(typeString)) {
-        return typeof candidate === typeString;
-      }
-      return candidate === typeString;
+      : null => {
+      return typeString === "null"
+        ? candidate === null
+        : typeof candidate === typeString;
     },
-    `${typeString}`,
+    typeString,
   );
 
-export const or = <T, U>(
-  isT: TypePredicate<T>,
-  isU: TypePredicate<U>,
-): TypePredicate<T | U> =>
-  isType((candidate: unknown): candidate is T | U => {
-    return isT(candidate) || isU(candidate);
-  }, `${isT[typeDescription]} | ${isU[typeDescription]}`);
+export type ExtractTypesFromPredicates<
+  T extends ReadonlyArray<TypePredicate<unknown>>,
+> = { [K in keyof T]: T[K] extends TypePredicate<infer V> ? V : never };
 
-export const exclude = <T, U>(
-  isT: TypePredicate<T>,
-  isU: TypePredicate<U>,
-): TypePredicate<Exclude<T, U>> => {
-  const excludedTypeDescRegexp = new RegExp(`(^| \\| )${isU[typeDescription]}`);
-  return isType(
-    (candidate: unknown): candidate is Exclude<T, U> => {
-      return isT(candidate) && !isU(candidate);
-    },
-    excludedTypeDescRegexp.test(isT[typeDescription])
-      ? isT[typeDescription].replace(excludedTypeDescRegexp, "")
-      : `${isT[typeDescription]} | !${isU[typeDescription]}`,
-  );
-};
-
-export const isNullish = or(is("null"), is("undefined"));
-
-export const isInPrimitiveUnion = <
-  UnionMembers extends readonly (string | number | boolean)[],
+export const isTuple = <
+  Predicates extends ReadonlyArray<TypePredicate<unknown>>,
 >(
-  unionMembers: UnionMembers,
-): TypePredicate<UnionMembers[number]> => {
-  const isPrimitive = or(or(is("boolean"), is("string")), is("number"));
-
-  return isType(
-    (candidate: unknown): candidate is UnionMembers[number] => {
-      return isPrimitive(candidate) && unionMembers.includes(candidate);
+  ...predicates: Predicates
+): TypePredicate<ExtractTypesFromPredicates<Predicates>> =>
+  isType(
+    (
+      candidate: unknown,
+    ): candidate is ExtractTypesFromPredicates<Predicates> => {
+      return (
+        Array.isArray(candidate) &&
+        predicates.every((predicate, i) => predicate(candidate[i]))
+      );
     },
-    unionMembers.map((elem) => JSON.stringify(elem)).join(" | "),
+    `[${predicates.map((predicate) => predicate[typeDescription]).join(", ")}]`,
   );
-};
+
+export const isUnion = <Predicates extends TypePredicate<unknown>[]>(
+  ...predicates: Predicates
+): TypePredicate<
+  Predicates[number] extends TypePredicate<infer Type> ? Type : never
+> =>
+  isType(
+    (
+      candidate: unknown,
+    ): candidate is Predicates[number] extends TypePredicate<infer Type>
+      ? Type
+      : never => {
+      return predicates.some((predicate) => predicate(candidate));
+    },
+    predicates.map((predicate) => predicate[typeDescription]).join(" | "),
+  );
+
+type UnionToIntersection<Union> = (
+  Union extends unknown ? (argument: Union) => void : never
+) extends (argument: infer Intersection) => void
+  ? Intersection
+  : never;
+
+export const isIntersection = <Predicates extends TypePredicate<unknown>[]>(
+  ...predicates: Predicates
+): TypePredicate<
+  UnionToIntersection<
+    Predicates[number] extends TypePredicate<infer Type> ? Type : never
+  >
+> =>
+  isType(
+    (
+      candidate: unknown,
+    ): candidate is UnionToIntersection<
+      Predicates[number] extends TypePredicate<infer Type> ? Type : never
+    > => {
+      return predicates.every((predicate) => predicate(candidate));
+    },
+    predicates.map((predicate) => predicate[typeDescription]).join(" & "),
+  );
+
+export const isNullish = isUnion(is("null"), is("undefined"));
