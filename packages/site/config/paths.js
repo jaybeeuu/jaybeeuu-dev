@@ -1,14 +1,15 @@
 // @ts-check
 
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
 
 const appDirectory = fs.realpathSync(process.cwd());
 
-/** @param {string} relativePath */
+/**
+ * @param {string} relativePath
+ * @returns {string}
+ */
 const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
-
-const certs = resolveApp("certs");
 
 export const paths = {
   dist: resolveApp("dist"),
@@ -16,10 +17,9 @@ export const paths = {
   indexHtml: resolveApp("public/index.html"),
   srcIndex: resolveApp("src/index.tsx"),
   src: resolveApp("src"),
-  packageJson: resolveApp("package.json"),
   certs: {
-    key: path.join(certs, "key.key"),
-    certificate: path.join(certs, "cert.crt"),
+    key: resolveApp("certs/key.key"),
+    certificate: resolveApp("src/cert.crt"),
   },
   manifest: resolveApp("node_modules/@jaybeeuu/posts/lib/manifest.json"),
   postsLib: "node_modules/@jaybeeuu/posts/lib",

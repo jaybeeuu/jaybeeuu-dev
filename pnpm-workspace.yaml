@@ -10,6 +10,7 @@ packages:
   - "packages/preact-recoilless"
   - "packages/reading-time-cli"
   - "packages/recoilless"
+  - "packages/rollup-plugin-feed"
   - "packages/scripts"
   - "packages/site"
   - "packages/utilities"

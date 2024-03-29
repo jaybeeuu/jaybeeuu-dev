@@ -33,7 +33,6 @@ const gitRevisionPlugin = new GitRevisionPlugin({
 });
 
 const isProduction = env.NODE_ENV === "production";
-/** @type {"production" | "development"} */
 const mode = isProduction ? "production" : "development";
 const isWatching = process.argv.includes("serve");
 
@@ -287,7 +286,7 @@ export default {
         },
         ...Object.values(postManifest).map((meta) => {
           const lastmod = (meta.lastUpdateDate ?? meta.publishDate).split(
-            "T",
+            "T"
           )[0];
           return {
             path: path.posix.join(postsRoot, meta.slug),
@@ -312,8 +311,8 @@ export default {
           Math.max(
             ...Object.values(postManifest).map((meta) => {
               return +new Date(meta.publishDate);
-            }),
-          ),
+            })
+          )
         ),
         copyright: `All rights reserved ${new Date().getFullYear()}, Josh Bickley-Wallace`,
         feedLinks: {
@@ -338,7 +337,7 @@ export default {
           link: resolvedURLToSite(postsRoot, meta.slug),
           published: new Date(meta.publishDate),
           title: meta.title,
-        }),
+        })
       ),
     }),
     new webpack.ProgressPlugin(),

@@ -1,0 +1,50 @@
+{
+  "name": "@jaybeeuu/rollup-plugin-feed",
+  "version": "0.0.0",
+  "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
+  "license": "MIT",
+  "description": "A simple rollup wrapper for the feed library.",
+  "keywords": [
+    "atom",
+    "feed",
+    "plugin",
+    "rss",
+    "syndication",
+    "rollup",
+    "xml"
+  ],
+  "homepage": "https://github.com/jaybeeuu/jaybeeuu-dev/tree/main/packages/rollup-plugin-feed#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaybeeuu/jaybeeuu-dev.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jaybeeuu/jaybeeuu-dev/issues"
+  },
+  "engines": {
+    "node": ">=20.11.1"
+  },
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "scripts": {
+    "build": "tsc --pretty",
+    "start": "tsc --pretty --watch --incremental",
+    "lint": "eslint --ext .js,.ts --format codeframe .",
+    "type-check": "tsc --noEmit --pretty"
+  },
+  "dependencies": {
+    "feed": "^4.2.2"
+  },
+  "devDependencies": {
+    "@jaybeeuu/eslint-config": "workspace:*",
+    "@types/node": "^20.11.30",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.3",
+    "rollup": "^4.13.2"
+  }
+}

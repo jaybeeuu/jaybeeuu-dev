@@ -23,7 +23,7 @@ export interface ImageState {
 
 export const useImages = (
   backgrounds: BackgroundImages | null,
-  currentTheme: Theme,
+  currentTheme: Theme
 ): ImageState => {
   const [imageState, setImageState] = useState<ImageState>({
     previous: null,
@@ -31,21 +31,14 @@ export const useImages = (
   });
 
   useEffect(() => {
-    let cancelled = false;
-    void (async () => {
-      const currentName = backgrounds?.[currentTheme];
-      if (!currentName) {
-        return;
-      }
+    const currentName = backgrounds?.[currentTheme];
+    if (!currentName) {
+      return;
+    }
 
-      const current = await images[currentName]();
+    const current = images[currentName];
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (!cancelled) {
-        setImageState({ previous: imageState.current, current });
-      }
-    })();
-    return () => (cancelled = true);
+    setImageState({ previous: imageState.current, current });
   }, [currentTheme, backgrounds]);
 
   return imageState;
