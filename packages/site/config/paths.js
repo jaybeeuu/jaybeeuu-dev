@@ -23,4 +23,6 @@ export const paths = {
   },
   manifest: resolveApp("node_modules/@jaybeeuu/posts/lib/manifest.json"),
   postsLib: "node_modules/@jaybeeuu/posts/lib",
+  postsRoot: "blog",
+  baseUrl: "https://jaybeeuu.dev",
 };

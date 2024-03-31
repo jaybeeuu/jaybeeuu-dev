@@ -14,7 +14,9 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "build": "vite build",
+    "build:static": "node ./scripts/build-static.js",
+    "build:vite": "vite build",
+    "build": "pnpm build:vite && pnpm build:static",
     "start-wp": "cross-env NODE_ENV=development webpack",
     "build-wp": "cross-env NODE_ENV=production webpack ",
     "gen-certs": "gen-certs",
@@ -40,6 +42,7 @@
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.30",
     "@types/webpack-bundle-analyzer": "^4.7.0",
+    "@types/xmldoc": "^1.1.9",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "@typescript-eslint/parser": "^7.3.1",
     "babel-jest": "^29.7.0",
@@ -63,6 +66,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "mini-css-extract-plugin": "^2.8.1",
+    "rollup": "^4.13.2",
     "sharp": "^0.33.2",
     "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "^3.3.4",
@@ -79,7 +83,8 @@
     "webpack": "^5.91.0",
     "webpack-bundle-analyzer": "^4.10.1",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.4"
+    "webpack-dev-server": "^5.0.4",
+    "xml-writer": "^1.7.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.24.1",

@@ -686,6 +686,9 @@ importers:
       '@types/webpack-bundle-analyzer':
         specifier: ^4.7.0
         version: 4.7.0(webpack-cli@5.1.4)
+      '@types/xmldoc':
+        specifier: ^1.1.9
+        version: 1.1.9
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.3.1
         version: 7.3.1(@typescript-eslint/parser@7.3.1)(eslint@8.57.0)(typescript@5.4.3)
@@ -752,6 +755,9 @@ importers:
       mini-css-extract-plugin:
         specifier: ^2.8.1
         version: 2.8.1(webpack@5.91.0)
+      rollup:
+        specifier: ^4.13.2
+        version: 4.13.2
       sharp:
         specifier: ^0.33.2
         version: 0.33.2
@@ -784,7 +790,7 @@ importers:
         version: 4.5.2(@types/node@20.11.30)
       vite-imagetools:
         specifier: ^6.1.0
-        version: 6.2.9
+        version: 6.2.9(rollup@4.13.2)
       vite-plugin-mkcert:
         specifier: ^1.16.0
         version: 1.17.5(vite@4.5.2)
@@ -803,6 +809,9 @@ importers:
       webpack-dev-server:
         specifier: ^5.0.4
         version: 5.0.4(webpack-cli@5.1.4)(webpack@5.91.0)
+      xml-writer:
+        specifier: ^1.7.0
+        version: 1.7.0
 
   packages/utilities:
     dependencies:
@@ -3189,7 +3198,7 @@ packages:
       picomatch: 2.3.1
     dev: true
 
-  /@rollup/pluginutils@5.1.0:
+  /@rollup/pluginutils@5.1.0(rollup@4.13.2):
     resolution: {integrity: sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -3201,6 +3210,7 @@ packages:
       '@types/estree': 1.0.5
       estree-walker: 2.0.2
       picomatch: 2.3.1
+      rollup: 4.13.2
     dev: true
 
   /@rollup/rollup-android-arm-eabi@4.13.2:
@@ -3784,6 +3794,10 @@ packages:
     resolution: {integrity: sha512-vmQSUcfalpIq0R9q7uTo2lXs6eGIpt9wtnLdMv9LVpIjCA/+ufZRozlVoVelIYixx1ugCBKDhn89vnsEGOCx9A==}
     dependencies:
       '@types/node': 20.11.30
+
+  /@types/xmldoc@1.1.9:
+    resolution: {integrity: sha512-HLwIAudQ9xedPOK9rKd7gSHYzM5qtWOzae9z5tM7dRDR1hWeNlFSejfnxFMIv06mm2LmtX+pzVQ4GN86vf/b3g==}
+    dev: true
 
   /@types/yargs-parser@21.0.3:
     resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
@@ -11622,11 +11636,11 @@ packages:
       extsprintf: 1.3.0
     dev: false
 
-  /vite-imagetools@6.2.9:
+  /vite-imagetools@6.2.9(rollup@4.13.2):
     resolution: {integrity: sha512-C4ZYhgj2vAj43/TpZ06XlDNP0p/7LIeYbgUYr+xG44nM++4HGX6YZBKAYpiBNgiCFUTJ6eXkRppWBrfPMevgmg==}
     engines: {node: '>=12.0.0'}
     dependencies:
-      '@rollup/pluginutils': 5.1.0
+      '@rollup/pluginutils': 5.1.0(rollup@4.13.2)
       imagetools-core: 6.0.4
     transitivePeerDependencies:
       - rollup
@@ -12105,6 +12119,11 @@ packages:
   /xml-name-validator@4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
     engines: {node: '>=12'}
+    dev: true
+
+  /xml-writer@1.7.0:
+    resolution: {integrity: sha512-elFVMRiV5jb59fbc87zzVa0C01QLBEWP909mRuWqFqrYC5wNTH5QW4AaKMNv7d6zAsuOulkD7wnztZNLQW0Nfg==}
+    engines: {node: '>=0.4.0'}
     dev: true
 
   /xml@1.0.1:
