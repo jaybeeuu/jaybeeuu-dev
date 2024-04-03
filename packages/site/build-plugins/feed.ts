@@ -1,6 +1,6 @@
 import type { FeedOptions, Item as FeedItem } from "feed";
+import type { Plugin } from "vite";
 import { Feed } from "feed";
-import type { Plugin } from "rollup";
 
 export { FeedItem, FeedOptions };
 
