@@ -66,14 +66,14 @@ declare module "xml-writer" {
     endPI(): XMLWriter;
 
     /** Write a DocType */
-    writeDocType(name: string, pubid: string, sysid: string, subset: string);
+    writeDocType(name: string, pubid?: string, sysid?: string, subset?: string);
 
     /** Create start DocType tag */
     startDocType(
       name: string,
-      pubid: string,
-      sysid: string,
-      subset: string
+      pubid?: string,
+      sysid?: string,
+      subset?: string
     ): XMLWriter;
 
     /** End current DocType */

@@ -7,5 +7,6 @@
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment",
     "types": ["jest"]
-  }
+  },
+  "exclude": ["dist"]
 }

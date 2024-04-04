@@ -31,14 +31,23 @@ export const useImages = (
   });
 
   useEffect(() => {
-    const currentName = backgrounds?.[currentTheme];
-    if (!currentName) {
-      return;
-    }
+    const signal = { cancelled: false };
 
-    const current = images[currentName];
+    void (async () => {
+      const currentName = backgrounds?.[currentTheme];
+      if (!currentName) {
+        return;
+      }
 
-    setImageState({ previous: imageState.current, current });
+      const current = images[currentName];
+
+      await fetch(current.placeholder);
+
+      if (!signal.cancelled) {
+        setImageState({ previous: imageState.current, current });
+      }
+    })();
+    return () => (signal.cancelled = true);
   }, [currentTheme, backgrounds]);
 
   return imageState;

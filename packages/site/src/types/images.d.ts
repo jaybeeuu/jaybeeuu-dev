@@ -17,7 +17,17 @@ declare module "*.jpg?background" {
   export default src;
 }
 
-declare module "*.(jpg|png|svg)" {
+declare module "*.svg" {
+  const fileUrl: string;
+  export default fileUrl;
+}
+
+declare module "*.png" {
+  const fileUrl: string;
+  export default fileUrl;
+}
+
+declare module "*.jpg" {
   const fileUrl: string;
   export default fileUrl;
 }

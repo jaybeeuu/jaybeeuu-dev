@@ -11,19 +11,10 @@ const handler: ProxyHandler<{ [key: string]: () => Promise<ImageDetails> }> = {
       cachedImages[image] = jest.fn().mockReturnValue(
         Promise.resolve<ImageDetails>({
           src: `${String(image)}-src`,
-          srcSet: `${String(image)}-srcSet`,
           placeholder: `${String(image)}-placeholder`,
-          images: [
-            {
-              path: `${String(image)}-path`,
-              width: 100,
-              height: 100,
-            },
-          ],
-          width: 100,
-          height: 100,
+          position: `${String(image)}-position`,
           alt: `${String(image)}-alt`,
-        }),
+        })
       );
     }
     return cachedImages[image];
