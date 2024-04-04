@@ -18,6 +18,7 @@ const resolvedURLToBase = (...pathFragments: string[]): string => {
   const url = new URL(paths.baseUrl);
   return (url.pathname = path.posix.join(url.pathname, ...pathFragments));
 };
+const isProduction = process.env.NODE_ENV === "production";
 
 export default defineConfig({
   css: {
@@ -25,14 +26,16 @@ export default defineConfig({
       localsConvention: "camelCaseOnly",
     },
   },
-  server: {
-    port: 3443,
-    https: {
-      ca: fs.readFileSync("./certs/ca.pem"),
-      key: fs.readFileSync("./certs/key.key"),
-      cert: fs.readFileSync("./certs/cert.crt"),
-    },
-  },
+  server: isProduction
+    ? undefined
+    : {
+        port: 3443,
+        https: {
+          ca: fs.readFileSync("./certs/ca.pem"),
+          key: fs.readFileSync("./certs/key.key"),
+          cert: fs.readFileSync("./certs/cert.crt"),
+        },
+      },
   plugins: [
     preact(),
     imagetools({
