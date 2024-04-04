@@ -11,7 +11,7 @@ import type { PostManifest } from "@jaybeeuu/compost/lib";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const postManifest: PostManifest = JSON.parse(
-  fs.readFileSync(paths.manifest, "utf8")
+  fs.readFileSync(paths.manifest, "utf8"),
 );
 
 const resolvedURLToBase = (...pathFragments: string[]): string => {
@@ -82,9 +82,9 @@ export default defineConfig({
           lastModified: new Date(
             Math.max(
               ...Object.values(postManifest).map(
-                (meta) => +new Date(meta.lastUpdateDate ?? meta.publishDate)
-              )
-            )
+                (meta) => +new Date(meta.lastUpdateDate ?? meta.publishDate),
+              ),
+            ),
           ),
           priority: 0.8,
           changeFrequency: "weekly",
@@ -95,7 +95,7 @@ export default defineConfig({
             lastModified: new Date(meta.lastUpdateDate ?? meta.publishDate),
             priority: 0.5,
             changeFrequency: "monthly",
-          })
+          }),
         ),
       ],
     }),
@@ -113,8 +113,8 @@ export default defineConfig({
           Math.max(
             ...Object.values(postManifest).map((meta) => {
               return +new Date(meta.publishDate);
-            })
-          )
+            }),
+          ),
         ),
         copyright: `All rights reserved ${new Date().getFullYear()}, Josh Bickley-Wallace`,
         feedLinks: {

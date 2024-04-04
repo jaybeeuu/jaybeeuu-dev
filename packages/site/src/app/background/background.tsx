@@ -23,7 +23,7 @@ export interface ImageState {
 
 export const useImages = (
   backgrounds: BackgroundImages | null,
-  currentTheme: Theme
+  currentTheme: Theme,
 ): ImageState => {
   const [imageState, setImageState] = useState<ImageState>({
     previous: null,

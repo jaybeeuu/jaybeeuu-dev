@@ -43,7 +43,7 @@ export const version = (options: RollupPluginVersionOptions): Plugin => {
           buildMode: this.meta.watchMode ? "development" : "production",
         },
         null,
-        2
+        2,
       );
       this.emitFile({
         type: "asset",

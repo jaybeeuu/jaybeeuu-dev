@@ -14,11 +14,11 @@ interface UseImagesProps {
 }
 
 const renderUseImages = (
-  initialProps: UseImagesProps
+  initialProps: UseImagesProps,
 ): RenderHookResult<ImageState, UseImagesProps> => {
   return renderHook(
     ({ backgrounds, currentTheme }) => useImages(backgrounds, currentTheme),
-    { initialProps }
+    { initialProps },
   );
 };
 

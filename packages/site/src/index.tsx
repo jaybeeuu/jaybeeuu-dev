@@ -17,5 +17,5 @@ render(
   <StoreProvider>
     <App />
   </StoreProvider>,
-  app
+  app,
 );

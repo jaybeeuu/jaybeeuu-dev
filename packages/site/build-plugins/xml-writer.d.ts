@@ -7,7 +7,7 @@ declare module "xml-writer" {
   declare class XMLWriter {
     constructor(
       indent: boolean | string = false,
-      writer: (content: string, encoding: string) => void = undefined
+      writer: (content: string, encoding: string) => void = undefined,
     );
 
     /** Write text */
@@ -20,7 +20,7 @@ declare module "xml-writer" {
     startDocument(
       version = "1.0",
       encoding: string = null,
-      standalone = false
+      standalone = false,
     ): XMLWriter;
 
     /** End current document */
@@ -73,7 +73,7 @@ declare module "xml-writer" {
       name: string,
       pubid?: string,
       sysid?: string,
-      subset?: string
+      subset?: string,
     ): XMLWriter;
 
     /** End current DocType */

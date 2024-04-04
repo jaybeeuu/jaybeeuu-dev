@@ -14,7 +14,7 @@ const handler: ProxyHandler<{ [key: string]: () => Promise<ImageDetails> }> = {
           placeholder: `${String(image)}-placeholder`,
           position: `${String(image)}-position`,
           alt: `${String(image)}-alt`,
-        })
+        }),
       );
     }
     return cachedImages[image];
