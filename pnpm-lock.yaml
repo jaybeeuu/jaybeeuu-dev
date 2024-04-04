@@ -663,9 +663,6 @@ importers:
       jest-environment-jsdom:
         specifier: ^29.7.0
         version: 29.7.0
-      sharp:
-        specifier: ^0.33.2
-        version: 0.33.2
       shelljs:
         specifier: ^0.8.5
         version: 0.8.5
