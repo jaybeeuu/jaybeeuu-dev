@@ -1,5 +1,6 @@
-import { typeDescription } from "./core.js";
+import type { CheckedBy, TypeAssertion } from "./index";
 import {
+  assert,
   is,
   isArrayOf,
   isInstanceOf,
@@ -40,7 +41,7 @@ describe("type-guards", () => {
     );
 
     it("has the right type description.", () => {
-      expect(isNullish[typeDescription]).toBe("null | undefined");
+      expect(isNullish.typeDescription).toBe("null | undefined");
     });
   });
 
@@ -83,12 +84,37 @@ describe("type-guards", () => {
       },
     );
 
+    it("returns a good error message when it fails.", () => {
+      const isObj = isObject({
+        a: isObject({
+          c: is("number"),
+          d: isArrayOf(is("string")),
+        }),
+        b: is("number"),
+      });
+      const assertIsObj: TypeAssertion<CheckedBy<typeof isObj>> = assert(isObj);
+      expect(() => {
+        assertIsObj({
+          a: {
+            c: 3,
+            d: [1, "a", 2],
+          },
+          b: "s",
+        });
+      }).toThrow(
+        new TypeError(`Expected { a: { c: number; d: string[]; }; b: number; } but received object.
+root.b: Expected "number", but received "string": s.
+root.a.d[2]: Expected "string", but received "number": 2.
+root.a.d[0]: Expected "string", but received "number": 1.`),
+      );
+    });
+
     it("has the right type description.", () => {
       expect(
         isObject({
           a: is("string"),
           b: is("number"),
-        })[typeDescription],
+        }).typeDescription,
       ).toBe("{ a: string; b: number; }");
     });
   });
@@ -125,7 +151,7 @@ describe("type-guards", () => {
     );
 
     it("has the right type description.", () => {
-      expect(isArrayOf(is("number"))[typeDescription]).toBe("number[]");
+      expect(isArrayOf(is("number")).typeDescription).toBe("number[]");
     });
   });
 
@@ -160,7 +186,7 @@ describe("type-guards", () => {
     );
 
     it("has the right type description.", () => {
-      expect(isRecordOf(is("number"))[typeDescription]).toBe(
+      expect(isRecordOf(is("number")).typeDescription).toBe(
         "{ [key: string]: number; }",
       );
     });
@@ -284,7 +310,7 @@ describe("type-guards", () => {
     ] as const)(
       "$#: is(typeString: $typeString) has type description $typeString.",
       ({ typeString }) => {
-        expect(is(typeString)[typeDescription]).toBe(typeString);
+        expect(is(typeString).typeDescription).toBe(typeString);
       },
     );
   });
@@ -337,7 +363,7 @@ describe("type-guards", () => {
     it.each([{ type: "literal" }, { type: 1 }, { type: true }] as const)(
       "$#: isLiteral(type: $type) has type description $type.",
       ({ type }) => {
-        expect(isLiteral(type)[typeDescription]).toBe(String(type));
+        expect(isLiteral(type).typeDescription).toBe(String(type));
       },
     );
   });
@@ -375,7 +401,7 @@ describe("type-guards", () => {
     );
 
     it("has the right type description.", () => {
-      expect(isUnionOf(is("number"), is("string"))[typeDescription]).toBe(
+      expect(isUnionOf(is("number"), is("string")).typeDescription).toBe(
         "number | string",
       );
     });
@@ -417,7 +443,7 @@ describe("type-guards", () => {
         isIntersectionOf(
           isObject({ a: is("string") }),
           isObject({ b: is("number") }),
-        )[typeDescription],
+        ).typeDescription,
       ).toBe("{ a: string; } & { b: number; }");
     });
   });
@@ -455,7 +481,7 @@ describe("type-guards", () => {
     );
 
     it("has the right type description.", () => {
-      expect(isTuple(is("string"), is("number"))[typeDescription]).toBe(
+      expect(isTuple(is("string"), is("number")).typeDescription).toBe(
         "[string, number]",
       );
     });
@@ -505,7 +531,7 @@ describe("type-guards", () => {
     );
 
     it("has the right type description.", () => {
-      expect(isInstanceOf(A)[typeDescription]).toBe("instanceof(A)");
+      expect(isInstanceOf(A).typeDescription).toBe("instanceof(A)");
     });
   });
 });

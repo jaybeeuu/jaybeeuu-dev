@@ -1,72 +1,23 @@
-import type { TypePredicate } from "./core.js";
-import { isType, typeDescription } from "./core.js";
-
-const hasOwnProperty = <Obj extends object, Property extends PropertyKey>(
-  obj: Obj,
-  prop: Property,
-): obj is Obj & { [key in Property]: unknown } => {
-  return Object.prototype.hasOwnProperty.call(obj, prop);
-};
-
-export const isObject = <Obj extends object>(properties: {
-  [key in keyof Obj]: TypePredicate<Obj[key]>;
-}): TypePredicate<Obj> =>
-  isType(
-    (candidate: unknown): candidate is Obj => {
-      if (typeof candidate !== "object") {
-        return false;
-      }
-
-      if (candidate === null) {
-        return false;
-      }
-
-      return Object.entries(properties).every(([key, isCorrectType]) => {
-        return (
-          hasOwnProperty(candidate, key) &&
-          (isCorrectType as (candidate: unknown) => boolean)(candidate[key])
-        );
-      });
-    },
-    `{ ${Object.entries<TypePredicate<unknown>>(properties)
-      .map(([key, predicate]) => `${key}: ${predicate[typeDescription]};`)
-      .join(" ")} }`,
-  );
-
-export type ElementOfArray<Arr> = Arr extends (infer Element)[]
-  ? Element
-  : never;
-
-export const isArrayOf = <Element>(
-  isElement: TypePredicate<Element>,
-): TypePredicate<Element[]> =>
-  isType((candidate: unknown): candidate is Element[] => {
-    return (
-      Array.isArray(candidate) &&
-      candidate.every((element) => isElement(element))
-    );
-  }, `${isElement[typeDescription]}[]`);
-
-export const isRecordOf = <RecordValue>(
-  isValue: TypePredicate<RecordValue>,
-): TypePredicate<{ [key: string]: RecordValue }> =>
-  isType((candidate: unknown): candidate is { [key: string]: RecordValue } => {
-    if (typeof candidate !== "object") {
-      return false;
-    }
-
-    if (candidate === null) {
-      return false;
-    }
-
-    return Object.values(candidate).every((value) => isValue(value));
-  }, `{ [key: string]: ${isValue[typeDescription]}; }`);
+import type {
+  TypePredicate,
+  ValidationContext,
+  ValidationFailed,
+  ValidationResult,
+} from "./core.js";
+import { failValidation, isType, passValidation } from "./core.js";
 
 export const isLiteral = <Type extends string | number | boolean>(
   type: Type,
 ): TypePredicate<Type> =>
-  isType((candidate: unknown): candidate is Type => {
-    return candidate === type;
+  isType((candidate: unknown, context): ValidationResult => {
+    if (candidate === type) {
+      return passValidation(context);
+    }
+
+    return failValidation(
+      `Expected Literal value "${String(type)}"; but received "${typeof candidate}"${typeof candidate !== "object" ? String(candidate) : ""}.`,
+      context,
+    );
   }, String(type));
 
 export type TypeString =
@@ -96,18 +47,20 @@ export const is = <Type extends TypeString | "null">(
 ): TypePredicate<
   Type extends TypeString ? TypeStringPrimitiveTypeMap[Type] : null
 > =>
-  isType(
-    (
-      candidate: unknown,
-    ): candidate is Type extends TypeString
-      ? TypeStringPrimitiveTypeMap[Type]
-      : null => {
-      return typeString === "null"
+  isType((candidate: unknown, context: ValidationContext): ValidationResult => {
+    if (
+      typeString === "null"
         ? candidate === null
-        : typeof candidate === typeString;
-    },
-    typeString,
-  );
+        : typeof candidate === typeString
+    ) {
+      return passValidation(context);
+    }
+
+    return failValidation(
+      `Expected "${typeString}", but received "${typeof candidate}"${typeof candidate !== "object" ? `: ${String(candidate)}` : ""}.`,
+      context,
+    );
+  }, typeString);
 
 export type ExtractTypesFromPredicates<
   T extends ReadonlyArray<TypePredicate<unknown>>,
@@ -119,15 +72,29 @@ export const isTuple = <
   ...predicates: Predicates
 ): TypePredicate<ExtractTypesFromPredicates<Predicates>> =>
   isType(
-    (
-      candidate: unknown,
-    ): candidate is ExtractTypesFromPredicates<Predicates> => {
-      return (
-        Array.isArray(candidate) &&
-        predicates.every((predicate, i) => predicate(candidate[i]))
-      );
+    (candidate: unknown, context: ValidationContext): ValidationResult => {
+      if (!Array.isArray(candidate)) {
+        return failValidation(
+          `Expected an array, but received ${typeof candidate}.`,
+          context,
+        );
+      }
+
+      if (candidate.length !== predicates.length) {
+        return failValidation(
+          `Expected an array with length ${predicates.length}, but received array with ${candidate.length} element(s).`,
+          context,
+        );
+      }
+
+      return predicates.reduce((currentResult, predicate, index) => {
+        return predicate.validate(candidate[index], {
+          path: `${context.path}[${index}]`,
+          currentResult,
+        });
+      }, context.currentResult);
     },
-    `[${predicates.map((predicate) => predicate[typeDescription]).join(", ")}]`,
+    `[${predicates.map((predicate) => predicate.typeDescription).join(", ")}]`,
   );
 
 export const isUnionOf = <Predicates extends TypePredicate<unknown>[]>(
@@ -136,14 +103,34 @@ export const isUnionOf = <Predicates extends TypePredicate<unknown>[]>(
   Predicates[number] extends TypePredicate<infer Type> ? Type : never
 > =>
   isType(
-    (
-      candidate: unknown,
-    ): candidate is Predicates[number] extends TypePredicate<infer Type>
-      ? Type
-      : never => {
-      return predicates.some((predicate) => predicate(candidate));
+    (candidate: unknown, context: ValidationContext): ValidationResult => {
+      const failures: ValidationFailed[] = [];
+      for (
+        let predicateIndex = 0;
+        predicateIndex < predicates.length;
+        predicateIndex++
+      ) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const result = predicates[predicateIndex]!.validate(candidate, {
+          currentResult: { valid: true },
+          path: `${context.path} | (${predicateIndex})`,
+        });
+        if (result.valid) {
+          return result;
+        }
+        failures.push(result);
+      }
+
+      return failValidation(
+        `Expected union of types. The following errors were received:\n${failures
+          .map((failure) =>
+            failure.errorMessages.map((message) => `\t\t${message}`).join("\n"),
+          )
+          .join("\n")}\n`,
+        context,
+      );
     },
-    predicates.map((predicate) => predicate[typeDescription]).join(" | "),
+    predicates.map((predicate) => predicate.typeDescription).join(" | "),
   );
 
 type UnionToIntersection<Union> = (
@@ -160,14 +147,114 @@ export const isIntersectionOf = <Predicates extends TypePredicate<unknown>[]>(
   >
 > =>
   isType(
-    (
-      candidate: unknown,
-    ): candidate is UnionToIntersection<
-      Predicates[number] extends TypePredicate<infer Type> ? Type : never
-    > => {
-      return predicates.every((predicate) => predicate(candidate));
+    (candidate: unknown, context: ValidationContext): ValidationResult => {
+      const result = predicates.reduce<ValidationResult>(
+        (currentResult, predicate, predicateIndex) => {
+          return predicate.validate(candidate, {
+            path: `${context.path} & (${predicateIndex})`,
+            currentResult,
+          });
+        },
+        { valid: true },
+      );
+
+      if (result.valid) {
+        return passValidation(context);
+      }
+
+      return failValidation(
+        `Expected intersection of types. The following errors were received:\n${result.errorMessages.map((message) => `\t\t${message}`).join("\n")}\n`,
+        context,
+      );
     },
-    predicates.map((predicate) => predicate[typeDescription]).join(" & "),
+    predicates.map((predicate) => predicate.typeDescription).join(" & "),
+  );
+
+const hasOwnProperty = <Obj extends object, Property extends PropertyKey>(
+  obj: Obj,
+  prop: Property,
+): obj is Obj & { [key in Property]: unknown } => {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+};
+
+export type ElementOfArray<Arr> = Arr extends (infer Element)[]
+  ? Element
+  : never;
+
+export const isArrayOf = <Element>(
+  isElement: TypePredicate<Element>,
+): TypePredicate<Element[]> =>
+  isType((candidate: unknown, context: ValidationContext): ValidationResult => {
+    if (!Array.isArray(candidate)) {
+      return failValidation(
+        `Expected an array, but received ${typeof candidate}.`,
+        context,
+      );
+    }
+
+    return candidate.reduce<ValidationResult>(
+      (currentResult, element, elementIndex) => {
+        return isElement.validate(element, {
+          path: `${context.path}[${elementIndex}]`,
+          currentResult,
+        });
+      },
+      context.currentResult,
+    );
+  }, `${isElement.typeDescription}[]`);
+
+export const isRecordOf = <RecordValue>(
+  isValue: TypePredicate<RecordValue>,
+): TypePredicate<{ [key: string]: RecordValue }> =>
+  isType((candidate: unknown, context: ValidationContext): ValidationResult => {
+    if (typeof candidate !== "object") {
+      return failValidation(
+        `Expected an object, but received type "${typeof candidate}".`,
+        context,
+      );
+    }
+
+    if (candidate === null) {
+      return failValidation(`Candidate cannot be null, but was.`, context);
+    }
+
+    return Object.entries(candidate).reduce((currentResult, [key, value]) => {
+      return isValue.validate(value, {
+        path: `${context.path}.${key}`,
+        currentResult,
+      });
+    }, context.currentResult);
+  }, `{ [key: string]: ${isValue.typeDescription}; }`);
+
+export const isObject = <Obj extends object>(properties: {
+  [key in keyof Obj]: TypePredicate<Obj[key]>;
+}): TypePredicate<Obj> =>
+  isType(
+    (candidate: unknown, context: ValidationContext): ValidationResult => {
+      if (typeof candidate !== "object") {
+        return failValidation(
+          `Expected an object, but received type "${typeof candidate}".`,
+          context,
+        );
+      }
+
+      if (candidate === null) {
+        return failValidation(`Candidate cannot be null, but was.`, context);
+      }
+
+      return Object.entries(properties).reduce(
+        (currentResult, [key, isCorrectType]) => {
+          return (isCorrectType as TypePredicate<unknown>).validate(
+            hasOwnProperty(candidate, key) ? candidate[key] : undefined,
+            { path: `${context.path}.${key}`, currentResult },
+          );
+        },
+        context.currentResult,
+      );
+    },
+    `{ ${Object.entries<TypePredicate<unknown>>(properties)
+      .map(([key, predicate]) => `${key}: ${predicate.typeDescription};`)
+      .join(" ")} }`,
   );
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -177,8 +264,27 @@ export const isInstanceOf = <Type extends AnyConstructor>(
   constructor: Type,
 ): TypePredicate<InstanceType<Type>> => {
   return isType(
-    (candidate: unknown): candidate is InstanceType<Type> =>
-      candidate instanceof constructor,
+    (candidate: unknown, context: ValidationContext): ValidationResult => {
+      if (typeof candidate !== "object") {
+        return failValidation(
+          `Expected an object, but received type "${typeof candidate}".`,
+          context,
+        );
+      }
+
+      if (candidate === null) {
+        return failValidation(`Candidate cannot be null, but was.`, context);
+      }
+
+      if (candidate instanceof constructor) {
+        return passValidation(context);
+      }
+
+      return failValidation(
+        `Expected instance of ${constructor.name} but received: ${candidate.constructor.name}`,
+        context,
+      );
+    },
     `instanceof(${constructor.name})`,
   );
 };

@@ -1,4 +1,5 @@
-import { typeDescription } from "./core.js";
+import type { ValidationContext, ValidationResult } from "./core.js";
+import { failValidation, passValidation } from "./core.js";
 import { assert, isType, is } from "./index.js";
 import type { TypeAssertion, TypePredicate } from "./index.js";
 
@@ -7,7 +8,11 @@ describe("assert", () => {
     const assertIsString: TypeAssertion<string> = assert(is("string"));
     expect(() => {
       assertIsString(100);
-    }).toThrow(new TypeError("Expected a string but got a number."));
+    }).toThrow(
+      new TypeError(
+        'Expected string but received number.\nroot: Expected "string", but received "number": 100.',
+      ),
+    );
   });
 
   it("doesn't throw when the candidate matches the type guard.", () => {
@@ -20,21 +25,28 @@ describe("assert", () => {
 
 describe("isType", () => {
   it("returns a function that executes the function passed in.", () => {
-    const predicate = (candidate: unknown): candidate is string => true;
+    const predicate = (
+      candidate: unknown,
+      context: ValidationContext,
+    ): ValidationResult => passValidation(context);
     const isString = isType(predicate, "{description}");
     expect(isString("thing")).toBe(true);
   });
+
   it("attaches a description that matches the description passed in.", () => {
-    const predicate = (candidate: unknown): candidate is string => true;
+    const predicate = (
+      candidate: unknown,
+      context: ValidationContext,
+    ): ValidationResult => passValidation(context);
     const isString = isType(predicate, "{description}");
-    expect(isString[typeDescription]).toBe("{description}");
+    expect(isString.typeDescription).toBe("{description}");
   });
 
   describe("check", () => {
     it("check returns a typed value if the check passes.", () => {
       const isString = isType(
-        (candidate: unknown): candidate is string =>
-          typeof candidate === "string",
+        (candidate: unknown, context: ValidationContext): ValidationResult =>
+          passValidation(context),
         "string",
       );
       expect(isString.check("this?")).toBe("this?");
@@ -42,12 +54,12 @@ describe("isType", () => {
 
     it("check throws if the check failed.", () => {
       const isString = isType(
-        (candidate: unknown): candidate is string =>
-          typeof candidate === "string",
+        (candidate: unknown, context: ValidationContext): ValidationResult =>
+          failValidation("Expected a string but got a number.", context),
         "string",
       );
       expect(() => isString.check(10)).toThrow(
-        "Expected a string but got a number.",
+        "Expected string but received number.\nroot: Expected a string but got a number.",
       );
     });
   });
@@ -55,8 +67,8 @@ describe("isType", () => {
   describe("assert", () => {
     it("assert returns if the check passes.", () => {
       const isString: TypePredicate<string> = isType(
-        (candidate: unknown): candidate is string =>
-          typeof candidate === "string",
+        (candidate: unknown, context: ValidationContext): ValidationResult =>
+          passValidation(context),
         "string",
       );
       expect(() => {
@@ -66,13 +78,15 @@ describe("isType", () => {
 
     it("assert throws if the check failed.", () => {
       const isString: TypePredicate<string> = isType(
-        (candidate: unknown): candidate is string =>
-          typeof candidate === "string",
+        (candidate: unknown, context: ValidationContext): ValidationResult =>
+          failValidation("Expected a string but got a number.", context),
         "string",
       );
       expect(() => {
         isString.assert(10);
-      }).toThrow("Expected a string but got a number.");
+      }).toThrow(
+        "Expected string but received number.\nroot: Expected a string but got a number.",
+      );
     });
   });
 });
