@@ -1,5 +1,13 @@
 # @jaybeeuu/preact-recoilless
 
+## 10.0.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @jaybeeuu/recoilless@10.0.0
+  - @jaybeeuu/utilities@5.0.0
+
 ## 9.0.0
 
 ### Patch Changes
