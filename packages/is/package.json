@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "author": "Josh Bickley-Wallace <joshbickleywallace@outlook.com> (https://github.com/jaybeeuu)",
   "license": "MIT",
-  "description": "The utility functions used by my application",
+  "description": "Type validation, guards and assertion.",
   "keywords": [
     "Bickley-Wallace",
     "Josh",
