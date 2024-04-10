@@ -151,7 +151,7 @@ export const isIntersectionOf = <Predicates extends TypePredicate<unknown>[]>(
       const result = predicates.reduce<ValidationResult>(
         (currentResult, predicate, predicateIndex) => {
           return predicate.validate(candidate, {
-            path: `${context.path} & (${predicateIndex})`,
+            path: `${context.path} &(${predicateIndex})`,
             currentResult,
           });
         },

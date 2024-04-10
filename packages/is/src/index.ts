@@ -1,8 +1,14 @@
 import type { TypeAssertion, TypePredicate } from "./core.js";
 
 export {
+  ValidationContext,
+  ValidationFailed,
+  ValidationPassed,
+  ValidationResult,
   assert,
+  failValidation,
   isType,
+  passValidation,
   type TypeAssertion,
   type TypePredicate,
 } from "./core.js";

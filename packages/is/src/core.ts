@@ -1,5 +1,6 @@
 export type ValidationFailed = { valid: false; errorMessages: string[] };
-export type ValidationResult = { valid: true } | ValidationFailed;
+export type ValidationPassed = { valid: true };
+export type ValidationResult = ValidationPassed | ValidationFailed;
 export interface ValidationContext {
   path: string;
   currentResult: ValidationResult;

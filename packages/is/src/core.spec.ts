@@ -89,4 +89,27 @@ describe("isType", () => {
       );
     });
   });
+
+  describe("validate", () => {
+    it("validate returns a ValidationPassed if the check passes.", () => {
+      const isString: TypePredicate<string> = isType(
+        (candidate: unknown, context: ValidationContext): ValidationResult =>
+          passValidation(context),
+        "string",
+      );
+      expect(isString.validate("this?")).toStrictEqual({ valid: true });
+    });
+
+    it("assert throws if the check failed.", () => {
+      const isString: TypePredicate<string> = isType(
+        (candidate: unknown, context: ValidationContext): ValidationResult =>
+          failValidation("Expected a string but got a number.", context),
+        "string",
+      );
+      expect(isString.validate("this?")).toStrictEqual({
+        valid: false,
+        errorMessages: ["root: Expected a string but got a number."],
+      });
+    });
+  });
 });
