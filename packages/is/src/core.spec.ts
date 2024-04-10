@@ -12,13 +12,13 @@ describe("assert", () => {
       isType(
         (candidate: unknown, context: ValidationContext): ValidationResult =>
           failValidation("Whoops!", context),
-        "string"
-      )
+        "string",
+      ),
     );
     expect(() => {
       assertPredicate(100);
     }).toThrow(
-      new TypeError("Expected string but received number.\nroot: Whoops!")
+      new TypeError("Expected string but received number.\nroot: Whoops!"),
     );
   });
 
@@ -27,8 +27,8 @@ describe("assert", () => {
       isType(
         (candidate: unknown, context: ValidationContext): ValidationResult =>
           passValidation(context),
-        "string"
-      )
+        "string",
+      ),
     );
     expect(() => {
       assertPredicate("100");
@@ -41,7 +41,7 @@ describe("isType", () => {
     const predicate = isType(
       (candidate: unknown, context: ValidationContext): ValidationResult =>
         passValidation(context),
-      "{description}"
+      "{description}",
     );
     expect(predicate("thing")).toBe(true);
   });
@@ -49,7 +49,7 @@ describe("isType", () => {
     const predicate = isType(
       (candidate: unknown, context: ValidationContext): ValidationResult =>
         failValidation("Whoops!", context),
-      "{description}"
+      "{description}",
     );
     expect(predicate("thing")).toBe(false);
   });
@@ -58,7 +58,7 @@ describe("isType", () => {
     const predicate = isType(
       (candidate: unknown, context: ValidationContext): ValidationResult =>
         failValidation("Whoops!", context),
-      "{description}"
+      "{description}",
     );
     expect(predicate.typeDescription).toBe("{description}");
   });
@@ -68,7 +68,7 @@ describe("isType", () => {
       const predicate = isType(
         (candidate: unknown, context: ValidationContext): ValidationResult =>
           passValidation(context),
-        "{description}"
+        "{description}",
       );
 
       expect(predicate.check("this?")).toBe("this?");
@@ -78,11 +78,11 @@ describe("isType", () => {
       const predicate = isType(
         (candidate: unknown, context: ValidationContext): ValidationResult =>
           failValidation("Whoops!", context),
-        "{description}"
+        "{description}",
       );
 
       expect(() => predicate.check(10)).toThrow(
-        "Expected {description} but received number.\nroot: Whoops!"
+        "Expected {description} but received number.\nroot: Whoops!",
       );
     });
   });
@@ -92,7 +92,7 @@ describe("isType", () => {
       const predicate: TypePredicate<string> = isType(
         (candidate: unknown, context: ValidationContext): ValidationResult =>
           passValidation(context),
-        "string"
+        "string",
       );
       expect(() => {
         predicate.assert("this?");
@@ -103,12 +103,12 @@ describe("isType", () => {
       const predicate: TypePredicate<string> = isType(
         (candidate: unknown, context: ValidationContext): ValidationResult =>
           failValidation("Expected a string but got a number.", context),
-        "string"
+        "string",
       );
       expect(() => {
         predicate.assert(10);
       }).toThrow(
-        "Expected string but received number.\nroot: Expected a string but got a number."
+        "Expected string but received number.\nroot: Expected a string but got a number.",
       );
     });
   });
@@ -118,7 +118,7 @@ describe("isType", () => {
       const predicate: TypePredicate<string> = isType(
         (candidate: unknown, context: ValidationContext): ValidationResult =>
           passValidation(context),
-        "string"
+        "string",
       );
       expect(predicate.validate("this?")).toStrictEqual({ valid: true });
     });
@@ -127,7 +127,7 @@ describe("isType", () => {
       const predicate: TypePredicate<string> = isType(
         (candidate: unknown, context: ValidationContext): ValidationResult =>
           failValidation("Expected a string but got a number.", context),
-        "string"
+        "string",
       );
       expect(predicate.validate("this?")).toStrictEqual({
         valid: false,
