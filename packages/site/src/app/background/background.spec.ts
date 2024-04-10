@@ -1,7 +1,6 @@
 import { ControllablePromise } from "@jaybeeuu/utilities/test";
 import type { RenderHookResult } from "@testing-library/preact";
 import { act, renderHook, waitFor } from "@testing-library/preact";
-import type { ImageDetails } from "../images";
 import { images } from "../images";
 import type { Theme } from "../services/theme";
 import type { BackgroundImages } from "../state";
@@ -9,23 +8,6 @@ import type { ImageState } from "./background";
 import { useImages } from "./background";
 
 jest.mock("../images");
-
-const makeImageDetails = (image: string): ImageDetails => ({
-  src: `${String(image)}-src`,
-  srcSet: `${String(image)}-srcSet`,
-  placeholder: `${String(image)}-placeholder`,
-  images: [
-    {
-      path: `${String(image)}-path`,
-      width: 100,
-      height: 100,
-    },
-  ],
-  width: 100,
-  height: 100,
-  alt: `${String(image)}-alt`,
-});
-
 interface UseImagesProps {
   backgrounds: BackgroundImages | null;
   currentTheme: Theme;
@@ -75,8 +57,8 @@ describe("useImages", () => {
   });
 
   it("returns the light image as current when the light theme is selected after the promise resolves.", async () => {
-    const promise = new ControllablePromise<ImageDetails>();
-    jest.mocked(images["black-tusk"]).mockReturnValue(promise);
+    const promise = new ControllablePromise<Response>();
+    jest.spyOn(window, "fetch").mockReturnValue(promise);
 
     const { result } = renderUseImages({
       backgrounds: {
@@ -86,22 +68,21 @@ describe("useImages", () => {
       currentTheme: "light",
     });
 
-    const blackTusk = makeImageDetails("black-tusk");
     await act(() => {
-      promise.resolve(blackTusk);
+      promise.resolve({} as Response);
     });
 
     await waitFor(() => {
       expect(result.current).toStrictEqual({
-        current: blackTusk,
+        current: images["black-tusk"],
         previous: null,
       });
     });
   });
 
   it("returns the dark image as current when the dark theme is selected.", async () => {
-    const promise = new ControllablePromise<ImageDetails>();
-    jest.mocked(images.bath).mockReturnValue(promise);
+    const promise = new ControllablePromise<Response>();
+    jest.spyOn(window, "fetch").mockReturnValue(promise);
 
     const { result } = renderUseImages({
       backgrounds: {
@@ -111,24 +92,22 @@ describe("useImages", () => {
       currentTheme: "dark",
     });
 
-    const bath = makeImageDetails("bath");
     await act(() => {
-      promise.resolve(bath);
+      promise.resolve({} as Response);
     });
 
     await waitFor(() => {
       expect(result.current).toStrictEqual({
-        current: bath,
+        current: images["bath"],
         previous: null,
       });
     });
   });
 
   it("sets the previous and current images when the images change.", async () => {
-    const blackTusk = makeImageDetails("black-tusk");
-    jest.mocked(images["black-tusk"]).mockResolvedValue(blackTusk);
-    const christmasTrail = makeImageDetails("christmas-trail");
-    jest.mocked(images["christmas-trail"]).mockResolvedValue(christmasTrail);
+    jest
+      .spyOn(window, "fetch")
+      .mockResolvedValue(Promise.resolve({} as Response));
 
     const { rerender, result } = renderUseImages({
       backgrounds: {
@@ -140,7 +119,7 @@ describe("useImages", () => {
 
     await waitFor(() => {
       expect(result.current).toStrictEqual({
-        current: blackTusk,
+        current: images["black-tusk"],
         previous: null,
       });
     });
@@ -155,17 +134,16 @@ describe("useImages", () => {
 
     await waitFor(() => {
       expect(result.current).toStrictEqual({
-        current: christmasTrail,
-        previous: blackTusk,
+        current: images["christmas-trail"],
+        previous: images["black-tusk"],
       });
     });
   });
 
   it("sets the previous and current images when the theme changes.", async () => {
-    const blackTusk = makeImageDetails("black-tusk");
-    jest.mocked(images["black-tusk"]).mockResolvedValue(blackTusk);
-    const bath = makeImageDetails("bath");
-    jest.mocked(images.bath).mockResolvedValue(bath);
+    jest
+      .spyOn(window, "fetch")
+      .mockResolvedValue(Promise.resolve({} as Response));
 
     const { rerender, result } = renderUseImages({
       backgrounds: {
@@ -177,7 +155,7 @@ describe("useImages", () => {
 
     await waitFor(() => {
       expect(result.current).toStrictEqual({
-        current: blackTusk,
+        current: images["black-tusk"],
         previous: null,
       });
     });
@@ -192,8 +170,8 @@ describe("useImages", () => {
 
     await waitFor(() => {
       expect(result.current).toStrictEqual({
-        current: bath,
-        previous: blackTusk,
+        current: images["bath"],
+        previous: images["black-tusk"],
       });
     });
   });

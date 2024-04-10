@@ -15,7 +15,7 @@ export const isLiteral = <Type extends string | number | boolean>(
     }
 
     return failValidation(
-      `Expected Literal value "${String(type)}"; but received "${typeof candidate}"${typeof candidate !== "object" ? String(candidate) : ""}.`,
+      `Expected literal value "${String(type)}", but received "${typeof candidate}": ${typeof candidate !== "object" ? String(candidate) : ""}`,
       context,
     );
   }, String(type));
@@ -57,7 +57,7 @@ export const is = <Type extends TypeString | "null">(
     }
 
     return failValidation(
-      `Expected "${typeString}", but received "${typeof candidate}"${typeof candidate !== "object" ? `: ${String(candidate)}` : ""}.`,
+      `Expected "${typeString}", but received "${typeof candidate}"${typeof candidate !== "object" ? `: ${String(candidate)}` : ""}`,
       context,
     );
   }, typeString);
@@ -113,7 +113,7 @@ export const isUnionOf = <Predicates extends TypePredicate<unknown>[]>(
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const result = predicates[predicateIndex]!.validate(candidate, {
           currentResult: { valid: true },
-          path: `${context.path} | (${predicateIndex})`,
+          path: `${context.path} |(${predicateIndex})`,
         });
         if (result.valid) {
           return result;
@@ -124,7 +124,7 @@ export const isUnionOf = <Predicates extends TypePredicate<unknown>[]>(
       return failValidation(
         `Expected union of types. The following errors were received:\n${failures
           .map((failure) =>
-            failure.errorMessages.map((message) => `\t\t${message}`).join("\n"),
+            failure.errorMessages.map((message) => `\t${message}`).join("\n"),
           )
           .join("\n")}\n`,
         context,
@@ -151,7 +151,7 @@ export const isIntersectionOf = <Predicates extends TypePredicate<unknown>[]>(
       const result = predicates.reduce<ValidationResult>(
         (currentResult, predicate, predicateIndex) => {
           return predicate.validate(candidate, {
-            path: `${context.path} & (${predicateIndex})`,
+            path: `${context.path} &(${predicateIndex})`,
             currentResult,
           });
         },
@@ -163,7 +163,7 @@ export const isIntersectionOf = <Predicates extends TypePredicate<unknown>[]>(
       }
 
       return failValidation(
-        `Expected intersection of types. The following errors were received:\n${result.errorMessages.map((message) => `\t\t${message}`).join("\n")}\n`,
+        `Expected intersection of types. The following errors were received:\n${result.errorMessages.map((message) => `\t${message}`).join("\n")}\n`,
         context,
       );
     },

@@ -31,21 +31,23 @@ export const useImages = (
   });
 
   useEffect(() => {
-    let cancelled = false;
+    const signal = { cancelled: false };
+
     void (async () => {
       const currentName = backgrounds?.[currentTheme];
       if (!currentName) {
         return;
       }
 
-      const current = await images[currentName]();
+      const current = images[currentName];
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (!cancelled) {
+      await fetch(current.placeholder);
+
+      if (!signal.cancelled) {
         setImageState({ previous: imageState.current, current });
       }
     })();
-    return () => (cancelled = true);
+    return () => (signal.cancelled = true);
   }, [currentTheme, backgrounds]);
 
   return imageState;
