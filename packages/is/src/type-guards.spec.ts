@@ -37,7 +37,7 @@ describe("type-guards", () => {
       "$#: isNull(value: $value) -> $expectedOutcome",
       ({ expectedOutcome, value }) => {
         expect(isNullish(value)).toBe(expectedOutcome);
-      },
+      }
     );
 
     it("has the right type description.", () => {
@@ -79,9 +79,9 @@ describe("type-guards", () => {
           isObject({
             a: is("string"),
             b: is("number"),
-          })(value),
+          })(value)
         ).toBe(expectedOutcome);
-      },
+      }
     );
 
     it("returns a good error message when it fails.", () => {
@@ -103,9 +103,9 @@ describe("type-guards", () => {
         });
       }).toThrow(
         new TypeError(`Expected { a: { c: number; d: string[]; }; b: number; } but received object.
-root.b: Expected "number", but received "string": s.
-root.a.d[2]: Expected "string", but received "number": 2.
-root.a.d[0]: Expected "string", but received "number": 1.`),
+root.b: Expected "number", but received "string": s
+root.a.d[2]: Expected "string", but received "number": 2
+root.a.d[0]: Expected "string", but received "number": 1`)
       );
     });
 
@@ -114,7 +114,7 @@ root.a.d[0]: Expected "string", but received "number": 1.`),
         isObject({
           a: is("string"),
           b: is("number"),
-        }).typeDescription,
+        }).typeDescription
       ).toBe("{ a: string; b: number; }");
     });
   });
@@ -147,7 +147,7 @@ root.a.d[0]: Expected "string", but received "number": 1.`),
       ({ expectedOutcome, value }) => {
         const predicate = isArrayOf(is("number"));
         expect(predicate(value)).toBe(expectedOutcome);
-      },
+      }
     );
 
     it("has the right type description.", () => {
@@ -182,12 +182,26 @@ root.a.d[0]: Expected "string", but received "number": 1.`),
       '$#: isRecordOf(is("number"))(value: $value) -> $expectedOutcome',
       ({ expectedOutcome, value }) => {
         expect(isRecordOf(is("number"))(value)).toBe(expectedOutcome);
-      },
+      }
     );
 
     it("has the right type description.", () => {
       expect(isRecordOf(is("number")).typeDescription).toBe(
-        "{ [key: string]: number; }",
+        "{ [key: string]: number; }"
+      );
+    });
+
+    it("returns a good error message when it fails.", () => {
+      const isObj = isRecordOf(is("string"));
+      const assertIsObj: TypeAssertion<CheckedBy<typeof isObj>> = assert(isObj);
+      expect(() => {
+        assertIsObj({
+          a: "A",
+          b: 1,
+        });
+      }).toThrow(
+        new TypeError(`Expected { [key: string]: string; } but received object.
+root.b: Expected "string", but received "number": 1`)
       );
     });
   });
@@ -294,7 +308,7 @@ root.a.d[0]: Expected "string", but received "number": 1.`),
       "$#: is(typeString: $typeString)(value: $value) -> $expectedOutcome;",
       ({ expectedOutcome, typeString, value }) => {
         expect(is(typeString)(value)).toBe(expectedOutcome);
-      },
+      }
     );
 
     it.each([
@@ -311,8 +325,17 @@ root.a.d[0]: Expected "string", but received "number": 1.`),
       "$#: is(typeString: $typeString) has type description $typeString.",
       ({ typeString }) => {
         expect(is(typeString).typeDescription).toBe(typeString);
-      },
+      }
     );
+
+    it("returns a useful message indicating why validation failed.", () => {
+      expect(is("number").validate("something else")).toStrictEqual({
+        valid: false,
+        errorMessages: [
+          `root: Expected "number", but received "string": something else`,
+        ],
+      });
+    });
   });
 
   describe("isLiteral", () => {
@@ -357,15 +380,24 @@ root.a.d[0]: Expected "string", but received "number": 1.`),
       "$#: isLiteral(type: $type)(value: $value) -> $expectedOutcome;",
       ({ expectedOutcome, type, value }) => {
         expect(isLiteral(type)(value)).toBe(expectedOutcome);
-      },
+      }
     );
 
     it.each([{ type: "literal" }, { type: 1 }, { type: true }] as const)(
       "$#: isLiteral(type: $type) has type description $type.",
       ({ type }) => {
         expect(isLiteral(type).typeDescription).toBe(String(type));
-      },
+      }
     );
+
+    it("returns a useful message indicating why validation failed.", () => {
+      expect(isLiteral("thing").validate("something else")).toStrictEqual({
+        valid: false,
+        errorMessages: [
+          `root: Expected literal value "thing", but received "string": something else`,
+        ],
+      });
+    });
   });
 
   describe("isUnionOf", () => {
@@ -394,16 +426,33 @@ root.a.d[0]: Expected "string", but received "number": 1.`),
           isUnionOf(
             is("number"),
             isLiteral("banana"),
-            isLiteral("apple"),
-          )(value),
+            isLiteral("apple")
+          )(value)
         ).toBe(expectedOutcome);
-      },
+      }
     );
 
     it("has the right type description.", () => {
       expect(isUnionOf(is("number"), is("string")).typeDescription).toBe(
-        "number | string",
+        "number | string"
       );
+    });
+
+    it("builds a useful message indicating how each element of the union failed.", () => {
+      expect(
+        isUnionOf(
+          isObject({ a: is("string") }),
+          isObject({ b: is("number") })
+        ).validate({ c: "{string}" })
+      ).toStrictEqual({
+        valid: false,
+        errorMessages: [
+          `root: Expected union of types. The following errors were received:
+\troot |(0).a: Expected "string", but received "undefined": undefined
+\troot |(1).b: Expected "number", but received "undefined": undefined
+`,
+        ],
+      });
     });
   });
 
@@ -432,18 +481,18 @@ root.a.d[0]: Expected "string", but received "number": 1.`),
         expect(
           isIntersectionOf(
             isObject({ a: is("string") }),
-            isObject({ b: is("number") }),
-          )(value),
+            isObject({ b: is("number") })
+          )(value)
         ).toBe(expectedOutcome);
-      },
+      }
     );
 
     it("has the right type description.", () => {
       expect(
         isIntersectionOf(
           isObject({ a: is("string") }),
-          isObject({ b: is("number") }),
-        ).typeDescription,
+          isObject({ b: is("number") })
+        ).typeDescription
       ).toBe("{ a: string; } & { b: number; }");
     });
 
@@ -451,13 +500,13 @@ root.a.d[0]: Expected "string", but received "number": 1.`),
       expect(
         isIntersectionOf(
           isObject({ a: is("string") }),
-          isObject({ b: is("number") }),
-        ).validate({ a: "{string}" }),
+          isObject({ b: is("number") })
+        ).validate({ a: "{string}" })
       ).toStrictEqual({
         valid: false,
         errorMessages: [
           `root: Expected intersection of types. The following errors were received:
-          root &(1).b: Expected \"number\", but received \"undefined\": undefined.
+\troot &(1).b: Expected "number", but received "undefined": undefined
 `,
         ],
       });
@@ -499,24 +548,24 @@ root.a.d[0]: Expected "string", but received "number": 1.`),
       '$#: isTuple(is("string"), is("number"))(value: $value) -> $expectedOutcome',
       ({ expectedOutcome, value }) => {
         expect(isTuple(is("string"), is("number"))(value)).toBe(
-          expectedOutcome,
+          expectedOutcome
         );
-      },
+      }
     );
 
     it("has the right type description.", () => {
       expect(isTuple(is("string"), is("number")).typeDescription).toBe(
-        "[string, number]",
+        "[string, number]"
       );
     });
 
     it("includes the index of the incorrect value in the message.", () => {
       expect(
-        isTuple(is("string"), is("number")).validate(["string", "string"]),
+        isTuple(is("string"), is("number")).validate(["string", "string"])
       ).toStrictEqual({
         valid: false,
         errorMessages: [
-          'root[1]: Expected "number", but received "string": string.',
+          'root[1]: Expected "number", but received "string": string',
         ],
       });
     });
@@ -574,14 +623,14 @@ root.a.d[0]: Expected "string", but received "number": 1.`),
       "$#: isInstanceOf(A)(value: $value) -> $expectedOutcome",
       ({ expectedOutcome, value }) => {
         expect(isInstanceOf(A)(value)).toBe(expectedOutcome);
-      },
+      }
     );
 
     it("has the right type description.", () => {
       expect(isInstanceOf(A).typeDescription).toBe("instanceof(A)");
     });
 
-    it("produces a messeage including the name of the class when validation fails.", () => {
+    it("produces a message including the name of the class when validation fails.", () => {
       expect(isInstanceOf(A).validate({})).toStrictEqual({
         valid: false,
         errorMessages: ["root: Expected instance of A but received: Object"],
