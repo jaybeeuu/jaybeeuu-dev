@@ -75,6 +75,12 @@ PascalCase
 uppercase
 lowercase
 uncapitalize
+redux-thunk
+redux
+thunks
+gif
+erroring
+grebulons
  - src/premature-optimisation.md
 v14.15.1
 Hrn
@@ -103,3 +109,15 @@ _is_
  - src/jest-transforms/jest-transforms.md
 v18
 npmland
+ - src/react-suspense/react-suspense.md
+HOC
+rtk
+swr
+500ms
+ArtistPage.js
+TensorFlow.js
+expector
+MobileNet
+TypeScript'd
+data.js
+v5
