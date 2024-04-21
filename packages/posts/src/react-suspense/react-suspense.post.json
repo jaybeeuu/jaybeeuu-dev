@@ -1,0 +1,5 @@
+{
+  "title": "React, Async, Suspense, and Transitions",
+  "abstract": "A deep dive in to async support in React via Suspense and Transitions",
+  "publish": true
+}
