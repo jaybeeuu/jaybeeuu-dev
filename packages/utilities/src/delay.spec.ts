@@ -1,4 +1,5 @@
 import { echo, delay } from "./delay.js";
+import { describe, expect, it, jest } from "@jest/globals";
 
 const setupMockTimers = (): void => {
   jest.useFakeTimers();
@@ -31,7 +32,7 @@ describe("echo", () => {
 
   it("returns the result of the supplied factory after the given time.", async () => {
     setupMockTimers();
-    const factory = jest.fn<string, []>().mockReturnValue("{result}");
+    const factory = jest.fn<() => string>().mockReturnValue("{result}");
     const promise = echo(factory, 100);
 
     jest.advanceTimersByTime(99);

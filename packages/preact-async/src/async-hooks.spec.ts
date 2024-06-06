@@ -7,6 +7,7 @@ import {
   useSemanticMemo,
 } from "./async-hooks";
 
+import { describe, expect, it, jest } from "@jest/globals";
 describe("async-hooks", () => {
   describe("useIsMounted", () => {
     it("returns true while the component is mounted.", () => {
@@ -29,7 +30,7 @@ describe("async-hooks", () => {
 
     it("does not rerun the factory when the component rerenders, and the deps haven't updated.", () => {
       const factory = jest
-        .fn<number, [number]>()
+        .fn<(memoResult: number) => number>()
         .mockImplementation((memoResult: number) => memoResult);
 
       const { rerender } = renderHook(
@@ -44,7 +45,7 @@ describe("async-hooks", () => {
     });
 
     it("does not rerun the factory when the component rerenders, and the deps haven't updated, even if it has returned undefined the first time.", () => {
-      const factory = jest.fn<undefined, []>().mockReturnValue(undefined);
+      const factory = jest.fn<() => void>().mockReturnValue(undefined);
 
       const { rerender } = renderHook(
         ({ prop }) => {
@@ -60,7 +61,7 @@ describe("async-hooks", () => {
 
     it("calls the factory when the component rerenders, and the deps have updated.", () => {
       const factory = jest
-        .fn<number, [number]>()
+        .fn<(memoResult: number) => number>()
         .mockImplementation((memoResult: number) => memoResult);
 
       const { rerender } = renderHook(
@@ -76,7 +77,7 @@ describe("async-hooks", () => {
 
     it("doesn't call the factory when the component rerenders a third time, and the deps have not updated.", () => {
       const factory = jest
-        .fn<number, [number]>()
+        .fn<(memoResult: number) => number>()
         .mockImplementation((memoResult: number) => memoResult);
 
       const { rerender } = renderHook(
@@ -94,7 +95,7 @@ describe("async-hooks", () => {
 
     it("updates the return value when the component rerenders, and the deps have updated.", () => {
       const factory = jest
-        .fn<number, [number]>()
+        .fn<(memoResult: number) => number>()
         .mockImplementation((memoResult: number) => memoResult);
 
       const { result, rerender } = renderHook(

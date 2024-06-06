@@ -7,6 +7,7 @@ import type { BackgroundImages } from "../state";
 import type { ImageState } from "./background";
 import { useImages } from "./background";
 
+import { describe, expect, it, jest } from "@jest/globals";
 jest.mock("../images");
 interface UseImagesProps {
   backgrounds: BackgroundImages | null;
@@ -105,9 +106,7 @@ describe("useImages", () => {
   });
 
   it("sets the previous and current images when the images change.", async () => {
-    jest
-      .spyOn(window, "fetch")
-      .mockResolvedValue(Promise.resolve({} as Response));
+    jest.spyOn(window, "fetch").mockResolvedValue({} as Response);
 
     const { rerender, result } = renderUseImages({
       backgrounds: {
@@ -141,9 +140,7 @@ describe("useImages", () => {
   });
 
   it("sets the previous and current images when the theme changes.", async () => {
-    jest
-      .spyOn(window, "fetch")
-      .mockResolvedValue(Promise.resolve({} as Response));
+    jest.spyOn(window, "fetch").mockResolvedValue({} as Response);
 
     const { rerender, result } = renderUseImages({
       backgrounds: {

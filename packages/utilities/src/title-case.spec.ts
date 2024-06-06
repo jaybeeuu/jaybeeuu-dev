@@ -1,5 +1,6 @@
 import { titleCase } from "./title-case";
 
+import { describe, expect, it } from "@jest/globals";
 describe("titleCase", () => {
   it("titles the case of a kebab-case String.", () => {
     expect(titleCase("kebab-case")).toBe("Kebab Case");

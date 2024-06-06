@@ -5,6 +5,7 @@ import {
   getOutputFile,
 } from "./helpers";
 
+import { describe, expect, it } from "@jest/globals";
 describe("images", () => {
   it("includes image tags in the compiled html.", async () => {
     await cleanUpDirectories();

@@ -1,9 +1,10 @@
+import { Failure } from "@jaybeeuu/utilities";
+import { describe, expect, it } from "@jest/globals";
 import {
   cleanUpDirectories,
   getCompiledPostWithContent,
   getOutputFile,
 } from "./helpers";
-import { Failure } from "@jaybeeuu/utilities";
 
 describe("links", () => {
   it("compiles an inline hash link to link properly within the document.", async () => {

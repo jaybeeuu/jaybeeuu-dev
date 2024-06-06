@@ -29,22 +29,22 @@
     "lint": "eslint --ext .js,.ts --format codeframe -c ./base.js ."
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^7.3.1",
-    "@typescript-eslint/parser": "^7.3.1",
+    "@typescript-eslint/eslint-plugin": "^7.12.0",
+    "@typescript-eslint/parser": "^7.12.0",
     "eslint": "^8.57.0",
-    "eslint-plugin-jest": "^27.9.0",
-    "eslint-plugin-react": "^7.34.1"
+    "eslint-plugin-jest": "^28.6.0",
+    "eslint-plugin-react": "^7.34.2"
   },
   "dependencies": {
     "eslint-config-prettier": "^9.1.0",
     "eslint-formatter-codeframe": "^7.32.1",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.5"
   },
   "peerDependencies": {
-    "@typescript-eslint/eslint-plugin": "^7.3.1",
-    "@typescript-eslint/parser": "^7.3.1",
+    "@typescript-eslint/eslint-plugin": "^7.12.0",
+    "@typescript-eslint/parser": "^7.12.0",
     "eslint": "^8.57.0",
-    "eslint-plugin-jest": "^27.9.0",
-    "eslint-plugin-react": "^7.34.1"
+    "eslint-plugin-jest": "^28.6.0",
+    "eslint-plugin-react": "^7.34.2"
   }
 }

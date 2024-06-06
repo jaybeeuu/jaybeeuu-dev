@@ -14,6 +14,7 @@ import {
   type TypeString,
 } from "./index";
 
+import { describe, expect, it } from "@jest/globals";
 describe("type-guards", () => {
   describe("isNullish", () => {
     const samples: {

@@ -14,6 +14,7 @@ import type { PostManifest, PostMetaData } from "../../src/index";
 import type { PostMetaFileData } from "../../src/posts/src/metafile";
 import readingTime from "reading-time";
 
+import { describe, expect, it, jest } from "@jest/globals";
 jest.mock("node-fetch");
 
 const writeOutputManifestFile = (
