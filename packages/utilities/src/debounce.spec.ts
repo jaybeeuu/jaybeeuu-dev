@@ -1,5 +1,6 @@
 import { debounce } from "./debounce.js";
 
+import { describe, expect, it, jest } from "@jest/globals";
 jest.useFakeTimers();
 type Args = [number, string, { id: number }];
 
@@ -26,7 +27,7 @@ describe("debounce", () => {
 
   it("executes the actor with the supplied arguments.", () => {
     const args: Args = [1, "2", { id: 3 }];
-    const actor = jest.fn<never, Args>();
+    const actor = jest.fn<(...ars: Args) => never>();
     const delay = 500;
 
     debounce(actor, delay)(...args);
@@ -49,7 +50,7 @@ describe("debounce", () => {
   });
 
   it("executes the actor with the most recent arguments.", () => {
-    const actor = jest.fn<never, Args>();
+    const actor = jest.fn<(...ars: Args) => never>();
     const delay = 500;
 
     const debounced = debounce(actor, delay);

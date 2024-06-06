@@ -1,5 +1,6 @@
 import { multiPartition } from "./multi-partition.js";
 
+import { describe, expect, it } from "@jest/globals";
 describe("multi-partition", () => {
   it("partitions an array into 3 partitions.", () => {
     const input = [1, 2, 3, 2, 1, 3];

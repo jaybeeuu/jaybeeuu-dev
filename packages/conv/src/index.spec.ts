@@ -1,5 +1,6 @@
 import { conv } from "./index.js";
 import { env } from "node:process";
+import { describe, expect, it, jest } from "@jest/globals";
 
 jest.mock("dotenv");
 

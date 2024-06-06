@@ -15,13 +15,15 @@ import { update } from "../../src/posts/index.js";
 import type { PostManifest, UpdateOptions } from "../../src/posts/src/types.js";
 import type * as ReadingTime from "reading-time";
 
-jest.mock<typeof ReadingTime>("reading-time", () => {
+import { jest } from "@jest/globals";
+jest.mock<typeof ReadingTime>("reading-time", (): typeof ReadingTime => {
   const readingTime = jest.requireActual<typeof ReadingTime>("reading-time");
 
   return {
+    // @ts-expect-error __esModule tesll jes what to do, but is not included in the ReadingTime type.
     __esModule: true,
     ...readingTime,
-    default: jest.fn().mockReturnValue({
+    default: jest.fn<typeof ReadingTime.default>().mockReturnValue({
       text: "1 min read.",
       time: 1,
       words: 1,
@@ -35,7 +37,7 @@ jest.mock<typeof Utilities>("@jaybeeuu/utilities", () => {
   const utils = jest.requireActual<typeof Utilities>("@jaybeeuu/utilities");
   utils.log = {
     error: jest.fn(),
-    getErrorMessage: jest.fn(),
+    getErrorMessage: jest.fn<(err: unknown) => string>(),
     info: jest.fn(),
     warn: jest.fn(),
   };

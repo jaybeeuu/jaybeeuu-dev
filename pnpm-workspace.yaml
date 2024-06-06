@@ -1,5 +1,6 @@
 packages:
   - "packages/compost"
+  - "packages/conv"
   - "packages/e2e-hooks"
   - "packages/e2e"
   - "packages/eslint-config"

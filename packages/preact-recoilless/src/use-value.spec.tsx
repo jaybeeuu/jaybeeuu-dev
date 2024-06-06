@@ -12,7 +12,8 @@ import { h } from "preact";
 import { StoreProvider } from "./store-provider.js";
 import { useValue } from "./use-value.js";
 
-jest.mock<typeof UtilitiesModule>("@jaybeeuu/utilities", () => {
+import { describe, expect, it, jest } from "@jest/globals";
+jest.mock("@jaybeeuu/utilities", (): typeof UtilitiesModule => {
   const actualUtilities = jest.requireActual<typeof UtilitiesModule>(
     "@jaybeeuu/utilities",
   );
@@ -20,7 +21,8 @@ jest.mock<typeof UtilitiesModule>("@jaybeeuu/utilities", () => {
   return {
     ...actualUtilities,
     monitorPromise: jest
-      .fn()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .fn<typeof actualUtilities.monitorPromise<any>>()
       .mockImplementation(actualUtilities.monitorPromise),
   };
 });

@@ -1,5 +1,6 @@
 import { cleanUpDirectories, getCompiledPostWithContent } from "./helpers";
 
+import { describe, expect, it } from "@jest/globals";
 describe("compile", () => {
   it("compiles a post tto include some basic content.", async () => {
     await cleanUpDirectories();
