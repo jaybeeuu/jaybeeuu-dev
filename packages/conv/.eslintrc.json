@@ -1,0 +1,14 @@
+{
+  "extends": ["@jaybeeuu/eslint-config/base", "@jaybeeuu/eslint-config/jest"],
+  "env": {
+    "node": true
+  },
+  "rules": {
+    "jest/require-hook": [
+      "error",
+      {
+        "allowedFunctionCalls": ["withFakeTimers"]
+      }
+    ]
+  }
+}
