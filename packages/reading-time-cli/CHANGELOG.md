@@ -1,5 +1,11 @@
 # @jaybeeuu/reading-time-cli
 
+## 1.0.4
+
+### Patch Changes
+
+- [#171](https://github.com/jaybeeuu/jaybeeuu-dev/pull/171) [`bb4d651`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/bb4d651bd3262478978fd8cb2e6c3ba56fb452e9) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Update all dependencies
+
 ## 1.0.3
 
 ### Patch Changes
