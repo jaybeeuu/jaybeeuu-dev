@@ -9,8 +9,8 @@ describe("conv", () => {
     delete env.THING;
     expect(() => conv({ THING: { type: "string" } })).toThrow(
       new TypeError(
-        `Expected environment variable THING to be defined, but it was "undefined".`
-      )
+        `Expected environment variable THING to be defined, but it was "undefined".`,
+      ),
     );
   });
 
@@ -48,7 +48,7 @@ describe("conv", () => {
     it("throws if the variable value is not a number.", () => {
       env.THING = "{thing}";
       expect(() => conv({ THING: { type: "number" } })).toThrow(
-        'Expected THING to be a valid number, but received "{thing}".'
+        'Expected THING to be a valid number, but received "{thing}".',
       );
     });
 
@@ -62,7 +62,7 @@ describe("conv", () => {
     it('throws if the variable value is not "true" or "false".', () => {
       env.THING = "{thing}";
       expect(() => conv({ THING: { type: "boolean" } })).toThrow(
-        'Expected THING to be either "true" or "false", but received "{thing}".'
+        'Expected THING to be either "true" or "false", but received "{thing}".',
       );
     });
 
@@ -80,7 +80,7 @@ describe("conv", () => {
       ({ value, expectedResult }) => {
         env.THING = value;
         expect(conv({ THING: { type: "boolean" } }).THING).toBe(expectedResult);
-      }
+      },
     );
   });
 
@@ -88,7 +88,7 @@ describe("conv", () => {
     it("throws if the variable value is not a valid date.", () => {
       env.THING = "{not a date}";
       expect(() => conv({ THING: { type: "date" } })).toThrow(
-        'Expected THING to be a valid date or date/time, but received "{not a date}".'
+        'Expected THING to be a valid date or date/time, but received "{not a date}".',
       );
     });
 
@@ -104,9 +104,9 @@ describe("conv", () => {
       ({ value, expectedResult }) => {
         env.THING = value;
         expect(conv({ THING: { type: "date" } }).THING).toStrictEqual(
-          expectedResult
+          expectedResult,
         );
-      }
+      },
     );
   });
 

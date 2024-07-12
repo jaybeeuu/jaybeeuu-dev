@@ -35,13 +35,13 @@ export const main = (): void => {
           type: "string",
         },
       },
-      (options) => version(options)
+      (options) => version(options),
     )
     .command(
       "publish",
       "Publish the packages whose versions have bumped & push tags to github.",
       {},
-      () => publish()
+      () => publish(),
     )
     .demandCommand()
     .help().argv;

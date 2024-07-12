@@ -50,7 +50,7 @@ type InferredEnvVars<Options extends EnvVarOptions> = {
 const valueParsers: {
   [type in EnvVarType]: (
     valueString: string,
-    name: string
+    name: string,
   ) => EnvVarTypeJsTypeMap[type];
 } = {
   boolean: (valueString, name) => {
@@ -58,7 +58,7 @@ const valueParsers: {
 
     if (lowerValue !== "true" && lowerValue !== "false") {
       throw new Error(
-        `Expected ${name} to be either "true" or "false", but received "${valueString}".`
+        `Expected ${name} to be either "true" or "false", but received "${valueString}".`,
       );
     }
 
@@ -69,7 +69,7 @@ const valueParsers: {
 
     if (isNaN(asDate.getTime())) {
       throw new Error(
-        `Expected ${name} to be a valid date or date/time, but received "${valueString}".`
+        `Expected ${name} to be a valid date or date/time, but received "${valueString}".`,
       );
     }
 
@@ -83,7 +83,7 @@ const valueParsers: {
 
     if (isNaN(asNumber)) {
       throw new Error(
-        `Expected ${name} to be a valid number, but received "${valueString}".`
+        `Expected ${name} to be a valid number, but received "${valueString}".`,
       );
     }
 
@@ -95,7 +95,7 @@ const assertIsEnvVarType: TypeAssertion<EnvVarType> = isUnionOf(
   isLiteral("string"),
   isLiteral("boolean"),
   isLiteral("number"),
-  isLiteral("date")
+  isLiteral("date"),
 ).assert;
 
 type ResolvedEnvVar = {
@@ -112,7 +112,7 @@ type ResolvedEnvVar = {
 
 const resolveVariableOptions = (
   name: string,
-  option: EnvVarOption
+  option: EnvVarOption,
 ): ResolvedEnvVar => {
   const type =
     option.type ?? ("default" in option ? typeof option.default : "string");
@@ -133,7 +133,7 @@ const resolveVariableOptions = (
 };
 
 export const conv = <Vars extends EnvVarOptions>(
-  vars: Vars
+  vars: Vars,
 ): InferredEnvVars<Vars> => {
   config();
 
@@ -155,7 +155,7 @@ export const conv = <Vars extends EnvVarOptions>(
 
     assertIsNotNullish(
       value,
-      `Expected environment variable ${variable.name} to be defined, but it was "${env[variable.name]}".`
+      `Expected environment variable ${variable.name} to be defined, but it was "${env[variable.name]}".`,
     );
 
     acc[variable.name] = valueParsers[variable.type](value, variable.name);
