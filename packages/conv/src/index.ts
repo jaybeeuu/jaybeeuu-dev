@@ -12,39 +12,39 @@ type EnvVarTypeJsTypeMap = {
   date: Date;
 };
 
-type EnvVarOptionWithType<Type extends EnvVarType> = Type extends EnvVarType
-  ?
-      | { type: Type; optional?: true }
-      | { type?: Type; default: EnvVarTypeJsTypeMap[Type] }
-  : never;
+type EnvVarOption<Type extends EnvVarType = EnvVarType> =
+  | { type?: Type; optional: boolean }
+  | { type: Type }
+  | { type?: Type; default: EnvVarTypeJsTypeMap[Type] };
 
-type EnvVarOption<
-  Name extends string = string,
-  Type extends EnvVarType = EnvVarType,
-> = Name | ({ name: Name } & EnvVarOptionWithType<Type>);
+type EnvVarOptions = { [name: string]: EnvVarOption };
 
-type EnvVarOptions = readonly EnvVarOption[];
-
-type EnvVars<Vars extends EnvVarOptions> = Vars[number];
-
-type NameOf<Var extends EnvVarOption> = Var extends { name: infer Name }
-  ? Name
-  : Var;
-
-type EnvVarNames<Vars extends EnvVarOptions> = NameOf<Vars[number]>;
-
-type NameEnvVarMap<Vars extends EnvVarOptions> = {
-  [Key in EnvVarNames<Vars>]: Extract<EnvVars<Vars>, Key | { name: Key }>;
-};
-
-type EnvValues<Vars extends EnvVarOptions> = {
-  [Key in EnvVarNames<Vars>]: NameEnvVarMap<Vars>[Key] extends EnvVarOptionWithType<
-    infer Type
-  >
-    ? NameEnvVarMap<Vars>[Key] extends { optional: true }
-      ? EnvVarTypeJsTypeMap[Type] | null
-      : EnvVarTypeJsTypeMap[Type]
+type InferTypeFromTypeString<Option extends EnvVarOption> = Option extends {
+  type?: infer Type;
+}
+  ? Type extends EnvVarType
+    ? EnvVarTypeJsTypeMap[Type]
+    : unknown
+  : Option extends {
+        default: infer DefaultType;
+      }
+    ? DefaultType
     : string;
+
+type InferredOptionDataType<Option extends EnvVarOption> = Option extends {
+  default: infer DefaultType;
+}
+  ? InferTypeFromTypeString<Option> | DefaultType
+  : InferTypeFromTypeString<Option>;
+
+type InferredOptionType<Option extends EnvVarOption> = Option extends {
+  optional: true;
+}
+  ? InferredOptionDataType<Option> | null
+  : InferredOptionDataType<Option>;
+
+type InferredEnvVars<Options extends EnvVarOptions> = {
+  [key in keyof Options]: InferredOptionType<Options[key]>;
 };
 
 const valueParsers: {
@@ -110,34 +110,37 @@ type ResolvedEnvVar = {
     }
 );
 
-const resolveVariableOptions = (option: EnvVarOption): ResolvedEnvVar => {
-  if (typeof option === "string") {
-    return { type: "string", name: option, optional: false };
-  }
-
-  const type = option.type ?? typeof option.default;
+const resolveVariableOptions = (
+  name: string,
+  option: EnvVarOption
+): ResolvedEnvVar => {
+  const type =
+    option.type ?? ("default" in option ? typeof option.default : "string");
   assertIsEnvVarType(type);
 
   const optionalOrDefault =
     "default" in option
       ? { default: option.default }
-      : { optional: option.optional ?? false };
+      : "optional" in option
+        ? { optional: option.optional }
+        : { optional: false };
 
   return {
-    name: option.name,
+    name,
     type,
     ...optionalOrDefault,
   };
 };
 
-export const conv = <Vars extends EnvVarOption[]>(
-  ...vars: Vars
-): EnvValues<Vars> => {
+export const conv = <Vars extends EnvVarOptions>(
+  vars: Vars
+): InferredEnvVars<Vars> => {
   config();
-  return vars.reduce<{
+
+  return Object.entries(vars).reduce<{
     [key: string]: string | number | boolean | Date | null;
-  }>((acc, varOption) => {
-    const variable = resolveVariableOptions(varOption);
+  }>((acc, [name, varOption]) => {
+    const variable = resolveVariableOptions(name, varOption);
     const value = env[variable.name] || null;
 
     if (value === null && "optional" in variable && variable.optional) {
@@ -158,5 +161,5 @@ export const conv = <Vars extends EnvVarOption[]>(
     acc[variable.name] = valueParsers[variable.type](value, variable.name);
 
     return acc;
-  }, {}) as EnvValues<Vars>;
+  }, {}) as InferredEnvVars<Vars>;
 };
