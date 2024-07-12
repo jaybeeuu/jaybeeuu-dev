@@ -9,7 +9,6 @@ export const main = (): void => {
       {
         base: {
           default: "main",
-          type: "string",
         },
         "git-hub-token": {
           type: "string",
