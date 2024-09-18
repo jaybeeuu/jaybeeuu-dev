@@ -7,7 +7,7 @@ import {
   joinUrlPath,
   success,
 } from "@jaybeeuu/utilities";
-import type { MarkedOptions } from "marked";
+import type { MarkedOptions, Tokens } from "marked";
 import { marked } from "marked";
 import { gfmHeadingId } from "marked-gfm-heading-id";
 import type { SynchronousOptions } from "marked-highlight";
@@ -17,8 +17,8 @@ import Prism from "prismjs";
 import loadLanguages from "prismjs/components/index.js";
 import type { IOptions } from "sanitize-html";
 import sanitizeHtml from "sanitize-html";
-import { canAccessSync, readTextFileSync } from "../../files/index.js";
-import { getHash } from "../../hash.js";
+import { canAccessSync, readTextFileSync } from "../files/index.js";
+import { getHash } from "../hash.js";
 import { getSlug } from "./file-paths.js";
 
 export interface RenderContext {
@@ -96,9 +96,6 @@ class CustomRenderer extends marked.Renderer {
   readonly #renderContext: RenderContext;
   readonly #slugger = new Slugger();
 
-  // public readonly code: Renderer["code"];
-  // public readonly image: Renderer["image"];
-
   public get assets(): Assets[] {
     return this.#assets;
   }
@@ -115,15 +112,11 @@ class CustomRenderer extends marked.Renderer {
     };
   }
 
-  private innerCode(
-    code: string,
-    language: string | undefined,
-    isEscaped: boolean,
-  ): string {
-    const rendered = super.code(code, language, isEscaped);
+  private innerCode(args: Tokens.Code): string {
+    const rendered = super.code(args);
+    const { lang: language } = args;
 
     const preClasses = [
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       `language-${language || "none"}`,
       this.#renderContext.codeLineNumbers && "line-numbers",
     ]
@@ -136,7 +129,10 @@ class CustomRenderer extends marked.Renderer {
       const lineNumberRows = [
         '<span aria-hidden="true" class="line-number-rows">',
         ...Array.from(
-          { length: code.split("\n").length },
+          {
+            // -2 for the back tick lines.
+            length: args.raw.split("\n").length - 2,
+          },
           () => "<span></span>",
         ),
         "</span>",
@@ -148,15 +144,12 @@ class CustomRenderer extends marked.Renderer {
     return adjusted;
   }
 
-  private innerImage(
-    href: string | null,
-    title: string | null,
-    text: string,
-  ): string {
+  private innerImage(args: Tokens.Image): string {
+    const { href } = args;
     assertIsNotNullish(href);
 
     if (href.startsWith("https:") || href.startsWith("http:")) {
-      return super.image(href, title, text);
+      return super.image(args);
     }
 
     const resolvedImagePath = path.resolve(
@@ -174,28 +167,29 @@ class CustomRenderer extends marked.Renderer {
       destinationPath: hashedFileName,
     });
 
-    return super.image(transformedHref, title, text);
+    return super.image({ ...args, href: transformedHref });
   }
 
-  heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6): string {
-    if (level === 1 && this.#renderContext.removeH1) {
+  heading({ depth, tokens }: Tokens.Heading): string {
+    if (depth === 1 && this.#renderContext.removeH1) {
       return "";
     }
-    const htmlContent = innerHTML(text);
+    const compiled = this.parser.parseInline(tokens);
+    const htmlContent = innerHTML(compiled);
     const escapedText = escapeText(htmlContent);
     const headerSlug = this.#slugger.slug(escapedText);
     const href = `#${headerSlug}`;
 
     return [
       "",
-      `<h${level} id="${headerSlug}">`,
-      `  ${text}`,
+      `<h${depth} id="${headerSlug}">`,
+      `  ${compiled}`,
       `  <a class="hash-link" title="${htmlContent}" href="${href}"></a>`,
-      `</h${level}>`,
+      `</h${depth}>`,
     ].join("\n");
   }
 
-  link(href: string, title: string | null, text: string): string {
+  link({ href, ...args }: Tokens.Link): string {
     const resolvedHrefPath = path.resolve(
       path.dirname(this.#renderContext.sourceFilePath),
       href,
@@ -203,11 +197,13 @@ class CustomRenderer extends marked.Renderer {
 
     switch (true) {
       case isPostHref(resolvedHrefPath): {
-        return super.link(
-          joinUrlPath(this.#renderContext.hrefRoot, getSlug(resolvedHrefPath)),
-          title,
-          text,
-        );
+        return super.link({
+          ...args,
+          href: joinUrlPath(
+            this.#renderContext.hrefRoot,
+            getSlug(resolvedHrefPath),
+          ),
+        });
       }
       case href.startsWith("."): {
         const asset = getAssetDetails(
@@ -220,10 +216,10 @@ class CustomRenderer extends marked.Renderer {
           destinationPath: asset.hashedFileName,
         });
 
-        return super.link(asset.href, title, text);
+        return super.link({ href: asset.href, ...args });
       }
       default:
-        return super.link(href, title, text);
+        return super.link({ href, ...args });
     }
   }
 }

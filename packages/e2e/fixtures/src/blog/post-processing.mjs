@@ -1,6 +1,6 @@
 // @ts-check
 
-import fs from "fs";
+import fs from "node:fs";
 
 /**
  * @typedef {import("@jaybeeuu/compost").PostManifest} PostManifest
@@ -60,7 +60,7 @@ const transformManifest = async () => {
     (transformed, [slug, meta]) => {
       transformed[slug] = {
         ...meta,
-        // @ts-expect-error
+        // @ts-expect-error In practice I'm only overwriting some of the metadata.
         ...manifestTransformations[slug],
       };
       return transformed;
@@ -71,4 +71,4 @@ const transformManifest = async () => {
   await writeManifest(transformedManifest);
 };
 
-transformManifest();
+void transformManifest();

@@ -8,16 +8,10 @@ import type {
 } from "@jaybeeuu/recoilless";
 import { Store } from "@jaybeeuu/recoilless";
 import { assertIsNotNullish } from "@jaybeeuu/utilities";
+import { describe, expect, it } from "@jest/globals";
 import { renderHook } from "@testing-library/preact";
-import type { ComponentChildren, JSX } from "preact";
-import { h } from "preact";
-import { StoreProvider } from "./store-provider.js";
+import { createTestStoreWrapper } from "../test/index.js";
 import { useAction } from "./use-action.js";
-
-// eslint-disable-next-line react/display-name
-const Wrapper =
-  (store?: Store): ((props: { children: ComponentChildren }) => JSX.Element) =>
-  ({ children }) => <StoreProvider store={store}>{children}</StoreProvider>;
 
 const storedValue: PrimitiveValue<number> = {
   name: "storedValue",
@@ -33,11 +27,10 @@ const addDoubleToValue: Action<[number]> = (
   set(storedValue, newValue);
 };
 
-import { describe, expect, it } from "@jest/globals";
 describe("useAction", () => {
   it("returns a function with one less arg.", () => {
     const { result } = renderHook(() => useAction(addDoubleToValue), {
-      wrapper: Wrapper(),
+      wrapper: createTestStoreWrapper(),
     });
 
     expect(result.current).toStrictEqual(expect.any(Function));
@@ -46,11 +39,12 @@ describe("useAction", () => {
   it("sets the store value correctly when the result is executed.", () => {
     const store = new Store();
     const { result } = renderHook(() => useAction(addDoubleToValue), {
-      wrapper: Wrapper(store),
+      wrapper: createTestStoreWrapper(store),
     });
     const actor = result.current;
     assertIsNotNullish(actor);
     actor(2);
+
     expect(store.getValue(storedValue).current).toBe(5);
   });
 });

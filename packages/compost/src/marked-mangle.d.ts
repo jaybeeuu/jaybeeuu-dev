@@ -1,4 +1,5 @@
+import type { MarkedExtension } from "marked";
+
 declare module "marked-mangle" {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-  export function mangle(): import("marked").MarkedExtension;
+  export function mangle(): MarkedExtension;
 }

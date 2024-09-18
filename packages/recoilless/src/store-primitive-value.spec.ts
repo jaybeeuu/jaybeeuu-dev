@@ -9,17 +9,20 @@ const firstName: PrimitiveValue<string> = {
 };
 
 import { describe, expect, it, jest } from "@jest/globals";
+
 describe("recoilless store", () => {
   describe("primitive values", () => {
     it("allows the retrieval of a primitive value from the store.", () => {
       const store = new Store();
       const firstNameValueState = store.getValue(firstName);
+
       expect(firstNameValueState).toBeInstanceOf(PrimitiveValueState);
     });
 
     it("has the value in the store once it has been retrieved.", () => {
       const store = new Store();
       store.getValue(firstName);
+
       expect(store.hasValue(firstName)).toBe(true);
     });
 
@@ -34,6 +37,7 @@ describe("recoilless store", () => {
       const store = new Store();
       const firstState = store.getValue(firstName);
       const secondState = store.getValue(firstName);
+
       expect(firstState).toBe(secondState);
     });
 

@@ -1,4 +1,4 @@
-import type { UpdateOptions } from "packages/compost/src/posts/src/types";
+import type { UpdateOptions } from "packages/compost/src/posts/types";
 import {
   cleanUpDirectories,
   getCompiledPostWithContent,

@@ -90,7 +90,6 @@ const innerRecurseDir = async function* (
   }
 };
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export const recurseDirectory = async function* (
   directory: string,
   options?: RecurseDirectoryOptions,

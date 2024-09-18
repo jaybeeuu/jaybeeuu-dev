@@ -3,8 +3,8 @@ import { failure } from "@jaybeeuu/utilities";
 import type {
   FetchJsonFileFailureReason,
   ReadJsonFileFailureReason,
-} from "../../files/index.js";
-import { fetchJsonFile, readJsonFile } from "../../files/index.js";
+} from "../files/index.js";
+import { fetchJsonFile, readJsonFile } from "../files/index.js";
 import { isOldManifest, type OldPostManifest } from "./types.js";
 
 export type GetOldManifestFailureReason = "read manifest failed";

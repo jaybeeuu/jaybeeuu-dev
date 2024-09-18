@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as log from "./log.js";
 
 import { describe, expect, it, jest } from "@jest/globals";

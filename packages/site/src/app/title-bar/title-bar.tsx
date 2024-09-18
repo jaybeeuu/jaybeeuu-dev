@@ -1,8 +1,7 @@
 import { useValue } from "@jaybeeuu/preact-recoilless";
 import classNames from "classnames";
-import type { JSX } from "preact";
+import type { JSX, Ref } from "preact";
 import { h } from "preact";
-import type { Ref } from "preact/hooks";
 import { useLayoutEffect, useRef } from "preact/hooks";
 import { Link } from "preact-router";
 import { NavBar } from "../nav-bar";
@@ -14,14 +13,13 @@ export interface NavBarProps {
   className: string;
 }
 
-export const useTitleBarRef = (): Ref<HTMLDivElement | null> => {
+export const useTitleBarRef = (): Ref<HTMLDivElement> => {
   const [, setTitleBaeHeight] = useValue(titleBarHeight);
   const titleRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     setTitleBaeHeight(titleRef.current?.offsetHeight ?? 0);
   }, []);
-
   return titleRef;
 };
 

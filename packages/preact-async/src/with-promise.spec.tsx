@@ -1,3 +1,5 @@
+import { describe, expect, it } from "@jest/globals";
+import "@testing-library/jest-dom/jest-globals";
 import { render } from "@testing-library/preact";
 import type { PromiseState } from "packages/utilities/lib";
 import type { JSX } from "preact";
@@ -34,7 +36,9 @@ describe("withPromise", () => {
       <ContentWithPromise message={{ status: "pending" }} />,
     );
 
-    await expect(findByText("Pending")).resolves.toBeVisible();
+    const thing = await findByText("Pending");
+
+    expect(thing).toBeVisible();
   });
 
   it("renders the content component when the promise completes.", async () => {

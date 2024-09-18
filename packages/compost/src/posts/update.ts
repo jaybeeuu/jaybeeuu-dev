@@ -8,7 +8,7 @@ import {
   recurseDirectory,
   writeJsonFile,
   writeTextFile,
-} from "../../files/index.js";
+} from "../files/index.js";
 import type { CompileFailureReason as CompileFailureReason } from "./compile.js";
 import { compilePost } from "./compile.js";
 import type { ValidateSlugFailureReason as ValidateSlugFailureReason } from "./file-paths.js";
