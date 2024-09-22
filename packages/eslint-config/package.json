@@ -8,6 +8,7 @@
     "config",
     "eslint"
   ],
+  "type": "module",
   "homepage": "https://github.com/jaybeeuu/jaybeeuu-dev/tree/main/packages/eslint-config#readme",
   "repository": {
     "type": "git",
@@ -22,29 +23,33 @@
     "index.js"
   ],
   "exports": {
+    ".": "./index.js",
     "./base": "./base.js",
     "./jest": "./jest.js"
   },
   "scripts": {
-    "lint": "eslint --ext .js,.ts --format codeframe -c ./base.js ."
+    "lint": "eslint --format codeframe ."
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^7.12.0",
-    "@typescript-eslint/parser": "^7.12.0",
-    "eslint": "^8.57.0",
-    "eslint-plugin-jest": "^28.6.0",
-    "eslint-plugin-react": "^7.34.2"
+    "@types/eslint": "^9.6.1",
+    "@types/node": "^22.5.4",
+    "@typescript-eslint/eslint-plugin": "^8.4.0",
+    "@typescript-eslint/parser": "^8.4.0",
+    "eslint": "^9.9.1",
+    "eslint-plugin-jest": "^28.8.3",
+    "eslint-plugin-react": "^7.35.2"
   },
   "dependencies": {
+    "@eslint/compat": "^1.1.1",
+    "@eslint/js": "^9.9.1",
+    "@types/eslint__js": "^8.42.3",
     "eslint-config-prettier": "^9.1.0",
     "eslint-formatter-codeframe": "^7.32.1",
-    "typescript": "^5.4.5"
+    "globals": "^15.9.0",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.4.0"
   },
   "peerDependencies": {
-    "@typescript-eslint/eslint-plugin": "^7.12.0",
-    "@typescript-eslint/parser": "^7.12.0",
-    "eslint": "^8.57.0",
-    "eslint-plugin-jest": "^28.6.0",
-    "eslint-plugin-react": "^7.34.2"
+    "eslint": "^9.9.1"
   }
 }

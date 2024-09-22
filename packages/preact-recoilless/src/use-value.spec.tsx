@@ -3,16 +3,14 @@
  */
 import type { DerivedValue } from "@jaybeeuu/recoilless";
 import { Store } from "@jaybeeuu/recoilless";
-import { monitorPromise, pending } from "@jaybeeuu/utilities";
-import type { MonitorPromiseOptions } from "@jaybeeuu/utilities";
 import type * as UtilitiesModule from "@jaybeeuu/utilities";
+import type { MonitorPromiseOptions } from "@jaybeeuu/utilities";
+import { monitorPromise, pending } from "@jaybeeuu/utilities";
+import { describe, expect, it, jest } from "@jest/globals";
 import { act, renderHook } from "@testing-library/preact";
-import type { ComponentType } from "preact";
-import { h } from "preact";
-import { StoreProvider } from "./store-provider.js";
+import { createTestStoreWrapper } from "../test/index.js";
 import { useValue } from "./use-value.js";
 
-import { describe, expect, it, jest } from "@jest/globals";
 jest.mock("@jaybeeuu/utilities", (): typeof UtilitiesModule => {
   const actualUtilities = jest.requireActual<typeof UtilitiesModule>(
     "@jaybeeuu/utilities",
@@ -27,17 +25,12 @@ jest.mock("@jaybeeuu/utilities", (): typeof UtilitiesModule => {
   };
 });
 
-// eslint-disable-next-line react/display-name
-const Wrapper =
-  (store?: Store): ComponentType<{ children: Element }> =>
-  ({ children }) => <StoreProvider store={store}>{children}</StoreProvider>;
-
 describe("useValue", () => {
   describe("primitive", () => {
     it("returns the initial value.", () => {
       const { result } = renderHook(
         () => useValue({ name: "holiday", initialValue: "Whistler" }),
-        { wrapper: Wrapper() },
+        { wrapper: createTestStoreWrapper() },
       );
 
       expect(result.current).toStrictEqual(["Whistler", expect.any(Function)]);
@@ -46,7 +39,7 @@ describe("useValue", () => {
     it("updates the value when the set function is called.", async () => {
       const { result } = renderHook(
         () => useValue({ name: "holiday", initialValue: "Whistler" }),
-        { wrapper: Wrapper() },
+        { wrapper: createTestStoreWrapper() },
       );
 
       await act(() => {
@@ -60,10 +53,10 @@ describe("useValue", () => {
       const store = new Store();
       const value = { name: "holiday", initialValue: "Whistler" };
       const { result } = renderHook(() => useValue(value), {
-        wrapper: Wrapper(store),
+        wrapper: createTestStoreWrapper(store),
       });
       const { result: otherResult } = renderHook(() => useValue(value), {
-        wrapper: Wrapper(store),
+        wrapper: createTestStoreWrapper(store),
       });
 
       await act(() => {
@@ -77,9 +70,10 @@ describe("useValue", () => {
       const store = new Store();
       const value = { name: "holiday", initialValue: "Whistler" };
       const { unmount } = renderHook(() => useValue(value), {
-        wrapper: Wrapper(store),
+        wrapper: createTestStoreWrapper(store),
       });
       unmount();
+
       expect(store.hasValue(value)).toBe(false);
     });
   });
@@ -88,7 +82,7 @@ describe("useValue", () => {
     it("returns the result of the derived value function.", () => {
       const { result } = renderHook(
         () => useValue({ name: "holiday", derive: () => "Whistler" }),
-        { wrapper: Wrapper() },
+        { wrapper: createTestStoreWrapper() },
       );
 
       expect(result.current).toBe("Whistler");
@@ -103,11 +97,12 @@ describe("useValue", () => {
       };
       const firstStopState = store.getValue(firstStop);
       const { result } = renderHook(() => useValue(holiday), {
-        wrapper: Wrapper(store),
+        wrapper: createTestStoreWrapper(store),
       });
       await act(() => {
         firstStopState.set("Iceland");
       });
+
       expect(result.current).toBe("Iceland");
     });
 
@@ -119,9 +114,10 @@ describe("useValue", () => {
         derive: ({ get }) => get(firstStop),
       };
       const { unmount } = renderHook(() => useValue(holiday), {
-        wrapper: Wrapper(store),
+        wrapper: createTestStoreWrapper(store),
       });
       unmount();
+
       expect(store.hasValue(holiday)).toBe(false);
     });
 
@@ -133,9 +129,10 @@ describe("useValue", () => {
         derive: ({ get }) => get(firstStop),
       };
       const { unmount } = renderHook(() => useValue(holiday), {
-        wrapper: Wrapper(store),
+        wrapper: createTestStoreWrapper(store),
       });
       unmount();
+
       expect(store.hasValue(firstStop)).toBe(false);
     });
   });
@@ -156,7 +153,7 @@ describe("useValue", () => {
             },
             options,
           ),
-        { wrapper: Wrapper() },
+        { wrapper: createTestStoreWrapper() },
       );
 
       expect(monitorPromise).toHaveBeenCalledWith(promise, options);
@@ -177,7 +174,7 @@ describe("useValue", () => {
             },
             options,
           ),
-        { wrapper: Wrapper() },
+        { wrapper: createTestStoreWrapper() },
       );
 
       expect(result.current).toStrictEqual(pending());

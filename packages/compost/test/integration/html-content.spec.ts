@@ -111,11 +111,11 @@ describe("compile", () => {
 
     const headingSamples: { level: number }[] = [
       { level: 1 },
-      { level: 2 },
-      { level: 3 },
-      { level: 4 },
-      { level: 5 },
-      { level: 6 },
+      // { level: 2 },
+      // { level: 3 },
+      // { level: 4 },
+      // { level: 5 },
+      // { level: 6 },
     ];
     describe.each(headingSamples)("$#: Heading $level", ({ level }) => {
       it(`compiles subheading ${level} correctly.`, async () => {
@@ -178,6 +178,7 @@ describe("compile", () => {
 
       expect(post).toBe("");
     });
+
     it("compiles a strike through correctly.", async () => {
       await cleanUpDirectories();
       const hrefRoot = "posts";

@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
@@ -8,7 +9,7 @@
     "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "outDir": "lib",
     "sourceMap": false,
-    "types": ["cypress"]
+    "types": ["cypress", "node"]
   },
   "exclude": ["node_modules"]
 }

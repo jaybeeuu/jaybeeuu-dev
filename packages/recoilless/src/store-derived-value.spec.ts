@@ -8,6 +8,7 @@ import { DerivedValueState } from "./state/index.js";
 import { Store } from "./store.js";
 
 import { describe, expect, it, jest } from "@jest/globals";
+
 describe("recoilless store", () => {
   describe("derived values", () => {
     const firstName: PrimitiveValue<string> = {
@@ -30,12 +31,14 @@ describe("recoilless store", () => {
     it("allows the retrieval of a derived value from the store.", () => {
       const store = new Store();
       const fullNameValueState = store.getValue(fullName);
+
       expect(fullNameValueState).toBeInstanceOf(DerivedValueState);
     });
 
     it("has the value in the store once it has been retrieved.", () => {
       const store = new Store();
       store.getValue(fullName);
+
       expect(store.hasValue(fullName)).toBe(true);
     });
 
@@ -43,12 +46,14 @@ describe("recoilless store", () => {
       const store = new Store();
       const firstState = store.getValue(fullName);
       const secondState = store.getValue(fullName);
+
       expect(firstState).toBe(secondState);
     });
 
     it("sets the initial current value using the derive function and dependencies.", () => {
       const store = new Store();
       const state = store.getValue(fullName);
+
       expect(state.current).toBe(
         `${firstName.initialValue} ${surname.initialValue}`,
       );
@@ -67,6 +72,7 @@ describe("recoilless store", () => {
             }, 0);
           }),
       });
+
       await expect(state.current).resolves.toBe(
         `${firstName.initialValue} ${surname.initialValue}`,
       );
@@ -209,6 +215,7 @@ describe("recoilless store", () => {
     it("has the correct initial value on the state retrieved.", () => {
       const store = new Store();
       const counterValueState = store.getValue(counter);
+
       expect(counterValueState.current).toBe(0);
     });
 
@@ -219,12 +226,15 @@ describe("recoilless store", () => {
       const change = store.getValue(counterChange);
 
       change.set(1);
+
       expect(counterValueState.current).toBe(1);
 
       change.set(0);
+
       expect(counterValueState.current).toBe(1);
 
       change.set(1);
+
       expect(counterValueState.current).toBe(2);
     });
 

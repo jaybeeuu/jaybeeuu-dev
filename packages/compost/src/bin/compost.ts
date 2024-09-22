@@ -4,8 +4,8 @@ import chokidar from "chokidar";
 import yargsFactory from "yargs";
 import { hideBin } from "yargs/helpers";
 import { update } from "../posts/index.js";
-import type { UpdateOptions } from "../posts/src/types.js";
-import type { UpdateFailureReason } from "../posts/src/update.js";
+import type { UpdateOptions } from "../posts/types.js";
+import type { UpdateFailureReason } from "../posts/update.js";
 
 const yargs = yargsFactory(hideBin(process.argv));
 

@@ -1,3 +1,4 @@
+.husky/_
 .pnpm-debug.log
 /.VSCodeCounter
 /coverage-reports

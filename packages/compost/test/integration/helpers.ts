@@ -1,8 +1,8 @@
 import type Utilities from "@jaybeeuu/utilities";
 import type { Result } from "@jaybeeuu/utilities";
 import { assertIsNotNullish } from "@jaybeeuu/utilities";
-import type { PostMetaFileData } from "packages/compost/src/posts/src/metafile";
-import type { UpdateFailureReason } from "packages/compost/src/posts/src/update.js";
+import type { PostMetaFileData } from "packages/compost/src/posts/metafile";
+import type { UpdateFailureReason } from "packages/compost/src/posts/update.js";
 import path from "path";
 import type { File } from "../../src/files/index";
 import {
@@ -12,7 +12,7 @@ import {
   writeTextFiles,
 } from "../../src/files/index";
 import { update } from "../../src/posts/index.js";
-import type { PostManifest, UpdateOptions } from "../../src/posts/src/types.js";
+import type { PostManifest, UpdateOptions } from "../../src/posts/types.js";
 import type * as ReadingTime from "reading-time";
 
 import { jest } from "@jest/globals";

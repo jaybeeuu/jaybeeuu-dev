@@ -16,8 +16,8 @@ type RemovalSchedulerFactory<
   unschedule: UnscheduleRemoval;
 };
 
-export interface SynchronousRemovalFactoryOptions
-  extends BaseSchedulerFactoryOptions<"synchronous"> {}
+export type SynchronousRemovalFactoryOptions =
+  BaseSchedulerFactoryOptions<"synchronous">;
 
 const makeScheduleSynchronousRemoval: RemovalSchedulerFactory<
   SynchronousRemovalFactoryOptions

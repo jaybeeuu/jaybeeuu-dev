@@ -1,6 +1,11 @@
 import { getThemeRoot } from "../features/theme";
 import { getThemeSwitch } from "../features/nav-bar";
 
+type MediaQueryEventListener<K extends keyof MediaQueryListEventMap> = (
+  this: MediaQueryList,
+  ev: MediaQueryListEventMap[K],
+) => void;
+
 class MockMediaQuery {
   #matches = true;
   #changeListeners: ((ev: MediaQueryListEventMap["change"]) => void)[] = [];
@@ -30,7 +35,7 @@ class MockMediaQuery {
 
   addEventListener<K extends keyof MediaQueryListEventMap>(
     type: K,
-    listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => void,
+    listener: MediaQueryEventListener<K>,
   ): void {
     this.#changeListeners = [...this.#changeListeners, listener];
     this.#resolveHasListeners();
@@ -38,7 +43,7 @@ class MockMediaQuery {
 
   removeEventListener<K extends keyof MediaQueryListEventMap>(
     type: K,
-    listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => void,
+    listener: MediaQueryEventListener<K>,
   ): void {
     this.#changeListeners.filter((candidate) => candidate !== listener);
   }

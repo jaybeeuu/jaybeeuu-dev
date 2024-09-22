@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 export const info = (message: string, ...args: unknown[]): void => {
   console.log(message, ...args);
 };

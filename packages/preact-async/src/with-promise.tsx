@@ -39,7 +39,7 @@ export const withPromise = <ContentProps extends object>({
       case "pending":
         return <Pending />;
       case "complete": {
-        // @ts-expect-error
+        // @ts-expect-error Maybe promises is a compound type using the keys on ContentProps, TypeScript is unhappy because it thinks that ContentProps could be a class, but.... it can't it will always be a map.
         return <Content {...promise.value} />;
       }
       case "failed":

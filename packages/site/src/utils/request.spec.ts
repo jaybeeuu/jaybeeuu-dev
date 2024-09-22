@@ -2,6 +2,7 @@ import { asError } from "@jaybeeuu/utilities";
 import { fetchJson, fetchText } from "./request";
 
 import { describe, expect, it, jest } from "@jest/globals";
+
 describe("fetchJson", () => {
   it("returns the deserialized JSON .", async () => {
     jest.spyOn(window, "fetch").mockResolvedValue({

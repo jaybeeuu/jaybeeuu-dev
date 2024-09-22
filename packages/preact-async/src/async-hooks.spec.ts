@@ -1,4 +1,5 @@
 import { ControllablePromise } from "@jaybeeuu/utilities/test";
+import { describe, expect, it, jest } from "@jest/globals";
 import { act, renderHook, waitFor } from "@testing-library/preact";
 import {
   useAsyncGenerator,
@@ -7,17 +8,18 @@ import {
   useSemanticMemo,
 } from "./async-hooks";
 
-import { describe, expect, it, jest } from "@jest/globals";
 describe("async-hooks", () => {
   describe("useIsMounted", () => {
     it("returns true while the component is mounted.", () => {
       const { result } = renderHook(() => useIsMounted());
+
       expect(result.current).toStrictEqual({ current: true });
     });
 
     it("returns false once the component is unmounted.", () => {
       const { result, unmount } = renderHook(() => useIsMounted());
       unmount();
+
       expect(result.current).toStrictEqual({ current: false });
     });
   });
@@ -25,6 +27,7 @@ describe("async-hooks", () => {
   describe("useSemanticMemo", () => {
     it("returns the result of the memo.", () => {
       const { result } = renderHook(() => useSemanticMemo(() => 1, []));
+
       expect(result.current).toBe(1);
     });
 
@@ -123,6 +126,7 @@ describe("async-hooks", () => {
           [],
         ),
       );
+
       expect(result.current).toBe(0);
     });
 
@@ -171,6 +175,7 @@ describe("async-hooks", () => {
       const { result } = renderHook(() =>
         usePromise(() => new Promise<void>(() => {}), []),
       );
+
       expect(result.current.promiseState).toStrictEqual({ status: "pending" });
     });
 

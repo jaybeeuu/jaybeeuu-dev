@@ -3,6 +3,7 @@ import type { Action, ActionContext } from "./store.js";
 import { Store } from "./store.js";
 
 import { describe, expect, it } from "@jest/globals";
+
 describe("recoilless store", () => {
   describe("action", () => {
     const storedValue: PrimitiveValue<number> = {
@@ -24,6 +25,7 @@ describe("recoilless store", () => {
       const setter = store.getActor(addDoubleToValue);
       setter(3);
       const result = store.getValue(storedValue);
+
       expect(result.current).toBe(5);
     });
   });

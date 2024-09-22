@@ -3,7 +3,7 @@ import { App } from "./app";
 import { StoreProvider } from "@jaybeeuu/preact-recoilless";
 
 if (process.env.NODE_ENV === "development") {
-  import("preact/debug");
+  void import("preact/debug");
 }
 
 const appSelector = "#app";
