@@ -1,5 +1,20 @@
 # @jaybeeuu/site
 
+## 0.0.19
+
+### Patch Changes
+
+- [#179](https://github.com/jaybeeuu/jaybeeuu-dev/pull/179) [`332a36a`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/332a36aeba1cd783a6302c8979fa6c38fd834d87) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Update vite config to prevent inlining sprite.svg
+
+- Updated dependencies [[`ef1b79d`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/ef1b79d66a27e2837ea87c78ad254e1eae784c3c)]:
+  - @jaybeeuu/preact-recoilless@10.0.2
+  - @jaybeeuu/preact-async@7.0.2
+  - @jaybeeuu/recoilless@10.0.2
+  - @jaybeeuu/utilities@5.0.2
+  - @jaybeeuu/is@2.0.2
+  - @jaybeeuu/e2e-hooks@0.0.2
+  - @jaybeeuu/posts@0.0.0
+
 ## 0.0.18
 
 ### Patch Changes

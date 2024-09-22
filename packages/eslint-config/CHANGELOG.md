@@ -1,5 +1,11 @@
 # @jaybeeuu/eslint-config
 
+## 5.0.0
+
+### Major Changes
+
+- [#177](https://github.com/jaybeeuu/jaybeeuu-dev/pull/177) [`ef1b79d`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/ef1b79d66a27e2837ea87c78ad254e1eae784c3c) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Update dependencies, and update to eslint 9.0
+
 ## 4.1.1
 
 ### Patch Changes
