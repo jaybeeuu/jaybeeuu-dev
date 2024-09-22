@@ -36,6 +36,12 @@ export default defineConfig({
           cert: fs.readFileSync("./certs/cert.crt"),
         },
       },
+  build: {
+    assetsInlineLimit: (filePath: string) => {
+      console.log(filePath);
+      return filePath.endsWith(".sprite.svg") ? false : undefined;
+    },
+  },
   plugins: [
     preact(),
     imagetools({
