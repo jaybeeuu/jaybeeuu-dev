@@ -9,19 +9,16 @@
 
 .meta-data-row {
   /* border-bottom: 0.2rem solid var(--border-code-heading); */
-  font-size: 1.8rem;
+  font-size: smaller;
   margin-bottom: var(--padding-content);
   transition: var(--transition-theme);
   display: flex;
   align-items: baseline;
   width: 100%;
 }
+
 .meta-data-row :first-child {
   flex: 1 1 auto;
-}
-
-.reading-time {
-  font-size: smaller;
 }
 
 .article {

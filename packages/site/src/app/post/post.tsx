@@ -105,9 +105,7 @@ const Post = withPromise(
                     </Fragment>
                   ) : null}
                 </span>
-                <span className={css.readingTime}>
-                  {postMeta.readingTime.text}
-                </span>
+                <span>{postMeta.readingTime.text}</span>
               </div>
             </hgroup>
             <div

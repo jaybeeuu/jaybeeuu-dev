@@ -6,3 +6,5 @@ export type { ChangeFrequency, SiteMapUrl } from "./site-map";
 
 export { version } from "./version";
 export type { RollupPluginVersionOptions, Version } from "./version";
+
+export { cssModuleTypes } from "./css-module-types";

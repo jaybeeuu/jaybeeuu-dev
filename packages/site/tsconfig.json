@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    "isolatedModules": true,
     "jsx": "react",
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment",
