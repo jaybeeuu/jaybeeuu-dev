@@ -5,7 +5,7 @@ import { defineConfig } from "vite";
 import { imagetools } from "vite-imagetools";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import type { SiteMapUrl } from "./build-plugins";
-import { feed, siteMap, version } from "./build-plugins";
+import { cssModuleTypes, feed, siteMap, version } from "./build-plugins";
 import { paths } from "./config/paths";
 import type { PostManifest } from "@jaybeeuu/compost/lib";
 
@@ -38,7 +38,6 @@ export default defineConfig({
       },
   build: {
     assetsInlineLimit: (filePath: string) => {
-      console.log(filePath);
       return filePath.endsWith(".sprite.svg") ? false : undefined;
     },
   },
@@ -143,5 +142,6 @@ export default defineConfig({
       })),
     }),
     version({ fileName: "version.json" }),
+    cssModuleTypes(),
   ],
 });
