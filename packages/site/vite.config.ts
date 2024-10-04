@@ -102,6 +102,18 @@ export default defineConfig({
             changeFrequency: "monthly",
           }),
         ),
+        {
+          location: `/feeds/atom.xnl`,
+          lastModified: new Date(),
+          priority: 0.3,
+          changeFrequency: "weekly",
+        },
+        {
+          location: `/feeds/rss.xnl`,
+          lastModified: new Date(),
+          priority: 0.3,
+          changeFrequency: "weekly",
+        },
       ],
     }),
     feed({
