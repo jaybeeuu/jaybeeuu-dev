@@ -67,7 +67,7 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
           title={"GitHub"}
         />
         <IconLink
-          href={"feeds/atom.xml"}
+          href={"/feeds/atom.xml"}
           iconName={"rss_feed"}
           title="Atom Feed"
           type={"application/atom+xml"}

@@ -1,11 +1,12 @@
-import path from "path";
-import * as fs from "fs";
-import { certificateFor, uninstall as baseUninstall } from "devcert";
+import { log } from "@jaybeeuu/utilities";
+import { uninstall as baseUninstall, certificateFor } from "devcert";
+import * as fs from "node:fs";
+import path from "node:path";
 
 export const uninstall = (): void => {
-  console.log("Uninstalling CA...");
+  log.info("Uninstalling CA...");
   baseUninstall();
-  console.log("Done.");
+  log.info("Done.");
 };
 
 export interface PathOptions {
@@ -53,7 +54,7 @@ export const genCerts = async (options: GenCertsOptions): Promise<void> => {
     fs.promises.writeFile(paths.caFilePath, ssl.ca),
   ]);
 
-  console.log(
+  log.info(
     [
       "Certificates generated at:",
       "",

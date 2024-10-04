@@ -1,3 +1,4 @@
+import { log as logger } from "@jaybeeuu/utilities";
 import type { RestEndpointMethodTypes } from "@octokit/rest";
 import { Octokit } from "@octokit/rest";
 import chalk from "chalk";
@@ -17,7 +18,7 @@ export interface GitHubClientOptions {
 }
 
 const log = (message: string, ...args: unknown[]): void => {
-  console.log(chalk.green(message), ...args);
+  logger.info(chalk.green(message), ...args);
 };
 
 class GitHubClient {

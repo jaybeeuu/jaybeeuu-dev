@@ -1,6 +1,6 @@
 import type { CheckedBy, TypeAssertion } from "@jaybeeuu/is";
 import { assert, is, isObject } from "@jaybeeuu/is";
-import { delay, monitorPromise } from "@jaybeeuu/utilities";
+import { delay, log, monitorPromise } from "@jaybeeuu/utilities";
 import fetch from "node-fetch";
 import { Agent } from "node:https";
 
@@ -62,9 +62,9 @@ const pollForCommitHash = async (
       if (version.commit.startsWith(commitHash)) {
         return version;
       }
-      console.log(`Found commit "${version.commit}": No match.`);
+      log.info(`Found commit "${version.commit}": No match.`);
     } catch (error) {
-      console.log(error?.toString() ?? "Error");
+      log.info(error?.toString() ?? "Error");
     }
     await delay(pollTime);
   }
@@ -79,7 +79,7 @@ export const waitUp = async ({
   url,
   insecureSSL,
 }: WaitUpOptions): Promise<void> => {
-  console.log("Wait Up!\n", {
+  log.info("Wait Up!\n", {
     commitHash,
     pollTime,
     timeoutDelay,
@@ -103,11 +103,11 @@ export const waitUp = async ({
   })) {
     switch (promise.status) {
       case "pending": {
-        console.log("Polling for commit hash.");
+        log.info("Polling for commit hash.");
         break;
       }
       case "complete": {
-        console.log(
+        log.info(
           `Found expected version in ${Date.now() - startTime}ms.\n`,
           promise.value,
         );
