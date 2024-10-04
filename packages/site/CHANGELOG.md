@@ -1,5 +1,11 @@
 # @jaybeeuu/site
 
+## 0.0.20
+
+### Patch Changes
+
+- [#181](https://github.com/jaybeeuu/jaybeeuu-dev/pull/181) [`3e7a449`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/3e7a449f4b99e94d5847f19bed183c711ba8bc0b) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Fix link to feeds, add feeds into site map and add vite css module types
+
 ## 0.0.19
 
 ### Patch Changes

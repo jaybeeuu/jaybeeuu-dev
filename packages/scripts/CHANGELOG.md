@@ -1,5 +1,11 @@
 # @jaybeeuu/scripts
 
+## 0.1.16
+
+### Patch Changes
+
+- [#181](https://github.com/jaybeeuu/jaybeeuu-dev/pull/181) [`3e7a449`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/3e7a449f4b99e94d5847f19bed183c711ba8bc0b) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Use logger, not console.log
+
 ## 0.1.15
 
 ### Patch Changes
