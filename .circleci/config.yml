@@ -150,17 +150,8 @@ jobs:
           name: Install pnpm
           command: npm i -g pnpm@9.1.4
       - run:
-          name: Derive Deployment URL
-          command: |
-            if [ $CIRCLE_BRANCH = "main" ];
-            then
-              echo 'export DEPLOYMENT_URL="https://jaybeeuu.dev"' >> "$BASH_ENV"
-            else
-              echo 'export DEPLOYMENT_URL="https://$CIRCLE_BRANCH.jaybeeuu-dev.pages.dev"' >> "$BASH_ENV"
-            fi
-      - run:
           name: Run e2e Tests
-          command: node ./packages/scripts/bin/wait-up.js --url "$DEPLOYMENT_URL/version.json" --commit-hash $CIRCLE_SHA1 && pnpm e2e run --config "baseUrl=$DEPLOYMENT_URL"
+          command: pnpm --filter @jaybeeuu/site start & pnpx wait-on --timeout=60000 https://localhost:3443/ && pnpm e2e run
       - store_test_results:
           path: ./packages/e2e/.reports
       - store_artifacts:

@@ -49,6 +49,7 @@ export default defineConfig({
     istanbulPlugin({
       requireEnv: true,
       forceBuildInstrument: true,
+      cypress: true,
     }),
     imagetools({
       defaultDirectives: (url) => {
