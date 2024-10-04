@@ -14,6 +14,7 @@
   "type": "module",
   "scripts": {
     "start": "cross-env NODE_ENV=development vite",
+    "start:coverage": "cross-env VITE_COVERAGE=TRUE NODE_ENV=development vite",
     "build": "cross-env NODE_ENV=production vite build",
     "preview": "cross-env NODE_ENV=production vite preview",
     "gen-certs": "gen-certs",
@@ -59,6 +60,7 @@
     "typescript": "^5.5.4",
     "vite": "^5.4.3",
     "vite-imagetools": "^7.0.4",
+    "vite-plugin-istanbul": "^6.0.2",
     "vite-plugin-mkcert": "^1.17.6",
     "vite-plugin-static-copy": "^1.0.6",
     "xml-writer": "^1.7.0"

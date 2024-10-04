@@ -170,6 +170,7 @@ jobs:
       - store_artifacts:
           path: ./packages/e2e/fixtures/blog
           destination: e2e-posts
+      - codecov/upload
 
   version:
     <<: *job-base
