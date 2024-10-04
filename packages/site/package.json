@@ -15,8 +15,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development vite",
     "build": "cross-env NODE_ENV=production vite build",
-    "preserve": "pnpm run build",
-    "serve": "pnpx http-server --ssl --cert ./certs/cert.crt --key ./certs/key.key --port 3443 ./dist",
+    "preview": "cross-env NODE_ENV=production vite preview",
     "gen-certs": "gen-certs",
     "lint": "eslint --format codeframe .",
     "test": "jest",
