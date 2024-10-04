@@ -133,6 +133,8 @@ jobs:
 
   e2e:
     <<: *job-base
+    env:
+      CYPRESS_COVERAGE: true
     docker:
       - image: cypress/included:13.14.2
         auth:

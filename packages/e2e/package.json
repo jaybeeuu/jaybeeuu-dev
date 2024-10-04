@@ -15,7 +15,6 @@
     "build": "compost --source-dir ./fixtures/src/blog --output-dir ./fixtures/blog --href-root blog --remove-h1 --code-line-numbers",
     "postbuild": "node ./fixtures/src/blog/post-processing.mjs",
     "e2e": "cypress",
-    "e2e:coverage": "crossEnv CYPRESS_COVERAGE=true cypress",
     "lint": "eslint --format codeframe . --max-warnings 0",
     "type-check": "tsc --noEmit --pretty"
   },
@@ -25,7 +24,6 @@
     "@types/node": "^22.5.4",
     "@typescript-eslint/eslint-plugin": "^8.4.0",
     "@typescript-eslint/parser": "^8.4.0",
-    "cross-env": "^7.0.3",
     "eslint": "^9.9.1",
     "eslint-plugin-cypress": "^3.5.0",
     "typescript": "^5.5.4"

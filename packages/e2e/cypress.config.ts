@@ -1,6 +1,8 @@
 import { defineConfig } from "cypress";
 import coverage from "@cypress/code-coverage/task";
 
+console.log("CYPRESS_COVERAGE", process.env.CYPRESS_COVERAGE);
+
 export default defineConfig({
   e2e: {
     baseUrl: "https://localhost:3443",
