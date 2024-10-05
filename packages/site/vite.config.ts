@@ -8,6 +8,9 @@ import type { SiteMapUrl } from "./build-plugins";
 import { cssModuleTypes, feed, siteMap, version } from "./build-plugins";
 import { paths } from "./config/paths";
 import type { PostManifest } from "@jaybeeuu/compost/lib";
+import istanbulPlugin from "vite-plugin-istanbul";
+
+console.log("VITE_COVERAGE", process.env.VITE_COVERAGE);
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const postManifest: PostManifest = JSON.parse(
@@ -43,6 +46,11 @@ export default defineConfig({
   },
   plugins: [
     preact(),
+    istanbulPlugin({
+      requireEnv: true,
+      forceBuildInstrument: true,
+      cypress: true,
+    }),
     imagetools({
       defaultDirectives: (url) => {
         if (url.searchParams.has("placeholder")) {

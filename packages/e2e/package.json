@@ -19,10 +19,11 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "devDependencies": {
+    "@cypress/code-coverage": "^3.13.4",
     "@jaybeeuu/eslint-config": "workspace:*",
+    "@types/node": "^22.5.4",
     "@typescript-eslint/eslint-plugin": "^8.4.0",
     "@typescript-eslint/parser": "^8.4.0",
-    "@types/node": "^22.5.4",
     "eslint": "^9.9.1",
     "eslint-plugin-cypress": "^3.5.0",
     "typescript": "^5.5.4"

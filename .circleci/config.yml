@@ -131,7 +131,36 @@ jobs:
           path: ./test-reports/
       - codecov/upload
 
-  e2e:
+  e2e-coverage:
+    <<: *job-base
+    environment:
+      CYPRESS_COVERAGE: true
+    docker:
+      - image: cypress/included:13.14.2
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
+
+    working_directory: *src-dir
+
+    steps:
+      - attach_workspace:
+          at: *src-dir
+      - run:
+          name: Install pnpm
+          command: npm i -g pnpm@9.1.4
+      - run:
+          name: Install dependencies
+          command: pnpm --filter @jaybeeuu/site i
+      - run:
+          name: Run e2e Tests
+          command: pnpm --filter @jaybeeuu/site start & pnpx wait-on --timeout=60000 https://localhost:3443/ && pnpm e2e run
+      - run:
+          name: Install curl and gpg
+          command: apt-get update && apt-get install curl gpg -y
+      - codecov/upload
+
+  e2e-deployment:
     <<: *job-base
     docker:
       - image: cypress/included:13.14.2
@@ -204,7 +233,10 @@ workflows:
   build:
     jobs:
       - checkout-install-build
-      - e2e:
+      - e2e-coverage:
+          requires:
+            - checkout-install-build
+      - e2e-deployment:
           requires:
             - checkout-install-build
       - format-check:
@@ -229,7 +261,8 @@ workflows:
             tags:
               ignore: /.*/
           requires:
-            - e2e
+            - e2e-coverage
+            - e2e-deployment
             - format-check
             - lint
             - spell-check
@@ -242,7 +275,8 @@ workflows:
             tags:
               ignore: /.*/
           requires:
-            - e2e
+            - e2e-coverage
+            - e2e-deployment
             - format-check
             - lint
             - spell-check
