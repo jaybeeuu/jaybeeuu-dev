@@ -81,6 +81,8 @@ thunks
 gif
 erroring
 grebulons
+codecov
+marmite
  - src/premature-optimisation.md
 v14.15.1
 Hrn
@@ -121,3 +123,5 @@ MobileNet
 TypeScript'd
 data.js
 v5
+ - src/codecov/codecov.md
+circle-ci

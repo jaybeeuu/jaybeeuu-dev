@@ -3,13 +3,13 @@
 Code coverage is one of those marmite topics.
 SOme people really want it, and others think it's a waste of time, or worse that coverage targets are toxic and dangerous.
 
-I decided a little while ago to try paying attention to coverage stats in this code base. I was pleasantly surprised at the insight it brought me and the way it changed how I thought about the tests I wass writing.
+I decided a little while ago to try paying attention to coverage stats in this code base. I was pleasantly surprised at the insight it brought me and the way it changed how I thought about the tests I was writing.
 
 ## Some background
 
 I've always been on the side"I don't like it" side the argument.
 
-It seems to me that if you'r following TDD or similar workflows, i.e. testing is an instrinsic part of the way you build software, then you don't need a coverage target, you're not aiming to fill in th missing blanks, and you don't need to see what's not covered since you already wrote your tests for the behaviour you want before, or during development... you can't have any blanks.
+It seems to me that if you're following TDD or similar workflows, i.e. testing is an intrinsic part of the way you build software, then you don't need a coverage target, you're not aiming to fill in the missing blanks, and you don't need to see what's not covered since you already wrote your tests for the behaviour you want before, or during development... you can't have any blanks.
 
 I've also seen and heard of some horror stories.
 
@@ -30,7 +30,7 @@ So in the name of experimentation, I gave codecov a try.
 
 I'm not really interested in reviewing codecov, this is really a post about the general idea of measuring coverage. but...
 
-I chose codecov largely because it's free for open source repos, and it's _the_ name in this space that i could think of, and i can see why.
+I chose codecov largely because it's free for open source repos, and it's _the_ name in this space that I could think of, and I can see why.
 
 It has some really good visualisations and allows you to explore the coverage, right down to the source file.
 It's integrations in to the CI/CD tool I use, circle-ci were also really easy to setup.
@@ -38,7 +38,7 @@ You can look at coverage per branch or PR too and track how coverage is changing
 
 If you're looking for a tool for this then I'd at least consider it in a shortlist.
 
-Enough on that subject. What di all of this do for me?
+Enough on that subject. What did all of this do for me?
 
 ## So what?
 
@@ -53,7 +53,7 @@ When I first turned it on my coverage was
 [81%](https://app.codecov.io/gh/jaybeeuu/jaybeeuu-dev/pull/131/tree).
 I don't think that's too bad, and pretty close to the target 80% that some recommend.
 It's worth pointing out too that I only enabled codecov for the unit tests in my repo.
-For the site I'd chosen to take an e2e first approach, so actual coverage was slightly higher (turned out to be
+For the site I'd chosen to take an E2E first approach, so actual coverage was slightly higher (turned out to be
 [around](https://app.codecov.io/gh/jaybeeuu/jaybeeuu-dev/pull/182)
 {4% higher}(<https://app.codecov.io/gh/jaybeeuu/jaybeeuu-dev/pull/183>)).
 
@@ -65,16 +65,16 @@ So while having a test focus does result in coverage being slightly unnecessary,
 
 The next insight I'm not perfect (Surprise!).
 So in exploring the visualisations I also discovered that I'd missed some things, and that in some cases they were definitely twisty bits of logic that needed covering with tests. I also found that, measuring, and publicising my coverage was a huge motivator for filling in the blanks.
-I've added around 10% coverage over a few commits, and it ws kind of fun seeing it grow, and that doughnut turn steadily green.
+I've added around 10% coverage over a few commits, and it was kind of fun seeing it grow, and that doughnut turn steadily green.
 
 Interestingly it went the other way too.
-I found that despite covering all the behaviours I wanted, there was still some code which was not covered. It turned out it ws dead code, which could be deleted.
+I found that despite covering all the behaviours I wanted, there was still some code which was not covered. It turned out it was dead code, which could be deleted.
 
 It occurred to me that this is a valuable insight.
 I would have had no reason to explore that code, and even had I stumbled upon it, I would have needed to spend some time analysing call paths etc to confirm it was unused,
 
 ## Would I do it again?
 
-I thnk on balance I would still be cautious of enforced limits. But I might apply them to teams where test coverage was low, and the culture needed adjusting.
-Especially i'd look at "patch coverage" (the amount of coverage there is of the changed lines) rather than project coverage.
+I think on balance I would still be cautious of enforced limits. But I might apply them to teams where test coverage was low, and the culture needed adjusting.
+Especially I'd look at "patch coverage" (the amount of coverage there is of the changed lines) rather than project coverage.
 When there is already a culture of testing, I think there is still value in measuring and visualising the coverage of your test suite, so personally I think a tool like this would be worthwhile.
