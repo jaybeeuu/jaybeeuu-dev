@@ -9,6 +9,7 @@ import { useImages } from "./background";
 
 import { describe, expect, it, jest } from "@jest/globals";
 jest.mock("../images");
+
 interface UseImagesProps {
   backgrounds: BackgroundImages | null;
   currentTheme: Theme;
