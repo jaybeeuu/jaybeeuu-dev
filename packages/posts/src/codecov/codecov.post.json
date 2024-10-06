@@ -1,0 +1,5 @@
+{
+  "title": "Switching on Codecov",
+  "abstract": "A little while ago I started uploading my coverage results to codecov, Having always been a bit skeptical of coverage checking, I was surprised by the insights it brought, and the change in my behaviours.",
+  "publish": true
+}
