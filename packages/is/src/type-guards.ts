@@ -292,16 +292,13 @@ export const isInstanceOf = <Type extends AnyConstructor>(
 export const isKeyOf = <Obj extends object>(
   obj: Obj,
 ): TypePredicate<keyof Obj> =>
-  isType(
-    (candidate: unknown, context: ValidationContext): ValidationResult => {
-      if (typeof candidate === "string" && candidate in obj) {
-        return passValidation(context);
-      }
+  isType((candidate: unknown, context: ValidationContext): ValidationResult => {
+    if (typeof candidate === "string" && candidate in obj) {
+      return passValidation(context);
+    }
 
-      return failValidation(
-        `Expected key of object, but received "${typeof candidate}": ${String(candidate)}`,
-        context,
-      );
-    },
-    `keyof(${JSON.stringify(obj)})`,
-  );
+    return failValidation(
+      `Expected key of object, but received "${typeof candidate}": ${String(candidate)}`,
+      context,
+    );
+  }, Object.keys(obj).join(" | "));

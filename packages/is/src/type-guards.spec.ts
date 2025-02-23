@@ -674,7 +674,7 @@ root.b: Expected "string", but received "number": 1`),
     );
 
     it("has the right type description.", () => {
-      expect(isKey.typeDescription).toBe(`keyof(${JSON.stringify(obj)})`);
+      expect(isKey.typeDescription).toBe(`a | b | c`);
     });
 
     it("returns a useful message indicating why validation failed.", () => {

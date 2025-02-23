@@ -126,7 +126,7 @@ jobs:
       - setup_workspace
       - run:
           name: Unit Tests
-          command: pnpm test -- --ci
+          command: pnpm test --ci
       - store_test_results:
           path: ./test-reports/
       - codecov/upload
