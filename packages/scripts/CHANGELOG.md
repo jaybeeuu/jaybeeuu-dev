@@ -1,5 +1,13 @@
 # @jaybeeuu/scripts
 
+## 0.1.17
+
+### Patch Changes
+
+- Updated dependencies [[`e301391`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/e301391482f98912f9a51ec309e72431408cb6f0)]:
+  - @jaybeeuu/is@2.1.0
+  - @jaybeeuu/utilities@5.0.2
+
 ## 0.1.16
 
 ### Patch Changes
