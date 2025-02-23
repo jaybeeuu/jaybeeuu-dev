@@ -1,5 +1,11 @@
 # @jaybeeuu/is
 
+## 2.1.0
+
+### Minor Changes
+
+- [#186](https://github.com/jaybeeuu/jaybeeuu-dev/pull/186) [`e301391`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/e301391482f98912f9a51ec309e72431408cb6f0) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Add isKeyOf to allow users to require data be a key of an object.
+
 ## 2.0.2
 
 ### Patch Changes
