@@ -8,10 +8,10 @@ import {
   isLiteral,
   isNullish,
   isObject,
-  isPredicated,
   isRecordOf,
   isTuple,
   isUnionOf,
+  isKeyOf,
   type TypeString,
 } from "./index";
 
@@ -640,27 +640,24 @@ root.b: Expected "string", but received "number": 1`),
     });
   });
 
-  describe("isPredicated", () => {
-    const isEven = isPredicated(
-      (candidate): candidate is number =>
-        typeof candidate === "number" && candidate % 2 === 0,
-      "even number",
-    );
+  describe("isKeyOf", () => {
+    const obj = { a: 1, b: 2, c: 3 };
+    const isKey = isKeyOf(obj);
 
     const samples: {
       value: unknown;
       expectedOutcome: boolean;
     }[] = [
       {
-        value: 2,
+        value: "a",
         expectedOutcome: true,
       },
       {
-        value: 3,
+        value: "d",
         expectedOutcome: false,
       },
       {
-        value: "2",
+        value: 1,
         expectedOutcome: false,
       },
       {
@@ -670,20 +667,22 @@ root.b: Expected "string", but received "number": 1`),
     ];
 
     it.each(samples)(
-      "$#: isPredicated(isEven)(value: $value) -> $expectedOutcome",
+      "$#: isKeyOf(obj)(value: $value) -> $expectedOutcome",
       ({ expectedOutcome, value }) => {
-        expect(isEven(value)).toBe(expectedOutcome);
+        expect(isKey(value)).toBe(expectedOutcome);
       },
     );
 
     it("has the right type description.", () => {
-      expect(isEven.typeDescription).toBe("even number");
+      expect(isKey.typeDescription).toBe(`keyof(${JSON.stringify(obj)})`);
     });
 
     it("returns a useful message indicating why validation failed.", () => {
-      expect(isEven.validate(3)).toStrictEqual({
+      expect(isKey.validate("d")).toStrictEqual({
         valid: false,
-        errorMessages: [`root: Expected even number, but received number.`],
+        errorMessages: [
+          `root: Expected key of object, but received "string": d`,
+        ],
       });
     });
   });

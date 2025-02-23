@@ -22,10 +22,10 @@ export {
   isIntersectionOf,
   isLiteral,
   isObject,
-  isPredicated,
   isRecordOf,
   isTuple,
   isUnionOf,
+  isKeyOf,
   type TypeString,
 } from "./type-guards.js";
 
