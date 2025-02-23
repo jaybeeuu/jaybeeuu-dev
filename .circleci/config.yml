@@ -144,7 +144,17 @@ jobs:
     working_directory: *src-dir
 
     steps:
-      - setup_workspace
+      - attach_workspace:
+          at: *src-dir
+      - run:
+          name: Install pnpm
+          command: npm i -g pnpm@10.4.1
+      - run:
+          name: Install dependencies
+          command: pnpm --filter @jaybeeuu/site... i
+      - run:
+          name: Build
+          command: pnpm --filter @jaybeeuu/site... build
       - run:
           name: Run e2e Tests
           command: pnpm --filter @jaybeeuu/site start & pnpx wait-on --timeout=60000 https://localhost:3443/ && pnpm e2e run
