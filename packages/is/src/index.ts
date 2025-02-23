@@ -22,6 +22,7 @@ export {
   isIntersectionOf,
   isLiteral,
   isObject,
+  isPredicated,
   isRecordOf,
   isTuple,
   isUnionOf,

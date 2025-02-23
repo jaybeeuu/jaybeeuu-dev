@@ -288,3 +288,22 @@ export const isInstanceOf = <Type extends AnyConstructor>(
     `instanceof(${constructor.name})`,
   );
 };
+
+export const isPredicated = <Type>(
+  predicate: (candidate: unknown) => candidate is Type,
+  typeDescription: string,
+): TypePredicate<Type> => {
+  return isType(
+    (candidate: unknown, context: ValidationContext): ValidationResult => {
+      if (predicate(candidate)) {
+        return passValidation(context);
+      }
+
+      return failValidation(
+        `Expected ${typeDescription}, but received ${typeof candidate}.`,
+        context,
+      );
+    },
+    typeDescription,
+  );
+};

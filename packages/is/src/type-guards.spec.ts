@@ -8,6 +8,7 @@ import {
   isLiteral,
   isNullish,
   isObject,
+  isPredicated,
   isRecordOf,
   isTuple,
   isUnionOf,
@@ -635,6 +636,54 @@ root.b: Expected "string", but received "number": 1`),
       expect(isInstanceOf(A).validate({})).toStrictEqual({
         valid: false,
         errorMessages: ["root: Expected instance of A but received: Object"],
+      });
+    });
+  });
+
+  describe("isPredicated", () => {
+    const isEven = isPredicated(
+      (candidate): candidate is number =>
+        typeof candidate === "number" && candidate % 2 === 0,
+      "even number",
+    );
+
+    const samples: {
+      value: unknown;
+      expectedOutcome: boolean;
+    }[] = [
+      {
+        value: 2,
+        expectedOutcome: true,
+      },
+      {
+        value: 3,
+        expectedOutcome: false,
+      },
+      {
+        value: "2",
+        expectedOutcome: false,
+      },
+      {
+        value: null,
+        expectedOutcome: false,
+      },
+    ];
+
+    it.each(samples)(
+      "$#: isPredicated(isEven)(value: $value) -> $expectedOutcome",
+      ({ expectedOutcome, value }) => {
+        expect(isEven(value)).toBe(expectedOutcome);
+      },
+    );
+
+    it("has the right type description.", () => {
+      expect(isEven.typeDescription).toBe("even number");
+    });
+
+    it("returns a useful message indicating why validation failed.", () => {
+      expect(isEven.validate(3)).toStrictEqual({
+        valid: false,
+        errorMessages: [`root: Expected even number, but received number.`],
       });
     });
   });
