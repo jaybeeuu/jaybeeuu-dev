@@ -11,6 +11,7 @@ import {
   isRecordOf,
   isTuple,
   isUnionOf,
+  isKeyOf,
   type TypeString,
 } from "./index";
 
@@ -635,6 +636,53 @@ root.b: Expected "string", but received "number": 1`),
       expect(isInstanceOf(A).validate({})).toStrictEqual({
         valid: false,
         errorMessages: ["root: Expected instance of A but received: Object"],
+      });
+    });
+  });
+
+  describe("isKeyOf", () => {
+    const obj = { a: 1, b: 2, c: 3 };
+    const isKey = isKeyOf(obj);
+
+    const samples: {
+      value: unknown;
+      expectedOutcome: boolean;
+    }[] = [
+      {
+        value: "a",
+        expectedOutcome: true,
+      },
+      {
+        value: "d",
+        expectedOutcome: false,
+      },
+      {
+        value: 1,
+        expectedOutcome: false,
+      },
+      {
+        value: null,
+        expectedOutcome: false,
+      },
+    ];
+
+    it.each(samples)(
+      "$#: isKeyOf(obj)(value: $value) -> $expectedOutcome",
+      ({ expectedOutcome, value }) => {
+        expect(isKey(value)).toBe(expectedOutcome);
+      },
+    );
+
+    it("has the right type description.", () => {
+      expect(isKey.typeDescription).toBe(`a | b | c`);
+    });
+
+    it("returns a useful message indicating why validation failed.", () => {
+      expect(isKey.validate("d")).toStrictEqual({
+        valid: false,
+        errorMessages: [
+          `root: Expected key of object, but received "string": d`,
+        ],
       });
     });
   });

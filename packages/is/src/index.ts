@@ -25,6 +25,7 @@ export {
   isRecordOf,
   isTuple,
   isUnionOf,
+  isKeyOf,
   type TypeString,
 } from "./type-guards.js";
 

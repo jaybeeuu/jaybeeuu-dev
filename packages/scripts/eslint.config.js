@@ -8,7 +8,4 @@ import {
 
 export default config(...base, node, ignoreFromGitIgnore(import.meta.url), {
   files: ["**/*.ts", "**/*.tsx"],
-  rules: {
-    "no-console": ["off"],
-  },
 });

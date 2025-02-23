@@ -7,7 +7,7 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 import type { SiteMapUrl } from "./build-plugins";
 import { cssModuleTypes, feed, siteMap, version } from "./build-plugins";
 import { paths } from "./config/paths";
-import type { PostManifest } from "@jaybeeuu/compost/lib";
+import type { PostManifest } from "@jaybeeuu/compost";
 import istanbulPlugin from "vite-plugin-istanbul";
 
 console.log("VITE_COVERAGE", process.env.VITE_COVERAGE);
