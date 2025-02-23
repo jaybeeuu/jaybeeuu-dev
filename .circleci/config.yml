@@ -135,6 +135,7 @@ jobs:
     <<: *job-base
     environment:
       CYPRESS_COVERAGE: true
+      CYPRESS_VIDEO: false
     docker:
       - image: cypress/included:13.14.2
         auth:
