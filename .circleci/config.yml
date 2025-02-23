@@ -19,7 +19,7 @@ commands:
     steps:
       - run:
           name: Install pnpm
-          command: sudo npm i -g pnpm@9.1.4
+          command: sudo npm i -g pnpm@10.4.1
 
   setup_workspace:
     steps:
@@ -148,7 +148,7 @@ jobs:
           at: *src-dir
       - run:
           name: Install pnpm
-          command: npm i -g pnpm@9.1.4
+          command: npm i -g pnpm@10.4.1
       - run:
           name: Install dependencies
           command: pnpm --filter @jaybeeuu/site i
@@ -175,7 +175,7 @@ jobs:
           at: *src-dir
       - run:
           name: Install pnpm
-          command: npm i -g pnpm@9.1.4
+          command: npm i -g pnpm@10.4.1
       - run:
           name: Derive Deployment URL
           command: |
