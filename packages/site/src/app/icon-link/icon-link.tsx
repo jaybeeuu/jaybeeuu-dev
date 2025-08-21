@@ -12,7 +12,7 @@ export interface IconLinkProps {
   href: string;
   iconName: IconName;
   type: string;
-  native: boolean;
+  localStaticContent: boolean;
 }
 
 export const IconLink = ({
@@ -20,14 +20,14 @@ export const IconLink = ({
   href,
   iconName,
   type,
-  native = false,
+  localStaticContent = false,
 }: IconLinkProps): JSX.Element => (
   <a
     className={css.componentRoot}
     href={href}
     type={type}
     title={title}
-    data-native={native}
+    data-native={localStaticContent}
   >
     <Icon title={title} name={iconName} />
   </a>
