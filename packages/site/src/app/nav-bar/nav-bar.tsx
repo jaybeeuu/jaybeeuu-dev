@@ -71,6 +71,7 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
           iconName={"rss_feed"}
           title="Atom Feed"
           type={"application/atom+xml"}
+          native
         />
         <ThemeToggle className={e2eHooks.switch} />
       </div>
