@@ -16,6 +16,7 @@ export const navBar = {
   homeLink: navBarBlock.element("home-link"),
   linkedInLink: navBarBlock.element("linked-in-link"),
   postsListLink: navBarBlock.element("posts-list-link"),
+  atomFeedLink: navBarBlock.element("atom-link"),
   switch: navBarBlock.element("switch"),
 };
 

@@ -18,3 +18,6 @@ export const getPostListLink = (): Cypress.Chainable<
 > => cy.get(navBarSelectors.postsListLink);
 export const getThemeSwitch = (): Cypress.Chainable<JQuery> =>
   cy.get(navBarSelectors.switch);
+export const getAtomFeedLink = (): Cypress.Chainable<
+  JQuery<HTMLAnchorElement>
+> => cy.get(navBarSelectors.atomFeedLink);

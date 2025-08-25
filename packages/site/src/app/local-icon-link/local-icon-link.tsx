@@ -1,9 +1,9 @@
+import classNames from "classnames";
 import type { JSX } from "preact";
 import { h } from "preact";
 import type { IconName } from "../icon/index";
 import { Icon } from "../icon/index";
-
-import css from "./icon-link.module.css";
+import css from "./local-icon-link.module.css";
 
 export type { IconName };
 
@@ -12,24 +12,24 @@ export interface IconLinkProps {
   href: string;
   iconName: IconName;
   type: string;
-  localStaticContent: boolean;
+  className?: string;
 }
 
-export const IconLink = ({
+export const LocalIconLink = ({
+  className,
   title,
   href,
   iconName,
   type,
-  localStaticContent = false,
 }: IconLinkProps): JSX.Element => (
   <a
-    className={css.componentRoot}
+    className={classNames(css.componentRoot, className)}
     href={href}
     type={type}
     title={title}
-    data-native={localStaticContent}
+    data-native
   >
     <Icon title={title} name={iconName} />
   </a>
 );
-IconLink.displayName = "IconLink";
+LocalIconLink.displayName = "IconLink";
