@@ -45,7 +45,7 @@ export const feed = (options: RollupPluginFeedOptions): Plugin => {
           req.url === "/" + options.rssFileName &&
           feeds.rss
         ) {
-          res.setHeader("Content-Type", "application/rss+xml");
+          res.setHeader("Content-Type", "application/xml");
           res.end(feeds.rss);
           return;
         }
@@ -54,7 +54,7 @@ export const feed = (options: RollupPluginFeedOptions): Plugin => {
           req.url === "/" + options.atomFileName &&
           feeds.atom
         ) {
-          res.setHeader("Content-Type", "application/atom+xml");
+          res.setHeader("Content-Type", "application/xml");
           res.end(feeds.atom);
           return;
         }
