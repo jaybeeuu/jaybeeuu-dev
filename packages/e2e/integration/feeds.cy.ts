@@ -10,7 +10,7 @@ describe("RSS/Atom Feeds", () => {
     navBar
       .getAtomFeedLink()
       .should("exist")
-      .and("have.attr", "type", "application/xml")
+      .and("have.attr", "type", "application/atom+xml")
       .and("have.attr", "href", "/feeds/atom.xml")
       .click();
     cy.url().should("include", "/feeds/atom.xml");

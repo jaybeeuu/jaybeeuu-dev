@@ -14,10 +14,9 @@ export default defineConfig({
   env: {
     coverage: false,
   },
-  experimentalFetchPolyfill: true,
   fixturesFolder: "fixtures",
   screenshotsFolder: ".screenshots",
-  video: true,
+  video: false,
   videosFolder: ".videos",
   reporter: "mocha-junit-reporter",
   reporterOptions: {
