@@ -38,6 +38,10 @@ export default defineConfig({
           key: fs.readFileSync("./certs/key.key"),
           cert: fs.readFileSync("./certs/cert.crt"),
         },
+        fs: {
+          strict: false,
+          allow: [".."],
+        },
       },
   build: {
     assetsInlineLimit: (filePath: string) => {
@@ -111,13 +115,13 @@ export default defineConfig({
           }),
         ),
         {
-          location: `/feeds/atom.xnl`,
+          location: `/feeds/atom.xml`,
           lastModified: new Date(),
           priority: 0.3,
           changeFrequency: "weekly",
         },
         {
-          location: `/feeds/rss.xnl`,
+          location: `/feeds/rss.xml`,
           lastModified: new Date(),
           priority: 0.3,
           changeFrequency: "weekly",

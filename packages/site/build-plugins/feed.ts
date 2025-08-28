@@ -1,5 +1,5 @@
 import type { FeedOptions, Item as FeedItem } from "feed";
-import type { Plugin } from "vite";
+import type { Plugin, Connect } from "vite";
 import { Feed } from "feed";
 
 export { FeedItem, FeedOptions };
@@ -39,27 +39,28 @@ export const feed = (options: RollupPluginFeedOptions): Plugin => {
       // Generate feeds in dev mode
       const feeds = generateFeeds();
 
-      server.middlewares.use((req, res, next) => {
-        if (
-          options.rssFileName &&
-          req.url === "/" + options.rssFileName &&
-          feeds.rss
-        ) {
-          res.setHeader("Content-Type", "application/xml");
+      // Insert our middleware early to handle XML feeds before SPA routing
+      const handler: Connect.NextHandleFunction = (req, res, next) => {
+        const url = req.url || "";
+        if (url.endsWith(`/${options.rssFileName}`) && feeds.rss) {
+          res.setHeader("Content-Type", "application/rss+xml");
+          res.setHeader("Content-Disposition", "inline");
+          res.setHeader("X-Content-Type-Options", "nosniff");
           res.end(feeds.rss);
           return;
         }
-        if (
-          options.atomFileName &&
-          req.url === "/" + options.atomFileName &&
-          feeds.atom
-        ) {
-          res.setHeader("Content-Type", "application/xml");
+        if (url.endsWith(`/${options.atomFileName}`) && feeds.atom) {
+          res.setHeader("Content-Type", "application/atom+xml");
+          res.setHeader("Content-Disposition", "inline");
+          res.setHeader("X-Content-Type-Options", "nosniff");
           res.end(feeds.atom);
           return;
         }
         next();
-      });
+      };
+
+      // Add our handler to the front of the middleware stack
+      server.middlewares.use(handler);
     },
     generateBundle() {
       const feeds = generateFeeds();
