@@ -1,5 +1,5 @@
 import type { FeedOptions, Item as FeedItem } from "feed";
-import type { Plugin } from "vite";
+import type { Plugin, Connect } from "vite";
 import { Feed } from "feed";
 
 export { FeedItem, FeedOptions };
@@ -24,28 +24,62 @@ export interface RollupPluginFeedOptions {
 }
 
 export const feed = (options: RollupPluginFeedOptions): Plugin => {
+  const generateFeeds = (): { rss: string | null; atom: string | null } => {
+    const outputFeed = new Feed(options.feedOptions);
+    options.items.forEach((item) => outputFeed.addItem(item));
+    return {
+      rss: options.rssFileName ? outputFeed.rss2() : null,
+      atom: options.atomFileName ? outputFeed.atom1() : null,
+    };
+  };
+
   return {
     name: "feed",
+    configureServer(server) {
+      // Generate feeds in dev mode
+      const feeds = generateFeeds();
+
+      // Insert our middleware early to handle XML feeds before SPA routing
+      const handler: Connect.NextHandleFunction = (req, res, next) => {
+        const url = req.url || "";
+        if (url.endsWith(`/${options.rssFileName}`) && feeds.rss) {
+          res.setHeader("Content-Type", "application/rss+xml");
+          res.setHeader("Content-Disposition", "inline");
+          res.setHeader("X-Content-Type-Options", "nosniff");
+          res.end(feeds.rss);
+          return;
+        }
+        if (url.endsWith(`/${options.atomFileName}`) && feeds.atom) {
+          res.setHeader("Content-Type", "application/atom+xml");
+          res.setHeader("Content-Disposition", "inline");
+          res.setHeader("X-Content-Type-Options", "nosniff");
+          res.end(feeds.atom);
+          return;
+        }
+        next();
+      };
+
+      // Add our handler to the front of the middleware stack
+      server.middlewares.use(handler);
+    },
     generateBundle() {
-      const outputFeed = new Feed(options.feedOptions);
+      const feeds = generateFeeds();
 
-      options.items.forEach((item) => outputFeed.addItem(item));
-
-      if (options.rssFileName) {
+      if (options.rssFileName && feeds.rss) {
         this.emitFile({
           type: "asset",
           name: options.rssFileName,
           fileName: options.rssFileName,
-          source: outputFeed.rss2(),
+          source: feeds.rss,
         });
       }
 
-      if (options.atomFileName) {
+      if (options.atomFileName && feeds.atom) {
         this.emitFile({
           type: "asset",
           name: options.atomFileName,
           fileName: options.atomFileName,
-          source: outputFeed.atom1(),
+          source: feeds.atom,
         });
       }
     },

@@ -31,48 +31,63 @@ interface RollupPluginSiteMapOptions {
   baseUrl: string;
 }
 
-const makeSiteMap = (options: {
-  urls: SiteMapUrl[];
-  baseUrl: string;
-}): string => {
-  const { urls, baseUrl } = options;
+const makeGenerateSiteMap =
+  (options: { urls: SiteMapUrl[]; baseUrl: string }): (() => string) =>
+  () => {
+    const { urls, baseUrl } = options;
 
-  const xml = new XMLWriter(true);
-  xml.startDocument("1.0", "utf-8");
-  xml.startElement("urlset");
+    const xml = new XMLWriter(true);
+    xml.startDocument("1.0", "utf-8");
+    xml.startElement("urlset");
 
-  xml.writeAttribute("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
-  urls.forEach((url) => {
-    xml.startElement("url");
-    xml.writeAttribute("loc", joinToBase(baseUrl, url.location));
+    xml.writeAttribute("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
+    urls.forEach((url) => {
+      xml.startElement("url");
+      xml.writeAttribute("loc", joinToBase(baseUrl, url.location));
 
-    if (url.lastModified) {
-      const isoDate = url.lastModified.toISOString().split("T")[0];
-      assertIsNotNullish(isoDate);
+      if (url.lastModified) {
+        const isoDate = url.lastModified.toISOString().split("T")[0];
+        assertIsNotNullish(isoDate);
 
-      xml.writeAttribute("lastmod", isoDate);
-    }
-    if (url.changeFrequency) {
-      xml.writeAttribute("changefreq", url.changeFrequency);
-    }
-    if (url.priority) {
-      xml.writeAttribute("priority", `${url.priority}`);
-    }
+        xml.writeAttribute("lastmod", isoDate);
+      }
+      if (url.changeFrequency) {
+        xml.writeAttribute("changefreq", url.changeFrequency);
+      }
+      if (url.priority) {
+        xml.writeAttribute("priority", `${url.priority}`);
+      }
+      xml.endElement();
+    });
+
     xml.endElement();
-  });
+    xml.endDocument();
 
-  xml.endElement();
-  xml.endDocument();
-
-  return xml.toString();
-};
+    return xml.toString();
+  };
 
 export const siteMap = (options: RollupPluginSiteMapOptions): Plugin => {
+  const generateSitemap = makeGenerateSiteMap(options);
+
   return {
     name: "siteMap",
 
+    configureServer(server) {
+      // Generate sitemap in dev mode
+      const siteMapString = generateSitemap();
+
+      server.middlewares.use((req, res, next) => {
+        if (req.url === "/" + options.filename) {
+          res.setHeader("Content-Type", "application/xml");
+          res.end(siteMapString);
+          return;
+        }
+        next();
+      });
+    },
+
     generateBundle() {
-      const siteMapString = makeSiteMap(options);
+      const siteMapString = generateSitemap();
 
       this.emitFile({
         type: "asset",

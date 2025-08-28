@@ -4,9 +4,9 @@ import type { JSX } from "preact";
 import { h } from "preact";
 import { Link } from "preact-router/match";
 import { useState } from "preact/hooks";
-import { IconLink } from "../icon-link/index";
 import { Icon } from "../icon/index";
 import { ImageLink } from "../image-link/index";
+import { LocalIconLink } from "../local-icon-link/index";
 import { ThemeToggle } from "../theme-toggle/index";
 import githubDark from "./github-dark.png";
 import githubLight from "./github-light.png";
@@ -66,7 +66,8 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
           }}
           title={"GitHub"}
         />
-        <IconLink
+        <LocalIconLink
+          className={e2eHooks.atomFeedLink}
           href={"/feeds/atom.xml"}
           iconName={"rss_feed"}
           title="Atom Feed"

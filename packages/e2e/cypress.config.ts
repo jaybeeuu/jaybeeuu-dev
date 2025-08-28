@@ -1,7 +1,5 @@
 import { defineConfig } from "cypress";
-import coverage from "@cypress/code-coverage/task";
-
-console.log("CYPRESS_COVERAGE", process.env.CYPRESS_COVERAGE);
+import coverage from "@cypress/code-coverage/task.js";
 
 export default defineConfig({
   e2e: {
@@ -16,10 +14,9 @@ export default defineConfig({
   env: {
     coverage: false,
   },
-  experimentalFetchPolyfill: true,
   fixturesFolder: "fixtures",
   screenshotsFolder: ".screenshots",
-  video: true,
+  video: false,
   videosFolder: ".videos",
   reporter: "mocha-junit-reporter",
   reporterOptions: {
