@@ -162,7 +162,7 @@ So expect to see the ecosystem move in that direction.
 The way this works is that when node executes the JS in a module it wraps the code in a function.
 The function makes sure that the module is executing in it's own context, and internals don't bleed into the global scope.
 It also supplies a couple of special variables which the module can use.
-More details can be found [here](https://nodejs.org/docs/latest/api/modules.html#modules_the_module_wrapper),
+More details can be found in [the Node.js docs](https://nodejs.org/docs/latest/api/modules.html#modules_the_module_wrapper),
 but the important ones for the sake of this discussion are `exports`, `module` and `require`.
 
 Here's an example ripped almost exactly from the [node docs](https://nodejs.org/docs/latest/api/modules.html)...

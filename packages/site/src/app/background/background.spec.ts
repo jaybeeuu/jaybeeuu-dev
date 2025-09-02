@@ -58,6 +58,7 @@ describe("useImages", () => {
     expect(result.current).toStrictEqual({ current: null, previous: null });
   });
 
+  // eslint-disable-next-line jest/prefer-ending-with-an-expect
   it("returns the light image as current when the light theme is selected after the promise resolves.", async () => {
     const promise = new ControllablePromise<Response>();
     jest.spyOn(window, "fetch").mockReturnValue(promise);
@@ -82,6 +83,7 @@ describe("useImages", () => {
     });
   });
 
+  // eslint-disable-next-line jest/prefer-ending-with-an-expect
   it("returns the dark image as current when the dark theme is selected.", async () => {
     const promise = new ControllablePromise<Response>();
     jest.spyOn(window, "fetch").mockReturnValue(promise);
@@ -106,6 +108,7 @@ describe("useImages", () => {
     });
   });
 
+  // eslint-disable-next-line jest/prefer-ending-with-an-expect
   it("sets the previous and current images when the images change.", async () => {
     jest.spyOn(window, "fetch").mockResolvedValue({} as Response);
 
@@ -140,6 +143,7 @@ describe("useImages", () => {
     });
   });
 
+  // eslint-disable-next-line jest/prefer-ending-with-an-expect
   it("sets the previous and current images when the theme changes.", async () => {
     jest.spyOn(window, "fetch").mockResolvedValue({} as Response);
 

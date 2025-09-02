@@ -167,6 +167,7 @@ const makeFile = (
       this.content = newContent;
       this.stats = new Stats({
         type: "file",
+        // eslint-disable-next-line @typescript-eslint/no-misused-spread
         ...this.stats,
         mtime: new Date(),
       });
@@ -174,6 +175,7 @@ const makeFile = (
     logAccess() {
       this.stats = new Stats({
         type: "file",
+        // eslint-disable-next-line @typescript-eslint/no-misused-spread
         ...this.stats,
         atime: new Date(),
       });
@@ -524,12 +526,9 @@ jest
 type MkdirOptions =
   | (fsModule.MakeDirectoryOptions & { recursive: true })
   | fsModule.Mode
-  | (
-      | (fsModule.MakeDirectoryOptions & { recursive?: false })
-      | fsModule.Mode
-      | fsModule.MakeDirectoryOptions
-      | null
-    );
+  | (fsModule.MakeDirectoryOptions & { recursive?: false })
+  | fsModule.MakeDirectoryOptions
+  | null;
 
 type Mkdir = (
   path: fsModule.PathLike,

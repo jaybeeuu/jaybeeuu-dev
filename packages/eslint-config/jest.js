@@ -1,5 +1,4 @@
 // @ts-check
-// @ts-expect-error there are no types for this library
 import jestPlugin from "eslint-plugin-jest";
 import globals from "globals";
 import { config } from "typescript-eslint";
@@ -17,6 +16,7 @@ export const jest = config(
   {
     files: ["**/*.spec.ts", "**/*.spec.tsx"],
     extends: [jestPlugin.configs["flat/all"]],
+    // @ts-expect-error the type appear to be wrong here.
     rules: { ...jestRules },
   },
   {

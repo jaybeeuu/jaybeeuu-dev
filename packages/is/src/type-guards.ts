@@ -15,7 +15,7 @@ export const isLiteral = <Type extends string | number | boolean>(
     }
 
     return failValidation(
-      `Expected literal value "${String(type)}", but received "${typeof candidate}": ${typeof candidate !== "object" ? String(candidate) : ""}`,
+      `Expected literal value "${String(type)}", but received "${typeof candidate}${candidate && typeof candidate === "object" ? `: ${candidate.constructor.name}` : ""}`,
       context,
     );
   }, String(type));
@@ -57,7 +57,7 @@ export const is = <Type extends TypeString | "null">(
     }
 
     return failValidation(
-      `Expected "${typeString}", but received "${typeof candidate}"${typeof candidate !== "object" ? `: ${String(candidate)}` : ""}`,
+      `Expected "${typeString}", but received "${typeof candidate}"${candidate && typeof candidate === "object" ? `: ${candidate.constructor.name}` : ""}`,
       context,
     );
   }, typeString);

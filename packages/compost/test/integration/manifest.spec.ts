@@ -17,6 +17,13 @@ import readingTime from "reading-time";
 import { describe, expect, it, jest } from "@jest/globals";
 jest.mock("node-fetch");
 
+interface PostFileWithStringContent extends Omit<PostFile, "content"> {
+  content: string;
+}
+interface PostFileWithStringArrayContent extends Omit<PostFile, "content"> {
+  content: string[];
+}
+
 const writeOutputManifestFile = (
   metaData: Pick<PostMetaData, "slug"> & Partial<Omit<PostMetaData, "slug">>,
 ): Promise<void> => {
@@ -116,7 +123,7 @@ describe("manifest", () => {
   it("does not change publish date when a post is updated and recompiled, and compost has access to the old manifest.", async () => {
     await cleanUpDirectories();
     const slug = "first-post";
-    const postFile: PostFile = {
+    const postFile: PostFileWithStringArrayContent = {
       slug,
       meta: {
         title: "This is the first post",
@@ -150,7 +157,7 @@ describe("manifest", () => {
   it("updates the lastUpdatedDate when a post is updated and recompiled, and compost has access to the old manifest.", async () => {
     await cleanUpDirectories();
     const slug = "first-post";
-    const postFile: PostFile = {
+    const postFile: PostFileWithStringArrayContent = {
       slug,
       meta: {
         title: "This is the first post",
@@ -213,7 +220,7 @@ describe("manifest", () => {
   it("includes the lastUpdatedDate from the old manifest when a post is recompiled but not updated, and compost has access to the old manifest.", async () => {
     await cleanUpDirectories();
     const slug = "first-post";
-    const postFile: PostFile = {
+    const postFile: PostFileWithStringContent = {
       slug,
       meta: {
         title: "This is the first post",
@@ -230,7 +237,7 @@ describe("manifest", () => {
 
     await writePostFile({
       ...postFile,
-      content: [...postFile.content, "some new content"],
+      content: [postFile.content, "some new content"],
     });
 
     const updatedDate = "2020-03-12";
@@ -277,7 +284,7 @@ describe("manifest", () => {
   it("updates the lastUpdatedDate when the manifest needs to be fetched.", async () => {
     await cleanUpDirectories();
     const slug = "first-post";
-    const postFile: PostFile = {
+    const postFile: PostFileWithStringContent = {
       slug,
       meta: {
         title: "This is the first post",
@@ -300,7 +307,7 @@ describe("manifest", () => {
 
     await writePostFile({
       ...postFile,
-      content: [...postFile.content, "some new content"],
+      content: [postFile.content, "some new content"],
     });
 
     const updatedDate = "2020-03-12";
@@ -318,7 +325,7 @@ describe("manifest", () => {
   it("updates the lastUpdatedDate when the manifest needs to be fetched from the first of several old manifest locations.", async () => {
     await cleanUpDirectories();
     const slug = "first-post";
-    const postFile: PostFile = {
+    const postFile: PostFileWithStringContent = {
       slug,
       meta: {
         title: "This is the first post",
@@ -344,7 +351,7 @@ describe("manifest", () => {
 
     await writePostFile({
       ...postFile,
-      content: [...postFile.content, "some new content"],
+      content: [postFile.content, "some new content"],
     });
 
     const updatedDate = "2020-03-12";
@@ -360,7 +367,7 @@ describe("manifest", () => {
   it("updates the lastUpdatedDate when the manifest needs to be fetched from the fallback.", async () => {
     await cleanUpDirectories();
     const slug = "first-post";
-    const postFile: PostFile = {
+    const postFile: PostFileWithStringContent = {
       slug,
       meta: {
         title: "This is the first post",
@@ -390,7 +397,7 @@ describe("manifest", () => {
 
     await writePostFile({
       ...postFile,
-      content: [...postFile.content, "some new content"],
+      content: [postFile.content, "some new content"],
     });
 
     const updatedDate = "2020-03-12";

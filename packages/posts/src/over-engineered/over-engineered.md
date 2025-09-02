@@ -1,7 +1,7 @@
 # Over Engineered
 
 This site is a little over engineered. OK... a lot over engineered.
-If you want to see the code it's [here](https://github.com/jaybeeuu/jaybeeuu-dev).
+If you want to see the code it's available in [GitHub](https://github.com/jaybeeuu/jaybeeuu-dev).
 
 It's a blog, but for some reason it's a Preact application with a homegrown recoil like state management library.
 It uses a custom Webpack configuration, with a self authored Webpack plugin for the RSS feeds.

@@ -311,7 +311,7 @@ The `imageClassifications` prop is a `Promise<ImageClassification[]>` - that's t
 Similarly to `Albums.js` the promise is passed to a hook (`usePromise`) and then data returned is displayed.
 This component is wrapped in a `Suspense` component, so if it suspends we get a loading spinner.
 
-`usePromise` is listed [here](https://github.com/jaybeeuu/React-suspense/blob/bf9ffd094ccad973fa617f38816c409c6c3aac8a/src/use-promise.ts).
+`usePromise` is listed in [use-promise.ts](https://github.com/jaybeeuu/React-suspense/blob/bf9ffd094ccad973fa617f38816c409c6c3aac8a/src/use-promise.ts).
 (It's a TypeScript'd and refactored version of the `use` hook shown above, so I won't bother showing it here.)
 If the promise passed in is **pending**, `usePromise` throws the promise, if rejected then the error is thrown, and if resolved then it synchronously returns the result.
 

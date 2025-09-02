@@ -125,5 +125,6 @@ MobileNet
 TypeScript'd
 data.js
 v5
+ts
  - src/codecov/codecov.md
 circle-ci

@@ -83,28 +83,20 @@ export const main = (argv: string[]): void => {
           wordsPerMinute,
         });
 
-        switch (true) {
-          case timeOnly: {
-            log(result.time);
-            break;
-          }
-          case minutesOnly: {
-            log(result.minutes);
-            break;
-          }
-          case textOnly: {
-            log(result.text);
-            break;
-          }
-          default: {
-            log(
-              [
-                `${chalk.bold("Reading Time")} (${filePath})`,
-                "",
-                `${chalk.green(result.text)} (${result.words} words)`,
-              ].join("\n"),
-            );
-          }
+        if (timeOnly) {
+          log(result.time);
+        } else if (minutesOnly) {
+          log(result.minutes);
+        } else if (textOnly) {
+          log(result.text);
+        } else {
+          log(
+            [
+              `${chalk.bold("Reading Time")} (${filePath})`,
+              "",
+              `${chalk.green(result.text)} (${result.words} words)`,
+            ].join("\n"),
+          );
         }
       },
     )
