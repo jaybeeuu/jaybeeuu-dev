@@ -1,8 +1,8 @@
 // @ts-check
 import reactPlugin from "eslint-plugin-react";
-import tseslint from "typescript-eslint";
+import { defineConfig } from "eslint/config";
 
-export const preact = tseslint.config({
+export const preact = defineConfig({
   extends: reactPlugin.configs.flat.recommended && [
     reactPlugin.configs.flat.recommended,
   ],

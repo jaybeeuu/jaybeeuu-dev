@@ -6,6 +6,7 @@ import {
   node,
 } from "@jaybeeuu/eslint-config";
 
+/** @type {import("eslint").Linter.Config[]} */
 export default config(...base, node, ignoreFromGitIgnore(import.meta.url), {
   files: ["**/*.ts", "**/*.tsx"],
 });
