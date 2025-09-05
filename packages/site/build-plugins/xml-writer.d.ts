@@ -4,10 +4,10 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 declare module "xml-writer" {
-  declare class XMLWriter {
+  class XMLWriter {
     constructor(
-      indent: boolean | string = false,
-      writer: (content: string, encoding: string) => void = undefined,
+      indent?: boolean | string,
+      writer?: (content: string, encoding: string) => void,
     );
 
     /** Write text */
@@ -18,16 +18,16 @@ declare module "xml-writer" {
 
     /** Create document tag */
     startDocument(
-      version = "1.0",
-      encoding: string = null,
-      standalone = false,
+      version?: string,
+      encoding?: string,
+      standalone?: boolean,
     ): XMLWriter;
 
     /** End current document */
     endDocument(): XMLDocument;
 
     /**  Write full element tag */
-    writeElement(name: string, content: string);
+    writeElement(name: string, content: string): XMLWriter;
 
     /** Write full namespaced element tag */
     writeElementNS(): XMLWriter;
@@ -66,7 +66,12 @@ declare module "xml-writer" {
     endPI(): XMLWriter;
 
     /** Write a DocType */
-    writeDocType(name: string, pubid?: string, sysid?: string, subset?: string);
+    writeDocType(
+      name: string,
+      pubid?: string,
+      sysid?: string,
+      subset?: string,
+    ): XMLWriter;
 
     /** Create start DocType tag */
     startDocType(

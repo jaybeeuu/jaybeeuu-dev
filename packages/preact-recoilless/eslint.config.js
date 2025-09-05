@@ -8,6 +8,7 @@ import {
   preact,
 } from "@jaybeeuu/eslint-config";
 
+/** @type {import("eslint").Linter.Config[]} */
 export default config(
   ...base,
   browser,

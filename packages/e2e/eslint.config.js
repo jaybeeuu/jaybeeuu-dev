@@ -9,6 +9,8 @@ import {
 import cypress from "eslint-plugin-cypress";
 
 /** @type {import("eslint").Linter.Config[]} */
+
+/** @type {import("eslint").Linter.Config[]} */
 export default config(
   ...base,
   ignoreFromGitIgnore(import.meta.url),
