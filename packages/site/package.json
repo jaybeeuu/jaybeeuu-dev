@@ -82,6 +82,7 @@
     "prism-theme-night-owl": "^1.4.0",
     "prism-theme-one-light-dark": "^1.0.4",
     "prism-theme-vars": "^0.2.5",
-    "regenerator-runtime": "^0.14.1"
+    "regenerator-runtime": "^0.14.1",
+    "wouter": "^3.7.1"
   }
 }

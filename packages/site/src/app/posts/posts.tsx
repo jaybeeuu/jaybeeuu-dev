@@ -4,7 +4,7 @@ import type { PostManifest, PostMetaData } from "@jaybeeuu/compost";
 import { postList as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import { useValue } from "@jaybeeuu/preact-recoilless";
 import classNames from "classnames";
-import { Link } from "preact-router/match";
+import { Link } from "wouter";
 import { asRoute } from "../as-route";
 import { useBackgrounds as useBackgrounds } from "../use-background";
 import { usePageInfo } from "../use-page-info";
@@ -25,7 +25,7 @@ const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
         ? "Nothing to see? Write some posts..."
         : manifestValues.sort(compareDateString).map((meta) => (
             <Link
-              href={`/blog/${meta.slug}`}
+              to={`/blog/${meta.slug}`}
               className={classNames(
                 css.post,
                 e2eHooks.link,
