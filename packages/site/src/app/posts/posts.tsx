@@ -5,7 +5,6 @@ import { postList as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import { useValue } from "@jaybeeuu/preact-recoilless";
 import classNames from "classnames";
 import { Link } from "wouter";
-import { asRoute } from "../as-route";
 import { useBackgrounds as useBackgrounds } from "../use-background";
 import { usePageInfo } from "../use-page-info";
 import { postsManifest } from "../state";
@@ -46,11 +45,14 @@ const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
 });
 PostList.displayName = "PostList";
 
-export const PostsRoute = asRoute((): JSX.Element => {
+export const Posts = (): JSX.Element => {
   useBackgrounds({
     dark: "great-northern-highway",
     light: "royal-exhibition-hall",
   });
   const manifest = useValue(postsManifest);
   return <PostList manifest={manifest} />;
-});
+};
+Posts.displayName = "Posts";
+
+export const PostsRoute = Posts;

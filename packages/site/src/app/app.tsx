@@ -3,12 +3,12 @@ import classNames from "classnames";
 import type { JSX } from "preact";
 import { h } from "preact";
 import { Switch, Route } from "wouter";
-import { FouOhFourRoute } from "./four-oh-four";
+import { FouOhFour } from "./four-oh-four";
 import css from "./app.module.css";
 import { Background } from "./background";
-import { HomeRoute } from "./home";
+import { Home } from "./home/home";
 import { PostRoute } from "./post";
-import { PostsRoute } from "./posts";
+import { Posts } from "./posts/posts";
 import { TitleBar } from "./title-bar";
 import { ThemeRoot } from "./theme";
 
@@ -17,10 +17,10 @@ export const App = (): JSX.Element => (
     <Background className={classNames(css.main, e2eHooks.root)}>
       <TitleBar className={css.static} />
       <Switch>
-        <Route path="/" component={HomeRoute} />
-        <Route path="/blog" component={PostsRoute} />
+        <Route path="/" component={Home} />
+        <Route path="/blog" component={Posts} />
         <Route path="/blog/:slug" component={PostRoute} />
-        <Route component={FouOhFourRoute} />
+        <Route component={FouOhFour} />
       </Switch>
     </Background>
   </ThemeRoot>

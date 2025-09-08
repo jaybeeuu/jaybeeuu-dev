@@ -77,7 +77,6 @@
     "classnames": "^2.5.1",
     "core-js": "^3.45.1",
     "preact": "^10.27.1",
-    "preact-router": "^4.1.2",
     "preact-transitioning": "^1.5.2",
     "prism-theme-night-owl": "^1.4.0",
     "prism-theme-one-light-dark": "^1.0.4",

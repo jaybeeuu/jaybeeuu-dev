@@ -46,8 +46,8 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
         </Link>
         <Link
           className={classNames(css.link, e2eHooks.postsListLink, {
-            [css.active]: location.startsWith("/blog"),
-            [e2eHooks.activeLink]: location.startsWith("/blog"),
+            [css.active]: location === "/blog",
+            [e2eHooks.activeLink]: location === "/blog",
           })}
           to={"/blog"}
           onClick={() => {

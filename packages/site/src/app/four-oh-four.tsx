@@ -1,7 +1,6 @@
 import { fourOhFour } from "@jaybeeuu/e2e-hooks";
 import type { JSX } from "preact";
 import { h } from "preact";
-import { asRoute } from "./as-route";
 import { ErrorMessage } from "./error";
 import { useBackgrounds } from "./use-background";
 
@@ -18,4 +17,4 @@ export const FouOhFour = (): JSX.Element => {
 };
 FouOhFour.displayName = "FourOhFourComponent";
 
-export const FouOhFourRoute = asRoute(FouOhFour);
+export const FouOhFourRoute = FouOhFour;
