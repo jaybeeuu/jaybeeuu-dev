@@ -16,5 +16,3 @@ export const FouOhFour = (): JSX.Element => {
   );
 };
 FouOhFour.displayName = "FourOhFourComponent";
-
-export const FouOhFourRoute = FouOhFour;

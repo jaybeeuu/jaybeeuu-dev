@@ -144,23 +144,17 @@ const PostLookupResult = withPromise(
 );
 PostLookupResult.displayName = "PostLookupResult";
 
-const PostLookup = (): JSX.Element | null => {
+const PostLookup = (): JSX.Element => {
   const { slug } = useParams<{ slug: string }>();
   useBackgrounds({ dark: "moon", light: "black-tusk" });
 
   const [, setSlug] = useValue(currentPostSlug);
   useEffect(() => {
-    if (slug) {
-      setSlug(slug);
-    }
+    setSlug(slug!);
   }, [slug]);
 
   const postMetaLookupResult = useValue(currentPostMeta);
   const postHtmlLookupResult = useValue(currentPostHtml);
-
-  if (!slug) {
-    return <FouOhFour />;
-  }
 
   return (
     <PostLookupResult

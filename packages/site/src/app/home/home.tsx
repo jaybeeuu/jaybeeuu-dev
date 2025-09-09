@@ -13,5 +13,3 @@ export const Home = (): JSX.Element => {
   );
 };
 Home.displayName = "Home";
-
-export const HomeRoute = Home;

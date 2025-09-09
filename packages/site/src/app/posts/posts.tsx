@@ -54,5 +54,3 @@ export const Posts = (): JSX.Element => {
   return <PostList manifest={manifest} />;
 };
 Posts.displayName = "Posts";
-
-export const PostsRoute = Posts;
