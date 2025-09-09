@@ -144,7 +144,7 @@ const PostLookupResult = withPromise(
 );
 PostLookupResult.displayName = "PostLookupResult";
 
-const PostLookup = (): JSX.Element => {
+export const PostLookup = (): JSX.Element => {
   const { slug } = useParams<{ slug: string }>();
   useBackgrounds({ dark: "moon", light: "black-tusk" });
 
