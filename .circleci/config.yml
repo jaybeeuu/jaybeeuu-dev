@@ -136,6 +136,7 @@ jobs:
     environment:
       CYPRESS_COVERAGE: true
       CYPRESS_VIDEO: false
+      DBUS_SESSION_BUS_ADDRESS: /dev/null
     docker:
       - image: cypress/included:15.0.0
         auth:
@@ -158,6 +159,8 @@ jobs:
           command: pnpm --filter @jaybeeuu/site... --filter @jaybeeuu/e2e... build
       - run:
           name: Run e2e Tests
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: /dev/null
           command: pnpm --filter @jaybeeuu/site start & pnpx wait-on --timeout=60000 https://localhost:3443/ && pnpm e2e run
       - run:
           name: Install curl and gpg
@@ -166,6 +169,8 @@ jobs:
 
   e2e-deployed:
     <<: *job-base
+    environment:
+      DBUS_SESSION_BUS_ADDRESS: /dev/null
     docker:
       - image: cypress/included:15.0.0
         auth:
@@ -191,6 +196,8 @@ jobs:
             fi
       - run:
           name: Run e2e Tests
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: /dev/null
           command: node ./packages/scripts/bin/wait-up.js --url "$DEPLOYMENT_URL/version.json" --commit-hash $CIRCLE_SHA1 && pnpm e2e run --config "baseUrl=$DEPLOYMENT_URL"
       - store_test_results:
           path: ./packages/e2e/.reports
