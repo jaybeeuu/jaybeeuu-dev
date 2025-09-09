@@ -7,7 +7,7 @@ import { FouOhFour } from "./four-oh-four";
 import css from "./app.module.css";
 import { Background } from "./background";
 import { Home } from "./home";
-import { PostRoute } from "./post";
+import { PostLookup } from "./post";
 import { Posts } from "./posts";
 import { TitleBar } from "./title-bar";
 import { ThemeRoot } from "./theme";
@@ -19,7 +19,7 @@ export const App = (): JSX.Element => (
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/blog" component={Posts} />
-        <Route path="/blog/:slug" component={PostRoute} />
+        <Route path="/blog/:slug" component={PostLookup} />
         <Route component={FouOhFour} />
       </Switch>
     </Background>

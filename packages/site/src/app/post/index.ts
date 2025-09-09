@@ -1,1 +1,1 @@
-export { PostRoute } from "./post";
+export { PostLookup } from "./post";

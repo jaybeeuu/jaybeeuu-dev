@@ -164,5 +164,3 @@ const PostLookup = (): JSX.Element => {
   );
 };
 PostLookup.displayName = "PostLookup";
-
-export const PostRoute = PostLookup;
