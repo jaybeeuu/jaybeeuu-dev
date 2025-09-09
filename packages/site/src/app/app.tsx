@@ -6,9 +6,9 @@ import { Switch, Route } from "wouter";
 import { FouOhFour } from "./four-oh-four";
 import css from "./app.module.css";
 import { Background } from "./background";
-import { Home } from "./home/home";
+import { HomeRoute as Home } from "./home";
 import { PostRoute } from "./post";
-import { Posts } from "./posts/posts";
+import { PostsRoute as Posts } from "./posts";
 import { TitleBar } from "./title-bar";
 import { ThemeRoot } from "./theme";
 
