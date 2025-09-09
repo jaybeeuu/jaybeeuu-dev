@@ -150,7 +150,7 @@ export const PostLookup = (): JSX.Element => {
 
   const [, setSlug] = useValue(currentPostSlug);
   useEffect(() => {
-    setSlug(slug!);
+    setSlug(slug);
   }, [slug]);
 
   const postMetaLookupResult = useValue(currentPostMeta);
