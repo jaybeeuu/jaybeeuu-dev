@@ -240,7 +240,7 @@ workflows:
       - e2e-coverage:
           requires:
             - checkout-install-build
-      - e2e-deployment:
+      - e2e-deployed:
           requires:
             - checkout-install-build
       - format-check:
@@ -266,7 +266,7 @@ workflows:
               ignore: /.*/
           requires:
             - e2e-coverage
-            - e2e-deployment
+            - e2e-deployed
             - format-check
             - lint
             - spell-check
@@ -280,7 +280,7 @@ workflows:
               ignore: /.*/
           requires:
             - e2e-coverage
-            - e2e-deployment
+            - e2e-deployed
             - format-check
             - lint
             - spell-check
