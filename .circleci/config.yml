@@ -164,7 +164,7 @@ jobs:
           command: apt-get update && apt-get install curl gpg -y
       - codecov/upload
 
-  e2e-deployment:
+  e2e-deployed:
     <<: *job-base
     docker:
       - image: cypress/included:15.0.0
