@@ -3,12 +3,14 @@ import {
   base,
   browser,
   config,
-  node,
   ignoreFromGitIgnore,
+  node,
 } from "@jaybeeuu/eslint-config";
-
 import cypress from "eslint-plugin-cypress";
 
+/** @type {import("eslint").Linter.Config[]} */
+
+/** @type {import("eslint").Linter.Config[]} */
 export default config(
   ...base,
   ignoreFromGitIgnore(import.meta.url),

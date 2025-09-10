@@ -1,9 +1,10 @@
 // @ts-check
 import eslint from "@eslint/js";
+import { defineConfig } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-export const base = tseslint.config(
+export const base = defineConfig(
   eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   {

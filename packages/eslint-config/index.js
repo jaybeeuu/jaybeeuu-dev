@@ -3,7 +3,7 @@ import { includeIgnoreFile } from "@eslint/compat";
 import globals from "globals";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-export { config } from "typescript-eslint";
+export { defineConfig as config } from "eslint/config";
 export { base } from "./base.js";
 export { browser, node } from "./env.js";
 export { jest } from "./jest.js";
@@ -11,9 +11,8 @@ export { preact } from "./preact.js";
 export { globals };
 
 /**
- *
  * @param {string} importMetaUrl
- * @returns {import("eslint").Linter.FlatConfig}
+ * @returns {import("eslint").Linter.Config}
  */
 export const ignoreFromGitIgnore = (importMetaUrl) => {
   const __filename = fileURLToPath(importMetaUrl);

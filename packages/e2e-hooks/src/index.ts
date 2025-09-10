@@ -11,12 +11,13 @@ export const post = {
 
 const navBarBlock = makeHookBlock("nav-bar");
 export const navBar = {
+  activeLink: navBarBlock.element("active-link"),
+  atomFeedLink: navBarBlock.element("atom-link"),
   block: navBarBlock(),
   gitHubLink: navBarBlock.element("github-link"),
   homeLink: navBarBlock.element("home-link"),
   linkedInLink: navBarBlock.element("linked-in-link"),
   postsListLink: navBarBlock.element("posts-list-link"),
-  atomFeedLink: navBarBlock.element("atom-link"),
   switch: navBarBlock.element("switch"),
 };
 

@@ -4,13 +4,10 @@
 const config = {
   clearMocks: true,
   testEnvironment: "node",
-  // collectCoverageFrom : [
-  //   "./src/**",
-  //   "!./src/bin/**"
-  // ],
   transform: {
     "^.+\\.(t|j)sx?$": "ts-jest",
   },
+  transformIgnorePatterns: ["/node_modules/(?!(\\.pnpm|marked/))"],
   testMatch: ["**/*.spec.ts"],
   testPathIgnorePatterns: ["/node_modules/", "/lib/"],
   watchPathIgnorePatterns: ["<rootDir>/.fs/", "<rootDir>/lib/"],

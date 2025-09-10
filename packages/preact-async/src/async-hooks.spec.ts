@@ -8,6 +8,20 @@ import {
   useSemanticMemo,
 } from "./async-hooks";
 
+const waitForValueToChange = (getValue: () => unknown): Promise<void> => {
+  const initialValue = getValue();
+  return waitFor(() => {
+    if (getValue() === initialValue) {
+      throw new Error("Value hasn't changed yet.");
+    }
+  });
+};
+
+const waitForEffects = (): Promise<void> =>
+  act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+
 describe("async-hooks", () => {
   describe("useIsMounted", () => {
     it("returns true while the component is mounted.", () => {
@@ -131,10 +145,11 @@ describe("async-hooks", () => {
     });
 
     it("returns a new value once the generator emits.", async () => {
+      const promise = new ControllablePromise();
       const { result } = renderHook(() =>
         useAsyncGenerator(
           async function* (): AsyncGenerator<number> {
-            await Promise.resolve();
+            await promise;
             yield 1;
           },
           0,
@@ -142,9 +157,11 @@ describe("async-hooks", () => {
         ),
       );
 
-      await waitFor(() => {
-        expect(result.current).toBe(1);
-      });
+      promise.resolve();
+
+      await waitForValueToChange(() => result.current);
+
+      expect(result.current).toBe(1);
     });
 
     it("doesn't explode if the component is unmounted before the generator emits.", async () => {
@@ -180,48 +197,46 @@ describe("async-hooks", () => {
     });
 
     it("returns complete after the promise resolves.", async () => {
-      const { result } = renderHook(() =>
-        usePromise(() => Promise.resolve(1), []),
-      );
+      const promise = new ControllablePromise<number>();
+      const { result } = renderHook(() => usePromise(() => promise, []));
 
-      await waitFor(() => {
-        expect(result.current.promiseState).toStrictEqual({
-          status: "complete",
-          value: 1,
-        });
+      promise.resolve(1);
+
+      await waitForValueToChange(() => result.current.promiseState.status);
+
+      expect(result.current.promiseState).toStrictEqual({
+        status: "complete",
+        value: 1,
       });
     });
 
-    it("uses the factory to calculate a nw value when the deps updae during a render.", async () => {
+    it("uses the factory to calculate a nw value when the deps update during a render.", async () => {
       const { result, rerender } = renderHook(
         ({ value }) => usePromise(() => Promise.resolve(value), [value]),
         { initialProps: { value: 1 } },
       );
 
       rerender({ value: 2 });
+      await waitForValueToChange(() => result.current.promiseState);
 
-      await waitFor(() => {
-        expect(result.current.promiseState).toStrictEqual({
-          status: "complete",
-          value: 2,
-        });
+      expect(result.current.promiseState).toStrictEqual({
+        status: "complete",
+        value: 2,
       });
     });
 
     it("returns error after the promise rejects. Converting the reason to an error along the way.", async () => {
-      const { result } = renderHook(() =>
-        usePromise(
-          // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
-          () => Promise.reject("Whoops!"),
-          [],
-        ),
-      );
+      const promise = new ControllablePromise<number>();
+      const { result } = renderHook(() => usePromise(() => promise, []));
 
-      await waitFor(() => {
-        expect(result.current.promiseState).toStrictEqual({
-          status: "failed",
-          error: new Error('"Whoops!"'),
-        });
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+      promise.reject("Whoops!");
+
+      await waitForValueToChange(() => result.current.promiseState.status);
+
+      expect(result.current.promiseState).toStrictEqual({
+        status: "failed",
+        error: new Error('"Whoops!"'),
       });
     });
 
@@ -240,9 +255,9 @@ describe("async-hooks", () => {
 
       unmount();
 
-      await waitFor(() => {
-        expect(abortedRef.current).toBe(true);
-      });
+      await waitForEffects();
+
+      expect(abortedRef.current).toBe(true);
     });
 
     it("aborts the promise if the component rerenders and the deps have updated.", async () => {
@@ -265,9 +280,9 @@ describe("async-hooks", () => {
 
       rerender({ value: 2 });
 
-      await waitFor(() => {
-        expect(abortedRef.current).toBe(true);
-      });
+      await waitForEffects();
+
+      expect(abortedRef.current).toBe(true);
     });
 
     it("aborts the promise when teh abort function is called.", async () => {
@@ -288,13 +303,11 @@ describe("async-hooks", () => {
         { initialProps: { value: 1 } },
       );
 
-      await act(() => {
-        result.current.abort();
-      });
+      result.current.abort();
 
-      await waitFor(() => {
-        expect(abortedRef.current).toBe(true);
-      });
+      await waitForEffects();
+
+      expect(abortedRef.current).toBe(true);
     });
   });
 });

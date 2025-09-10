@@ -3,7 +3,7 @@ import classNames from "classnames";
 import type { JSX, Ref } from "preact";
 import { h } from "preact";
 import { useLayoutEffect, useRef } from "preact/hooks";
-import { Link } from "preact-router";
+import { Link } from "preact-router/match";
 import { NavBar } from "../nav-bar";
 import { titleBarHeight, titleBarStyle } from "../state";
 

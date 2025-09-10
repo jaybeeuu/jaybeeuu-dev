@@ -19,24 +19,24 @@
     "type-check": "tsc --noEmit --pretty"
   },
   "devDependencies": {
-    "@cypress/code-coverage": "^3.13.4",
+    "@cypress/code-coverage": "^3.14.6",
     "@jaybeeuu/eslint-config": "workspace:*",
     "@types/cypress": "^1.1.6",
-    "@types/node": "^22.5.4",
-    "@typescript-eslint/eslint-plugin": "^8.4.0",
-    "@typescript-eslint/parser": "^8.4.0",
+    "@types/node": "^24.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.41.0",
+    "@typescript-eslint/parser": "^8.41.0",
     "cypress": "15.0.0",
-    "eslint": "^9.9.1",
-    "eslint-plugin-cypress": "^3.5.0",
-    "typescript": "^5.5.4"
+    "eslint": "^9.34.0",
+    "eslint-plugin-cypress": "^5.1.1",
+    "typescript": "^5.9.2"
   },
   "dependencies": {
-    "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.4",
+    "@babel/core": "^7.28.3",
+    "@babel/preset-env": "^7.28.3",
     "@jaybeeuu/compost": "workspace:*",
     "@jaybeeuu/e2e-hooks": "workspace:*",
     "@jaybeeuu/utilities": "workspace:*",
-    "core-js": "3.38.1",
+    "core-js": "3.45.1",
     "mocha-junit-reporter": "^2.2.1"
   }
 }

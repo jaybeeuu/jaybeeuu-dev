@@ -5,8 +5,8 @@ import type {
   ValidationResult,
 } from "./core.js";
 import { assert, failValidation, isType, passValidation } from "./core.js";
-
 import { describe, expect, it } from "@jest/globals";
+
 describe("assert", () => {
   it("throws when the candidate does not match the type guard.", () => {
     const assertPredicate: TypeAssertion<unknown> = assert(

@@ -5,4 +5,5 @@ import {
   ignoreFromGitIgnore,
 } from "@jaybeeuu/eslint-config";
 
-export default config(...base, ignoreFromGitIgnore(import.meta.url), node);
+/** @type {import("eslint").Linter.Config[]} */
+export default config([...base, ignoreFromGitIgnore(import.meta.url), node]);

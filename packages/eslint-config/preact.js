@@ -1,10 +1,11 @@
 // @ts-check
-// @ts-expect-error there are no types for this library
 import reactPlugin from "eslint-plugin-react";
-import tseslint from "typescript-eslint";
+import { defineConfig } from "eslint/config";
 
-export const preact = tseslint.config({
-  extends: [reactPlugin.configs.flat.recommended],
+export const preact = defineConfig({
+  extends: reactPlugin.configs.flat.recommended && [
+    reactPlugin.configs.flat.recommended,
+  ],
   files: ["**/*.tsx"],
   languageOptions: {
     parserOptions: {

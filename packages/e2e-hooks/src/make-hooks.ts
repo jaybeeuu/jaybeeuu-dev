@@ -101,7 +101,11 @@ export const makeClassSelectors = <Hooks extends HookMap>(
           acc[name] = asClassSelector(hook);
           break;
         }
-        default:
+        case "bigint":
+        case "boolean":
+        case "number":
+        case "symbol":
+        case "undefined":
           throw new Error(
             `Unable to make type ${typeof hook} into a class selector.`,
           );

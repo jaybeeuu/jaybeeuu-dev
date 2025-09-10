@@ -1,5 +1,4 @@
 import { describe, expect, it } from "@jest/globals";
-import "@testing-library/jest-dom/jest-globals";
 import { render } from "@testing-library/preact";
 import type { PromiseState } from "packages/utilities/lib";
 import type { JSX } from "preact";

@@ -4,8 +4,9 @@
   --transition-complex: 500ms ease-in-out;
   --transition-slow: 1s ease-in-out;
   --transition-theme-timing: var(--transition-complex);
-  --transition-theme: border-color var(--transition-slow),
-    color var(--transition-theme-timing), fill var(--transition-theme-timing),
+  --transition-theme:
+    border-color var(--transition-slow), color var(--transition-theme-timing),
+    fill var(--transition-theme-timing),
     background-color var(--transition-theme-timing);
 
   --margin-content-width: 3.6rem;

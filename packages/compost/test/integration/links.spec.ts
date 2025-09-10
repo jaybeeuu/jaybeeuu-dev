@@ -10,7 +10,7 @@ describe("links", () => {
   it("compiles an inline hash link to link properly within the document.", async () => {
     await cleanUpDirectories();
     const hrefRoot = "posts";
-    const slug = "{slug}";
+    const slug = "test-slug";
     const post = await getCompiledPostWithContent(
       {
         slug,
@@ -27,7 +27,7 @@ describe("links", () => {
   it("compiles an inline link with no href properly.", async () => {
     await cleanUpDirectories();
     const hrefRoot = "posts";
-    const slug = "{slug}";
+    const slug = "test-slug";
     const post = await getCompiledPostWithContent(
       {
         slug,
@@ -42,7 +42,7 @@ describe("links", () => {
   it("throws when a link does not go to a file that exists.", async () => {
     await cleanUpDirectories();
     const hrefRoot = "posts";
-    const slug = "{slug}";
+    const slug = "test-slug";
     await expect(() =>
       getCompiledPostWithContent(
         {
@@ -59,7 +59,7 @@ describe("links", () => {
 
     const post = await getCompiledPostWithContent(
       {
-        slug: "{slug}",
+        slug: "test-slug",
         content: ["This is a [link](./other-post.md)"],
         otherFiles: [
           { path: "./other-post.md", content: "This is a post." },
@@ -86,7 +86,7 @@ describe("links", () => {
 
     const post = await getCompiledPostWithContent(
       {
-        slug: "{slug}",
+        slug: "test-slug",
         content: ["This is a [link](./not-a-post.md)"],
         otherFiles: [
           {
@@ -111,7 +111,7 @@ describe("links", () => {
     const updateOptions = { hrefRoot: "posts" };
 
     void (await getCompiledPostWithContent({
-      slug: "{slug}",
+      slug: "test-slug",
       content: ["This is a [link](./not-a-post.md)"],
       otherFiles: [
         {
@@ -130,7 +130,7 @@ describe("links", () => {
     await cleanUpDirectories();
 
     const post = await getCompiledPostWithContent({
-      slug: "{slug}",
+      slug: "test-slug",
       content: ["This is a [link](http://somewhere.net/a-post.md)"],
     });
 

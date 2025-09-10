@@ -195,32 +195,31 @@ class CustomRenderer extends marked.Renderer {
       href,
     );
 
-    switch (true) {
-      case isPostHref(resolvedHrefPath): {
-        return super.link({
-          ...args,
-          href: joinUrlPath(
-            this.#renderContext.hrefRoot,
-            getSlug(resolvedHrefPath),
-          ),
-        });
-      }
-      case href.startsWith("."): {
-        const asset = getAssetDetails(
-          resolvedHrefPath,
+    if (isPostHref(resolvedHrefPath)) {
+      return super.link({
+        ...args,
+        href: joinUrlPath(
           this.#renderContext.hrefRoot,
-        );
-
-        this.assets.push({
-          sourcePath: resolvedHrefPath,
-          destinationPath: asset.hashedFileName,
-        });
-
-        return super.link({ href: asset.href, ...args });
-      }
-      default:
-        return super.link({ href, ...args });
+          getSlug(resolvedHrefPath),
+        ),
+      });
     }
+
+    if (href.startsWith(".")) {
+      const asset = getAssetDetails(
+        resolvedHrefPath,
+        this.#renderContext.hrefRoot,
+      );
+
+      this.assets.push({
+        sourcePath: resolvedHrefPath,
+        destinationPath: asset.hashedFileName,
+      });
+
+      return super.link({ href: asset.href, ...args });
+    }
+
+    return super.link({ href, ...args });
   }
 }
 

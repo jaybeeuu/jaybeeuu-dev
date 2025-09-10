@@ -105,9 +105,9 @@ describe("type-guards", () => {
         });
       }).toThrow(
         new TypeError(`Expected { a: { c: number; d: string[]; }; b: number; } but received object.
-root.b: Expected "number", but received "string": s
-root.a.d[2]: Expected "string", but received "number": 2
-root.a.d[0]: Expected "string", but received "number": 1`),
+root.b: Expected "number", but received "string"
+root.a.d[2]: Expected "string", but received "number"
+root.a.d[0]: Expected "string", but received "number"`),
       );
     });
 
@@ -203,7 +203,7 @@ root.a.d[0]: Expected "string", but received "number": 1`),
         });
       }).toThrow(
         new TypeError(`Expected { [key: string]: string; } but received object.
-root.b: Expected "string", but received "number": 1`),
+root.b: Expected "string", but received "number"`),
       );
     });
   });
@@ -333,9 +333,7 @@ root.b: Expected "string", but received "number": 1`),
     it("returns a useful message indicating why validation failed.", () => {
       expect(is("number").validate("something else")).toStrictEqual({
         valid: false,
-        errorMessages: [
-          `root: Expected "number", but received "string": something else`,
-        ],
+        errorMessages: [`root: Expected "number", but received "string"`],
       });
     });
   });
@@ -396,7 +394,7 @@ root.b: Expected "string", but received "number": 1`),
       expect(isLiteral("thing").validate("something else")).toStrictEqual({
         valid: false,
         errorMessages: [
-          `root: Expected literal value "thing", but received "string": something else`,
+          `root: Expected literal value "thing", but received "string`,
         ],
       });
     });
@@ -450,8 +448,8 @@ root.b: Expected "string", but received "number": 1`),
         valid: false,
         errorMessages: [
           `root: Expected union of types. The following errors were received:
-\troot |(0).a: Expected "string", but received "undefined": undefined
-\troot |(1).b: Expected "number", but received "undefined": undefined
+\troot |(0).a: Expected "string", but received "undefined"
+\troot |(1).b: Expected "number", but received "undefined"
 `,
         ],
       });
@@ -508,7 +506,7 @@ root.b: Expected "string", but received "number": 1`),
         valid: false,
         errorMessages: [
           `root: Expected intersection of types. The following errors were received:
-\troot &(1).b: Expected "number", but received "undefined": undefined
+\troot &(1).b: Expected "number", but received "undefined"
 `,
         ],
       });
@@ -566,9 +564,7 @@ root.b: Expected "string", but received "number": 1`),
         isTuple(is("string"), is("number")).validate(["string", "string"]),
       ).toStrictEqual({
         valid: false,
-        errorMessages: [
-          'root[1]: Expected "number", but received "string": string',
-        ],
+        errorMessages: ['root[1]: Expected "number", but received "string"'],
       });
     });
   });

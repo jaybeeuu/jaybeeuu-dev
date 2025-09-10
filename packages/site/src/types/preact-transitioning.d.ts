@@ -46,10 +46,22 @@ declare module "preact-transitioning" {
   }
 
   type Transition = ComponentType<TransitionProps>;
-  declare const Transition: Transition;
+  const Transition: Transition;
 
-  interface CSSTransitionProps extends TransitionProps {
+  interface CSSTransitionProps {
     children: ComponentChildren;
+    in?: boolean;
+    appear?: boolean;
+    enter?: boolean;
+    exit?: boolean;
+    alwaysMounted?: boolean;
+    duration?: number;
+    onEnter?: () => void;
+    onEntering?: () => void;
+    onEntered?: () => void;
+    onExit?: () => void;
+    onExiting?: () => void;
+    onExited?: () => void;
     classNames:
       | string
       | {
@@ -66,7 +78,7 @@ declare module "preact-transitioning" {
   }
 
   type CSSTransition = ComponentType<CSSTransitionProps>;
-  declare const CSSTransition: CSSTransition;
+  const CSSTransition: CSSTransition;
 
   interface StyleTransitionProps extends TransitionProps {
     styles: {
@@ -83,7 +95,7 @@ declare module "preact-transitioning" {
   }
 
   type StyleTransition = ComponentType<StyleTransitionProps>;
-  declare const StyleTransition: StyleTransition;
+  const StyleTransition: StyleTransition;
 
   interface TransitionGroupProps {
     children: ComponentChildren;
@@ -94,5 +106,5 @@ declare module "preact-transitioning" {
   }
 
   type TransitionGroup = ComponentType<TransitionGroupProps>;
-  declare const TransitionGroup: TransitionGroup;
+  const TransitionGroup: TransitionGroup;
 }
