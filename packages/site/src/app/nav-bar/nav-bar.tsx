@@ -34,7 +34,7 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
         <Link
           activeClassName={classNames(css.active, e2eHooks.activeLink)}
           className={classNames(css.link, e2eHooks.homeLink)}
-          href={"/"}
+          href="/"
           onClick={() => {
             setIsOpen(false);
           }}
@@ -44,7 +44,7 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
         <Link
           activeClassName={classNames(css.active, e2eHooks.activeLink)}
           className={classNames(css.link, e2eHooks.postsListLink)}
-          href={"/blog"}
+          href="/blog"
           onClick={() => {
             setIsOpen(false);
           }}
