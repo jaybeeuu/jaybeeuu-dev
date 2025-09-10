@@ -1,0 +1,5 @@
+/feeds/atom.xml
+  Content-Type: application/atom+xml
+
+/feeds/rss.xml
+  Content-Type: application/rss+xml
