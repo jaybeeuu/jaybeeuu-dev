@@ -62,7 +62,7 @@ describe("compile", () => {
     it("compiles a heading to contain a link.", async () => {
       await cleanUpDirectories();
       const hrefRoot = "posts";
-      const slug = "{slug}";
+      const slug = "test-slug";
       const post = await getCompiledPostWithContent(
         {
           slug,
@@ -85,7 +85,7 @@ describe("compile", () => {
     it("compiles a heading to contain a unique link.", async () => {
       await cleanUpDirectories();
       const hrefRoot = "posts";
-      const slug = "{slug}";
+      const slug = "test-slug";
       const post = await getCompiledPostWithContent(
         {
           slug,
@@ -121,7 +121,7 @@ describe("compile", () => {
       it(`compiles subheading ${level} correctly.`, async () => {
         await cleanUpDirectories();
         const hrefRoot = "posts";
-        const slug = "{slug}";
+        const slug = "test-slug";
         const post = await getCompiledPostWithContent(
           {
             slug,
@@ -144,7 +144,7 @@ describe("compile", () => {
       it("compiles a heading link to contain a link which only includes the text - not the rest of the link.", async () => {
         await cleanUpDirectories();
         const hrefRoot = "posts";
-        const slug = "{slug}";
+        const slug = "test-slug";
         const post = await getCompiledPostWithContent(
           {
             slug,
@@ -182,7 +182,7 @@ describe("compile", () => {
     it("compiles a strike through correctly.", async () => {
       await cleanUpDirectories();
       const hrefRoot = "posts";
-      const slug = "{slug}";
+      const slug = "test-slug";
       const post = await getCompiledPostWithContent(
         {
           slug,

@@ -184,7 +184,7 @@ export const getCompiledPostWithContent = async (
     : contentOrPost;
 
   const postFile = {
-    slug: "{slug}",
+    slug: "test-slug",
     content: ["{content}"],
     ...userPost,
     meta: {
