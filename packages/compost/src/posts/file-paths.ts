@@ -3,7 +3,7 @@ import { assertIsNotNullish, failure, success } from "@jaybeeuu/utilities";
 import path from "path";
 import { getHash } from "../hash.js";
 
-const ALLOWED_SLUG_FORMAT = "^[0-9A-z-]{4,}$";
+const ALLOWED_SLUG_FORMAT = "^[0-9A-Za-z-]{4,}$";
 
 export type ValidateSlugFailureReason = "invalid slug";
 export type ValidateSlugResult = Result<never, ValidateSlugFailureReason>;
