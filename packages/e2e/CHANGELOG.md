@@ -1,5 +1,13 @@
 # @jaybeeuu/e2e
 
+## 0.0.18
+
+### Patch Changes
+
+- Updated dependencies [[`fca31c0`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/fca31c081ea20e65c579e172ad4f00181c8852b7)]:
+  - @jaybeeuu/compost@0.2.6
+  - @jaybeeuu/utilities@5.0.3
+
 ## 0.0.17
 
 ### Patch Changes
