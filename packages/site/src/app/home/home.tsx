@@ -1,11 +1,10 @@
 import type { JSX } from "preact";
 import { h } from "preact";
-import { asRoute } from "../as-route";
 import { useBackgrounds } from "../use-background";
 
 import css from "./home.module.css";
 
-const Home = (): JSX.Element => {
+export const Home = (): JSX.Element => {
   useBackgrounds({ dark: "bath", light: "english-bay-park" });
   return (
     <div className={css.componentRoot}>
@@ -14,5 +13,3 @@ const Home = (): JSX.Element => {
   );
 };
 Home.displayName = "Home";
-
-export const HomeRoute = asRoute(Home);

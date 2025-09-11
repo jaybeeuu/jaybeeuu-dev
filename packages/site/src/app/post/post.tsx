@@ -8,7 +8,7 @@ import type { JSX, RefObject } from "preact";
 import { createRef, h, render, Fragment } from "preact";
 import { useEffect, useLayoutEffect } from "preact/hooks";
 import { FouOhFour } from "../four-oh-four";
-import { asRoute } from "../as-route";
+import { useParams } from "wouter";
 import { Icon } from "../icon";
 import type { PostHtmlLookupResult, PostMetaDataLookupResult } from "../state";
 import {
@@ -144,17 +144,15 @@ const PostLookupResult = withPromise(
 );
 PostLookupResult.displayName = "PostLookupResult";
 
-export interface PostLookupProps {
-  slug: string;
-}
-
-const PostLookup = ({ slug }: PostLookupProps): JSX.Element | null => {
+export const PostLookup = (): JSX.Element => {
+  const { slug } = useParams<{ slug: string }>();
   useBackgrounds({ dark: "moon", light: "black-tusk" });
 
   const [, setSlug] = useValue(currentPostSlug);
   useEffect(() => {
     setSlug(slug);
   }, [slug]);
+
   const postMetaLookupResult = useValue(currentPostMeta);
   const postHtmlLookupResult = useValue(currentPostHtml);
 
@@ -166,5 +164,3 @@ const PostLookup = ({ slug }: PostLookupProps): JSX.Element | null => {
   );
 };
 PostLookup.displayName = "PostLookup";
-
-export const PostRoute = asRoute(PostLookup);

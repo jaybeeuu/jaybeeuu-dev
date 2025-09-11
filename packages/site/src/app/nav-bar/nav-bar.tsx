@@ -2,7 +2,7 @@ import { navBar as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import classNames from "classnames";
 import type { JSX } from "preact";
 import { h } from "preact";
-import { Link } from "preact-router/match";
+import { Link, useLocation } from "wouter";
 import { useState } from "preact/hooks";
 import { Icon } from "../icon/index";
 import { ImageLink } from "../image-link/index";
@@ -19,6 +19,7 @@ export interface NavBarProps {
 
 export const NavBar = ({ className }: NavBarProps): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
+  const [location] = useLocation();
 
   return (
     <div className={classNames(css.componentRoot, e2eHooks.block, className)}>
@@ -32,9 +33,11 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
       />
       <div className={classNames(css.optionsList, { [css.open]: isOpen })}>
         <Link
-          activeClassName={classNames(css.active, e2eHooks.activeLink)}
-          className={classNames(css.link, e2eHooks.homeLink)}
-          href="/"
+          className={classNames(css.link, e2eHooks.homeLink, {
+            [css.active]: location === "/",
+            [e2eHooks.activeLink]: location === "/",
+          })}
+          to={"/"}
           onClick={() => {
             setIsOpen(false);
           }}
@@ -42,9 +45,11 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
           Home
         </Link>
         <Link
-          activeClassName={classNames(css.active, e2eHooks.activeLink)}
-          className={classNames(css.link, e2eHooks.postsListLink)}
-          href="/blog"
+          className={classNames(css.link, e2eHooks.postsListLink, {
+            [css.active]: location === "/blog",
+            [e2eHooks.activeLink]: location === "/blog",
+          })}
+          to={"/blog"}
           onClick={() => {
             setIsOpen(false);
           }}

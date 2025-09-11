@@ -3,7 +3,7 @@ import classNames from "classnames";
 import type { JSX, Ref } from "preact";
 import { h } from "preact";
 import { useLayoutEffect, useRef } from "preact/hooks";
-import { Link } from "preact-router/match";
+import { Link } from "wouter";
 import { NavBar } from "../nav-bar";
 import { titleBarHeight, titleBarStyle } from "../state";
 
@@ -34,7 +34,7 @@ export const TitleBar = ({ className }: NavBarProps): JSX.Element => {
       ref={titleRef}
     >
       <h1 className={css.title}>
-        <Link href="/">Josh Bickley-Wallace</Link>
+        <Link to="/">Josh Bickley-Wallace</Link>
       </h1>
       <NavBar />
     </div>

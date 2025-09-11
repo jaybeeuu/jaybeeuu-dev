@@ -148,6 +148,9 @@ jobs:
       - attach_workspace:
           at: *src-dir
       - run:
+          name: Install system dependencies
+          command: apt-get update && apt-get install -y xvfb dbus-x11
+      - run:
           name: Install pnpm
           command: npm i -g pnpm@10.4.1
       - run:
@@ -158,13 +161,16 @@ jobs:
           command: pnpm --filter @jaybeeuu/site... --filter @jaybeeuu/e2e... build
       - run:
           name: Run e2e Tests
-          command: pnpm --filter @jaybeeuu/site start & pnpx wait-on --timeout=60000 https://localhost:3443/ && pnpm e2e run
+          command: |
+            export DISPLAY=:99
+            Xvfb :99 -screen 0 1280x1024x24 -ac &
+            dbus-launch --exit-with-session pnpm --filter @jaybeeuu/site start & pnpx wait-on --timeout=60000 https://localhost:3443/ && pnpm e2e run
       - run:
           name: Install curl and gpg
           command: apt-get update && apt-get install curl gpg -y
       - codecov/upload
 
-  e2e-deployment:
+  e2e-deployed:
     <<: *job-base
     docker:
       - image: cypress/included:15.0.0
@@ -177,6 +183,9 @@ jobs:
     steps:
       - attach_workspace:
           at: *src-dir
+      - run:
+          name: Install system dependencies
+          command: apt-get update && apt-get install -y xvfb dbus-x11
       - run:
           name: Install pnpm
           command: npm i -g pnpm@10.4.1
@@ -191,7 +200,10 @@ jobs:
             fi
       - run:
           name: Run e2e Tests
-          command: node ./packages/scripts/bin/wait-up.js --url "$DEPLOYMENT_URL/version.json" --commit-hash $CIRCLE_SHA1 && pnpm e2e run --config "baseUrl=$DEPLOYMENT_URL"
+          command: |
+            export DISPLAY=:99
+            Xvfb :99 -screen 0 1280x1024x24 -ac &
+            dbus-launch --exit-with-session node ./packages/scripts/bin/wait-up.js --url "$DEPLOYMENT_URL/version.json" --commit-hash $CIRCLE_SHA1 && pnpm e2e run --config "baseUrl=$DEPLOYMENT_URL"
       - store_test_results:
           path: ./packages/e2e/.reports
       - store_artifacts:
@@ -240,7 +252,7 @@ workflows:
       - e2e-coverage:
           requires:
             - checkout-install-build
-      - e2e-deployment:
+      - e2e-deployed:
           requires:
             - checkout-install-build
       - format-check:
@@ -266,7 +278,7 @@ workflows:
               ignore: /.*/
           requires:
             - e2e-coverage
-            - e2e-deployment
+            - e2e-deployed
             - format-check
             - lint
             - spell-check
@@ -280,7 +292,7 @@ workflows:
               ignore: /.*/
           requires:
             - e2e-coverage
-            - e2e-deployment
+            - e2e-deployed
             - format-check
             - lint
             - spell-check
