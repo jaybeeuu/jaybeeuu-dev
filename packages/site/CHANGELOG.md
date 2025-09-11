@@ -1,5 +1,33 @@
 # @jaybeeuu/site
 
+## 0.0.22
+
+### Patch Changes
+
+- [#191](https://github.com/jaybeeuu/jaybeeuu-dev/pull/191) [`f9827a4`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/f9827a47520eabd6f51bc575e6eefedfb9b166f0) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Migrate routing from preact-router to wouter
+  - Replace preact-router with wouter for better TypeScript support and smaller bundle size
+  - Update router configuration to use Switch/Route pattern
+  - Implement active link detection using useLocation hook
+  - Remove asRoute HOC pattern in favor of direct hook usage
+  - Maintain external link handling for server-served routes
+  - All existing functionality preserved with improved type safety
+
+- [#192](https://github.com/jaybeeuu/jaybeeuu-dev/pull/192) [`fca31c0`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/fca31c081ea20e65c579e172ad4f00181c8852b7) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Add comprehensive slug validation tests and fix TypeScript build issues
+  - Add unit tests for validateSlug function with proper regex anchoring
+  - Fix slug validation regex to exclude invalid characters between Z and a
+  - Resolve TypeScript errors in preact-router Link components with proper type declarations
+  - Add Cloudflare \_headers file for correct feed content types
+  - Fix CircleCI config typo and update dependencies
+  - Update all dependencies
+
+- Updated dependencies [[`fca31c0`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/fca31c081ea20e65c579e172ad4f00181c8852b7)]:
+  - @jaybeeuu/is@2.1.1
+  - @jaybeeuu/preact-async@7.0.3
+  - @jaybeeuu/preact-recoilless@11.0.1
+  - @jaybeeuu/recoilless@11.0.1
+  - @jaybeeuu/utilities@5.0.3
+  - @jaybeeuu/posts@0.0.0
+
 ## 0.0.21
 
 ### Patch Changes

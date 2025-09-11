@@ -1,5 +1,20 @@
 # @jaybeeuu/preact-async
 
+## 7.0.3
+
+### Patch Changes
+
+- [#192](https://github.com/jaybeeuu/jaybeeuu-dev/pull/192) [`fca31c0`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/fca31c081ea20e65c579e172ad4f00181c8852b7) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Add comprehensive slug validation tests and fix TypeScript build issues
+  - Add unit tests for validateSlug function with proper regex anchoring
+  - Fix slug validation regex to exclude invalid characters between Z and a
+  - Resolve TypeScript errors in preact-router Link components with proper type declarations
+  - Add Cloudflare \_headers file for correct feed content types
+  - Fix CircleCI config typo and update dependencies
+  - Update all dependencies
+
+- Updated dependencies [[`fca31c0`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/fca31c081ea20e65c579e172ad4f00181c8852b7)]:
+  - @jaybeeuu/utilities@5.0.3
+
 ## 7.0.2
 
 ### Patch Changes
