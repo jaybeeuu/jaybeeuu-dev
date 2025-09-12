@@ -106,6 +106,22 @@ Add tech-radar command to compost: `compost tech-radar .` for compiling technolo
 - Comprehensive test coverage using existing patterns
 - No breaking changes to existing blog functionality
 
+## Documentation and Release
+
+### Feature 4: Documentation and Changeset
+
+**Components to Update:**
+
+- **Changeset** - Add changeset describing new tech-radar command functionality
+- **README.md** - Update compost package README to document tech-radar command usage
+- **CLI help text** - Ensure `compost --help` shows tech-radar subcommand
+
+**BDD Steps:**
+
+- **Red**: Verify README.md mentions tech-radar command
+- **Green**: Update documentation with usage examples and command options
+- **Commit**: Documentation and changeset for tech-radar feature
+
 ## Output Structure
 
 ```
