@@ -20,7 +20,10 @@ import {
 } from "./file-paths.js";
 import type { GetOldManifestFailureReason } from "./manifest.js";
 import { getOldManifest } from "./manifest.js";
-import type { GetMetaFileContentFailureReason } from "./metafile.js";
+import type {
+  GetMetaFileContentFailureReason,
+  PostMetaFileData,
+} from "./metafile.js";
 import { getMetaFileContent } from "./metafile.js";
 import { hasFrontMatter, parseFrontMatter } from "./frontmatter.js";
 import type { OldPostManifest, PostManifest, UpdateOptions } from "./types.js";
@@ -59,13 +62,13 @@ const processPost = async ({
   resolvedOutputDir,
 }: {
   slug: string;
-  metaData: any;
+  metaData: PostMetaFileData;
   sourceFileText: string;
   sourceFilePath: string;
   options: UpdateOptions;
   oldManifest: OldPostManifest;
   resolvedOutputDir: string;
-}) => {
+}): Promise<Result<PostManifest[string], UpdateFailureReason>> => {
   const compiledPostResult = await compilePost({
     codeLineNumbers: options.codeLineNumbers,
     hrefRoot: options.hrefRoot,

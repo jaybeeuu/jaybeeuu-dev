@@ -42,7 +42,7 @@ export const parseFrontMatter = (
     const markdownContent = fileContent.slice(frontMatterEnd + 5);
 
     // Parse YAML front matter
-    const parsedYaml = yaml.load(frontMatterText) as unknown;
+    const parsedYaml = yaml.load(frontMatterText);
 
     // Validate against PostMetaFileData schema
     if (!isPostMetaFile(parsedYaml)) {
