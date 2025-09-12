@@ -22,6 +22,7 @@ import type { GetOldManifestFailureReason } from "./manifest.js";
 import { getOldManifest } from "./manifest.js";
 import type { GetMetaFileContentFailureReason } from "./metafile.js";
 import { getMetaFileContent } from "./metafile.js";
+import { hasFrontMatter, parseFrontMatter } from "./frontmatter.js";
 import type { OldPostManifest, PostManifest, UpdateOptions } from "./types.js";
 import getReadingTime from "reading-time";
 
@@ -30,7 +31,8 @@ export type UpdateFailureReason =
   | ValidateSlugFailureReason
   | GetOldManifestFailureReason
   | GetMetaFileContentFailureReason
-  | LoadSourceFailureReason;
+  | LoadSourceFailureReason
+  | "parse front matter failed";
 
 export type LoadSourceFailureReason = `Failed to load file ${string}`;
 
@@ -44,6 +46,78 @@ const loadPostSourceText = async (
   } catch (error) {
     return failure(`Failed to load file ${sourceFilePath}`, error);
   }
+};
+
+// Helper function to process a single post
+const processPost = async ({
+  slug,
+  metaData,
+  sourceFileText,
+  sourceFilePath,
+  options,
+  oldManifest,
+  resolvedOutputDir,
+}: {
+  slug: string;
+  metaData: any;
+  sourceFileText: string;
+  sourceFilePath: string;
+  options: UpdateOptions;
+  oldManifest: OldPostManifest;
+  resolvedOutputDir: string;
+}) => {
+  const compiledPostResult = await compilePost({
+    codeLineNumbers: options.codeLineNumbers,
+    hrefRoot: options.hrefRoot,
+    removeH1: options.removeH1,
+    sourceFilePath,
+    sourceFileText,
+  });
+
+  if (!compiledPostResult.success) {
+    return compiledPostResult;
+  }
+
+  const { html: compiledPost, assets } = compiledPostResult.value;
+  const compiledFileName = getCompiledPostFileName(slug, compiledPost);
+  const compiledFilePath = path.join(resolvedOutputDir, compiledFileName);
+
+  await Promise.all([
+    writeTextFile(compiledFilePath, compiledPost),
+    ...assets.map((asset) =>
+      copyFile(
+        asset.sourcePath,
+        path.join(options.outputDir, asset.destinationPath),
+      ),
+    ),
+  ]);
+
+  const href = joinUrlPath(options.hrefRoot, compiledFileName);
+  const originalRecord = oldManifest[slug];
+
+  const publishDate = new Date(
+    originalRecord?.publishDate ?? new Date(),
+  ).toISOString();
+
+  const hasBeenUpdated =
+    originalRecord && originalRecord.fileName !== compiledFileName;
+  const lastUpdateDate = hasBeenUpdated
+    ? new Date().toISOString()
+    : originalRecord?.lastUpdateDate
+      ? new Date(originalRecord.lastUpdateDate).toISOString()
+      : null;
+
+  const readingTime = getReadingTime(sourceFileText);
+
+  return success({
+    ...metaData,
+    fileName: compiledFileName,
+    href,
+    lastUpdateDate,
+    publishDate,
+    readingTime,
+    slug,
+  });
 };
 
 export const update = async (
@@ -70,12 +144,17 @@ export const update = async (
 
   await deleteDirectories(resolvedOutputDir);
 
+  // Collect all posts from both JSON files and front matter markdown files
+  const processedSlugs = new Set<string>();
+
+  // Process traditional JSON metadata files
   for await (const metadataFileInfo of recurseDirectory(resolvedSourceDir, {
     include: [/.post.json$/],
   })) {
     const slug = getSlug(metadataFileInfo.relativeFilePath);
-    const slugValidation = validateSlug(slug);
+    processedSlugs.add(slug);
 
+    const slugValidation = validateSlug(slug);
     if (!slugValidation.success) {
       return slugValidation;
     }
@@ -100,60 +179,76 @@ export const update = async (
       return sourceFileText;
     }
 
-    const compiledPostResult = await compilePost({
-      codeLineNumbers: options.codeLineNumbers,
-      hrefRoot: options.hrefRoot,
-      removeH1: options.removeH1,
-      sourceFilePath: postMarkdownFilePath,
+    const result = await processPost({
+      slug,
+      metaData,
       sourceFileText: sourceFileText.value,
+      sourceFilePath: postMarkdownFilePath,
+      options,
+      oldManifest,
+      resolvedOutputDir,
     });
 
-    if (!compiledPostResult.success) {
-      return compiledPostResult;
+    if (!result.success) {
+      return result;
     }
 
-    const { html: compiledPost, assets } = compiledPostResult.value;
+    newManifest[slug] = result.value;
+  }
 
-    const compiledFileName = getCompiledPostFileName(slug, compiledPost);
-    const compiledFilePath = path.join(resolvedOutputDir, compiledFileName);
+  // Process markdown files with front matter (skip already processed ones)
+  for await (const markdownFileInfo of recurseDirectory(resolvedSourceDir, {
+    include: [/\.md$/],
+  })) {
+    const slug = getSlug(markdownFileInfo.relativeFilePath);
 
-    await Promise.all([
-      writeTextFile(compiledFilePath, compiledPost),
-      ...assets.map((asset) =>
-        copyFile(
-          asset.sourcePath,
-          path.join(options.outputDir, asset.destinationPath),
-        ),
-      ),
-    ]);
+    // Skip if already processed via JSON file
+    if (processedSlugs.has(slug)) {
+      continue;
+    }
 
-    const href = joinUrlPath(options.hrefRoot, compiledFileName);
+    const slugValidation = validateSlug(slug);
+    if (!slugValidation.success) {
+      return slugValidation;
+    }
 
-    const originalRecord = oldManifest[slug];
+    const sourceFileText = await loadPostSourceText(markdownFileInfo.filePath);
+    if (!sourceFileText.success) {
+      return sourceFileText;
+    }
 
-    const publishDate = new Date(
-      originalRecord?.publishDate ?? new Date(),
-    ).toISOString();
+    // Check if this markdown file has front matter
+    if (!hasFrontMatter(sourceFileText.value)) {
+      continue;
+    }
 
-    const hasBeenUpdated =
-      originalRecord && originalRecord.fileName !== compiledFileName;
-    const lastUpdateDate = hasBeenUpdated
-      ? new Date().toISOString()
-      : originalRecord?.lastUpdateDate
-        ? new Date(originalRecord.lastUpdateDate).toISOString()
-        : null;
+    const frontMatterResult = parseFrontMatter(sourceFileText.value);
+    if (!frontMatterResult.success) {
+      return frontMatterResult;
+    }
 
-    const readingTime = getReadingTime(sourceFileText.value);
+    const { metadata: metaData, content: markdownContent } =
+      frontMatterResult.value;
 
-    newManifest[slug] = {
-      ...metaData,
-      fileName: compiledFileName,
-      href,
-      lastUpdateDate,
-      publishDate,
-      readingTime,
+    if (!metaData.publish && !options.includeUnpublished) {
+      continue;
+    }
+
+    const result = await processPost({
       slug,
-    };
+      metaData,
+      sourceFileText: markdownContent,
+      sourceFilePath: markdownFileInfo.filePath,
+      options,
+      oldManifest,
+      resolvedOutputDir,
+    });
+
+    if (!result.success) {
+      return result;
+    }
+
+    newManifest[slug] = result.value;
   }
 
   await writeJsonFile(

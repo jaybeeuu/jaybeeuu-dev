@@ -425,4 +425,70 @@ describe("manifest", () => {
 
     expect(result.success).toBe(false);
   });
+
+  it.each([
+    {
+      approach: "JSON file",
+      useFrontMatter: false as const,
+      description: "uses traditional .post.json metadata file",
+    },
+    {
+      approach: "front matter",
+      useFrontMatter: true as const,
+      description: "uses YAML front matter in markdown file",
+    },
+  ])(
+    "produces identical manifest entries when $approach $description",
+    async ({ useFrontMatter }) => {
+      await cleanUpDirectories();
+
+      jest.mocked(readingTime).mockReturnValue({
+        minutes: 15,
+        text: "15 min read",
+        time: 900000,
+        words: 250,
+      });
+
+      const publishDate = "2023-05-20";
+      advanceTo(publishDate);
+      const slug = "test-post";
+      const meta: PostMetaFileData = {
+        title: "Test Post Title",
+        abstract: "This is a test post abstract.",
+        publish: true,
+      };
+
+      await writePostFile({
+        slug,
+        meta,
+        content: "# Test Post Title\n\nThis is test content for the post.",
+        useFrontMatter,
+      });
+
+      await compilePosts();
+
+      const manifest = await getPostManifest();
+
+      expect(manifest).toStrictEqual({
+        [slug]: {
+          ...meta,
+          fileName: expect.stringMatching(
+            new RegExp(`${slug}-[A-z0-9]{6}.html`),
+          ) as unknown,
+          href: expect.stringMatching(
+            new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`),
+          ) as unknown,
+          lastUpdateDate: null,
+          publishDate: new Date(publishDate).toISOString(),
+          readingTime: {
+            minutes: 15,
+            text: "15 min read",
+            time: 900000,
+            words: 250,
+          },
+          slug,
+        },
+      });
+    },
+  );
 });

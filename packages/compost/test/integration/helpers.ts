@@ -53,6 +53,7 @@ export interface PostFile {
   meta: PostMetaFileData | null;
   path?: string;
   slug: string;
+  useFrontMatter?: boolean;
   otherFiles?: {
     content: string;
     path: string;
@@ -99,16 +100,44 @@ export const writePostFile = async (
 ): Promise<void> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
 
-  const { content, meta, path: postPath = ".", slug, otherFiles } = postFile;
+  const {
+    content,
+    meta,
+    path: postPath = ".",
+    slug,
+    otherFiles,
+    useFrontMatter = false,
+  } = postFile;
+
+  const getMarkdownContent = (): string => {
+    const markdownContent = Array.isArray(content)
+      ? content.join("\n")
+      : content;
+
+    if (useFrontMatter && meta !== null) {
+      const frontMatter = Object.entries(meta)
+        .map(([key, value]) => {
+          if (typeof value === "string") {
+            return `${key}: "${value}"`;
+          }
+          return `${key}: ${value}`;
+        })
+        .join("\n");
+      return `---\n${frontMatter}\n---\n${markdownContent}`;
+    }
+
+    return markdownContent;
+  };
 
   await writeTextFiles(
     defaultedUpdateOptions.sourceDir,
     [
       {
         path: path.join(postPath, `${slug}.md`),
-        content: Array.isArray(content) ? content.join("\n") : content,
+        content: getMarkdownContent(),
       },
-      meta !== null
+      // Only create JSON file if not using front matter
+      !useFrontMatter && meta !== null
         ? {
             path: path.join(postPath, `${slug}.post.json`),
             content: JSON.stringify(meta, null, 2),
