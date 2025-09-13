@@ -3,33 +3,40 @@ import { parseFrontMatter, hasFrontMatter } from "./frontmatter.js";
 
 describe("frontmatter", () => {
   describe("hasFrontMatter", () => {
-    it("returns true for content with properly formatted front matter", () => {
-      const content = `---
+    it.each([
+      {
+        description: "content with properly formatted front matter",
+        content: `---
 title: "Test Post"
 abstract: "Test abstract"
 publish: true
 ---
 
-# Test Content`;
-
-      expect(hasFrontMatter(content)).toBe(true);
-    });
-
-    it("returns false for content without front matter", () => {
-      const content = "# Just a regular markdown file";
-
-      expect(hasFrontMatter(content)).toBe(false);
-    });
-
-    it("returns false for content with opening but no closing front matter", () => {
-      const content = `---
+# Test Content`,
+        expected: true,
+      },
+      {
+        description: "content without front matter",
+        content: "# Just a regular markdown file",
+        expected: false,
+      },
+      {
+        description: "content with opening but no closing front matter",
+        content: `---
 title: "Test Post"
 abstract: "Test abstract"
 publish: true
 
-# Test Content`;
-
-      expect(hasFrontMatter(content)).toBe(false);
+# Test Content`,
+        expected: false,
+      },
+      {
+        description: "content with no --- characters at all",
+        content: "title: Test\ncontent: body",
+        expected: false,
+      },
+    ])("returns $expected for $description", ({ content, expected }) => {
+      expect(hasFrontMatter(content)).toBe(expected);
     });
   });
 
@@ -60,32 +67,49 @@ This is the body.`;
       }
     });
 
-    it("fails when content doesn't start with front matter", () => {
-      const content = "# Just a regular markdown file";
-
-      const result = parseFrontMatter(content);
-
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.reason).toBe("parse front matter failed");
-        expect(result.message).toBe("No front matter found");
-      }
-    });
-
-    it("fails when front matter is not properly closed", () => {
-      const content = `---
+    it.each([
+      {
+        description: "content doesn't start with front matter",
+        content: "# Just a regular markdown file",
+        expectedMessage: "No front matter found",
+      },
+      {
+        description: "front matter is not properly closed",
+        content: `---
 title: "Test Post"
 abstract: "Test abstract"
 publish: true
 
-# Test Content`;
+# Test Content`,
+        expectedMessage: "Front matter not properly closed",
+      },
+      {
+        description: "front matter has invalid structure",
+        content: `---
+title: "Test Post"
+abstract: "Test abstract"
+publish: "not-a-boolean"
+---
 
+# Test Content`,
+        expectedMessage: "Invalid front matter structure",
+      },
+      {
+        description: "front matter is missing required fields",
+        content: `---
+title: "Test Post"
+---
+
+# Test Content`,
+        expectedMessage: "Invalid front matter structure",
+      },
+    ])("fails when $description", ({ content, expectedMessage }) => {
       const result = parseFrontMatter(content);
 
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.reason).toBe("parse front matter failed");
-        expect(result.message).toBe("Front matter not properly closed");
+        expect(result.message).toBe(expectedMessage);
       }
     });
 
@@ -104,40 +128,6 @@ publish: true
       if (!result.success) {
         expect(result.reason).toBe("parse front matter failed");
         expect(result.message).toContain("can not read a block mapping entry");
-      }
-    });
-
-    it("fails when front matter has invalid structure", () => {
-      const content = `---
-title: "Test Post"
-abstract: "Test abstract"
-publish: "not-a-boolean"
----
-
-# Test Content`;
-
-      const result = parseFrontMatter(content);
-
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.reason).toBe("parse front matter failed");
-        expect(result.message).toBe("Invalid front matter structure");
-      }
-    });
-
-    it("fails when front matter is missing required fields", () => {
-      const content = `---
-title: "Test Post"
----
-
-# Test Content`;
-
-      const result = parseFrontMatter(content);
-
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.reason).toBe("parse front matter failed");
-        expect(result.message).toBe("Invalid front matter structure");
       }
     });
   });

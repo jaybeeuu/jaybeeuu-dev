@@ -26,9 +26,9 @@ import type {
 } from "./metafile.js";
 import { getMetaFileContent } from "./metafile.js";
 import {
+  PARSE_FRONT_MATTER_FAILED,
   hasFrontMatter,
   parseFrontMatter,
-  type PARSE_FRONT_MATTER_FAILED,
 } from "./frontmatter.js";
 import type { OldPostManifest, PostManifest, UpdateOptions } from "./types.js";
 import getReadingTime from "reading-time";
@@ -39,7 +39,7 @@ export type UpdateFailureReason =
   | GetOldManifestFailureReason
   | GetMetaFileContentFailureReason
   | LoadSourceFailureReason
-  | typeof PARSE_FRONT_MATTER_FAILED;
+  | "parse front matter failed";
 
 export type LoadSourceFailureReason = `Failed to load file ${string}`;
 

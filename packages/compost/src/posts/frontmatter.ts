@@ -12,7 +12,7 @@ export interface FrontMatterResult {
 
 export const parseFrontMatter = (
   fileContent: string,
-): Result<FrontMatterResult, typeof PARSE_FRONT_MATTER_FAILED> => {
+): Result<FrontMatterResult, "parse front matter failed"> => {
   if (!fileContent.startsWith("---\n")) {
     return failure(
       PARSE_FRONT_MATTER_FAILED,
