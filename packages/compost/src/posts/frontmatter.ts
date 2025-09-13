@@ -18,7 +18,6 @@ export interface FrontMatterResult {
 export const parseFrontMatter = (
   fileContent: string,
 ): Result<FrontMatterResult, "parse front matter failed"> => {
-  // Check if the file has front matter
   if (!fileContent.startsWith("---\n")) {
     return failure(
       "parse front matter failed",
