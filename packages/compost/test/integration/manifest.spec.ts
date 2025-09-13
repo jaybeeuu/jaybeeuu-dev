@@ -425,4 +425,102 @@ describe("manifest", () => {
 
     expect(result.success).toBe(false);
   });
+
+  it.each([
+    {
+      approach: "JSON file",
+      metadataStyle: "json" as const,
+      description: "uses traditional .post.json metadata file",
+    },
+    {
+      approach: "front matter",
+      metadataStyle: "frontmatter" as const,
+      description: "uses YAML front matter in markdown file",
+    },
+  ])(
+    "produces identical manifest entries when $approach $description",
+    async ({ metadataStyle }) => {
+      await cleanUpDirectories();
+
+      jest.mocked(readingTime).mockReturnValue({
+        minutes: 15,
+        text: "15 min read",
+        time: 900000,
+        words: 250,
+      });
+
+      const publishDate = "2023-05-20";
+      advanceTo(publishDate);
+      const slug = "test-post";
+      const meta: PostMetaFileData = {
+        title: "Test Post Title",
+        abstract: "This is a test post abstract.",
+        publish: true,
+      };
+
+      await writePostFile({
+        slug,
+        meta,
+        content: "# Test Post Title\n\nThis is test content for the post.",
+        metadataStyle,
+      });
+
+      await compilePosts();
+
+      const manifest = await getPostManifest();
+
+      expect(manifest).toStrictEqual({
+        [slug]: {
+          ...meta,
+          fileName: expect.stringMatching(
+            new RegExp(`${slug}-[A-z0-9]{6}.html`),
+          ) as unknown,
+          href: expect.stringMatching(
+            new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`),
+          ) as unknown,
+          lastUpdateDate: null,
+          publishDate: new Date(publishDate).toISOString(),
+          readingTime: {
+            minutes: 15,
+            text: "15 min read",
+            time: 900000,
+            words: 250,
+          },
+          slug,
+        },
+      });
+    },
+  );
+
+  it.each([
+    {
+      metadataStyle: "json" as const,
+      description: "JSON metadata",
+    },
+    {
+      metadataStyle: "frontmatter" as const,
+      description: "front matter metadata",
+    },
+  ])(
+    "ignores posts when meta is null with $description",
+    async ({ metadataStyle }) => {
+      await cleanUpDirectories();
+
+      const slug = "test-post-no-meta";
+
+      await writePostFile({
+        slug,
+        meta: null,
+        content: "# Test Post\n\nThis is test content.",
+        metadataStyle,
+      });
+
+      const result = await compilePosts();
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(Object.keys(result.value)).toHaveLength(0);
+      }
+    },
+  );
 });

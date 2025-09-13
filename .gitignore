@@ -3,4 +3,5 @@
 /.VSCodeCounter
 /coverage-reports
 /test-reports
+/plans
 node_modules
