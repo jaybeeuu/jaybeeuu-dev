@@ -107,7 +107,7 @@ export const writePostFile = async (
     path: postPath = ".",
     slug,
     otherFiles,
-    metadataStyle = "json",
+    metadataStyle = "frontmatter",
     frontMatterOverride,
   } = postFile;
 
