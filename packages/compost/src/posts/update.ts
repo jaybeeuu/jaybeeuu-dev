@@ -25,7 +25,11 @@ import type {
   PostMetaFileData,
 } from "./metafile.js";
 import { getMetaFileContent } from "./metafile.js";
-import { hasFrontMatter, parseFrontMatter } from "./frontmatter.js";
+import {
+  hasFrontMatter,
+  parseFrontMatter,
+  type PARSE_FRONT_MATTER_FAILED,
+} from "./frontmatter.js";
 import type { OldPostManifest, PostManifest, UpdateOptions } from "./types.js";
 import getReadingTime from "reading-time";
 
@@ -35,7 +39,7 @@ export type UpdateFailureReason =
   | GetOldManifestFailureReason
   | GetMetaFileContentFailureReason
   | LoadSourceFailureReason
-  | "parse front matter failed";
+  | typeof PARSE_FRONT_MATTER_FAILED;
 
 export type LoadSourceFailureReason = `Failed to load file ${string}`;
 
@@ -51,7 +55,6 @@ const loadPostSourceText = async (
   }
 };
 
-// Helper function to process a single post
 const processPost = async ({
   slug,
   metaData,

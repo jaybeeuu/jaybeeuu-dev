@@ -53,7 +53,8 @@ export interface PostFile {
   meta: PostMetaFileData | null;
   path?: string;
   slug: string;
-  useFrontMatter?: boolean;
+  metadataStyle?: "frontmatter" | "json";
+  frontMatterOverride?: string;
   otherFiles?: {
     content: string;
     path: string;
@@ -106,15 +107,21 @@ export const writePostFile = async (
     path: postPath = ".",
     slug,
     otherFiles,
-    useFrontMatter = false,
+    metadataStyle = "json",
+    frontMatterOverride,
   } = postFile;
 
   const getMarkdownContent = (): string => {
+    // If we have a front matter override, use it directly
+    if (frontMatterOverride) {
+      return frontMatterOverride;
+    }
+
     const markdownContent = Array.isArray(content)
       ? content.join("\n")
       : content;
 
-    if (useFrontMatter && meta !== null) {
+    if (metadataStyle === "frontmatter" && meta !== null) {
       const frontMatter = Object.entries(meta)
         .map(([key, value]) => {
           if (typeof value === "string") {
@@ -136,8 +143,7 @@ export const writePostFile = async (
         path: path.join(postPath, `${slug}.md`),
         content: getMarkdownContent(),
       },
-      // Only create JSON file if not using front matter
-      !useFrontMatter && meta !== null
+      metadataStyle === "json" && meta !== null
         ? {
             path: path.join(postPath, `${slug}.post.json`),
             content: JSON.stringify(meta, null, 2),

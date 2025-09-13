@@ -1,14 +1,9 @@
-import { is, isObject } from "@jaybeeuu/is";
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
 import yaml from "js-yaml";
-import type { PostMetaFileData } from "./metafile.js";
+import { isPostMetaFile, type PostMetaFileData } from "./metafile.js";
 
-const isPostMetaFile = isObject<PostMetaFileData>({
-  abstract: is("string"),
-  publish: is("boolean"),
-  title: is("string"),
-});
+export const PARSE_FRONT_MATTER_FAILED = "parse front matter failed" as const;
 
 export interface FrontMatterResult {
   metadata: PostMetaFileData;
@@ -17,10 +12,10 @@ export interface FrontMatterResult {
 
 export const parseFrontMatter = (
   fileContent: string,
-): Result<FrontMatterResult, "parse front matter failed"> => {
+): Result<FrontMatterResult, typeof PARSE_FRONT_MATTER_FAILED> => {
   if (!fileContent.startsWith("---\n")) {
     return failure(
-      "parse front matter failed",
+      PARSE_FRONT_MATTER_FAILED,
       new Error("No front matter found"),
     );
   }
@@ -28,25 +23,19 @@ export const parseFrontMatter = (
   const frontMatterEnd = fileContent.indexOf("\n---\n", 4);
   if (frontMatterEnd === -1) {
     return failure(
-      "parse front matter failed",
+      PARSE_FRONT_MATTER_FAILED,
       new Error("Front matter not properly closed"),
     );
   }
 
   try {
-    // Extract front matter content (skip opening ---)
     const frontMatterText = fileContent.slice(4, frontMatterEnd);
-
-    // Extract markdown content (skip closing --- and newline)
     const markdownContent = fileContent.slice(frontMatterEnd + 5);
-
-    // Parse YAML front matter
     const parsedYaml = yaml.load(frontMatterText);
 
-    // Validate against PostMetaFileData schema
     if (!isPostMetaFile(parsedYaml)) {
       return failure(
-        "parse front matter failed",
+        PARSE_FRONT_MATTER_FAILED,
         new Error("Invalid front matter structure"),
       );
     }
@@ -56,7 +45,7 @@ export const parseFrontMatter = (
       content: markdownContent,
     });
   } catch (error) {
-    return failure("parse front matter failed", error);
+    return failure(PARSE_FRONT_MATTER_FAILED, error);
   }
 };
 

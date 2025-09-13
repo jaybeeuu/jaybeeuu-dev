@@ -10,7 +10,7 @@ export type PostMetaFileData = Pick<
   "abstract" | "title" | "publish"
 >;
 
-const isPostMetaFile = isObject<PostMetaFileData>({
+export const isPostMetaFile = isObject<PostMetaFileData>({
   abstract: is("string"),
   publish: is("boolean"),
   title: is("string"),

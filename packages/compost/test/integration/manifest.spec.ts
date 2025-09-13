@@ -429,17 +429,17 @@ describe("manifest", () => {
   it.each([
     {
       approach: "JSON file",
-      useFrontMatter: false as const,
+      metadataStyle: "json" as const,
       description: "uses traditional .post.json metadata file",
     },
     {
       approach: "front matter",
-      useFrontMatter: true as const,
+      metadataStyle: "frontmatter" as const,
       description: "uses YAML front matter in markdown file",
     },
   ])(
     "produces identical manifest entries when $approach $description",
-    async ({ useFrontMatter }) => {
+    async ({ metadataStyle }) => {
       await cleanUpDirectories();
 
       jest.mocked(readingTime).mockReturnValue({
@@ -462,7 +462,7 @@ describe("manifest", () => {
         slug,
         meta,
         content: "# Test Post Title\n\nThis is test content for the post.",
-        useFrontMatter,
+        metadataStyle,
       });
 
       await compilePosts();
@@ -489,6 +489,38 @@ describe("manifest", () => {
           slug,
         },
       });
+    },
+  );
+
+  it.each([
+    {
+      metadataStyle: "json" as const,
+      description: "JSON metadata",
+    },
+    {
+      metadataStyle: "frontmatter" as const,
+      description: "front matter metadata",
+    },
+  ])(
+    "ignores posts when meta is null with $description",
+    async ({ metadataStyle }) => {
+      await cleanUpDirectories();
+
+      const slug = "test-post-no-meta";
+
+      await writePostFile({
+        slug,
+        meta: null,
+        content: "# Test Post\n\nThis is test content.",
+        metadataStyle,
+      });
+
+      const result = await compilePosts();
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(Object.keys(result.value)).toHaveLength(0);
+      }
     },
   );
 });
