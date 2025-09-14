@@ -140,7 +140,10 @@ export const writePostFile = async (
     defaultedUpdateOptions.sourceDir,
     [
       {
-        path: path.join(postPath, `${slug}.md`),
+        path: path.join(
+          postPath,
+          `${slug}${metadataStyle === "frontmatter" ? ".post" : ""}.md`,
+        ),
         content: getMarkdownContent(),
       },
       metadataStyle === "json" && meta !== null

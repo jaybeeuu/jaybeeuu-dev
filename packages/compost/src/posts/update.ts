@@ -2,6 +2,7 @@ import type { Result } from "@jaybeeuu/utilities";
 import { failure, joinUrlPath, log, success } from "@jaybeeuu/utilities";
 import path from "path";
 import {
+  canAccess,
   copyFile,
   deleteDirectories,
   readTextFile,
@@ -14,7 +15,6 @@ import { compilePost } from "./compile.js";
 import type { ValidateSlugFailureReason as ValidateSlugFailureReason } from "./file-paths.js";
 import {
   getCompiledPostFileName,
-  getPostMarkdownFilePath,
   getSlug,
   validateSlug,
 } from "./file-paths.js";
@@ -24,12 +24,9 @@ import type {
   GetMetaFileContentFailureReason,
   PostMetaFileData,
 } from "./metafile.js";
-import { getMetaFileContent } from "./metafile.js";
-import {
-  PARSE_FRONT_MATTER_FAILED,
-  hasFrontMatter,
-  parseFrontMatter,
-} from "./frontmatter.js";
+import { isPostMetaFile } from "./metafile.js";
+import type { ParesFrontMatterFailed } from "./frontmatter.js";
+import { hasFrontMatter, parseFrontMatter } from "./frontmatter.js";
 import type { OldPostManifest, PostManifest, UpdateOptions } from "./types.js";
 import getReadingTime from "reading-time";
 
@@ -37,9 +34,7 @@ export type UpdateFailureReason =
   | CompileFailureReason
   | ValidateSlugFailureReason
   | GetOldManifestFailureReason
-  | GetMetaFileContentFailureReason
-  | LoadSourceFailureReason
-  | "parse front matter failed";
+  | ResolvePostFailureReason;
 
 export type LoadSourceFailureReason = `Failed to load file ${string}`;
 
@@ -52,6 +47,113 @@ const loadPostSourceText = async (
     return success(postText);
   } catch (error) {
     return failure(`Failed to load file ${sourceFilePath}`, error);
+  }
+};
+
+type ResolvePostFailureReason =
+  | LoadSourceFailureReason
+  | GetMetaFileContentFailureReason
+  | ParesFrontMatterFailed;
+
+interface PostData {
+  content: string;
+  meta: PostMetaFileData;
+}
+
+const resolveFrontmatterPost = async (
+  markdownFilePath: string,
+): Promise<Result<PostData, ResolvePostFailureReason>> => {
+  const sourceFileTextResult = await loadPostSourceText(markdownFilePath);
+  if (!sourceFileTextResult.success) {
+    return sourceFileTextResult;
+  }
+
+  const sourceFileText = sourceFileTextResult.value;
+
+  if (!hasFrontMatter(sourceFileText)) {
+    const failureReason: LoadSourceFailureReason = `Failed to load file ${markdownFilePath}`;
+    return failure(
+      failureReason,
+      new Error("No front matter found in .post.md file"),
+    );
+  }
+
+  const frontMatterResult = parseFrontMatter(sourceFileText);
+  if (!frontMatterResult.success) {
+    return frontMatterResult;
+  }
+
+  const { metadata, content } = frontMatterResult.value;
+
+  return success({
+    content,
+    meta: metadata,
+  });
+};
+
+const resolveJsonPost = async (
+  markdownFilePath: string,
+): Promise<Result<PostData, ResolvePostFailureReason>> => {
+  const sourceFileTextResult = await loadPostSourceText(markdownFilePath);
+  if (!sourceFileTextResult.success) {
+    return sourceFileTextResult;
+  }
+
+  // Convert .md path to .post.json path
+  const jsonFilePath = markdownFilePath.replace(/\.md$/, ".post.json");
+
+  // Check if the JSON file exists
+  const canAccessJson = await canAccess(jsonFilePath);
+  if (!canAccessJson) {
+    const failureReason: LoadSourceFailureReason = `Failed to load file ${jsonFilePath}`;
+    return failure(
+      failureReason,
+      new Error(`Corresponding .post.json file not found: ${jsonFilePath}`),
+    );
+  }
+
+  // Read and parse the JSON metadata
+  try {
+    const jsonContent = await readTextFile(jsonFilePath);
+    const metadata: unknown = JSON.parse(jsonContent);
+
+    // Validate the metadata structure (similar to getMetaFileContent)
+    if (!isPostMetaFile(metadata)) {
+      const failureReason: ParesFrontMatterFailed = "parse front matter failed";
+      return failure(
+        failureReason,
+        new Error("Invalid metadata structure in JSON file"),
+      );
+    }
+
+    return success({
+      content: sourceFileTextResult.value,
+      meta: metadata,
+    });
+  } catch (error) {
+    const failureReason: LoadSourceFailureReason = `Failed to load file ${jsonFilePath}`;
+    return failure(
+      failureReason,
+      new Error(
+        `Failed to read or parse JSON file: ${jsonFilePath}. Error: ${String(error)}`,
+      ),
+    );
+  }
+};
+
+const resolvePost = async (
+  markdownFilePath: string,
+): Promise<Result<PostData, ResolvePostFailureReason>> => {
+  if (markdownFilePath.endsWith(".post.md")) {
+    return resolveFrontmatterPost(markdownFilePath);
+  } else if (markdownFilePath.endsWith(".md")) {
+    return resolveJsonPost(markdownFilePath);
+  } else {
+    const failureReason: LoadSourceFailureReason = `Failed to load file ${markdownFilePath}`;
+    return failure(
+      failureReason,
+      new Error(`Unsupported file extension: ${markdownFilePath}`),
+    );
   }
 };
 
@@ -150,91 +252,37 @@ export const update = async (
 
   await deleteDirectories(resolvedOutputDir);
 
-  // Collect all posts from both JSON files and front matter markdown files
-  const processedSlugs = new Set<string>();
-
-  // Process traditional JSON metadata files
-  for await (const metadataFileInfo of recurseDirectory(resolvedSourceDir, {
-    include: [/.post.json$/],
-  })) {
-    const slug = getSlug(metadataFileInfo.relativeFilePath);
-    processedSlugs.add(slug);
-
-    const slugValidation = validateSlug(slug);
-    if (!slugValidation.success) {
-      return slugValidation;
-    }
-
-    const metaFileContentResult = await getMetaFileContent(metadataFileInfo);
-    if (!metaFileContentResult.success) {
-      return metaFileContentResult;
-    }
-
-    const metaData = metaFileContentResult.value;
-    if (!metaData.publish && !options.includeUnpublished) {
-      continue;
-    }
-
-    const postMarkdownFilePath = getPostMarkdownFilePath(
-      metadataFileInfo.absolutePath,
-      slug,
-    );
-
-    const sourceFileText = await loadPostSourceText(postMarkdownFilePath);
-    if (!sourceFileText.success) {
-      return sourceFileText;
-    }
-
-    const result = await processPost({
-      slug,
-      metaData,
-      sourceFileText: sourceFileText.value,
-      sourceFilePath: postMarkdownFilePath,
-      options,
-      oldManifest,
-      resolvedOutputDir,
-    });
-
-    if (!result.success) {
-      return result;
-    }
-
-    newManifest[slug] = result.value;
-  }
-
-  // Process markdown files with front matter (skip already processed ones)
+  // Process all markdown files (both .md and .post.md)
   for await (const markdownFileInfo of recurseDirectory(resolvedSourceDir, {
-    include: [/\.md$/],
+    include: [/\.md$/, /\.post\.md$/],
   })) {
     const slug = getSlug(markdownFileInfo.relativeFilePath);
 
-    // Skip if already processed via JSON file
-    if (processedSlugs.has(slug)) {
-      continue;
-    }
-
     const slugValidation = validateSlug(slug);
     if (!slugValidation.success) {
       return slugValidation;
     }
 
-    const sourceFileText = await loadPostSourceText(markdownFileInfo.filePath);
-    if (!sourceFileText.success) {
-      return sourceFileText;
-    }
-
-    // Check if this markdown file has front matter
-    if (!hasFrontMatter(sourceFileText.value)) {
+    const postDataResult = await resolvePost(markdownFileInfo.filePath);
+    if (!postDataResult.success) {
+      // For .post.md files, differentiate between missing front matter (skip) vs parsing errors (fail)
+      if (markdownFileInfo.filePath.endsWith(".post.md")) {
+        // Check if the error is due to missing front matter (should skip) vs parsing errors (should fail)
+        const errorDetails =
+          (postDataResult.messageOrError as Error).message || "";
+        if (errorDetails.includes("No front matter found")) {
+          // Skip files without front matter
+          continue;
+        } else {
+          // Fail compilation for actual parsing errors (invalid YAML, invalid structure, etc.)
+          return postDataResult;
+        }
+      }
+      // Skip .md files that can't be resolved (e.g., no corresponding .post.json)
       continue;
     }
 
-    const frontMatterResult = parseFrontMatter(sourceFileText.value);
-    if (!frontMatterResult.success) {
-      return frontMatterResult;
-    }
-
-    const { metadata: metaData, content: markdownContent } =
-      frontMatterResult.value;
+    const { content, meta: metaData } = postDataResult.value;
 
     if (!metaData.publish && !options.includeUnpublished) {
       continue;
@@ -243,7 +291,7 @@ export const update = async (
     const result = await processPost({
       slug,
       metaData,
-      sourceFileText: markdownContent,
+      sourceFileText: content,
       sourceFilePath: markdownFileInfo.filePath,
       options,
       oldManifest,

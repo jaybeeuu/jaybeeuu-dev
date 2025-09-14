@@ -3,7 +3,7 @@ import { failure, success } from "@jaybeeuu/utilities";
 import yaml from "js-yaml";
 import { isPostMetaFile, type PostMetaFileData } from "./metafile.js";
 
-export const PARSE_FRONT_MATTER_FAILED = "parse front matter failed" as const;
+export type ParesFrontMatterFailed = "parse front matter failed";
 
 export interface FrontMatterResult {
   metadata: PostMetaFileData;
@@ -12,10 +12,10 @@ export interface FrontMatterResult {
 
 export const parseFrontMatter = (
   fileContent: string,
-): Result<FrontMatterResult, "parse front matter failed"> => {
+): Result<FrontMatterResult, ParesFrontMatterFailed> => {
   if (!fileContent.startsWith("---\n")) {
     return failure(
-      PARSE_FRONT_MATTER_FAILED,
+      "parse front matter failed",
       new Error("No front matter found"),
     );
   }
@@ -23,7 +23,7 @@ export const parseFrontMatter = (
   const frontMatterEnd = fileContent.indexOf("\n---\n", 4);
   if (frontMatterEnd === -1) {
     return failure(
-      PARSE_FRONT_MATTER_FAILED,
+      "parse front matter failed",
       new Error("Front matter not properly closed"),
     );
   }
@@ -35,7 +35,7 @@ export const parseFrontMatter = (
 
     if (!isPostMetaFile(parsedYaml)) {
       return failure(
-        PARSE_FRONT_MATTER_FAILED,
+        "parse front matter failed",
         new Error("Invalid front matter structure"),
       );
     }
@@ -45,7 +45,7 @@ export const parseFrontMatter = (
       content: markdownContent,
     });
   } catch (error) {
-    return failure(PARSE_FRONT_MATTER_FAILED, error);
+    return failure("parse front matter failed", error);
   }
 };
 
