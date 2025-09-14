@@ -29,11 +29,12 @@ publish: true
 
     const result = await compilePosts();
 
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      // The YAML parser error message should be propagated
-      expect(result.message).toContain("can not read a block mapping entry");
-    }
+    expect(result).toEqual(
+      expect.objectContaining({
+        success: false,
+        message: expect.stringContaining("can not read a block mapping entry"),
+      }),
+    );
   });
 
   it("fails compilation when front matter has invalid structure", async () => {
@@ -63,10 +64,12 @@ publish: "not-a-boolean"
 
     const result = await compilePosts();
 
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.message).toBe("Invalid front matter structure");
-    }
+    expect(result).toEqual(
+      expect.objectContaining({
+        success: false,
+        message: "Invalid front matter structure",
+      }),
+    );
   });
 
   it("fails compilation when front matter is missing required fields", async () => {
@@ -94,10 +97,12 @@ title: "Test Post"
 
     const result = await compilePosts();
 
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.message).toBe("Invalid front matter structure");
-    }
+    expect(result).toEqual(
+      expect.objectContaining({
+        success: false,
+        message: "Invalid front matter structure",
+      }),
+    );
   });
 
   it("skips files with unclosed front matter (detected by hasFrontMatter check)", async () => {
@@ -127,9 +132,14 @@ publish: true
     const result = await compilePosts();
 
     // This should succeed because the file gets skipped (has no properly closed front matter)
-    expect(result.success).toBe(true);
+    expect(result).toEqual(
+      expect.objectContaining({
+        success: true,
+        value: expect.objectContaining({}),
+      }),
+    );
+    // The manifest should be empty since no valid posts were processed
     if (result.success) {
-      // The manifest should be empty since no valid posts were processed
       expect(Object.keys(result.value)).toHaveLength(0);
     }
   });

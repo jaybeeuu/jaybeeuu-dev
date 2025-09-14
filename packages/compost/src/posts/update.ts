@@ -1,11 +1,9 @@
 import type { Result } from "@jaybeeuu/utilities";
-import { failure, joinUrlPath, log, success } from "@jaybeeuu/utilities";
+import { joinUrlPath, log, success } from "@jaybeeuu/utilities";
 import path from "path";
 import {
-  canAccess,
   copyFile,
   deleteDirectories,
-  readTextFile,
   recurseDirectory,
   writeJsonFile,
   writeTextFile,
@@ -20,14 +18,10 @@ import {
 } from "./file-paths.js";
 import type { GetOldManifestFailureReason } from "./manifest.js";
 import { getOldManifest } from "./manifest.js";
-import type {
-  GetMetaFileContentFailureReason,
-  PostMetaFileData,
-} from "./metafile.js";
-import { isPostMetaFile } from "./metafile.js";
-import type { ParesFrontMatterFailed } from "./frontmatter.js";
-import { hasFrontMatter, parseFrontMatter } from "./frontmatter.js";
+import type { PostMetaFileData } from "./metafile.js";
 import type { OldPostManifest, PostManifest, UpdateOptions } from "./types.js";
+import type { ResolvePostFailureReason } from "./post-resolver.js";
+import { resolvePost } from "./post-resolver.js";
 import getReadingTime from "reading-time";
 
 export type UpdateFailureReason =
@@ -35,127 +29,6 @@ export type UpdateFailureReason =
   | ValidateSlugFailureReason
   | GetOldManifestFailureReason
   | ResolvePostFailureReason;
-
-export type LoadSourceFailureReason = `Failed to load file ${string}`;
-
-const loadPostSourceText = async (
-  sourceFilePath: string,
-): Promise<Result<string, LoadSourceFailureReason>> => {
-  try {
-    const postText = await readTextFile(sourceFilePath);
-
-    return success(postText);
-  } catch (error) {
-    return failure(`Failed to load file ${sourceFilePath}`, error);
-  }
-};
-
-type ResolvePostFailureReason =
-  | LoadSourceFailureReason
-  | GetMetaFileContentFailureReason
-  | ParesFrontMatterFailed;
-
-interface PostData {
-  content: string;
-  meta: PostMetaFileData;
-}
-
-const resolveFrontmatterPost = async (
-  markdownFilePath: string,
-): Promise<Result<PostData, ResolvePostFailureReason>> => {
-  const sourceFileTextResult = await loadPostSourceText(markdownFilePath);
-  if (!sourceFileTextResult.success) {
-    return sourceFileTextResult;
-  }
-
-  const sourceFileText = sourceFileTextResult.value;
-
-  if (!hasFrontMatter(sourceFileText)) {
-    const failureReason: LoadSourceFailureReason = `Failed to load file ${markdownFilePath}`;
-    return failure(
-      failureReason,
-      new Error("No front matter found in .post.md file"),
-    );
-  }
-
-  const frontMatterResult = parseFrontMatter(sourceFileText);
-  if (!frontMatterResult.success) {
-    return frontMatterResult;
-  }
-
-  const { metadata, content } = frontMatterResult.value;
-
-  return success({
-    content,
-    meta: metadata,
-  });
-};
-
-const resolveJsonPost = async (
-  markdownFilePath: string,
-): Promise<Result<PostData, ResolvePostFailureReason>> => {
-  const sourceFileTextResult = await loadPostSourceText(markdownFilePath);
-  if (!sourceFileTextResult.success) {
-    return sourceFileTextResult;
-  }
-
-  // Convert .md path to .post.json path
-  const jsonFilePath = markdownFilePath.replace(/\.md$/, ".post.json");
-
-  // Check if the JSON file exists
-  const canAccessJson = await canAccess(jsonFilePath);
-  if (!canAccessJson) {
-    const failureReason: LoadSourceFailureReason = `Failed to load file ${jsonFilePath}`;
-    return failure(
-      failureReason,
-      new Error(`Corresponding .post.json file not found: ${jsonFilePath}`),
-    );
-  }
-
-  // Read and parse the JSON metadata
-  try {
-    const jsonContent = await readTextFile(jsonFilePath);
-    const metadata: unknown = JSON.parse(jsonContent);
-
-    // Validate the metadata structure (similar to getMetaFileContent)
-    if (!isPostMetaFile(metadata)) {
-      const failureReason: ParesFrontMatterFailed = "parse front matter failed";
-      return failure(
-        failureReason,
-        new Error("Invalid metadata structure in JSON file"),
-      );
-    }
-
-    return success({
-      content: sourceFileTextResult.value,
-      meta: metadata,
-    });
-  } catch (error) {
-    const failureReason: LoadSourceFailureReason = `Failed to load file ${jsonFilePath}`;
-    return failure(
-      failureReason,
-      new Error(
-        `Failed to read or parse JSON file: ${jsonFilePath}. Error: ${String(error)}`,
-      ),
-    );
-  }
-};
-
-const resolvePost = async (
-  markdownFilePath: string,
-): Promise<Result<PostData, ResolvePostFailureReason>> => {
-  if (markdownFilePath.endsWith(".post.md")) {
-    return resolveFrontmatterPost(markdownFilePath);
-  } else if (markdownFilePath.endsWith(".md")) {
-    return resolveJsonPost(markdownFilePath);
-  } else {
-    const failureReason: LoadSourceFailureReason = `Failed to load file ${markdownFilePath}`;
-    return failure(
-      failureReason,
-      new Error(`Unsupported file extension: ${markdownFilePath}`),
-    );
-  }
-};
 
 const processPost = async ({
   slug,
