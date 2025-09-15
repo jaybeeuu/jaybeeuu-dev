@@ -3,7 +3,7 @@ import { failure, success } from "@jaybeeuu/utilities";
 import { canAccess, readTextFile } from "../files/index.js";
 import type { PostMetaFileData } from "./metafile.js";
 import { isPostMetaFile } from "./metafile.js";
-import type { ParesFrontMatterFailed } from "./frontmatter.js";
+import type { ParseFrontMatterFailureReason } from "./frontmatter.js";
 import { hasFrontMatter, parseFrontMatter } from "./frontmatter.js";
 
 export type LoadSourceFailureReason = "load source failure";
@@ -15,13 +15,12 @@ export type UnsupportedFileExtensionReason = "unsupported file extension";
 export type ResolveFrontMatterPostFailureReason =
   | LoadSourceFailureReason
   | NoFrontMatterFailureReason
-  | ParesFrontMatterFailed;
+  | ParseFrontMatterFailureReason;
 
 export type ResolveJsonPostFailureReason =
   | LoadSourceFailureReason
   | JsonFileNotFoundReason
-  | JsonParseFailureReason
-  | ParesFrontMatterFailed;
+  | JsonParseFailureReason;
 
 type ResolvePostFailureReason =
   | ResolveFrontMatterPostFailureReason
@@ -102,9 +101,8 @@ const resolveJsonPost = async (
 
     // Validate the metadata structure (similar to getMetaFileContent)
     if (!isPostMetaFile(metadata)) {
-      const failureReason: ParesFrontMatterFailed = "parse front matter failed";
       return failure(
-        failureReason,
+        "json parse failure",
         new Error(`Invalid metadata structure in JSON file: ${jsonFilePath}`),
       );
     }

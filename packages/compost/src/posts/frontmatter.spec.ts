@@ -72,6 +72,7 @@ This is the body.`;
         description: "content doesn't start with front matter",
         content: "# Just a regular markdown file",
         expectedMessage: "No front matter found",
+        expectedReason: "no front matter found",
       },
       {
         description: "front matter is not properly closed",
@@ -82,6 +83,7 @@ publish: true
 
 # Test Content`,
         expectedMessage: "Front matter not properly closed",
+        expectedReason: "front matter not properly closed",
       },
       {
         description: "front matter has invalid structure",
@@ -93,6 +95,7 @@ publish: "not-a-boolean"
 
 # Test Content`,
         expectedMessage: "Invalid front matter structure",
+        expectedReason: "invalid front matter structure",
       },
       {
         description: "front matter is missing required fields",
@@ -102,16 +105,20 @@ title: "Test Post"
 
 # Test Content`,
         expectedMessage: "Invalid front matter structure",
+        expectedReason: "invalid front matter structure",
       },
-    ])("fails when $description", ({ content, expectedMessage }) => {
-      const result = parseFrontMatter(content);
+    ])(
+      "fails when $description",
+      ({ content, expectedMessage, expectedReason }) => {
+        const result = parseFrontMatter(content);
 
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.reason).toBe("parse front matter failed");
-        expect(result.message).toBe(expectedMessage);
-      }
-    });
+        expect(result.success).toBe(false);
+        if (!result.success) {
+          expect(result.reason).toBe(expectedReason);
+          expect(result.message).toBe(expectedMessage);
+        }
+      },
+    );
 
     it("fails when YAML parsing throws an error", () => {
       const content = `---
@@ -126,7 +133,7 @@ publish: true
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.reason).toBe("parse front matter failed");
+        expect(result.reason).toBe("front matter yaml parse failure");
         expect(result.message).toContain("can not read a block mapping entry");
       }
     });
