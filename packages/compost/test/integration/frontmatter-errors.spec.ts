@@ -1,5 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
 import { cleanUpDirectories, compilePosts, writePostFile } from "./helpers.js";
+import { writeTextFiles } from "../../src/files/index.js";
 
 describe("front matter error handling", () => {
   it("fails compilation when front matter YAML is invalid", async () => {
@@ -8,26 +9,22 @@ describe("front matter error handling", () => {
     const slug = "invalid-yaml-post";
 
     // Write a post with invalid YAML (unterminated string)
-    await writePostFile({
-      slug,
-      meta: {
-        title: "Test Post",
-        abstract: "Test abstract",
-        publish: true,
+    const invalidYamlContent = [
+      "---",
+      'title: "Test Post',
+      'abstract: "Unterminated string',
+      "publish: true",
+      "---",
+      "",
+      "# Test Content",
+    ].join("\n");
+
+    await writeTextFiles("src", [
+      {
+        path: `${slug}.post.md`,
+        content: invalidYamlContent,
       },
-      content: ["# Test Content"],
-      metadataStyle: "frontmatter",
-      // Override the front matter with invalid YAML
-      frontMatterOverride: [
-        "---",
-        'title: "Test Post',
-        'abstract: "Unterminated string',
-        "publish: true",
-        "---",
-        "",
-        "# Test Content",
-      ],
-    });
+    ]);
 
     const result = await compilePosts();
 
@@ -45,26 +42,22 @@ describe("front matter error handling", () => {
     const slug = "invalid-structure-post";
 
     // Write a post with invalid front matter structure
-    await writePostFile({
-      slug,
-      meta: {
-        title: "Test Post",
-        abstract: "Test abstract",
-        publish: true,
+    const invalidStructureContent = [
+      "---",
+      'title: "Test Post"',
+      'abstract: "Test abstract"',
+      'publish: "not-a-boolean"',
+      "---",
+      "",
+      "# Test Content",
+    ].join("\n");
+
+    await writeTextFiles("src", [
+      {
+        path: `${slug}.post.md`,
+        content: invalidStructureContent,
       },
-      content: ["# Test Content"],
-      metadataStyle: "frontmatter",
-      // Override with invalid structure (publish should be boolean)
-      frontMatterOverride: [
-        "---",
-        'title: "Test Post"',
-        'abstract: "Test abstract"',
-        'publish: "not-a-boolean"',
-        "---",
-        "",
-        "# Test Content",
-      ],
-    });
+    ]);
 
     const result = await compilePosts();
 
@@ -82,24 +75,20 @@ describe("front matter error handling", () => {
     const slug = "missing-fields-post";
 
     // Write a post with missing required fields
-    await writePostFile({
-      slug,
-      meta: {
-        title: "Test Post",
-        abstract: "Test abstract",
-        publish: true,
+    const missingFieldsContent = [
+      "---",
+      'title: "Test Post"',
+      "---",
+      "",
+      "# Test Content",
+    ].join("\n");
+
+    await writeTextFiles("src", [
+      {
+        path: `${slug}.post.md`,
+        content: missingFieldsContent,
       },
-      content: ["# Test Content"],
-      metadataStyle: "frontmatter",
-      // Override with missing required fields
-      frontMatterOverride: [
-        "---",
-        'title: "Test Post"',
-        "---",
-        "",
-        "# Test Content",
-      ],
-    });
+    ]);
 
     const result = await compilePosts();
 
@@ -119,15 +108,8 @@ describe("front matter error handling", () => {
     // Write a post with unclosed front matter - this will be skipped by hasFrontMatter check
     await writePostFile({
       slug,
-      meta: {
-        title: "Test Post",
-        abstract: "Test abstract",
-        publish: true,
-      },
-      content: ["# Test Content"],
-      metadataStyle: "frontmatter",
-      // Override with unclosed front matter
-      frontMatterOverride: [
+      meta: null,
+      content: [
         "---",
         'title: "Test Post"',
         'abstract: "Test abstract"',
@@ -135,6 +117,7 @@ describe("front matter error handling", () => {
         "",
         "# Test Content",
       ],
+      metadataStyle: "frontmatter",
     });
 
     const result = await compilePosts();

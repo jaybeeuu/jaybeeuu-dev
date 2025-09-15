@@ -61,7 +61,6 @@ interface BasePostFile {
 
 interface PostFileWithFrontmatter extends BasePostFile {
   metadataStyle: "frontmatter";
-  frontMatterOverride?: string | string[];
 }
 
 interface PostFileWithJson extends BasePostFile {
@@ -107,15 +106,7 @@ export const writeOutputManifestFile = async (
 const getMarkdownContent = (
   content: string | string[],
   meta: PostMetaFileData | null,
-  frontMatterOverride?: string | string[],
 ): string => {
-  // If we have a front matter override, use it directly
-  if (frontMatterOverride) {
-    return Array.isArray(frontMatterOverride)
-      ? frontMatterOverride.join("\n")
-      : frontMatterOverride;
-  }
-
   const markdownContent = Array.isArray(content) ? content.join("\n") : content;
 
   const frontMatter =
@@ -138,12 +129,12 @@ const writeFrontmatterPost = (
   postFile: PostFileWithFrontmatter,
   postPath: string,
 ): File[] => {
-  const { content, meta, slug, frontMatterOverride } = postFile;
+  const { content, meta, slug } = postFile;
 
   return [
     {
       path: path.join(postPath, `${slug}.post.md`),
-      content: getMarkdownContent(content, meta, frontMatterOverride),
+      content: getMarkdownContent(content, meta),
     },
   ];
 };

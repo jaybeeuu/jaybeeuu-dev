@@ -35,8 +35,15 @@ describe("frontmatter", () => {
         expected: false,
       },
       {
-        description: "content with no --- characters at all",
-        content: ["title: Test", "content: body"],
+        description: "content with opening but no closing front matter",
+        content: [
+          'title: "Test Post"',
+          'abstract: "Test abstract"',
+          "publish: true",
+          "---",
+          "",
+          "# Test Content",
+        ],
         expected: false,
       },
     ])("returns $expected for $description", ({ content, expected }) => {
