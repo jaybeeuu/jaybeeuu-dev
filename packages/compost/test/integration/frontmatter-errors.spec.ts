@@ -26,7 +26,7 @@ describe("front matter error handling", () => {
         "---",
         "",
         "# Test Content",
-      ].join("\n"),
+      ],
     });
 
     const result = await compilePosts();
@@ -63,7 +63,7 @@ describe("front matter error handling", () => {
         "---",
         "",
         "# Test Content",
-      ].join("\n"),
+      ],
     });
 
     const result = await compilePosts();
@@ -98,7 +98,7 @@ describe("front matter error handling", () => {
         "---",
         "",
         "# Test Content",
-      ].join("\n"),
+      ],
     });
 
     const result = await compilePosts();
@@ -134,7 +134,7 @@ describe("front matter error handling", () => {
         "publish: true",
         "",
         "# Test Content",
-      ].join("\n"),
+      ],
     });
 
     const result = await compilePosts();
