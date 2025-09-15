@@ -1,24 +1,36 @@
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
 import { canAccess, readTextFile } from "../files/index.js";
-import type {
-  GetMetaFileContentFailureReason,
-  PostMetaFileData,
-} from "./metafile.js";
+import type { PostMetaFileData } from "./metafile.js";
 import { isPostMetaFile } from "./metafile.js";
 import type { ParesFrontMatterFailed } from "./frontmatter.js";
 import { hasFrontMatter, parseFrontMatter } from "./frontmatter.js";
 
-export type LoadSourceFailureReason = `Failed to load file ${string}`;
+export type LoadSourceFailureReason = "load source failure";
+export type NoFrontMatterFailureReason = "no frontmatter in markdown file";
+export type JsonFileNotFoundReason = "json file not found";
+export type JsonParseFailureReason = "json parse failure";
+export type UnsupportedFileExtensionReason = "unsupported file extension";
+
+export type ResolveFrontMatterPostFailureReason =
+  | LoadSourceFailureReason
+  | NoFrontMatterFailureReason
+  | ParesFrontMatterFailed;
+
+export type ResolveJsonPostFailureReason =
+  | LoadSourceFailureReason
+  | JsonFileNotFoundReason
+  | JsonParseFailureReason
+  | ParesFrontMatterFailed;
 
 type ResolvePostFailureReason =
-  | LoadSourceFailureReason
-  | GetMetaFileContentFailureReason
-  | ParesFrontMatterFailed;
+  | ResolveFrontMatterPostFailureReason
+  | ResolveJsonPostFailureReason
+  | UnsupportedFileExtensionReason;
 
 export interface PostData {
   content: string;
-  meta: PostMetaFileData;
+  metadata: PostMetaFileData;
 }
 
 const loadPostSourceText = async (
@@ -29,13 +41,13 @@ const loadPostSourceText = async (
 
     return success(postText);
   } catch (error) {
-    return failure(`Failed to load file ${sourceFilePath}`, error);
+    return failure("load source failure", error);
   }
 };
 
 const resolveFrontmatterPost = async (
   markdownFilePath: string,
-): Promise<Result<PostData, ResolvePostFailureReason>> => {
+): Promise<Result<PostData, ResolveFrontMatterPostFailureReason>> => {
   const sourceFileTextResult = await loadPostSourceText(markdownFilePath);
   if (!sourceFileTextResult.success) {
     return sourceFileTextResult;
@@ -44,10 +56,9 @@ const resolveFrontmatterPost = async (
   const sourceFileText = sourceFileTextResult.value;
 
   if (!hasFrontMatter(sourceFileText)) {
-    const failureReason: LoadSourceFailureReason = `Failed to load file ${markdownFilePath}`;
     return failure(
-      failureReason,
-      new Error("No front matter found in .post.md file"),
+      "no frontmatter in markdown file",
+      new Error(`No frontmatter in markdown file: ${markdownFilePath}`),
     );
   }
 
@@ -60,13 +71,13 @@ const resolveFrontmatterPost = async (
 
   return success({
     content,
-    meta: metadata,
+    metadata,
   });
 };
 
 const resolveJsonPost = async (
   markdownFilePath: string,
-): Promise<Result<PostData, ResolvePostFailureReason>> => {
+): Promise<Result<PostData, ResolveJsonPostFailureReason>> => {
   const sourceFileTextResult = await loadPostSourceText(markdownFilePath);
   if (!sourceFileTextResult.success) {
     return sourceFileTextResult;
@@ -78,9 +89,8 @@ const resolveJsonPost = async (
   // Check if the JSON file exists
   const canAccessJson = await canAccess(jsonFilePath);
   if (!canAccessJson) {
-    const failureReason: LoadSourceFailureReason = `Failed to load file ${jsonFilePath}`;
     return failure(
-      failureReason,
+      "json file not found",
       new Error(`Corresponding .post.json file not found: ${jsonFilePath}`),
     );
   }
@@ -95,18 +105,17 @@ const resolveJsonPost = async (
       const failureReason: ParesFrontMatterFailed = "parse front matter failed";
       return failure(
         failureReason,
-        new Error("Invalid metadata structure in JSON file"),
+        new Error(`Invalid metadata structure in JSON file: ${jsonFilePath}`),
       );
     }
 
     return success({
       content: sourceFileTextResult.value,
-      meta: metadata,
+      metadata,
     });
   } catch (error) {
-    const failureReason: LoadSourceFailureReason = `Failed to load file ${jsonFilePath}`;
     return failure(
-      failureReason,
+      "json parse failure",
       new Error(
         `Failed to read or parse JSON file: ${jsonFilePath}. Error: ${String(error)}`,
       ),
@@ -122,9 +131,8 @@ export const resolvePost = async (
   } else if (markdownFilePath.endsWith(".md")) {
     return resolveJsonPost(markdownFilePath);
   } else {
-    const failureReason: LoadSourceFailureReason = `Failed to load file ${markdownFilePath}`;
     return failure(
-      failureReason,
+      "unsupported file extension",
       new Error(`Unsupported file extension: ${markdownFilePath}`),
     );
   }

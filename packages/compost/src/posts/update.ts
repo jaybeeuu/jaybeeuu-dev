@@ -32,7 +32,7 @@ export type UpdateFailureReason =
 
 const processPost = async ({
   slug,
-  metaData,
+  metadata,
   sourceFileText,
   sourceFilePath,
   options,
@@ -40,7 +40,7 @@ const processPost = async ({
   resolvedOutputDir,
 }: {
   slug: string;
-  metaData: PostMetaFileData;
+  metadata: PostMetaFileData;
   sourceFileText: string;
   sourceFilePath: string;
   options: UpdateOptions;
@@ -91,7 +91,7 @@ const processPost = async ({
   const readingTime = getReadingTime(sourceFileText);
 
   return success({
-    ...metaData,
+    ...metadata,
     fileName: compiledFileName,
     href,
     lastUpdateDate,
@@ -125,9 +125,8 @@ export const update = async (
 
   await deleteDirectories(resolvedOutputDir);
 
-  // Process all markdown files (both .md and .post.md)
   for await (const markdownFileInfo of recurseDirectory(resolvedSourceDir, {
-    include: [/\.md$/, /\.post\.md$/],
+    include: [/\.md$/],
   })) {
     const slug = getSlug(markdownFileInfo.relativeFilePath);
 
@@ -138,32 +137,24 @@ export const update = async (
 
     const postDataResult = await resolvePost(markdownFileInfo.filePath);
     if (!postDataResult.success) {
-      // For .post.md files, differentiate between missing front matter (skip) vs parsing errors (fail)
-      if (markdownFileInfo.filePath.endsWith(".post.md")) {
-        // Check if the error is due to missing front matter (should skip) vs parsing errors (should fail)
-        const errorDetails =
-          (postDataResult.messageOrError as Error).message || "";
-        if (errorDetails.includes("No front matter found")) {
-          // Skip files without front matter
-          continue;
-        } else {
-          // Fail compilation for actual parsing errors (invalid YAML, invalid structure, etc.)
-          return postDataResult;
-        }
+      if (
+        postDataResult.reason === "no frontmatter in markdown file" ||
+        postDataResult.reason === "json file not found"
+      ) {
+        continue;
       }
-      // Skip .md files that can't be resolved (e.g., no corresponding .post.json)
-      continue;
+      return postDataResult;
     }
 
-    const { content, meta: metaData } = postDataResult.value;
+    const { content, metadata } = postDataResult.value;
 
-    if (!metaData.publish && !options.includeUnpublished) {
+    if (!metadata.publish && !options.includeUnpublished) {
       continue;
     }
 
     const result = await processPost({
       slug,
-      metaData,
+      metadata,
       sourceFileText: content,
       sourceFilePath: markdownFileInfo.filePath,
       options,
