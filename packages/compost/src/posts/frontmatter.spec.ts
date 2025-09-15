@@ -6,13 +6,15 @@ describe("frontmatter", () => {
     it.each([
       {
         description: "content with properly formatted front matter",
-        content: `---
-title: "Test Post"
-abstract: "Test abstract"
-publish: true
----
-
-# Test Content`,
+        content: [
+          "---",
+          'title: "Test Post"',
+          'abstract: "Test abstract"',
+          "publish: true",
+          "---",
+          "",
+          "# Test Content",
+        ],
         expected: true,
       },
       {
@@ -22,12 +24,14 @@ publish: true
       },
       {
         description: "content with opening but no closing front matter",
-        content: `---
-title: "Test Post"
-abstract: "Test abstract"
-publish: true
-
-# Test Content`,
+        content: [
+          "---",
+          'title: "Test Post"',
+          'abstract: "Test abstract"',
+          "publish: true",
+          "",
+          "# Test Content",
+        ],
         expected: false,
       },
       {
@@ -36,23 +40,27 @@ publish: true
         expected: false,
       },
     ])("returns $expected for $description", ({ content, expected }) => {
-      expect(hasFrontMatter(content)).toBe(expected);
+      expect(
+        hasFrontMatter(Array.isArray(content) ? content.join("\n") : content),
+      ).toBe(expected);
     });
   });
 
   describe("parseFrontMatter", () => {
     it("successfully parses valid front matter", () => {
-      const content = `---
-title: "Test Post"
-abstract: "Test abstract"
-publish: true
----
+      const testContent = [
+        "---",
+        'title: "Test Post"',
+        'abstract: "Test abstract"',
+        "publish: true",
+        "---",
+        "",
+        "# Test Content",
+        "",
+        "This is the body.",
+      ].join("\n");
 
-# Test Content
-
-This is the body.`;
-
-      const result = parseFrontMatter(content);
+      const result = parseFrontMatter(testContent);
 
       expect(result.success).toBe(true);
       if (result.success) {
@@ -76,41 +84,43 @@ This is the body.`;
       },
       {
         description: "front matter is not properly closed",
-        content: `---
-title: "Test Post"
-abstract: "Test abstract"
-publish: true
-
-# Test Content`,
+        content: [
+          "---",
+          'title: "Test Post"',
+          'abstract: "Test abstract"',
+          "publish: true",
+          "",
+          "# Test Content",
+        ],
         expectedMessage: "Front matter not properly closed",
         expectedReason: "front matter not properly closed",
       },
       {
         description: "front matter has invalid structure",
-        content: `---
-title: "Test Post"
-abstract: "Test abstract"
-publish: "not-a-boolean"
----
-
-# Test Content`,
+        content: [
+          "---",
+          'title: "Test Post"',
+          'abstract: "Test abstract"',
+          'publish: "not-a-boolean"',
+          "---",
+          "",
+          "# Test Content",
+        ],
         expectedMessage: "Invalid front matter structure",
         expectedReason: "invalid front matter structure",
       },
       {
         description: "front matter is missing required fields",
-        content: `---
-title: "Test Post"
----
-
-# Test Content`,
+        content: ["---", 'title: "Test Post"', "---", "", "# Test Content"],
         expectedMessage: "Invalid front matter structure",
         expectedReason: "invalid front matter structure",
       },
     ])(
       "fails when $description",
       ({ content, expectedMessage, expectedReason }) => {
-        const result = parseFrontMatter(content);
+        const result = parseFrontMatter(
+          Array.isArray(content) ? content.join("\n") : content,
+        );
 
         expect(result.success).toBe(false);
         if (!result.success) {
@@ -121,15 +131,17 @@ title: "Test Post"
     );
 
     it("fails when YAML parsing throws an error", () => {
-      const content = `---
-title: "Test Post
-abstract: "Invalid YAML - unterminated string
-publish: true
----
+      const testContent = [
+        "---",
+        'title: "Test Post',
+        'abstract: "Invalid YAML - unterminated string',
+        "publish: true",
+        "---",
+        "",
+        "# Test Content",
+      ].join("\n");
 
-# Test Content`;
-
-      const result = parseFrontMatter(content);
+      const result = parseFrontMatter(testContent);
 
       expect(result.success).toBe(false);
       if (!result.success) {
