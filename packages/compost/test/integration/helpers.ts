@@ -104,41 +104,44 @@ export const writeOutputManifestFile = async (
   );
 };
 
+const getMarkdownContent = (
+  content: string | string[],
+  meta: PostMetaFileData | null,
+  frontMatterOverride?: string,
+): string => {
+  // If we have a front matter override, use it directly
+  if (frontMatterOverride) {
+    return frontMatterOverride;
+  }
+
+  const markdownContent = Array.isArray(content) ? content.join("\n") : content;
+
+  const frontMatter =
+    meta === null
+      ? ""
+      : [
+          "---",
+          ...Object.entries(meta).map(([key, value]) => {
+            if (typeof value === "string") {
+              return `${key}: "${value}"`;
+            }
+            return `${key}: ${value}`;
+          }),
+          "---",
+        ].join("\n");
+  return `${frontMatter}\n${markdownContent}`;
+};
+
 const writeFrontmatterPost = (
   postFile: PostFileWithFrontmatter,
   postPath: string,
 ): File[] => {
   const { content, meta, slug, frontMatterOverride } = postFile;
 
-  const getMarkdownContent = (): string => {
-    // If we have a front matter override, use it directly
-    if (frontMatterOverride) {
-      return frontMatterOverride;
-    }
-
-    const markdownContent = Array.isArray(content)
-      ? content.join("\n")
-      : content;
-
-    if (meta !== null) {
-      const frontMatter = Object.entries(meta)
-        .map(([key, value]) => {
-          if (typeof value === "string") {
-            return `${key}: "${value}"`;
-          }
-          return `${key}: ${value}`;
-        })
-        .join("\n");
-      return `---\n${frontMatter}\n---\n${markdownContent}`;
-    }
-
-    return markdownContent;
-  };
-
   return [
     {
       path: path.join(postPath, `${slug}.post.md`),
-      content: getMarkdownContent(),
+      content: getMarkdownContent(content, meta, frontMatterOverride),
     },
   ];
 };
@@ -176,13 +179,10 @@ export const writePostFile = async (
 
   const { path: postPath = ".", otherFiles } = postFile;
 
-  let strategyFiles: File[];
-
-  if (postFile.metadataStyle === "frontmatter") {
-    strategyFiles = writeFrontmatterPost(postFile, postPath);
-  } else {
-    strategyFiles = writeJsonPost(postFile, postPath);
-  }
+  const strategyFiles: File[] =
+    postFile.metadataStyle === "frontmatter"
+      ? writeFrontmatterPost(postFile, postPath)
+      : writeJsonPost(postFile, postPath);
 
   const allFiles = [
     ...strategyFiles,
