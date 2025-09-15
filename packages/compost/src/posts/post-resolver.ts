@@ -9,7 +9,9 @@ import { hasFrontMatter, parseFrontMatter } from "./frontmatter.js";
 export type LoadSourceFailureReason = "load source failure";
 export type NoFrontMatterFailureReason = "no frontmatter in markdown file";
 export type JsonFileNotFoundReason = "json file not found";
+export type LoadJsonFileFailureReason = "load json file failure";
 export type JsonParseFailureReason = "json parse failure";
+export type JsonValidationFailureReason = "json validation failure";
 export type UnsupportedFileExtensionReason = "unsupported file extension";
 
 export type ResolveFrontMatterPostFailureReason =
@@ -20,7 +22,9 @@ export type ResolveFrontMatterPostFailureReason =
 export type ResolveJsonPostFailureReason =
   | LoadSourceFailureReason
   | JsonFileNotFoundReason
-  | JsonParseFailureReason;
+  | LoadJsonFileFailureReason
+  | JsonParseFailureReason
+  | JsonValidationFailureReason;
 
 type ResolvePostFailureReason =
   | ResolveFrontMatterPostFailureReason
@@ -41,6 +45,28 @@ const loadPostSourceText = async (
     return success(postText);
   } catch (error) {
     return failure("load source failure", error);
+  }
+};
+
+const loadJsonFileText = async (
+  jsonFilePath: string,
+): Promise<Result<string, LoadJsonFileFailureReason>> => {
+  try {
+    const jsonText = await readTextFile(jsonFilePath);
+    return success(jsonText);
+  } catch (error) {
+    return failure("load json file failure", error);
+  }
+};
+
+const parseJsonContent = (
+  jsonText: string,
+): Result<unknown, JsonParseFailureReason> => {
+  try {
+    const parsed = JSON.parse(jsonText) as unknown;
+    return success(parsed);
+  } catch (error) {
+    return failure("json parse failure", error);
   }
 };
 
@@ -94,31 +120,31 @@ const resolveJsonPost = async (
     );
   }
 
-  // Read and parse the JSON metadata
-  try {
-    const jsonContent = await readTextFile(jsonFilePath);
-    const metadata: unknown = JSON.parse(jsonContent);
+  // Load the JSON file content
+  const jsonContentResult = await loadJsonFileText(jsonFilePath);
+  if (!jsonContentResult.success) {
+    return jsonContentResult;
+  }
 
-    // Validate the metadata structure (similar to getMetaFileContent)
-    if (!isPostMetaFile(metadata)) {
-      return failure(
-        "json parse failure",
-        new Error(`Invalid metadata structure in JSON file: ${jsonFilePath}`),
-      );
-    }
+  // Parse the JSON content
+  const parseResult = parseJsonContent(jsonContentResult.value);
+  if (!parseResult.success) {
+    return parseResult;
+  }
 
-    return success({
-      content: sourceFileTextResult.value,
-      metadata,
-    });
-  } catch (error) {
+  // Validate the metadata structure
+  const metadata = parseResult.value;
+  if (!isPostMetaFile(metadata)) {
     return failure(
-      "json parse failure",
-      new Error(
-        `Failed to read or parse JSON file: ${jsonFilePath}. Error: ${String(error)}`,
-      ),
+      "json validation failure",
+      new Error(`Invalid metadata structure in JSON file: ${jsonFilePath}`),
     );
   }
+
+  return success({
+    content: sourceFileTextResult.value,
+    metadata,
+  });
 };
 
 export const resolvePost = async (
