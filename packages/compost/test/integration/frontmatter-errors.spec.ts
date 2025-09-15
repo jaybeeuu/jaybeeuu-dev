@@ -15,16 +15,18 @@ describe("front matter error handling", () => {
         abstract: "Test abstract",
         publish: true,
       },
-      content: "# Test Content",
+      content: ["# Test Content"],
       metadataStyle: "frontmatter",
       // Override the front matter with invalid YAML
-      frontMatterOverride: `---
-title: "Test Post
-abstract: "Unterminated string
-publish: true
----
-
-# Test Content`,
+      frontMatterOverride: [
+        "---",
+        'title: "Test Post',
+        'abstract: "Unterminated string',
+        "publish: true",
+        "---",
+        "",
+        "# Test Content",
+      ].join("\n"),
     });
 
     const result = await compilePosts();
@@ -50,16 +52,18 @@ publish: true
         abstract: "Test abstract",
         publish: true,
       },
-      content: "# Test Content",
+      content: ["# Test Content"],
       metadataStyle: "frontmatter",
       // Override with invalid structure (publish should be boolean)
-      frontMatterOverride: `---
-title: "Test Post"
-abstract: "Test abstract"
-publish: "not-a-boolean"
----
-
-# Test Content`,
+      frontMatterOverride: [
+        "---",
+        'title: "Test Post"',
+        'abstract: "Test abstract"',
+        'publish: "not-a-boolean"',
+        "---",
+        "",
+        "# Test Content",
+      ].join("\n"),
     });
 
     const result = await compilePosts();
@@ -85,14 +89,16 @@ publish: "not-a-boolean"
         abstract: "Test abstract",
         publish: true,
       },
-      content: "# Test Content",
+      content: ["# Test Content"],
       metadataStyle: "frontmatter",
       // Override with missing required fields
-      frontMatterOverride: `---
-title: "Test Post"
----
-
-# Test Content`,
+      frontMatterOverride: [
+        "---",
+        'title: "Test Post"',
+        "---",
+        "",
+        "# Test Content",
+      ].join("\n"),
     });
 
     const result = await compilePosts();
@@ -118,15 +124,17 @@ title: "Test Post"
         abstract: "Test abstract",
         publish: true,
       },
-      content: "# Test Content",
+      content: ["# Test Content"],
       metadataStyle: "frontmatter",
       // Override with unclosed front matter
-      frontMatterOverride: `---
-title: "Test Post"
-abstract: "Test abstract"
-publish: true
-
-# Test Content`,
+      frontMatterOverride: [
+        "---",
+        'title: "Test Post"',
+        'abstract: "Test abstract"',
+        "publish: true",
+        "",
+        "# Test Content",
+      ].join("\n"),
     });
 
     const result = await compilePosts();

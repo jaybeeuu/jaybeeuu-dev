@@ -67,7 +67,7 @@ describe("manifest", () => {
     await writePostFile({
       slug,
       meta,
-      content: "# This is the first post\n\nIt has some content.",
+      content: ["# This is the first post", "", "It has some content."],
     });
 
     await compilePosts();
@@ -106,7 +106,7 @@ describe("manifest", () => {
         abstract: "This is the very first post.",
         publish: true,
       },
-      content: "# This is the first post\n\nIt has some content.",
+      content: ["# This is the first post", "", "It has some content."],
     });
     const hrefRoot = "posts";
     await compilePosts({ hrefRoot });
@@ -461,7 +461,11 @@ describe("manifest", () => {
       await writePostFile({
         slug,
         meta,
-        content: "# Test Post Title\n\nThis is test content for the post.",
+        content: [
+          "# Test Post Title",
+          "",
+          "This is test content for the post.",
+        ],
         metadataStyle,
       });
 
@@ -511,7 +515,7 @@ describe("manifest", () => {
       await writePostFile({
         slug,
         meta: null,
-        content: "# Test Post\n\nThis is test content.",
+        content: ["# Test Post", "", "This is test content."],
         metadataStyle,
       });
 
