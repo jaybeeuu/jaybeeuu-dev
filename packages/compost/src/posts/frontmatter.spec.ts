@@ -19,7 +19,7 @@ describe("frontmatter", () => {
       },
       {
         description: "content without front matter",
-        content: "# Just a regular markdown file",
+        content: ["# Just a regular markdown file"],
         expected: false,
       },
       {
@@ -36,13 +36,11 @@ describe("frontmatter", () => {
       },
       {
         description: "content with no --- characters at all",
-        content: "title: Test\ncontent: body",
+        content: ["title: Test", "content: body"],
         expected: false,
       },
     ])("returns $expected for $description", ({ content, expected }) => {
-      expect(
-        hasFrontMatter(Array.isArray(content) ? content.join("\n") : content),
-      ).toBe(expected);
+      expect(hasFrontMatter(content.join("\n"))).toBe(expected);
     });
   });
 
