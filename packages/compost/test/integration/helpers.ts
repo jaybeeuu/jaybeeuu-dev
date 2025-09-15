@@ -54,7 +54,7 @@ interface BasePostFile {
   path?: string;
   slug: string;
   otherFiles?: {
-    content: string;
+    content: string | string[];
     path: string;
   }[];
 }
@@ -190,7 +190,9 @@ export const writePostFile = async (
     ...strategyFiles,
     ...(otherFiles?.map((file) => ({
       path: path.join(postPath, file.path),
-      content: file.content,
+      content: Array.isArray(file.content)
+        ? file.content.join("\n")
+        : file.content,
     })) ?? []),
   ];
 
