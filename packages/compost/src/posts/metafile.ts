@@ -1,8 +1,9 @@
 import { is, isObject } from "@jaybeeuu/is";
 import type { Result } from "@jaybeeuu/utilities";
-import { repackError } from "@jaybeeuu/utilities";
+import { failure, repackError, success } from "@jaybeeuu/utilities";
+import yaml from "js-yaml";
 import type { FileInfo } from "../files/index.js";
-import { readJsonFile } from "../files/index.js";
+import { readJsonFile, readTextFile } from "../files/index.js";
 import type { PostMetaData } from "./types.js";
 
 export type PostMetaFileData = Pick<
@@ -17,6 +18,10 @@ export const isPostMetaFile = isObject<PostMetaFileData>({
 });
 
 export type GetMetaFileContentFailureReason = "read metadata failed";
+export type ReadYamlMetaFileFailureReason =
+  | "load yaml file failure"
+  | "yaml parse failure"
+  | "yaml validation failure";
 
 export const getMetaFileContent = async (
   metaFileInfo: FileInfo,
@@ -28,4 +33,34 @@ export const getMetaFileContent = async (
     "read metadata failed",
     `Reading metadata file ${relativeFilePath} failed.`,
   );
+};
+
+export const readYamlMetaFile = async (
+  filePath: string,
+): Promise<Result<PostMetaFileData, ReadYamlMetaFileFailureReason>> => {
+  // Read the YAML file content
+  let fileContent: string;
+  try {
+    fileContent = await readTextFile(filePath);
+  } catch (error) {
+    return failure("load yaml file failure", error);
+  }
+
+  // Parse the YAML content
+  let parsedContent: unknown;
+  try {
+    parsedContent = yaml.load(fileContent);
+  } catch (error) {
+    return failure("yaml parse failure", error);
+  }
+
+  // Validate the metadata structure
+  if (!isPostMetaFile(parsedContent)) {
+    return failure(
+      "yaml validation failure",
+      new Error(`Invalid metadata structure in YAML file: ${filePath}`),
+    );
+  }
+
+  return success(parsedContent);
 };
