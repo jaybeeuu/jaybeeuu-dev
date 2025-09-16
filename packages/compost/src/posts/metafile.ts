@@ -3,7 +3,7 @@ import type { Result } from "@jaybeeuu/utilities";
 import { failure, repackError, success } from "@jaybeeuu/utilities";
 import yaml from "js-yaml";
 import type { FileInfo } from "../files/index.js";
-import { readJsonFile, readTextFile } from "../files/index.js";
+import { readJsonFile } from "../files/index.js";
 import type { PostMetaData } from "./types.js";
 
 export type PostMetaFileData = Pick<
@@ -35,32 +35,38 @@ export const getMetaFileContent = async (
   );
 };
 
-export const readYamlMetaFile = async (
-  filePath: string,
-): Promise<Result<PostMetaFileData, ReadYamlMetaFileFailureReason>> => {
-  // Read the YAML file content
-  let fileContent: string;
+export type LoadYamlFailureReason = "front matter yaml parse failure";
+
+const loadYaml = (yamlText: string): Result<unknown, LoadYamlFailureReason> => {
   try {
-    fileContent = await readTextFile(filePath);
+    const parsedYaml = yaml.load(yamlText);
+    return success(parsedYaml);
   } catch (error) {
-    return failure("load yaml file failure", error);
+    return failure("front matter yaml parse failure", error);
+  }
+};
+
+export type ParseYamlMetaFailureReason =
+  | LoadYamlFailureReason
+  | "yaml metadata invalid";
+
+export const parseYamlMeta = (
+  yamlMeta: string,
+): Result<PostMetaFileData, ParseYamlMetaFailureReason> => {
+  const yamlResult = loadYaml(yamlMeta);
+  if (!yamlResult.success) {
+    return yamlResult;
   }
 
-  // Parse the YAML content
-  let parsedContent: unknown;
-  try {
-    parsedContent = yaml.load(fileContent);
-  } catch (error) {
-    return failure("yaml parse failure", error);
+  const parsedYaml = yamlResult.value;
+  const validationResult = isPostMetaFile.validate(parsedYaml);
+
+  if (validationResult.valid) {
+    return success(parsedYaml as PostMetaFileData);
   }
 
-  // Validate the metadata structure
-  if (!isPostMetaFile(parsedContent)) {
-    return failure(
-      "yaml validation failure",
-      new Error(`Invalid metadata structure in YAML file: ${filePath}`),
-    );
-  }
-
-  return success(parsedContent);
+  return failure(
+    "yaml metadata invalid",
+    validationResult.errorMessages.join("; "),
+  );
 };

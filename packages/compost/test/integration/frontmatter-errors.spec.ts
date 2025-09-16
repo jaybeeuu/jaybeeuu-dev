@@ -28,12 +28,10 @@ describe("front matter error handling", () => {
 
     const result = await compilePosts();
 
-    expect(result).toEqual(
-      expect.objectContaining({
-        success: false,
-        message: expect.stringContaining("can not read a block mapping entry"),
-      }),
-    );
+    expect(result).toMatchObject({
+      success: false,
+      reason: "front matter yaml parse failure",
+    });
   });
 
   it("fails compilation when front matter has invalid structure", async () => {
@@ -61,12 +59,10 @@ describe("front matter error handling", () => {
 
     const result = await compilePosts();
 
-    expect(result).toEqual(
-      expect.objectContaining({
-        success: false,
-        message: "Invalid front matter structure",
-      }),
-    );
+    expect(result).toMatchObject({
+      success: false,
+      reason: "yaml metadata invalid",
+    });
   });
 
   it("fails compilation when front matter is missing required fields", async () => {
@@ -92,12 +88,10 @@ describe("front matter error handling", () => {
 
     const result = await compilePosts();
 
-    expect(result).toEqual(
-      expect.objectContaining({
-        success: false,
-        message: "Invalid front matter structure",
-      }),
-    );
+    expect(result).toMatchObject({
+      success: false,
+      reason: "yaml metadata invalid",
+    });
   });
 
   it("skips files with unclosed front matter (detected by hasFrontMatter check)", async () => {
@@ -123,12 +117,10 @@ describe("front matter error handling", () => {
     const result = await compilePosts();
 
     // This should succeed because the file gets skipped (has no properly closed front matter)
-    expect(result).toEqual(
-      expect.objectContaining({
-        success: true,
-        value: expect.objectContaining({}),
-      }),
-    );
+    expect(result).toMatchObject({
+      success: true,
+      value: {},
+    });
     // The manifest should be empty since no valid posts were processed
     if (result.success) {
       expect(Object.keys(result.value)).toHaveLength(0);

@@ -101,7 +101,21 @@ describe("frontmatter", () => {
         expectedReason: "front matter not properly closed",
       },
       {
-        description: "front matter has invalid structure",
+        description: "YAML has invalid syntax",
+        content: [
+          "---",
+          'title: "Test Post',
+          'abstract: "Unterminated string',
+          "publish: true",
+          "---",
+          "",
+          "# Test Content",
+        ],
+        expectedReason: "front matter yaml parse failure",
+        expectedMessage: expect.stringContaining("can not read"),
+      },
+      {
+        description: "metadata has invalid structure",
         content: [
           "---",
           'title: "Test Post"',
@@ -111,14 +125,14 @@ describe("frontmatter", () => {
           "",
           "# Test Content",
         ],
-        expectedMessage: "Invalid front matter structure",
-        expectedReason: "invalid front matter structure",
+        expectedReason: "yaml metadata invalid",
+        expectedMessage: expect.stringContaining("root.publish"),
       },
       {
-        description: "front matter is missing required fields",
+        description: "metadata is missing required fields",
         content: ["---", 'title: "Test Post"', "---", "", "# Test Content"],
-        expectedMessage: "Invalid front matter structure",
-        expectedReason: "invalid front matter structure",
+        expectedReason: "yaml metadata invalid",
+        expectedMessage: expect.stringContaining("root.publish"),
       },
     ])(
       "fails when $description",
@@ -130,29 +144,9 @@ describe("frontmatter", () => {
         expect(result.success).toBe(false);
         if (!result.success) {
           expect(result.reason).toBe(expectedReason);
-          expect(result.message).toBe(expectedMessage);
+          expect(result.message).toStrictEqual(expectedMessage);
         }
       },
     );
-
-    it("fails when YAML parsing throws an error", () => {
-      const testContent = [
-        "---",
-        'title: "Test Post',
-        'abstract: "Invalid YAML - unterminated string',
-        "publish: true",
-        "---",
-        "",
-        "# Test Content",
-      ].join("\n");
-
-      const result = parseFrontMatter(testContent);
-
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.reason).toBe("front matter yaml parse failure");
-        expect(result.message).toContain("can not read a block mapping entry");
-      }
-    });
   });
 });
