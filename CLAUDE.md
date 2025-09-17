@@ -86,6 +86,13 @@ This is a pnpm workspace monorepo containing 14 packages under `/packages/`:
 - **State Management:** Uses custom recoilless atoms/selectors pattern
 - **CSS:** CSS Modules with typed definitions (`.module.css.d.ts`)
 
+### Coding Style Preferences
+
+- **No Comments:** Prefer expressive, self-documenting code over comments
+- **Minimal Comments:** Use comments sparingly and only when absolutely necessary for complex logic
+- **Expressive Code:** Choose descriptive variable/function names that make intent clear
+- **Clean Code:** Favor readability and simplicity over clever solutions
+
 ### Testing Strategy
 
 - **Unit Tests:** Jest with projects configuration for each package

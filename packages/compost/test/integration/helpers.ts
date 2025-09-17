@@ -1,8 +1,8 @@
 import type Utilities from "@jaybeeuu/utilities";
 import type { Result } from "@jaybeeuu/utilities";
 import { assertIsNotNullish } from "@jaybeeuu/utilities";
-import type { PostMetaFileData } from "packages/compost/src/posts/metafile";
-import type { UpdateFailureReason } from "packages/compost/src/posts/update.js";
+import type { PostMetaFileData } from "../../src/posts/metadata";
+import type { UpdateFailureReason } from "../../src/posts/update.js";
 import path from "path";
 import type { File } from "../../src/files/index";
 import {
@@ -48,7 +48,7 @@ export const cleanUpDirectories = async (): Promise<void> => {
   await deleteDirectories("/");
 };
 
-export interface PostFile {
+interface BasePostFile {
   content: string | string[];
   meta: PostMetaFileData | null;
   path?: string;
@@ -58,6 +58,16 @@ export interface PostFile {
     path: string;
   }[];
 }
+
+interface PostFileWithFrontmatter extends BasePostFile {
+  metadataStyle: "frontmatter";
+}
+
+interface PostFileWithJson extends BasePostFile {
+  metadataStyle?: "json";
+}
+
+export type PostFile = PostFileWithFrontmatter | PostFileWithJson;
 
 const getDefaultedUpdateOptions = (
   options: Partial<UpdateOptions> = {},
@@ -93,35 +103,89 @@ export const writeOutputManifestFile = async (
   );
 };
 
+const getMarkdownContent = (
+  content: string | string[],
+  meta: PostMetaFileData | null,
+): string => {
+  const markdownContent = Array.isArray(content) ? content.join("\n") : content;
+
+  const frontMatter =
+    meta === null
+      ? ""
+      : [
+          "---",
+          ...Object.entries(meta).map(([key, value]) => {
+            if (typeof value === "string") {
+              return `${key}: "${value}"`;
+            }
+            return `${key}: ${value}`;
+          }),
+          "---",
+        ].join("\n");
+  return `${frontMatter}\n${markdownContent}`;
+};
+
+const writeFrontmatterPost = (
+  postFile: PostFileWithFrontmatter,
+  postPath: string,
+): File[] => {
+  const { content, meta, slug } = postFile;
+
+  return [
+    {
+      path: path.join(postPath, `${slug}.post.md`),
+      content: getMarkdownContent(content, meta),
+    },
+  ];
+};
+
+const writeJsonPost = (
+  postFile: PostFileWithJson,
+  postPath: string,
+): File[] => {
+  const { content, meta, slug } = postFile;
+
+  const markdownContent = Array.isArray(content) ? content.join("\n") : content;
+
+  const files: File[] = [
+    {
+      path: path.join(postPath, `${slug}.md`),
+      content: markdownContent,
+    },
+  ];
+
+  if (meta !== null) {
+    files.push({
+      path: path.join(postPath, `${slug}.post.json`),
+      content: JSON.stringify(meta, null, 2),
+    });
+  }
+
+  return files;
+};
+
 export const writePostFile = async (
   postFile: PostFile,
   options: Partial<UpdateOptions> = {},
 ): Promise<void> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
 
-  const { content, meta, path: postPath = ".", slug, otherFiles } = postFile;
+  const { path: postPath = ".", otherFiles } = postFile;
 
-  await writeTextFiles(
-    defaultedUpdateOptions.sourceDir,
-    [
-      {
-        path: path.join(postPath, `${slug}.md`),
-        content: Array.isArray(content) ? content.join("\n") : content,
-      },
-      meta !== null
-        ? {
-            path: path.join(postPath, `${slug}.post.json`),
-            content: JSON.stringify(meta, null, 2),
-          }
-        : null,
-      ...(otherFiles?.map((file) => ({
-        path: path.join(postPath, file.path),
-        content: file.content,
-      })) ?? []),
-    ].filter((member: File | null): member is File => {
-      return member !== null;
-    }),
-  );
+  const strategyFiles: File[] =
+    postFile.metadataStyle === "frontmatter"
+      ? writeFrontmatterPost(postFile, postPath)
+      : writeJsonPost(postFile, postPath);
+
+  const allFiles = [
+    ...strategyFiles,
+    ...(otherFiles?.map((file) => ({
+      path: path.join(postPath, file.path),
+      content: file.content,
+    })) ?? []),
+  ];
+
+  await writeTextFiles(defaultedUpdateOptions.sourceDir, allFiles);
 };
 
 export const getOutputFile = async (

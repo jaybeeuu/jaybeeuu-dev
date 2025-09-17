@@ -17,13 +17,6 @@ export const validateSlug = (slug: string): ValidateSlugResult => {
       );
 };
 
-export const getPostMarkdownFilePath = (
-  metadataAbsolutePath: string,
-  slug: string,
-): string => {
-  return path.join(metadataAbsolutePath, `${slug}.md`);
-};
-
 export const getCompiledPostFileName = (
   slug: string,
   fileContent: string,

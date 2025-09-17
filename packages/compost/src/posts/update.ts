@@ -1,10 +1,9 @@
 import type { Result } from "@jaybeeuu/utilities";
-import { failure, joinUrlPath, log, success } from "@jaybeeuu/utilities";
+import { joinUrlPath, log, success } from "@jaybeeuu/utilities";
 import path from "path";
 import {
   copyFile,
   deleteDirectories,
-  readTextFile,
   recurseDirectory,
   writeJsonFile,
   writeTextFile,
@@ -14,36 +13,92 @@ import { compilePost } from "./compile.js";
 import type { ValidateSlugFailureReason as ValidateSlugFailureReason } from "./file-paths.js";
 import {
   getCompiledPostFileName,
-  getPostMarkdownFilePath,
   getSlug,
   validateSlug,
 } from "./file-paths.js";
 import type { GetOldManifestFailureReason } from "./manifest.js";
 import { getOldManifest } from "./manifest.js";
-import type { GetMetaFileContentFailureReason } from "./metafile.js";
-import { getMetaFileContent } from "./metafile.js";
+import type { PostMetaFileData } from "./metadata.js";
 import type { OldPostManifest, PostManifest, UpdateOptions } from "./types.js";
+import type { ResolvePostFailureReason } from "./post-resolver.js";
+import { resolvePost } from "./post-resolver.js";
 import getReadingTime from "reading-time";
 
 export type UpdateFailureReason =
   | CompileFailureReason
   | ValidateSlugFailureReason
   | GetOldManifestFailureReason
-  | GetMetaFileContentFailureReason
-  | LoadSourceFailureReason;
+  | ResolvePostFailureReason;
 
-export type LoadSourceFailureReason = `Failed to load file ${string}`;
+const processPost = async ({
+  slug,
+  metadata,
+  sourceFileText,
+  sourceFilePath,
+  options,
+  oldManifest,
+  resolvedOutputDir,
+}: {
+  slug: string;
+  metadata: PostMetaFileData;
+  sourceFileText: string;
+  sourceFilePath: string;
+  options: UpdateOptions;
+  oldManifest: OldPostManifest;
+  resolvedOutputDir: string;
+}): Promise<Result<PostManifest[string], UpdateFailureReason>> => {
+  const compiledPostResult = await compilePost({
+    codeLineNumbers: options.codeLineNumbers,
+    hrefRoot: options.hrefRoot,
+    removeH1: options.removeH1,
+    sourceFilePath,
+    sourceFileText,
+  });
 
-const loadPostSourceText = async (
-  sourceFilePath: string,
-): Promise<Result<string, LoadSourceFailureReason>> => {
-  try {
-    const postText = await readTextFile(sourceFilePath);
-
-    return success(postText);
-  } catch (error) {
-    return failure(`Failed to load file ${sourceFilePath}`, error);
+  if (!compiledPostResult.success) {
+    return compiledPostResult;
   }
+
+  const { html: compiledPost, assets } = compiledPostResult.value;
+  const compiledFileName = getCompiledPostFileName(slug, compiledPost);
+  const compiledFilePath = path.join(resolvedOutputDir, compiledFileName);
+
+  await Promise.all([
+    writeTextFile(compiledFilePath, compiledPost),
+    ...assets.map((asset) =>
+      copyFile(
+        asset.sourcePath,
+        path.join(options.outputDir, asset.destinationPath),
+      ),
+    ),
+  ]);
+
+  const href = joinUrlPath(options.hrefRoot, compiledFileName);
+  const originalRecord = oldManifest[slug];
+
+  const publishDate = new Date(
+    originalRecord?.publishDate ?? new Date(),
+  ).toISOString();
+
+  const hasBeenUpdated =
+    originalRecord && originalRecord.fileName !== compiledFileName;
+  const lastUpdateDate = hasBeenUpdated
+    ? new Date().toISOString()
+    : originalRecord?.lastUpdateDate
+      ? new Date(originalRecord.lastUpdateDate).toISOString()
+      : null;
+
+  const readingTime = getReadingTime(sourceFileText);
+
+  return success({
+    ...metadata,
+    fileName: compiledFileName,
+    href,
+    lastUpdateDate,
+    publishDate,
+    readingTime,
+    slug,
+  });
 };
 
 export const update = async (
@@ -70,90 +125,48 @@ export const update = async (
 
   await deleteDirectories(resolvedOutputDir);
 
-  for await (const metadataFileInfo of recurseDirectory(resolvedSourceDir, {
-    include: [/.post.json$/],
+  for await (const markdownFileInfo of recurseDirectory(resolvedSourceDir, {
+    include: [/\.md$/],
   })) {
-    const slug = getSlug(metadataFileInfo.relativeFilePath);
-    const slugValidation = validateSlug(slug);
+    const slug = getSlug(markdownFileInfo.relativeFilePath);
 
+    const slugValidation = validateSlug(slug);
     if (!slugValidation.success) {
       return slugValidation;
     }
 
-    const metaFileContentResult = await getMetaFileContent(metadataFileInfo);
-    if (!metaFileContentResult.success) {
-      return metaFileContentResult;
+    const postDataResult = await resolvePost(markdownFileInfo.filePath);
+    if (!postDataResult.success) {
+      if (
+        postDataResult.reason === "no frontmatter in markdown file" ||
+        postDataResult.reason === "json file not found"
+      ) {
+        continue;
+      }
+      return postDataResult;
     }
 
-    const metaData = metaFileContentResult.value;
-    if (!metaData.publish && !options.includeUnpublished) {
+    const { content, metadata } = postDataResult.value;
+
+    if (!metadata.publish && !options.includeUnpublished) {
       continue;
     }
 
-    const postMarkdownFilePath = getPostMarkdownFilePath(
-      metadataFileInfo.absolutePath,
+    const result = await processPost({
       slug,
-    );
-
-    const sourceFileText = await loadPostSourceText(postMarkdownFilePath);
-    if (!sourceFileText.success) {
-      return sourceFileText;
-    }
-
-    const compiledPostResult = await compilePost({
-      codeLineNumbers: options.codeLineNumbers,
-      hrefRoot: options.hrefRoot,
-      removeH1: options.removeH1,
-      sourceFilePath: postMarkdownFilePath,
-      sourceFileText: sourceFileText.value,
+      metadata,
+      sourceFileText: content,
+      sourceFilePath: markdownFileInfo.filePath,
+      options,
+      oldManifest,
+      resolvedOutputDir,
     });
 
-    if (!compiledPostResult.success) {
-      return compiledPostResult;
+    if (!result.success) {
+      return result;
     }
 
-    const { html: compiledPost, assets } = compiledPostResult.value;
-
-    const compiledFileName = getCompiledPostFileName(slug, compiledPost);
-    const compiledFilePath = path.join(resolvedOutputDir, compiledFileName);
-
-    await Promise.all([
-      writeTextFile(compiledFilePath, compiledPost),
-      ...assets.map((asset) =>
-        copyFile(
-          asset.sourcePath,
-          path.join(options.outputDir, asset.destinationPath),
-        ),
-      ),
-    ]);
-
-    const href = joinUrlPath(options.hrefRoot, compiledFileName);
-
-    const originalRecord = oldManifest[slug];
-
-    const publishDate = new Date(
-      originalRecord?.publishDate ?? new Date(),
-    ).toISOString();
-
-    const hasBeenUpdated =
-      originalRecord && originalRecord.fileName !== compiledFileName;
-    const lastUpdateDate = hasBeenUpdated
-      ? new Date().toISOString()
-      : originalRecord?.lastUpdateDate
-        ? new Date(originalRecord.lastUpdateDate).toISOString()
-        : null;
-
-    const readingTime = getReadingTime(sourceFileText.value);
-
-    newManifest[slug] = {
-      ...metaData,
-      fileName: compiledFileName,
-      href,
-      lastUpdateDate,
-      publishDate,
-      readingTime,
-      slug,
-    };
+    newManifest[slug] = result.value;
   }
 
   await writeJsonFile(
