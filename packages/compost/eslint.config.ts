@@ -6,8 +6,10 @@ import {
   ignoreFromGitIgnore,
 } from "@jaybeeuu/eslint-config";
 
-export default config([
+const eslintConfig: Linter.Config[] = config([
   ...base,
   ignoreFromGitIgnore(import.meta.url),
   node,
-]) as Linter.Config[];
+]);
+
+export default eslintConfig;
