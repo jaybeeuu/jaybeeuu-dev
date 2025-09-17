@@ -1,8 +1,8 @@
 import type Utilities from "@jaybeeuu/utilities";
 import type { Result } from "@jaybeeuu/utilities";
 import { assertIsNotNullish } from "@jaybeeuu/utilities";
-import type { PostMetaFileData } from "packages/compost/src/posts/metafile";
-import type { UpdateFailureReason } from "packages/compost/src/posts/update.js";
+import type { PostMetaFileData } from "../../src/posts/metadata";
+import type { UpdateFailureReason } from "../../src/posts/update.js";
 import path from "path";
 import type { File } from "../../src/files/index";
 import {

@@ -18,7 +18,7 @@ import {
 } from "./file-paths.js";
 import type { GetOldManifestFailureReason } from "./manifest.js";
 import { getOldManifest } from "./manifest.js";
-import type { PostMetaFileData } from "./metafile.js";
+import type { PostMetaFileData } from "./metadata.js";
 import type { OldPostManifest, PostManifest, UpdateOptions } from "./types.js";
 import type { ResolvePostFailureReason } from "./post-resolver.js";
 import { resolvePost } from "./post-resolver.js";

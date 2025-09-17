@@ -2,10 +2,11 @@ import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
 import { canAccess, readJsonFile, readTextFile } from "../files/index.js";
 import type { ReadJsonFileFailureReason } from "../files/index.js";
-import type { PostMetaFileData } from "./metafile.js";
-import { isPostMetaFile } from "./metafile.js";
-import type { ParseFrontMatterFailureReason } from "./frontmatter.js";
-import { hasFrontMatter, parseFrontMatter } from "./frontmatter.js";
+import type {
+  ParseYamlMetaFailureReason,
+  PostMetaFileData,
+} from "./metadata.js";
+import { isPostMetaFile, parseYamlMeta } from "./metadata.js";
 
 export type LoadSourceFailureReason = "load source failure";
 export type NoFrontMatterFailureReason = "no frontmatter in markdown file";
@@ -15,14 +16,14 @@ export type UnsupportedFileExtensionReason = "unsupported file extension";
 export type ResolveFrontMatterPostFailureReason =
   | LoadSourceFailureReason
   | NoFrontMatterFailureReason
-  | ParseFrontMatterFailureReason;
+  | ParseYamlMetaFailureReason;
 
 export type ResolveJsonPostFailureReason =
   | LoadSourceFailureReason
   | JsonFileNotFoundReason
   | ReadJsonFileFailureReason;
 
-type ResolvePostFailureReason =
+export type ResolvePostFailureReason =
   | ResolveFrontMatterPostFailureReason
   | ResolveJsonPostFailureReason
   | UnsupportedFileExtensionReason;
@@ -44,6 +45,13 @@ const loadPostSourceText = async (
   }
 };
 
+const hasFrontMatter = (sourceFileText: string): boolean => {
+  return (
+    sourceFileText.startsWith("---\n") &&
+    sourceFileText.indexOf("\n---\n", 4) !== -1
+  );
+};
+
 const resolveFrontmatterPost = async (
   markdownFilePath: string,
 ): Promise<Result<PostData, ResolveFrontMatterPostFailureReason>> => {
@@ -61,16 +69,18 @@ const resolveFrontmatterPost = async (
     );
   }
 
-  const frontMatterResult = parseFrontMatter(sourceFileText);
-  if (!frontMatterResult.success) {
-    return frontMatterResult;
-  }
+  const frontMatterEnd = sourceFileText.indexOf("\n---\n", 4);
+  const frontMatterText = sourceFileText.slice(4, frontMatterEnd);
+  const content = sourceFileText.slice(frontMatterEnd + 5);
 
-  const { metadata, content } = frontMatterResult.value;
+  const yamlResult = parseYamlMeta(frontMatterText);
+  if (!yamlResult.success) {
+    return yamlResult;
+  }
 
   return success({
     content,
-    metadata,
+    metadata: yamlResult.value,
   });
 };
 
@@ -82,10 +92,8 @@ const resolveJsonPost = async (
     return sourceFileTextResult;
   }
 
-  // Convert .md path to .post.json path
   const jsonFilePath = markdownFilePath.replace(/\.md$/, ".post.json");
 
-  // Check if the JSON file exists
   const canAccessJson = await canAccess(jsonFilePath);
   if (!canAccessJson) {
     return failure(
@@ -94,7 +102,6 @@ const resolveJsonPost = async (
     );
   }
 
-  // Read and parse the metadata file
   const metadataResult = await readJsonFile(jsonFilePath, isPostMetaFile);
   if (!metadataResult.success) {
     return metadataResult;
@@ -120,5 +127,3 @@ export const resolvePost = async (
     );
   }
 };
-
-export type { ResolvePostFailureReason };
