@@ -1,7 +1,7 @@
 // @ts-check
+import type { JestConfigWithTsJest } from "ts-jest";
 
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-const config = {
+const config: JestConfigWithTsJest = {
   clearMocks: true,
   preset: "ts-jest",
   transform: {

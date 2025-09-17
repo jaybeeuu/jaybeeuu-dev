@@ -1,9 +1,12 @@
 // @ts-check
+import type { Config } from "jest";
 
-/** @type {import('jest').Config} */
-const config = {
+const config: Config = {
   clearMocks: true,
   testEnvironment: "node",
+  // collectCoverageFrom : [
+  //   "src/**"
+  // ],
   transform: {
     "^.+\\.(t|j)sx?$": "ts-jest",
   },

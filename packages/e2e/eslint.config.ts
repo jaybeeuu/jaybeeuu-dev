@@ -1,4 +1,3 @@
-// @ts-check
 import {
   base,
   browser,
@@ -8,9 +7,6 @@ import {
 } from "@jaybeeuu/eslint-config";
 import cypress from "eslint-plugin-cypress";
 
-/** @type {import("eslint").Linter.Config[]} */
-
-/** @type {import("eslint").Linter.Config[]} */
 export default config(
   ...base,
   ignoreFromGitIgnore(import.meta.url),
