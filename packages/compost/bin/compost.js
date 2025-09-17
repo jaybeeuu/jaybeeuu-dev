@@ -1,3 +1,3 @@
 // @ts-check
 
-import "../lib/bin/main.js";
+import "../lib/exec/compost.js";
