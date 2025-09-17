@@ -1,4 +1,3 @@
-import type { Linter } from "eslint";
 import {
   config,
   base,
@@ -12,4 +11,4 @@ export default config(...base, ignoreFromGitIgnore(import.meta.url), node, {
       project: true,
     },
   },
-}) as Linter.Config[];
+});

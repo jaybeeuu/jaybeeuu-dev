@@ -1,4 +1,3 @@
-import type { Linter } from "eslint";
 import {
   base,
   browser,
@@ -26,4 +25,4 @@ export default config(
     files: ["plugins/**/*", "fixtures/**/*"],
     ...node,
   },
-) as Linter.Config[];
+);

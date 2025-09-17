@@ -1,4 +1,3 @@
-import type { Linter } from "eslint";
 import {
   config,
   base,
@@ -6,8 +5,4 @@ import {
   ignoreFromGitIgnore,
 } from "@jaybeeuu/eslint-config";
 
-export default config(
-  ...base,
-  ignoreFromGitIgnore(import.meta.url),
-  node,
-) as Linter.Config[];
+export default config(...base, ignoreFromGitIgnore(import.meta.url), node);

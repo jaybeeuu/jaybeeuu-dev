@@ -1,4 +1,3 @@
-import type { Linter } from "eslint";
 import {
   base,
   config,
@@ -14,4 +13,4 @@ export default config(...base, ...jest, ignoreFromGitIgnore(import.meta.url), {
       { allowedFunctionCalls: ["withFakeTimers"] },
     ],
   },
-}) as Linter.Config[];
+});

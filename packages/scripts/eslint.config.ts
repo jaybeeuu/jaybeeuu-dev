@@ -1,4 +1,3 @@
-import type { Linter } from "eslint";
 import {
   config,
   base,
@@ -8,4 +7,4 @@ import {
 
 export default config(...base, node, ignoreFromGitIgnore(import.meta.url), {
   files: ["**/*.ts", "**/*.tsx"],
-}) as Linter.Config[];
+});

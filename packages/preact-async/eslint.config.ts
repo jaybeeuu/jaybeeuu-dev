@@ -1,4 +1,3 @@
-import type { Linter } from "eslint";
 import {
   base,
   browser,
@@ -14,4 +13,4 @@ export default config(
   ...jest,
   ...preact,
   ignoreFromGitIgnore(import.meta.url),
-) as Linter.Config[];
+);
