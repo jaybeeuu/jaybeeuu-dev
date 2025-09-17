@@ -1,3 +1,4 @@
+import type { Linter } from "eslint";
 import {
   base,
   config,
@@ -5,12 +6,19 @@ import {
   jest,
 } from "@jaybeeuu/eslint-config";
 
-export default config(...base, ...jest, ignoreFromGitIgnore(import.meta.url), {
-  files: ["**/*.spec.ts", "**/*.spec.tsx"],
-  rules: {
-    "jest/require-hook": [
-      "error",
-      { allowedFunctionCalls: ["withFakeTimers"] },
-    ],
+const eslintConfig: Linter.Config[] = config(
+  ...base,
+  ...jest,
+  ignoreFromGitIgnore(import.meta.url),
+  {
+    files: ["**/*.spec.ts", "**/*.spec.tsx"],
+    rules: {
+      "jest/require-hook": [
+        "error",
+        { allowedFunctionCalls: ["withFakeTimers"] },
+      ],
+    },
   },
-});
+);
+
+export default eslintConfig;

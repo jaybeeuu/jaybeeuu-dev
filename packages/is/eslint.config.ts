@@ -1,3 +1,9 @@
+import type { Linter } from "eslint";
 import { config, base, ignoreFromGitIgnore } from "@jaybeeuu/eslint-config";
 
-export default config(...base, ignoreFromGitIgnore(import.meta.url));
+const eslintConfig: Linter.Config[] = config(
+  ...base,
+  ignoreFromGitIgnore(import.meta.url),
+);
+
+export default eslintConfig;

@@ -1,3 +1,4 @@
+import type { Linter } from "eslint";
 import {
   config,
   base,
@@ -5,9 +6,16 @@ import {
   node,
 } from "@jaybeeuu/eslint-config";
 
-export default config(...base, node, ignoreFromGitIgnore(import.meta.url), {
-  files: ["**/*.ts", "**/*.tsx"],
-  rules: {
-    "no-console": ["off"],
+const eslintConfig: Linter.Config[] = config(
+  ...base,
+  node,
+  ignoreFromGitIgnore(import.meta.url),
+  {
+    files: ["**/*.ts", "**/*.tsx"],
+    rules: {
+      "no-console": ["off"],
+    },
   },
-});
+);
+
+export default eslintConfig;
