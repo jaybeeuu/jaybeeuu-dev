@@ -1,9 +1,7 @@
 import { is, isObject } from "@jaybeeuu/is";
 import type { Result } from "@jaybeeuu/utilities";
-import { failure, repackError, success } from "@jaybeeuu/utilities";
+import { failure, success } from "@jaybeeuu/utilities";
 import yaml from "js-yaml";
-import type { FileInfo } from "../files/index.js";
-import { readJsonFile } from "../files/index.js";
 import type { PostMetaData } from "./types.js";
 
 export type PostMetaFileData = Pick<
@@ -22,18 +20,6 @@ export type ReadYamlMetaFileFailureReason =
   | "load yaml file failure"
   | "yaml parse failure"
   | "yaml validation failure";
-
-export const getMetaFileContent = async (
-  metaFileInfo: FileInfo,
-): Promise<Result<PostMetaFileData, "read metadata failed">> => {
-  const { relativeFilePath, filePath } = metaFileInfo;
-
-  return repackError(
-    await readJsonFile(filePath, isPostMetaFile),
-    "read metadata failed",
-    `Reading metadata file ${relativeFilePath} failed.`,
-  );
-};
 
 export type LoadYamlFailureReason = "front matter yaml parse failure";
 
