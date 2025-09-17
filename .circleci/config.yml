@@ -196,7 +196,11 @@ jobs:
             then
               echo 'export DEPLOYMENT_URL="https://jaybeeuu.dev"' >> "$BASH_ENV"
             else
-              echo 'export DEPLOYMENT_URL="https://$CIRCLE_BRANCH.jaybeeuu-dev.pages.dev"' >> "$BASH_ENV"
+              # Transform branch name to match Cloudflare Pages naming:
+              # - Replace slashes with hyphens
+              # - Truncate to ~28 characters (Cloudflare limit)
+              TRANSFORMED_BRANCH=$(echo "$CIRCLE_BRANCH" | sed 's/\//-/g' | cut -c1-28)
+              echo "export DEPLOYMENT_URL=\"https://$TRANSFORMED_BRANCH.jaybeeuu-dev.pages.dev\"" >> "$BASH_ENV"
             fi
       - run:
           name: Run e2e Tests
