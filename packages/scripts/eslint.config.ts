@@ -1,4 +1,4 @@
-// @ts-check
+import type { Linter } from "eslint";
 import {
   config,
   base,
@@ -6,10 +6,6 @@ import {
   node,
 } from "@jaybeeuu/eslint-config";
 
-/** @type {import("eslint").Linter.Config[]} */
 export default config(...base, node, ignoreFromGitIgnore(import.meta.url), {
   files: ["**/*.ts", "**/*.tsx"],
-  rules: {
-    "no-console": ["off"],
-  },
-});
+}) as Linter.Config[];

@@ -3,7 +3,8 @@
   "compilerOptions": {
     "module": "ESNext",
     "types": ["node"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "outDir": "lib"
   },
-  "exclude": ["node_modules"]
+  "exclude": ["lib", "node_modules"]
 }

@@ -1,4 +1,4 @@
-// @ts-check
+import type { Linter } from "eslint";
 import {
   base,
   config,
@@ -6,7 +6,6 @@ import {
   jest,
 } from "@jaybeeuu/eslint-config";
 
-/** @type {import("eslint").Linter.Config[]} */
 export default config(...base, ...jest, ignoreFromGitIgnore(import.meta.url), {
   files: ["**/*.spec.ts", "**/*.spec.tsx"],
   rules: {
@@ -15,4 +14,4 @@ export default config(...base, ...jest, ignoreFromGitIgnore(import.meta.url), {
       { allowedFunctionCalls: ["withFakeTimers"] },
     ],
   },
-});
+}) as Linter.Config[];

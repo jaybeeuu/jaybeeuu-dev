@@ -1,4 +1,4 @@
-// @ts-check
+import type { Linter } from "eslint";
 import {
   config,
   base,
@@ -6,11 +6,10 @@ import {
   ignoreFromGitIgnore,
 } from "@jaybeeuu/eslint-config";
 
-/** @type {import("eslint").Linter.Config[]} */
 export default config(...base, ignoreFromGitIgnore(import.meta.url), node, {
   languageOptions: {
     parserOptions: {
       project: true,
     },
   },
-});
+}) as Linter.Config[];

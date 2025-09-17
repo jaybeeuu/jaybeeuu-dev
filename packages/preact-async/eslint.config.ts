@@ -1,4 +1,4 @@
-// @ts-check
+import type { Linter } from "eslint";
 import {
   base,
   browser,
@@ -8,11 +8,10 @@ import {
   preact,
 } from "@jaybeeuu/eslint-config";
 
-/** @type {import("eslint").Linter.Config[]} */
 export default config(
   ...base,
   browser,
   ...jest,
   ...preact,
   ignoreFromGitIgnore(import.meta.url),
-);
+) as Linter.Config[];

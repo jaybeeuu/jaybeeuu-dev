@@ -23,6 +23,8 @@
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
 
-    "types": []
-  }
+    "types": [],
+    "outDir": "lib"
+  },
+  "exclude": ["lib", "node_modules", "coverage-reports"]
 }

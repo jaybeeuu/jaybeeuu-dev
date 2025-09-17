@@ -1,4 +1,4 @@
-// @ts-check
+import type { Linter } from "eslint";
 import {
   base,
   browser,
@@ -8,9 +8,6 @@ import {
 } from "@jaybeeuu/eslint-config";
 import cypress from "eslint-plugin-cypress";
 
-/** @type {import("eslint").Linter.Config[]} */
-
-/** @type {import("eslint").Linter.Config[]} */
 export default config(
   ...base,
   ignoreFromGitIgnore(import.meta.url),
@@ -29,4 +26,4 @@ export default config(
     files: ["plugins/**/*", "fixtures/**/*"],
     ...node,
   },
-);
+) as Linter.Config[];
