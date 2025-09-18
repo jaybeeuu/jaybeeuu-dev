@@ -3,9 +3,9 @@ import { debounce, failure, log, success } from "@jaybeeuu/utilities";
 import chokidar from "chokidar";
 import yargsFactory from "yargs";
 import { hideBin } from "yargs/helpers";
-import { update } from "../posts/index.js";
-import type { UpdateOptions } from "../posts/types.js";
-import type { UpdateFailureReason } from "../posts/update.js";
+import { update } from "../content/index.js";
+import type { UpdateOptions } from "../content/types.js";
+import type { UpdateFailureReason } from "../content/update.js";
 
 const yargs = yargsFactory(hideBin(process.argv));
 

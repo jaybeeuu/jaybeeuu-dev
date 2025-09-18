@@ -1,12 +1,12 @@
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
-import { canAccess, readJsonFile, readTextFile } from "../files/index.js";
-import type { ReadJsonFileFailureReason } from "../files/index.js";
+import { canAccess, readJsonFile, readTextFile } from "../../../files/index.js";
+import type { ReadJsonFileFailureReason } from "../../../files/index.js";
 import type {
   ParseYamlMetaFailureReason,
   PostMetaFileData,
-} from "./metadata.js";
-import { isPostMetaFile, parseYamlMeta } from "./metadata.js";
+} from "../../metadata.js";
+import { isPostMetaFile, parseYamlMeta } from "../../metadata.js";
 
 export type LoadSourceFailureReason = "load source failure";
 export type NoFrontMatterFailureReason = "no frontmatter in markdown file";

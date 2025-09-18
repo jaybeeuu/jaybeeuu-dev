@@ -1,8 +1,8 @@
 import type Utilities from "@jaybeeuu/utilities";
 import type { Result } from "@jaybeeuu/utilities";
 import { assertIsNotNullish } from "@jaybeeuu/utilities";
-import type { PostMetaFileData } from "../../src/posts/metadata";
-import type { UpdateFailureReason } from "../../src/posts/update.js";
+import type { PostMetaFileData } from "../../src/content/metadata";
+import type { UpdateFailureReason } from "../../src/content/update.js";
 import path from "path";
 import type { File } from "../../src/files/index";
 import {
@@ -11,8 +11,8 @@ import {
   writeJsonFile,
   writeTextFiles,
 } from "../../src/files/index";
-import { update } from "../../src/posts/index.js";
-import type { PostManifest, UpdateOptions } from "../../src/posts/types.js";
+import { update } from "../../src/content/index.js";
+import type { PostManifest, UpdateOptions } from "../../src/content/types.js";
 import type * as ReadingTime from "reading-time";
 
 import { jest } from "@jest/globals";
@@ -85,6 +85,7 @@ const getDefaultedUpdateOptions = (
     requireOldManifest: false,
     sourceDir: "src",
     watch: false,
+    clean: true,
     ...options,
   };
 };

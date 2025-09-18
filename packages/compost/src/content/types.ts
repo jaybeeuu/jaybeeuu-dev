@@ -54,4 +54,5 @@ export interface UpdateOptions {
   sourceDir: string;
   watch: boolean;
   removeH1: boolean;
+  clean: boolean;
 }

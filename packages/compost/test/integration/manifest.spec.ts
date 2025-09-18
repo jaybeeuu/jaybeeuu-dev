@@ -11,7 +11,7 @@ import { advanceTo } from "jest-date-mock";
 import type { Response } from "node-fetch";
 import fetch from "node-fetch";
 import type { PostManifest, PostMetaData } from "../../src/index";
-import type { PostMetaFileData } from "../../src/posts/metadata";
+import type { PostMetaFileData } from "../../src/content/metadata";
 import readingTime from "reading-time";
 
 import { describe, expect, it, jest } from "@jest/globals";
