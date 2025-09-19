@@ -10,7 +10,7 @@ import {
 import { advanceTo } from "jest-date-mock";
 import type { Response } from "node-fetch";
 import fetch from "node-fetch";
-import type { PostManifest, PostMetaData } from "../../src/index.js";
+import type { PostManifest, PostMetadata } from "../../src/index.js";
 import type { PostMetaFileData } from "../../src/content/processors/index.js";
 import readingTime from "reading-time";
 
@@ -25,7 +25,7 @@ interface PostFileWithStringArrayContent extends Omit<PostFile, "content"> {
 }
 
 const writeOutputManifestFile = (
-  metaData: Pick<PostMetaData, "slug"> & Partial<Omit<PostMetaData, "slug">>,
+  metaData: Pick<PostMetadata, "slug"> & Partial<Omit<PostMetadata, "slug">>,
 ): Promise<void> => {
   const defaultedManifest: PostManifest = {
     [metaData.slug]: {

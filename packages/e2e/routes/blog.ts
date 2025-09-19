@@ -1,4 +1,4 @@
-import type { PostManifest, PostMetaData } from "@jaybeeuu/compost";
+import type { PostManifest, PostMetadata } from "@jaybeeuu/compost";
 import { assertIsNotNullish } from "@jaybeeuu/utilities";
 
 export const slugs = [
@@ -16,7 +16,7 @@ export const withManifest = (): Cypress.Chainable<PostManifest> => {
 
 export const withPostMetaData = (
   slug: PostSlug,
-): Cypress.Chainable<PostMetaData> => {
+): Cypress.Chainable<PostMetadata> => {
   return withManifest().then((manifest) => {
     const meta = manifest[slug];
     assertIsNotNullish(meta);

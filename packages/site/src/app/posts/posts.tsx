@@ -1,6 +1,6 @@
 import type { JSX } from "preact";
 import { h } from "preact";
-import type { PostManifest, PostMetaData } from "@jaybeeuu/compost";
+import type { PostManifest, PostMetadata } from "@jaybeeuu/compost";
 import { postList as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import { useValue } from "@jaybeeuu/preact-recoilless";
 import classNames from "classnames";
@@ -12,7 +12,7 @@ import { withPromise as withPromise } from "../with-promise";
 
 import css from "./posts.module.css";
 
-const compareDateString = (left: PostMetaData, right: PostMetaData): number =>
+const compareDateString = (left: PostMetadata, right: PostMetadata): number =>
   Date.parse(right.publishDate) - Date.parse(left.publishDate);
 
 const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {

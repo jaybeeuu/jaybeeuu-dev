@@ -1,4 +1,4 @@
-import type { PostMetaData } from "@jaybeeuu/compost";
+import type { PostMetadata } from "@jaybeeuu/compost";
 import { post as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import { useAction, useValue } from "@jaybeeuu/preact-recoilless";
 import type { TypeAssertion } from "@jaybeeuu/is";
@@ -56,7 +56,7 @@ const useHashLinks = (
 
 interface PostComponentProps {
   postHtml: string;
-  postMeta: PostMetaData;
+  postMeta: PostMetadata;
 }
 
 const Post = withPromise(

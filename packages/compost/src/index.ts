@@ -1,1 +1,1 @@
-export type { PostManifest, PostMetaData } from "./content/index.js";
+export type { PostManifest, PostMetadata } from "./content/index.js";

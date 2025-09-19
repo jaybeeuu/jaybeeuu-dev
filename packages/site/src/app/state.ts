@@ -1,4 +1,4 @@
-import type { PostManifest, PostMetaData } from "@jaybeeuu/compost";
+import type { PostManifest, PostMetadata } from "@jaybeeuu/compost";
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
 import { fetchJson, fetchText } from "../utils/request";
@@ -27,14 +27,14 @@ export const currentPostSlug: PrimitiveValue<string | null> = {
 
 export type PostFailureReasons = "post-does-not-exist" | "no-slug-set";
 
-export type PostMetaDataLookupResult = Result<PostMetaData, PostFailureReasons>;
+export type PostMetaDataLookupResult = Result<PostMetadata, PostFailureReasons>;
 
 export const currentPostMeta: DerivedValue<Promise<PostMetaDataLookupResult>> =
   {
     name: "currentPostMeta",
     derive: async ({
       get,
-    }): Promise<Result<PostMetaData, PostFailureReasons>> => {
+    }): Promise<Result<PostMetadata, PostFailureReasons>> => {
       const manifest = await get(postsManifest);
       const slug = get(currentPostSlug);
       if (!slug) {

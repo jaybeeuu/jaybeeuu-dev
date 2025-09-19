@@ -4,7 +4,7 @@ import fs from "node:fs";
 
 /**
  * @typedef {import("@jaybeeuu/compost").PostManifest} PostManifest
- * @typedef {import("@jaybeeuu/compost").PostMetaData} PostMetaData
+ * @typedef {import("@jaybeeuu/compost").PostMetadata} PostMetadata
  */
 
 const manifestPath = "./fixtures/blog/manifest.json";
@@ -28,7 +28,7 @@ const writeManifest = (manifest) => {
 
 /**
  * @typedef {"memoising-selectors" | "module-spotting" | "the-rewrite"} PostSlug
- * @type {Partial<{ [slug in PostSlug]: Partial<PostMetaData> }>}
+ * @type {Partial<{ [slug in PostSlug]: Partial<PostMetadata> }>}
  */
 const manifestTransformations = {
   "memoising-selectors": {
@@ -54,7 +54,7 @@ const transformManifest = async () => {
     /**
      *
      * @param {PostManifest} transformed
-     * @param {[string, PostMetaData]} param1
+     * @param {[string, PostMetadata]} param1
      * @returns
      */
     (transformed, [slug, meta]) => {
