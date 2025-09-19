@@ -10,8 +10,8 @@ import {
 import { advanceTo } from "jest-date-mock";
 import type { Response } from "node-fetch";
 import fetch from "node-fetch";
-import type { PostManifest, PostMetaData } from "../../src/index";
-import type { PostMetaFileData } from "../../src/content/metadata";
+import type { PostManifest, PostMetaData } from "../../src/index.js";
+import type { PostMetaFileData } from "../../src/content/processors/index.js";
 import readingTime from "reading-time";
 
 import { describe, expect, it, jest } from "@jest/globals";

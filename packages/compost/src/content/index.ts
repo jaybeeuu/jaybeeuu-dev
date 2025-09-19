@@ -1,2 +1,2 @@
 export { update } from "./update.js";
-export type { PostManifest, PostMetaData } from "./types.js";
+export type { Metadata } from "./types.js";

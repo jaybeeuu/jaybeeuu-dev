@@ -2,12 +2,12 @@ import type { Result } from "@jaybeeuu/utilities";
 import { success } from "@jaybeeuu/utilities";
 import path from "path";
 import { recurseDirectory } from "../files/index.js";
-import type { PostManifest, UpdateOptions } from "./types.js";
+import type { UpdateOptions } from "./types.js";
 import type {
   MakePostUpdaterFailureReason,
   PostUpdaterFailureReason,
-} from "./processors/posts/processor.js";
-import { makePostUpdater } from "./processors/posts/processor.js";
+} from "./processors/index.js";
+import { makePostUpdater } from "./processors/index.js";
 
 export type UpdateFailureReason =
   | MakePostUpdaterFailureReason
@@ -15,7 +15,7 @@ export type UpdateFailureReason =
 
 export const update = async (
   options: UpdateOptions,
-): Promise<Result<PostManifest, UpdateFailureReason>> => {
+): Promise<Result<void, UpdateFailureReason>> => {
   const updatePostResult = await makePostUpdater(options);
   if (!updatePostResult.success) {
     return updatePostResult;
@@ -33,7 +33,7 @@ export const update = async (
     }
   }
 
-  await postUpdater.writeManifest();
+  await postUpdater.postProcess();
 
-  return success(postUpdater.newManifest);
+  return success();
 };

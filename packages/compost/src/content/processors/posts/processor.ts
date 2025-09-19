@@ -17,11 +17,10 @@ import {
   getSlug,
   validateSlug,
 } from "../../file-paths";
-import type { PostMetaFileData } from "../../metadata";
 import type {
   OldPostManifest,
-  PostManifest,
-  PostMetaData as PostMetadata,
+  PostUpdater,
+  ProcessingOutcome,
   UpdateOptions,
 } from "../../types";
 import type {
@@ -29,8 +28,9 @@ import type {
   ResolvePostFailureReason,
 } from "./post-resolver.js";
 import { resolvePost } from "./post-resolver.js";
-import type { GetOldManifestFailureReason } from "../../manifest.js";
-import { getOldManifest } from "../../manifest.js";
+import type { GetOldManifestFailureReason } from "../../old-manifest.js";
+import { getOldManifest } from "../../old-manifest.js";
+import type { PostManifest, PostMetadata, PostMetaFileData } from "./types.js";
 
 export type ProcessPostFailureReason =
   | CompileFailureReason
@@ -58,7 +58,7 @@ export const processPost = async ({
     resolvedOutputDir: string;
   };
   oldManifest: OldPostManifest;
-}): Promise<Result<PostManifest[string], ProcessPostFailureReason>> => {
+}): Promise<Result<PostMetadata, ProcessPostFailureReason>> => {
   const compiledPostResult = await compilePost({
     codeLineNumbers: options.codeLineNumbers,
     hrefRoot: options.hrefRoot,
@@ -123,19 +123,13 @@ export type PostUpdaterFailureReason =
   | ResolveJsonPostFailureReason
   | ProcessPostFailureReason;
 
-type ProcessingOutcomeSkipped = {
-  outcome: "skipped";
-  reason: "no meta detected";
-};
+export type PostProcessSkippedReason = "no meta detected";
+export type PostPostProcessFailureReason = "manifest write failed";
 
-type ProcessingOutcomeCompiled = {
-  outcome: "compiled";
-  metadata: PostMetadata;
-};
-
-export type ProcessingOutcome =
-  | ProcessingOutcomeSkipped
-  | ProcessingOutcomeCompiled;
+export type PostProcessingResult = Result<
+  ProcessingOutcome<PostMetadata, PostProcessSkippedReason>,
+  PostUpdaterFailureReason
+>;
 
 export const makePostUpdater = async (
   options: {
@@ -147,12 +141,12 @@ export const makePostUpdater = async (
   } & UpdateOptions,
 ): Promise<
   Result<
-    {
-      processFile: (
-        fileInfo: FileInfo,
-      ) => Promise<Result<ProcessingOutcome, PostUpdaterFailureReason>>;
-      postProcess: () => Promise<Result<void, "write manifest failed">>;
-    },
+    PostUpdater<
+      PostMetadata,
+      ProcessPostFailureReason,
+      PostProcessSkippedReason,
+      PostPostProcessFailureReason
+    >,
     MakePostUpdaterFailureReason
   >
 > => {
@@ -183,7 +177,7 @@ export const makePostUpdater = async (
   return success({
     processFile: async (
       markdownFileInfo: FileInfo,
-    ): Promise<Result<ProcessingOutcome, PostUpdaterFailureReason>> => {
+    ): Promise<PostProcessingResult> => {
       const slug = getSlug(markdownFileInfo.relativeFilePath);
 
       const slugValidation = validateSlug(slug);
@@ -228,7 +222,9 @@ export const makePostUpdater = async (
         metadata: result.value,
       });
     },
-    postProcess: async (): Promise<Result<void, "write manifest failed">> => {
+    postProcess: async (): Promise<
+      Result<void, PostPostProcessFailureReason>
+    > => {
       try {
         await writeJsonFile(
           path.resolve(options.outputDir, options.manifestFileName),
@@ -236,8 +232,11 @@ export const makePostUpdater = async (
         );
         return success();
       } catch (error) {
-        return failure("write manifest failed", error);
+        return failure("manifest write failed", error);
       }
+    },
+    get newManifest() {
+      return newManifest;
     },
   });
 };

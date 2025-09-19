@@ -2,12 +2,7 @@ import { is, isObject } from "@jaybeeuu/is";
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
 import yaml from "js-yaml";
-import type { PostMetaData } from "./types.js";
-
-export type PostMetaFileData = Pick<
-  PostMetaData,
-  "abstract" | "title" | "publish"
->;
+import type { PostMetaFileData } from "./types.js";
 
 export const isPostMetaFile = isObject<PostMetaFileData>({
   abstract: is("string"),

@@ -1,21 +1,26 @@
 import type Utilities from "@jaybeeuu/utilities";
 import type { Result } from "@jaybeeuu/utilities";
 import { assertIsNotNullish } from "@jaybeeuu/utilities";
-import type { PostMetaFileData } from "../../src/content/metadata";
-import type { UpdateFailureReason } from "../../src/content/update.js";
+import { jest } from "@jest/globals";
+import type {
+  PostManifest,
+  PostMetaFileData,
+} from "../../src/content/processors/index.js";
+import { isPostManifest } from "../../src/content/processors/index.js";
 import path from "path";
+import type * as ReadingTime from "reading-time";
+import { update } from "../../src/content/index.js";
+import type { UpdateOptions } from "../../src/content/types.js";
+import type { UpdateFailureReason } from "../../src/content/update.js";
 import type { File } from "../../src/files/index";
 import {
   deleteDirectories,
+  readJsonFile,
   readTextFile,
   writeJsonFile,
   writeTextFiles,
 } from "../../src/files/index";
-import { update } from "../../src/content/index.js";
-import type { PostManifest, UpdateOptions } from "../../src/content/types.js";
-import type * as ReadingTime from "reading-time";
 
-import { jest } from "@jest/globals";
 jest.mock<typeof ReadingTime>("reading-time", (): typeof ReadingTime => {
   const readingTime = jest.requireActual<typeof ReadingTime>("reading-time");
 
@@ -235,7 +240,18 @@ export const compilePosts = async (
   options?: Partial<UpdateOptions>,
 ): Promise<Result<PostManifest, UpdateFailureReason>> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
-  return update(defaultedUpdateOptions);
+  const updateResult = await update(defaultedUpdateOptions);
+  if (!updateResult.success) {
+    return updateResult;
+  }
+
+  return readJsonFile(
+    path.resolve(
+      defaultedUpdateOptions.outputDir,
+      defaultedUpdateOptions.manifestFileName,
+    ),
+    isPostManifest,
+  );
 };
 
 export const getCompiledPostWithContent = async (

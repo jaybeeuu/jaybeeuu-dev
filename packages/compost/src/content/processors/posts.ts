@@ -8,7 +8,7 @@ import type {
 import type { PostData } from "./posts/post-resolver.js";
 import { resolvePost } from "./posts/post-resolver.js";
 import { compilePost } from "../compile.js";
-import { getOldManifest } from "../manifest.js";
+import { getOldManifest } from "../old-manifest.js";
 import path from "path";
 
 /**
