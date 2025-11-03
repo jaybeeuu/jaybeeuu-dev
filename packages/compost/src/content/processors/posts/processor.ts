@@ -23,11 +23,8 @@ import type {
   ProcessingOutcome,
   UpdateOptions,
 } from "../../types";
-import type {
-  ResolveJsonPostFailureReason,
-  ResolvePostFailureReason,
-} from "./post-resolver.js";
-import { resolvePost } from "./post-resolver.js";
+import { resolveContent } from "../../content-resolver.js";
+import { contentResolverConfig } from "../../resolver-config.js";
 import type { GetOldManifestFailureReason } from "../../old-manifest.js";
 import { getOldManifest } from "../../old-manifest.js";
 import type { PostManifest, PostMetadata, PostMetaFileData } from "./types.js";
@@ -36,7 +33,7 @@ export type ProcessPostFailureReason =
   | CompileFailureReason
   | ValidateSlugFailureReason
   | GetOldManifestFailureReason
-  | ResolvePostFailureReason;
+  | "content-resolve-failure";
 
 export const processPost = async ({
   slug,
@@ -120,7 +117,6 @@ export type MakePostUpdaterFailureReason = GetOldManifestFailureReason;
 
 export type PostUpdaterFailureReason =
   | ValidateSlugFailureReason
-  | ResolveJsonPostFailureReason
   | ProcessPostFailureReason;
 
 export type PostProcessSkippedReason = "no meta detected";
@@ -185,26 +181,39 @@ export const makePostUpdater = async (
         return slugValidation;
       }
 
-      const postDataResult = await resolvePost(markdownFileInfo.filePath);
-      if (!postDataResult.success) {
+      const contentResult = await resolveContent(
+        markdownFileInfo.filePath,
+        contentResolverConfig,
+      );
+      if (!contentResult.success) {
         if (
-          postDataResult.reason === "no frontmatter in markdown file" ||
-          postDataResult.reason === "json file not found"
+          contentResult.reason === "no frontmatter in markdown file" ||
+          contentResult.reason === "json file not found"
         ) {
           return success({ outcome: "skipped", reason: "no meta detected" });
         }
-        return postDataResult;
+        return failure("content-resolve-failure", contentResult.message);
       }
 
-      const { content, metadata } = postDataResult.value;
+      if (contentResult.value.type !== "post") {
+        return failure(
+          "content-resolve-failure",
+          `Expected post content, got ${contentResult.value.type}`,
+        );
+      }
 
-      if (!metadata.publish && !options.includeUnpublished) {
+      const { content, metadata } = contentResult.value;
+
+      // Type assertion is safe because we already checked type === "post"
+      const postMetadata = metadata as PostMetaFileData;
+
+      if (!postMetadata.publish && !options.includeUnpublished) {
         return success();
       }
 
       const result = await processPost({
         slug,
-        metadata,
+        metadata: postMetadata,
         sourceFileText: content,
         sourceFilePath: markdownFileInfo.filePath,
         options: { ...options, resolvedOutputDir },

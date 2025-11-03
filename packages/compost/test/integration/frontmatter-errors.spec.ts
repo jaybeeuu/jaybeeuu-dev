@@ -30,7 +30,7 @@ describe("front matter error handling", () => {
 
     expect(result).toMatchObject({
       success: false,
-      reason: "front matter yaml parse failure",
+      reason: "content-resolve-failure",
     });
   });
 
@@ -61,7 +61,7 @@ describe("front matter error handling", () => {
 
     expect(result).toMatchObject({
       success: false,
-      reason: "yaml metadata invalid",
+      reason: "content-resolve-failure",
     });
   });
 
@@ -90,7 +90,7 @@ describe("front matter error handling", () => {
 
     expect(result).toMatchObject({
       success: false,
-      reason: "yaml metadata invalid",
+      reason: "content-resolve-failure",
     });
   });
 

@@ -71,7 +71,7 @@ This is test content.`,
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.reason).toBe("front matter yaml parse failure");
+        expect(result.reason).toBe("content-resolve-failure");
       }
     });
   });
@@ -150,7 +150,7 @@ This is test content.`,
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.reason).toBe("validation failed");
+        expect(result.reason).toBe("content-resolve-failure");
       }
     });
   });

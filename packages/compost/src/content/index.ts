@@ -7,3 +7,16 @@ export type {
   PostMetadata,
   ReadingTime,
 } from "./processors/index.js";
+export { resolveContent } from "./content-resolver.js";
+export type {
+  ContentResolverConfig,
+  ContentResolverConfigMap,
+  ResolvedContent,
+  ResolveContentFailureReason,
+} from "./content-resolver.js";
+export type {
+  ContentMetaDataMap,
+  ContentType,
+  TechRadarMetaFileData,
+} from "./content-types.js";
+export { contentResolverConfig } from "./resolver-config.js";

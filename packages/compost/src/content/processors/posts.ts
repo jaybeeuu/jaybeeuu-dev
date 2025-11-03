@@ -5,11 +5,18 @@ import type {
   GlobalConfig,
   ContentTypeConfig,
 } from "../types.js";
-import type { PostData } from "./posts/post-resolver.js";
-import { resolvePost } from "./posts/post-resolver.js";
+import { resolveContent } from "../content-resolver.js";
+import { contentResolverConfig } from "../resolver-config.js";
+import type { PostMetaFileData } from "./posts/types.js";
 import { compilePost } from "../compile.js";
 import { getOldManifest } from "../old-manifest.js";
 import path from "path";
+
+// PostData interface that matches what content-resolver returns for posts
+interface PostData {
+  content: string;
+  metadata: PostMetaFileData;
+}
 
 /**
  * Posts-specific handler implementation
@@ -43,12 +50,29 @@ export class PostsHandler {
   }
 
   async parseMetadata(filePath: string): Promise<Result<PostData, string>> {
-    // Use existing posts logic for metadata parsing - return the full PostData
-    return await resolvePost(filePath);
+    // Use generic content resolver with post configuration
+    const result = await resolveContent(filePath, contentResolverConfig);
+
+    if (!result.success) {
+      return failure("content-resolve-failure", result.message);
+    }
+
+    if (result.value.type !== "post") {
+      return failure(
+        "unexpected-content-type",
+        `Expected post content, got ${result.value.type}`,
+      );
+    }
+
+    // Transform to PostData format expected by this handler
+    return success({
+      content: result.value.content,
+      metadata: result.value.metadata,
+    });
   }
 
   validateMetadata(metadata: unknown): metadata is PostData {
-    // Basic validation - the resolvePost function already handles detailed validation
+    // Basic validation - the content resolver already handles detailed validation
     if (!metadata || typeof metadata !== "object") {
       return false;
     }
