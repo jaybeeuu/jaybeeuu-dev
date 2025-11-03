@@ -72,3 +72,28 @@ export interface PostUpdater<
   postProcess: () => Promise<Result<void, PostProcessFailureReason>>;
   readonly newManifest: Manifest<Meta>;
 }
+
+export interface CompiledContent {
+  html: string;
+  assets: Array<{
+    sourcePath: string;
+    destinationPath: string;
+  }>;
+}
+
+export interface GlobalConfig {
+  hrefRoot: string;
+  includeUnpublished: boolean;
+  codeLineNumbers: boolean;
+  outputDir: string;
+  sourceDir: string;
+  watch: boolean;
+  removeH1: boolean;
+  clean: boolean;
+}
+
+export interface ContentTypeConfig {
+  outputDir?: string;
+  manifestName?: string;
+  manifestLocator?: string[];
+}

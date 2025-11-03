@@ -19,7 +19,7 @@ const run = async (
       log.info(
         `Complete:\n\n${Object.entries(result.value)
           .map(([slug, postMeta]) => {
-            return `    ${slug}: ${postMeta.fileName}`;
+            return `    ${slug}: ${(postMeta as { fileName: string }).fileName}`;
           })
           .join("\n")}`,
       );
@@ -118,6 +118,12 @@ yargs.command(
       alias: ["w"],
       description:
         "Watch the source files and recompile the posts when changes occur.",
+      type: "boolean",
+      default: false,
+    },
+    clean: {
+      alias: ["c"],
+      description: "Clean the output directory before compiling.",
       type: "boolean",
       default: false,
     },

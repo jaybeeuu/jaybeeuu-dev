@@ -2,8 +2,9 @@ import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
 import type { ReadJsonFileFailureReason } from "../../../files/index.js";
 import { canAccess, readJsonFile, readTextFile } from "../../../files/index.js";
-import type { ParseYamlMetaFailureReason } from "./metadata.js";
-import { isPostMetaFile, parseYamlMeta } from "./metadata.js";
+import type { ParseYamlMetaFailureReason } from "../../metadata.js";
+import { parseYamlMeta } from "../../metadata.js";
+import { isPostMetaData } from "./metadata.js";
 import type { PostMetaFileData } from "./types.js";
 
 export type LoadSourceFailureReason = "load source failure";
@@ -71,7 +72,7 @@ const resolveFrontmatterPost = async (
   const frontMatterText = sourceFileText.slice(4, frontMatterEnd);
   const content = sourceFileText.slice(frontMatterEnd + 5);
 
-  const yamlResult = parseYamlMeta(frontMatterText);
+  const yamlResult = parseYamlMeta(frontMatterText, isPostMetaData);
   if (!yamlResult.success) {
     return yamlResult;
   }
@@ -100,7 +101,7 @@ const resolveJsonPost = async (
     );
   }
 
-  const metadataResult = await readJsonFile(jsonFilePath, isPostMetaFile);
+  const metadataResult = await readJsonFile(jsonFilePath, isPostMetaData);
   if (!metadataResult.success) {
     return metadataResult;
   }

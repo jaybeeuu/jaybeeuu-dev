@@ -127,7 +127,7 @@ This is test content.`,
       }
     });
 
-    it.only("fails compilation when JSON metadata has invalid structure", async () => {
+    it("fails compilation when JSON metadata has invalid structure", async () => {
       await cleanUpDirectories();
 
       const slug = "invalid-metadata-post";

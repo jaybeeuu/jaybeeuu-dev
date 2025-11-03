@@ -6,16 +6,18 @@ import type { UpdateOptions } from "./types.js";
 import type {
   MakePostUpdaterFailureReason,
   PostUpdaterFailureReason,
+  PostPostProcessFailureReason,
 } from "./processors/index.js";
 import { makePostUpdater } from "./processors/index.js";
 
 export type UpdateFailureReason =
   | MakePostUpdaterFailureReason
-  | PostUpdaterFailureReason;
+  | PostUpdaterFailureReason
+  | PostPostProcessFailureReason;
 
 export const update = async (
   options: UpdateOptions,
-): Promise<Result<void, UpdateFailureReason>> => {
+): Promise<Result<{ [slug: string]: unknown }, UpdateFailureReason>> => {
   const updatePostResult = await makePostUpdater(options);
   if (!updatePostResult.success) {
     return updatePostResult;
@@ -33,7 +35,10 @@ export const update = async (
     }
   }
 
-  await postUpdater.postProcess();
+  const postProcessResult = await postUpdater.postProcess();
+  if (!postProcessResult.success) {
+    return postProcessResult;
+  }
 
-  return success();
+  return success(postUpdater.newManifest);
 };
