@@ -16,12 +16,21 @@ const run = async (
     log.info("Composting...");
     const result = await update(options);
     if (result.success) {
+      // Format output for all content types
+      const outputLines = Object.entries(result.value)
+        .filter(([, manifest]) => Object.keys(manifest).length > 0)
+        .flatMap(([contentType, manifest]) => {
+          const contentTypeHeader = `  ${contentType}:`;
+          const manifestLines = Object.entries(manifest).map(([slug, meta]) => {
+            const fileName =
+              (meta as { fileName?: string }).fileName ?? "unknown";
+            return `    ${slug}: ${fileName}`;
+          });
+          return [contentTypeHeader, ...manifestLines];
+        });
+
       log.info(
-        `Complete:\n\n${Object.entries(result.value)
-          .map(([slug, postMeta]) => {
-            return `    ${slug}: ${(postMeta as { fileName: string }).fileName}`;
-          })
-          .join("\n")}`,
+        `Complete:\n\n${outputLines.join("\n") || "  No content processed"}`,
       );
       return success();
     } else {

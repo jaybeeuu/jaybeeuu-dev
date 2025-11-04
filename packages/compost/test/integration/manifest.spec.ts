@@ -10,7 +10,7 @@ import {
 import { advanceTo } from "jest-date-mock";
 import type { Response } from "node-fetch";
 import fetch from "node-fetch";
-import type { PostManifest, PostMetadata } from "../../src/index.js";
+import type { PostMetadata } from "../../src/index.js";
 import type { PostMetaFileData } from "../../src/content/processors/index.js";
 import readingTime from "reading-time";
 
@@ -27,7 +27,7 @@ interface PostFileWithStringArrayContent extends Omit<PostFile, "content"> {
 const writeOutputManifestFile = (
   metaData: Pick<PostMetadata, "slug"> & Partial<Omit<PostMetadata, "slug">>,
 ): Promise<void> => {
-  const defaultedManifest: PostManifest = {
+  const defaultedManifest: any = {
     [metaData.slug]: {
       title: "{title}",
       abstract: "{abstract}",
@@ -36,6 +36,7 @@ const writeOutputManifestFile = (
       lastUpdateDate: "Sun, 06 Jun 2021 22:08:34 GMT",
       fileName: "{fileName}",
       href: "{href}",
+      // No hash field - this is a v1 manifest being tested
       readingTime: { minutes: 1, words: 1, text: "1 min read", time: 60000 },
       ...metaData,
       slug: metaData.slug,
@@ -83,6 +84,7 @@ describe("manifest", () => {
         href: expect.stringMatching(
           new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`),
         ) as unknown,
+        hash: expect.stringMatching(/^[a-f0-9]{32}$/) as unknown,
         lastUpdateDate: null,
         publishDate: new Date(publishDate).toISOString(),
         readingTime: {
@@ -482,6 +484,7 @@ describe("manifest", () => {
           href: expect.stringMatching(
             new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`),
           ) as unknown,
+          hash: expect.stringMatching(/^[a-f0-9]{32}$/) as unknown,
           lastUpdateDate: null,
           publishDate: new Date(publishDate).toISOString(),
           readingTime: {

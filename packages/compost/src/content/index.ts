@@ -20,3 +20,9 @@ export type {
   TechRadarMetaFileData,
 } from "./content-types.js";
 export { contentResolverConfig } from "./resolver-config.js";
+export { processContent, ContentOrchestrator } from "./orchestrator.js";
+export type {
+  ProcessedContent,
+  ManifestMap,
+  OrchestratorConfig,
+} from "./orchestrator.js";

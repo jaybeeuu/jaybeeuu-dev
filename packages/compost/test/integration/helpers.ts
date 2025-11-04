@@ -1,6 +1,6 @@
 import type Utilities from "@jaybeeuu/utilities";
 import type { Result } from "@jaybeeuu/utilities";
-import { assertIsNotNullish } from "@jaybeeuu/utilities";
+import { assertIsNotNullish, success } from "@jaybeeuu/utilities";
 import { jest } from "@jest/globals";
 import type {
   PostManifest,
@@ -83,7 +83,7 @@ const getDefaultedUpdateOptions = (
     codeLineNumbers: false,
     hrefRoot: defaultedHrefRoot,
     includeUnpublished: false,
-    manifestFileName: "manifest.json",
+    manifestFileName: "post-manifest.json",
     oldManifestLocators: [],
     outputDir: path.join("out", defaultedHrefRoot),
     removeH1: false,
@@ -212,11 +212,26 @@ export const getPostManifest = async (
 ): Promise<PostManifest> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
 
+  // With the new orchestrator, post manifests are in post-manifest.json
   const fileContent = await getOutputFile(
-    defaultedUpdateOptions.manifestFileName,
+    "post-manifest.json",
     defaultedUpdateOptions,
   );
-  return JSON.parse(fileContent) as PostManifest;
+  const parsedContent = JSON.parse(fileContent);
+
+  // Handle both versioned (v2+) and legacy (v1) manifest formats
+  if (
+    typeof parsedContent === "object" &&
+    parsedContent !== null &&
+    "version" in parsedContent &&
+    "entries" in parsedContent
+  ) {
+    // New versioned format
+    return parsedContent.entries as PostManifest;
+  } else {
+    // Legacy format - direct object
+    return parsedContent as PostManifest;
+  }
 };
 
 export const getPost = async (
@@ -245,13 +260,9 @@ export const compilePosts = async (
     return updateResult;
   }
 
-  return readJsonFile(
-    path.resolve(
-      defaultedUpdateOptions.outputDir,
-      defaultedUpdateOptions.manifestFileName,
-    ),
-    isPostManifest,
-  );
+  // Extract post manifest from the ManifestMap
+  const postManifest = updateResult.value.post || {};
+  return success(postManifest as PostManifest);
 };
 
 export const getCompiledPostWithContent = async (
@@ -264,9 +275,11 @@ export const getCompiledPostWithContent = async (
     ? { content: contentOrPost }
     : contentOrPost;
 
+  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
   const postFile = {
     slug: "test-slug",
     content: ["{content}"],
+    path: defaultedUpdateOptions.sourceDir,
     ...userPost,
     meta: {
       abstract: "{abstract}",

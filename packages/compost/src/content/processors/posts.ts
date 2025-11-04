@@ -65,9 +65,10 @@ export class PostsHandler {
     }
 
     // Transform to PostData format expected by this handler
+    // Type assertion is safe because we already checked type === "post"
     return success({
       content: result.value.content,
-      metadata: result.value.metadata,
+      metadata: result.value.metadata as PostMetaFileData,
     });
   }
 

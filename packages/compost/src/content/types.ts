@@ -3,27 +3,56 @@ import { is, isObject, isUnionOf, isRecordOf } from "@jaybeeuu/is";
 import type { FileInfo } from "../files/index.js";
 import type { Result } from "@jaybeeuu/utilities";
 
-export const isMetadata = isObject({
+// V1 Metadata Schema (legacy - no hash field)
+export const isV1Metadata = isObject({
   fileName: is("string"),
   href: is("string"),
   lastUpdateDate: isUnionOf(is("string"), is("null")),
   publishDate: is("string"),
+  // No hash field in v1
 });
-export type Metadata = CheckedBy<typeof isMetadata>;
+export type V1Metadata = CheckedBy<typeof isV1Metadata>;
 
-export interface Manifest<Meta extends Metadata> {
+// V2 Metadata Schema (current - includes hash field)
+export const isV2Metadata = isObject({
+  fileName: is("string"),
+  href: is("string"),
+  lastUpdateDate: isUnionOf(is("string"), is("null")),
+  publishDate: is("string"),
+  hash: is("string"), // Required in v2
+});
+export type V2Metadata = CheckedBy<typeof isV2Metadata>;
+
+// Union type for all metadata (for backward compatibility)
+export type Metadata = V1Metadata | V2Metadata;
+
+// Generic manifest interface
+export interface Manifest<Meta extends V1Metadata | V2Metadata> {
   [slug: string]: Meta;
 }
 
-export const isOldPostMetaData = isObject({
-  fileName: is("string"),
-  lastUpdateDate: isUnionOf(is("string"), is("null")),
-  publishDate: is("string"),
-});
-export type OldMetadata = CheckedBy<typeof isOldPostMetaData>;
+// V1 Manifest Schema (direct entries, no version wrapper)
+export const isV1Manifest = isRecordOf(isV1Metadata);
+export type V1Manifest = CheckedBy<typeof isV1Manifest>;
 
-export const isOldManifest = isRecordOf(isOldPostMetaData);
-export type OldPostManifest = CheckedBy<typeof isOldManifest>;
+// V2 Manifest Schema (versioned with metadata)
+export const isV2ManifestEntries = isRecordOf(isV2Metadata);
+export const isV2Manifest = isObject({
+  version: is("number"),
+  metadata: isObject({
+    generatedAt: is("string"),
+    entryCount: is("number"),
+    overallHash: is("string"),
+  }),
+  entries: isV2ManifestEntries,
+});
+export type V2Manifest = CheckedBy<typeof isV2Manifest>;
+
+// Legacy aliases for backward compatibility
+export type OldMetadata = V1Metadata;
+export type OldPostManifest = V1Manifest;
+export const isOldPostMetaData = isV1Metadata;
+export const isOldManifest = isV1Manifest;
 
 export interface PostRedirectsMap {
   [oldHash: string]: string;
