@@ -16,7 +16,12 @@ export type {
   ResolvedContent,
   ResolveContentFailureReason,
 } from "./services/content-resolver.js";
-export type { ContentTypes, ContentMetaDataMap } from "./content-types.js";
+export type {
+  ContentTypes,
+  ContentMetaDataMap,
+  AnyContentConfig,
+  AnyContentConfigMap,
+} from "./content-types.js";
 export { contentResolverConfig } from "./content-types.js";
 export { processContent } from "./orchestrator.js";
 export type {

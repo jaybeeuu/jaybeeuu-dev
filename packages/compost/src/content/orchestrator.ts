@@ -13,7 +13,10 @@ import {
   type BaseManifestEntry,
   type OldManifest,
 } from "./services/content-processor.js";
-import { contentResolverConfig } from "./content-types.js";
+import {
+  contentResolverConfig,
+  type AnyContentConfigMap,
+} from "./content-types.js";
 
 // Re-export types for backwards compatibility
 export type { ProcessedContent, ManifestMap, BaseManifestEntry };
@@ -49,18 +52,19 @@ async function processContentFile(
     | "removeH1"
   >,
   manifestManager: ManifestManager,
+  contentConfig: AnyContentConfigMap,
 ): Promise<Result<ProcessedContent<string> | null, string>> {
   // The content processor determines content type and gets the appropriate old manifest
   // We need to pass all old manifests so it can choose the right one
   const allOldManifests: { [contentType: string]: OldManifest } = {};
 
-  for (const contentType of Object.keys(contentResolverConfig)) {
+  for (const contentType of Object.keys(contentConfig)) {
     allOldManifests[contentType] = manifestManager.getOldManifest(
       contentType,
     ) as OldManifest;
   }
 
-  return processFile(filePath, allOldManifests, config, contentResolverConfig);
+  return processFile(filePath, allOldManifests, config, contentConfig);
 }
 
 /**
@@ -93,6 +97,7 @@ async function updateManifests(
  */
 export async function processContent(
   config: OrchestratorConfig,
+  contentConfig: AnyContentConfigMap = contentResolverConfig,
 ): Promise<Result<ManifestMap, string>> {
   const manifestManager = new ManifestManager();
 
@@ -105,14 +110,19 @@ export async function processContent(
     await deleteDirectories(path.resolve(config.outputDir));
   }
 
-  const filesResult = await discoverContentFiles(config);
+  const filesResult = await discoverContentFiles(config, contentConfig);
   if (!filesResult.success) {
     return filesResult;
   }
 
   const processedContent: ProcessedContent<string>[] = [];
   for (const filePath of filesResult.value) {
-    const result = await processContentFile(filePath, config, manifestManager);
+    const result = await processContentFile(
+      filePath,
+      config,
+      manifestManager,
+      contentConfig,
+    );
     if (!result.success) {
       return failure("file processing failed", result.message);
     }

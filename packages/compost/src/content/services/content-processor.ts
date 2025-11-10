@@ -5,7 +5,7 @@ import { resolveContent, type ResolvedContent } from "./content-resolver.js";
 import { compileMarkdown } from "./markdown-compilation.js";
 // Note: We'll access processing functions directly from contentResolverConfig now
 import { copyFile, writeTextFile } from "../../files/index.js";
-import type { ContentConfig } from "../content-types.js";
+import type { ContentConfig, AnyContentConfigMap } from "../content-types.js";
 import { getSha1Hex } from "../../hash.js";
 
 /**
@@ -92,51 +92,35 @@ export interface ProcessedContent<
  * Context for content processing operations.
  * Contains all configuration and dependencies needed for processing.
  */
-interface ProcessingContext<
-  ConfigMap extends {
-    [K in keyof ConfigMap]: ConfigMap[K] extends ContentConfig<
-      infer Type,
-      infer MetaData
-    >
-      ? Type extends K
-        ? ContentConfig<Type, MetaData>
-        : never
-      : never;
-  },
-> {
+interface ProcessingContext {
   config: ContentProcessorConfig;
-  resolverConfig: ConfigMap;
+  resolverConfig: AnyContentConfigMap;
 }
 
 /**
- * Type-safe processing helper that preserves metadata types.
+ * Processing helper that handles content processing with runtime validation.
  *
- * @template ConfigMap - Map of content types to their ContentConfig definitions
- * @template Type - The content type
- * @template MetaData - The metadata type for this content type
+ * @param resolvedContent - Resolved content with metadata
+ * @param filePath - Path to the source file
+ * @param oldManifests - Old manifests for change detection
+ * @param context - Processing context with configuration
+ * @returns Promise resolving to processed content
  */
-async function processTypedContent<
-  ConfigMap extends {
-    [K in keyof ConfigMap]: ConfigMap[K] extends ContentConfig<
-      infer Type,
-      infer MetaData
-    >
-      ? Type extends K
-        ? ContentConfig<Type, MetaData>
-        : never
-      : never;
-  },
-  Type extends keyof ConfigMap & string,
-  MetaData,
->(
-  resolvedContent: ResolvedContent<Type, MetaData>,
+async function processTypedContent(
+  resolvedContent: ResolvedContent<string, any>,
   filePath: string,
   oldManifests: { [contentType: string]: OldManifest },
-  context: ProcessingContext<ConfigMap>,
+  context: ProcessingContext,
 ): Promise<Result<ProcessedContent<string>, string>> {
   const { type: contentType, metadata, content } = resolvedContent;
 
   const contentConfig = context.resolverConfig[contentType];
+  if (!contentConfig) {
+    return failure(
+      "content type not supported",
+      `No configuration found for content type: ${contentType}`,
+    );
+  }
 
   // Check if we should skip unpublished content
   const metadataWithPublish = metadata as unknown as { publish?: boolean };
@@ -205,24 +189,13 @@ async function processTypedContent<
  * @param resolverConfig - Content type resolver configuration
  * @returns Promise resolving to processed content or null if should be skipped
  */
-export async function processFile<
-  ConfigMap extends {
-    [K in keyof ConfigMap]: ConfigMap[K] extends ContentConfig<
-      infer Type,
-      infer MetaData
-    >
-      ? Type extends K
-        ? ContentConfig<Type, MetaData>
-        : never
-      : never;
-  },
->(
+export async function processFile(
   filePath: string,
   oldManifests: { [contentType: string]: OldManifest },
   config: ContentProcessorConfig,
-  resolverConfig: ConfigMap,
+  resolverConfig: AnyContentConfigMap,
 ): Promise<Result<ProcessedContent<string> | null, string>> {
-  const context: ProcessingContext<ConfigMap> = { config, resolverConfig };
+  const context: ProcessingContext = { config, resolverConfig };
 
   try {
     const contentResult = await resolveContent(
@@ -250,10 +223,9 @@ export async function processFile<
       );
     }
 
-    // Now process with type safety preserved
-    // Type assertion is safe here because we've already verified the content type exists in our config
+    // Now process the content
     const result = await processTypedContent(
-      contentResult.value as ResolvedContent<keyof ConfigMap & string, unknown>,
+      contentResult.value as ResolvedContent<string, any>,
       filePath,
       oldManifests,
       context,
@@ -283,21 +255,10 @@ export async function processFile<
  * @param context - Processing context with configuration
  * @returns Promise resolving to compiled content
  */
-async function compileContent<
-  ConfigMap extends {
-    [K in keyof ConfigMap]: ConfigMap[K] extends ContentConfig<
-      infer Type,
-      infer MetaData
-    >
-      ? Type extends K
-        ? ContentConfig<Type, MetaData>
-        : never
-      : never;
-  },
->(
+async function compileContent(
   filePath: string,
   content: string,
-  context: ProcessingContext<ConfigMap>,
+  context: ProcessingContext,
 ): Promise<
   Result<
     {
@@ -319,28 +280,15 @@ async function compileContent<
 /**
  * Type-safe manifest entry generation that preserves metadata types.
  */
-function generateTypedManifestEntry<
-  ConfigMap extends {
-    [K in keyof ConfigMap]: ConfigMap[K] extends ContentConfig<
-      infer Type,
-      infer MetaData
-    >
-      ? Type extends K
-        ? ContentConfig<Type, MetaData>
-        : never
-      : never;
-  },
-  Type extends keyof ConfigMap & string,
-  MetaData,
->(
+function generateTypedManifestEntry(
   slug: string,
-  metadata: MetaData,
+  metadata: any,
   content: string,
   compiledHtml: string,
   contentHash: string,
   oldManifest: OldManifest,
-  contentConfig: ConfigMap[Type],
-  context: ProcessingContext<ConfigMap>,
+  contentConfig: ContentConfig<string, any>,
+  context: ProcessingContext,
 ): BaseManifestEntry & { [key: string]: unknown } {
   const fileName = contentConfig.generateFileName(slug, compiledHtml);
   const href = joinUrlPath(context.config.hrefRoot, fileName);
@@ -389,24 +337,12 @@ function generateTypedManifestEntry<
 /**
  * Type-safe content writing that preserves content type information.
  */
-async function writeTypedCompiledContent<
-  ConfigMap extends {
-    [K in keyof ConfigMap]: ConfigMap[K] extends ContentConfig<
-      infer Type,
-      infer MetaData
-    >
-      ? Type extends K
-        ? ContentConfig<Type, MetaData>
-        : never
-      : never;
-  },
-  Type extends keyof ConfigMap & string,
->(
+async function writeTypedCompiledContent(
   slug: string,
   html: string,
   assets: Array<{ sourcePath: string; destinationPath: string }>,
-  contentConfig: ConfigMap[Type],
-  context: ProcessingContext<ConfigMap>,
+  contentConfig: ContentConfig<string, any>,
+  context: ProcessingContext,
 ): Promise<void> {
   const htmlFileName = contentConfig.generateFileName(slug, html);
   const htmlPath = path.join(context.config.outputDir, htmlFileName);

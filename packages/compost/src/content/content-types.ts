@@ -266,3 +266,11 @@ export type ContentMetaDataMap = MetadataMapFromConfig<
 
 // Type alias for backward compatibility with legacy imports
 export type { ContentTypes as ContentType };
+
+/**
+ * Simplified content config types for threading through the system.
+ * Uses any for metadata to eliminate complex generic constraints and allow
+ * compatibility with existing strongly-typed configs.
+ */
+export type AnyContentConfig = ContentConfig<string, any>;
+export type AnyContentConfigMap = { [key: string]: AnyContentConfig };

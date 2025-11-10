@@ -1,7 +1,7 @@
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
 import { recurseDirectory } from "../../files/index.js";
-import { contentResolverConfig } from "../content-types.js";
+import type { AnyContentConfigMap } from "../content-types.js";
 
 /**
  * Configuration for file discovery.
@@ -27,15 +27,17 @@ function createIncludePatterns(patterns: readonly string[]): RegExp[] {
  * based on file extension patterns for different content types.
  *
  * @param config - File discovery configuration
+ * @param contentConfig - Content type configuration
  * @returns Promise resolving to array of file paths or failure
  */
 export async function discoverContentFiles(
   config: FileDiscoveryConfig,
+  contentConfig: AnyContentConfigMap,
 ): Promise<Result<string[], string>> {
   try {
     const patterns: string[] = [];
 
-    for (const resolverConfig of Object.values(contentResolverConfig)) {
+    for (const resolverConfig of Object.values(contentConfig)) {
       patterns.push(...resolverConfig.filePatterns.frontmatter);
       patterns.push(...resolverConfig.filePatterns.jsonMetadata);
     }
