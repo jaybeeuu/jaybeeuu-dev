@@ -1,66 +1,21 @@
-import type { TypePredicate } from "@jaybeeuu/is";
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
-import type { ReadJsonFileFailureReason } from "../files/index.js";
-import { canAccess, readJsonFile, readTextFile } from "../files/index.js";
+import type { ReadJsonFileFailureReason } from "../../files/index.js";
+import { canAccess, readJsonFile, readTextFile } from "../../files/index.js";
 import type { ParseYamlMetaFailureReason } from "./metadata.js";
 import { parseYamlMeta } from "./metadata.js";
+import type { ContentConfig } from "../content-types.js";
 
-/**
- * Configuration for resolving a specific content type from markdown files.
- *
- * This interface defines how to identify, parse, and validate a specific content type
- * based on file patterns and metadata validation rules.
- *
- * @template Type - The content type identifier (e.g., "post", "tech-radar")
- * @template MetaData - The metadata interface for this content type
- */
-export interface ContentResolverConfig<Type extends string, MetaData> {
-  /** The unique identifier for this content type */
-  contentType: Type;
-
-  /** TypePredicate function to validate and type-check the metadata */
-  validator: TypePredicate<MetaData>;
-
-  /** File pattern configuration for this content type */
-  filePatterns: {
-    /**
-     * File extensions for frontmatter-based content.
-     * Files with these extensions contain YAML frontmatter.
-     * @example [".post.md", ".tech.md"]
-     */
-    frontmatter: string[];
-
-    /**
-     * File extensions for JSON metadata-based content.
-     * Files with these extensions have separate JSON metadata files.
-     * @example [".md"]
-     */
-    jsonMetadata: string[];
-
-    /**
-     * JSON file suffix for metadata files.
-     * Used to locate the JSON metadata file for jsonMetadata files.
-     * @example ".post.json" | ".tech.json"
-     */
-    jsonSuffix: string;
-  };
-}
-
-/**
- * Type-safe mapping of content types to their resolver configurations.
- *
- * This mapped type ensures that each content type has a properly configured
- * resolver with the correct metadata type association.
- *
- * @template Type - Union of supported content type identifiers
- * @template ContentMetaDataMap - Mapping of content types to their metadata interfaces
- */
+// Re-export the unified ContentConfig as ContentResolverConfig for backward compatibility
+export type ContentResolverConfig<
+  Type extends string,
+  MetaData,
+> = ContentConfig<Type, MetaData>;
 export type ContentResolverConfigMap<
   Type extends string,
-  ContentMetaDataMap extends { [type in Type]: unknown },
+  MetaDataMap extends { [type in Type]: unknown },
 > = {
-  [K in Type]: ContentResolverConfig<K, ContentMetaDataMap[K]>;
+  [K in Type]: ContentResolverConfig<K, MetaDataMap[K]>;
 };
 
 /**
@@ -221,7 +176,6 @@ export const resolveContent = async <
   >
 > => {
   // Find matching config based on file pattern
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const configs = Object.values(configMap) as ContentResolverConfig<
     Type,
     ContentMetaDataMap[Type]

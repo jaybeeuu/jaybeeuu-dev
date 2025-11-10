@@ -6,12 +6,14 @@ import {
   getPostManifest,
   writePostFile,
 } from "./helpers";
+import { writeJsonFile } from "../../src/files/index.js";
+import path from "path";
 
-import { advanceTo } from "jest-date-mock";
+import { advanceTo, clear } from "jest-date-mock";
 import type { Response } from "node-fetch";
 import fetch from "node-fetch";
 import type { PostMetadata } from "../../src/index.js";
-import type { PostMetaFileData } from "../../src/content/processors/index.js";
+import type { PostMetaFileData } from "../../src/content/index.js";
 import readingTime from "reading-time";
 
 import { describe, expect, it, jest } from "@jest/globals";
@@ -76,24 +78,34 @@ describe("manifest", () => {
     const manifest = await getPostManifest();
 
     expect(manifest).toStrictEqual({
-      [slug]: {
-        ...meta,
-        fileName: expect.stringMatching(
-          new RegExp(`${slug}-[A-z0-9]{6}.html`),
+      version: 2,
+      metadata: {
+        generatedAt: expect.stringMatching(
+          /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
         ) as unknown,
-        href: expect.stringMatching(
-          new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`),
-        ) as unknown,
-        hash: expect.stringMatching(/^[a-f0-9]{32}$/) as unknown,
-        lastUpdateDate: null,
-        publishDate: new Date(publishDate).toISOString(),
-        readingTime: {
-          minutes: 20,
-          text: "{reading time}",
-          time: 120000,
-          words: 10,
+        entryCount: 1,
+        overallHash: expect.stringMatching(/^[a-f0-9]{40}$/) as unknown,
+      },
+      entries: {
+        [slug]: {
+          ...meta,
+          fileName: expect.stringMatching(
+            new RegExp(`${slug}-[A-z0-9]{6}.html`),
+          ) as unknown,
+          href: expect.stringMatching(
+            new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`),
+          ) as unknown,
+          hash: expect.stringMatching(/^[a-f0-9]{40}$/) as unknown,
+          lastUpdateDate: null,
+          publishDate: new Date(publishDate).toISOString(),
+          readingTime: {
+            minutes: 20,
+            text: "{reading time}",
+            time: 120000,
+            words: 10,
+          },
+          slug,
         },
-        slug,
       },
     });
   });
@@ -115,7 +127,7 @@ describe("manifest", () => {
 
     const manifest = await getPostManifest();
 
-    expect(manifest[slug]?.href).toStrictEqual(
+    expect(manifest.entries[slug]?.href).toStrictEqual(
       expect.stringMatching(
         new RegExp(`/${hrefRoot}/${slug}-[A-z0-9]{6}.html`),
       ) as unknown,
@@ -151,7 +163,7 @@ describe("manifest", () => {
 
     const manifest = await getPostManifest();
 
-    expect(manifest[slug]?.publishDate).toStrictEqual(
+    expect(manifest.entries[slug]?.publishDate).toStrictEqual(
       new Date(publishDate).toISOString(),
     );
   });
@@ -188,7 +200,7 @@ describe("manifest", () => {
 
     const manifest = await getPostManifest();
 
-    expect(manifest[slug]?.lastUpdateDate).toStrictEqual(
+    expect(manifest.entries[slug]?.lastUpdateDate).toStrictEqual(
       new Date(updatedDate).toISOString(),
     );
   });
@@ -216,7 +228,7 @@ describe("manifest", () => {
 
     const manifest = await getPostManifest();
 
-    expect(manifest[slug]?.lastUpdateDate).toBeNull();
+    expect(manifest.entries[slug]?.lastUpdateDate).toBeNull();
   });
 
   it("includes the lastUpdatedDate from the old manifest when a post is recompiled but not updated, and compost has access to the old manifest.", async () => {
@@ -251,36 +263,68 @@ describe("manifest", () => {
 
     const manifest = await getPostManifest();
 
-    expect(manifest[slug]?.lastUpdateDate).toStrictEqual(
+    expect(manifest.entries[slug]?.lastUpdateDate).toStrictEqual(
       new Date(updatedDate).toISOString(),
     );
   });
 
   it("transforms old manifest data which are not in ISO format into ISO.", async () => {
     await cleanUpDirectories();
+    clear(); // Reset mock date
+
     const slug = "first-post";
+    const content = "# This is the first post";
+    const meta = {
+      title: "This is the first post",
+      abstract: "This is the very first post.",
+      publish: true,
+    };
+
     await writePostFile({
       slug,
-      meta: {
-        title: "This is the first post",
-        abstract: "This is the very first post.",
-        publish: true,
-      },
-      content: "# This is the first post",
+      meta,
+      content,
     });
-    await writeOutputManifestFile({
-      fileName: "first-post-ulvbV2.html",
-      lastUpdateDate: "Fri, 30 Jul 2021 20:18:43 GMT",
-      publishDate: "Sun, 06 Jun 2021 22:08:34 GMT",
+
+    // First compile to get the actual filenames and hashes that will be generated
+    await compilePosts();
+    const initialManifest = await getPostManifest();
+    const actualFileName = initialManifest.entries[slug]?.fileName;
+    const actualHash = initialManifest.entries[slug]?.hash;
+
+    // Clean up and start fresh
+    await cleanUpDirectories();
+    await writePostFile({
       slug,
+      meta,
+      content,
     });
+
+    // Now create a V1 manifest (no hash field) with the correct filename but old date formats
+    const v1Manifest = {
+      [slug]: {
+        fileName: actualFileName,
+        lastUpdateDate: "Fri, 30 Jul 2021 20:18:43 GMT",
+        publishDate: "Sun, 06 Jun 2021 22:08:34 GMT",
+        href: `/posts/${actualFileName}`,
+      },
+    };
+    // Write the V1 manifest directly to bypass type checking
+    await writeJsonFile(
+      path.join("out", "posts", "post-manifest.json"),
+      v1Manifest,
+    );
 
     await compilePosts();
 
     const manifest = await getPostManifest();
 
-    expect(manifest[slug]?.lastUpdateDate).toBe("2021-07-30T20:18:43.000Z");
-    expect(manifest[slug]?.publishDate).toBe("2021-06-06T22:08:34.000Z");
+    expect(manifest.entries[slug]?.lastUpdateDate).toBe(
+      "2021-07-30T20:18:43.000Z",
+    );
+    expect(manifest.entries[slug]?.publishDate).toBe(
+      "2021-06-06T22:08:34.000Z",
+    );
   });
 
   it("updates the lastUpdatedDate when the manifest needs to be fetched.", async () => {
@@ -319,7 +363,7 @@ describe("manifest", () => {
     expect(fetch).toHaveBeenCalledWith(oldManifestLocator);
 
     const newManifest = await getPostManifest();
-    expect(newManifest[slug]?.lastUpdateDate).toStrictEqual(
+    expect(newManifest.entries[slug]?.lastUpdateDate).toStrictEqual(
       new Date(updatedDate).toISOString(),
     );
   });
@@ -361,7 +405,7 @@ describe("manifest", () => {
     await compilePosts({ oldManifestLocators });
 
     const newManifest = await getPostManifest();
-    expect(newManifest[slug]?.lastUpdateDate).toStrictEqual(
+    expect(newManifest.entries[slug]?.lastUpdateDate).toStrictEqual(
       new Date(updatedDate).toISOString(),
     );
   });
@@ -407,7 +451,7 @@ describe("manifest", () => {
     await compilePosts({ oldManifestLocators });
 
     const newManifest = await getPostManifest();
-    expect(newManifest[slug]?.lastUpdateDate).toStrictEqual(
+    expect(newManifest.entries[slug]?.lastUpdateDate).toStrictEqual(
       new Date(updatedDate).toISOString(),
     );
   });
@@ -476,24 +520,34 @@ describe("manifest", () => {
       const manifest = await getPostManifest();
 
       expect(manifest).toStrictEqual({
-        [slug]: {
-          ...meta,
-          fileName: expect.stringMatching(
-            new RegExp(`${slug}-[A-z0-9]{6}.html`),
+        version: 2,
+        metadata: {
+          generatedAt: expect.stringMatching(
+            /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
           ) as unknown,
-          href: expect.stringMatching(
-            new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`),
-          ) as unknown,
-          hash: expect.stringMatching(/^[a-f0-9]{32}$/) as unknown,
-          lastUpdateDate: null,
-          publishDate: new Date(publishDate).toISOString(),
-          readingTime: {
-            minutes: 15,
-            text: "15 min read",
-            time: 900000,
-            words: 250,
+          entryCount: 1,
+          overallHash: expect.stringMatching(/^[a-f0-9]{40}$/) as unknown,
+        },
+        entries: {
+          [slug]: {
+            ...meta,
+            fileName: expect.stringMatching(
+              new RegExp(`${slug}-[A-z0-9]{6}.html`),
+            ) as unknown,
+            href: expect.stringMatching(
+              new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`),
+            ) as unknown,
+            hash: expect.stringMatching(/^[a-f0-9]{40}$/) as unknown,
+            lastUpdateDate: null,
+            publishDate: new Date(publishDate).toISOString(),
+            readingTime: {
+              minutes: 15,
+              text: "15 min read",
+              time: 900000,
+              words: 250,
+            },
+            slug,
           },
-          slug,
         },
       });
     },
@@ -526,7 +580,7 @@ describe("manifest", () => {
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(Object.keys(result.value)).toHaveLength(0);
+        expect(Object.keys(result.value.entries)).toHaveLength(0);
       }
     },
   );

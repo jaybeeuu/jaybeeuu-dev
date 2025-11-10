@@ -1,6 +1,6 @@
 import type { Result } from "@jaybeeuu/utilities";
 import { assertIsNotNullish, failure, success } from "@jaybeeuu/utilities";
-import path from "path";
+import path from "node:path";
 import { getHash } from "../hash.js";
 
 const ALLOWED_SLUG_FORMAT = "^[0-9A-Za-z-]{4,}$";

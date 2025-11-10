@@ -1,4 +1,4 @@
-import path from "path";
+import path from "node:path";
 // import highlight from "highlight.js";
 import type { Result } from "@jaybeeuu/utilities";
 import {
@@ -17,9 +17,9 @@ import Prism from "prismjs";
 import loadLanguages from "prismjs/components/index.js";
 import type { IOptions } from "sanitize-html";
 import sanitizeHtml from "sanitize-html";
-import { canAccessSync, readTextFileSync } from "../files/index.js";
-import { getHash } from "../hash.js";
-import { getSlug } from "./file-paths.js";
+import { canAccessSync, readTextFileSync } from "../../files/index.js";
+import { getHash } from "../../hash.js";
+import { getSlug } from "../file-paths.js";
 
 export interface RenderContext {
   codeLineNumbers: boolean;
@@ -275,16 +275,16 @@ const sanitizeOptions: IOptions = {
 
 export type CompileFailureReason = `Failed to compile ${string}`;
 
-export interface CompiledPost {
+export interface CompiledMarkdown {
   html: string;
   assets: Assets[];
 }
 
 marked.use(mangle(), gfmHeadingId(), markedHighlight(markedHighlightOptions));
 
-export const compilePost = async (
+export const compileMarkdown = async (
   renderContext: RenderContext,
-): Promise<Result<CompiledPost, CompileFailureReason>> => {
+): Promise<Result<CompiledMarkdown, CompileFailureReason>> => {
   try {
     const renderer = new CustomRenderer(renderContext);
 

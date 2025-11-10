@@ -1,26 +1,24 @@
-export { update } from "./update.js";
-export type { Metadata } from "./types.js";
-export { parseYamlMeta } from "./metadata.js";
-export type { ParseYamlMetaFailureReason } from "./metadata.js";
+// Legacy update function - use processContent from orchestrator instead
+// Note: Metadata type has been simplified - export specific types instead
+export { parseYamlMeta } from "./services/metadata.js";
+export type { ParseYamlMetaFailureReason } from "./services/metadata.js";
+// Export post-related types that may still be used externally
 export type {
   PostManifest,
   PostMetadata,
+  PostMetaFileData,
   ReadingTime,
-} from "./processors/index.js";
-export { resolveContent } from "./content-resolver.js";
+} from "./content-types.js";
+export { isPostManifest } from "./content-types.js";
+export { resolveContent } from "./services/content-resolver.js";
 export type {
   ContentResolverConfig,
-  ContentResolverConfigMap,
   ResolvedContent,
   ResolveContentFailureReason,
-} from "./content-resolver.js";
-export type {
-  ContentMetaDataMap,
-  ContentType,
-  TechRadarMetaFileData,
-} from "./content-types.js";
-export { contentResolverConfig } from "./resolver-config.js";
-export { processContent, ContentOrchestrator } from "./orchestrator.js";
+} from "./services/content-resolver.js";
+export type { ContentTypes, ContentMetaDataMap } from "./content-types.js";
+export { contentResolverConfig } from "./content-types.js";
+export { processContent } from "./orchestrator.js";
 export type {
   ProcessedContent,
   ManifestMap,

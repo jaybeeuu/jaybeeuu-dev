@@ -47,7 +47,7 @@ describe("metafile integration", () => {
     // Should succeed but with empty manifest since the post was skipped
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(Object.keys(result.value)).toHaveLength(0);
+      expect(Object.keys(result.value.entries)).toHaveLength(0);
     }
   });
 });

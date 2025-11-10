@@ -3,16 +3,17 @@ import { failure } from "@jaybeeuu/utilities";
 import type {
   FetchJsonFileFailureReason,
   ReadJsonFileFailureReason,
-} from "../files/index.js";
-import { fetchJsonFile, readJsonFile } from "../files/index.js";
+} from "../../../files/index.js";
+import { fetchJsonFile, readJsonFile } from "../../../files/index.js";
 import {
-  isV1Manifest,
-  isV2Manifest,
-  type V1Manifest,
-  type V2Metadata,
-} from "./types.js";
+  isV1Entry,
+  isV2Entry,
+  type V1Entry,
+  type V2Entry,
+} from "../../types.js";
+import { isV1ManifestFile, isV2ManifestFile } from "./manifest-manager.js";
 import { is } from "@jaybeeuu/is";
-import crypto from "crypto";
+import { getSha1Hex } from "../../../hash.js";
 
 export type GetOldManifestFailureReason = "read manifest failed";
 
@@ -29,17 +30,11 @@ const extractHashFromFilename = (fileName: string, slug: string): string => {
   if (match && match[1]) {
     // Use the filename hash as a basis for the v2 hash
     // This provides reasonable change detection for most cases
-    return crypto
-      .createHash("md5")
-      .update(`v1-upgrade-${match[1]}`)
-      .digest("hex");
+    return getSha1Hex(`v1-upgrade-${match[1]}`);
   }
 
   // Fallback: generate hash from the entire filename
-  return crypto
-    .createHash("md5")
-    .update(`v1-upgrade-${fileName}`)
-    .digest("hex");
+  return getSha1Hex(`v1-upgrade-${fileName}`);
 };
 
 /**
@@ -52,10 +47,10 @@ const escapeRegExp = (string: string): string => {
 /**
  * Upgrade v1 manifest entries to v2 format by adding hash field
  */
-const upgradeV1Manifest = (
-  v1Manifest: V1Manifest,
-): Record<string, V2Metadata> => {
-  const upgradedEntries: Record<string, V2Metadata> = {};
+const upgradeV1Manifest = (v1Manifest: {
+  [slug: string]: V1Entry;
+}): { [key: string]: V2Entry } => {
+  const upgradedEntries: { [key: string]: V2Entry } = {};
 
   for (const [slug, entry] of Object.entries(v1Manifest)) {
     upgradedEntries[slug] = {
@@ -71,11 +66,10 @@ const getManifestFromOldManifestLocator = async (
   manifestLocator: string,
 ): Promise<
   Result<
-    Record<string, V2Metadata>,
+    { [key: string]: V2Entry },
     FetchJsonFileFailureReason | ReadJsonFileFailureReason
   >
 > => {
-  // First try to read the file without validation to handle both v1 and v2 formats
   const readResult = /^https?/.test(manifestLocator)
     ? await fetchJsonFile(manifestLocator, is("object"))
     : await readJsonFile(manifestLocator, is("object"));
@@ -87,9 +81,11 @@ const getManifestFromOldManifestLocator = async (
   const data = readResult.value;
 
   // Use version field to determine which validation to apply
-  if (typeof data === "object" && data !== null && "version" in data) {
+  if (typeof data === "object" && "version" in data) {
     // Has version field - validate as v2 manifest
-    if (isV2Manifest(data)) {
+    // Use isV2Entry for basic V2 validation (we don't know specific content type here)
+    const v2Validator = isV2ManifestFile(isV2Entry);
+    if (v2Validator(data)) {
       // V2 format - extract the entries (already have hash fields)
       return { success: true, value: data.entries };
     } else {
@@ -101,7 +97,7 @@ const getManifestFromOldManifestLocator = async (
   }
 
   // No version field - check if it's v1 format and upgrade
-  if (isV1Manifest(data)) {
+  if (isV1ManifestFile(data)) {
     // V1 format - upgrade to v2 by adding hash fields
     const upgradedManifest = upgradeV1Manifest(data);
     return { success: true, value: upgradedManifest };
@@ -117,7 +113,7 @@ const getManifestFromOldManifestLocator = async (
 export const getOldManifest = async (
   manifestOutputFileName: string,
   manifestLocators: string[],
-): Promise<Result<Record<string, V2Metadata>, GetOldManifestFailureReason>> => {
+): Promise<Result<{ [key: string]: V2Entry }, GetOldManifestFailureReason>> => {
   const defaultedManifestLocators = [
     ...manifestLocators,
     manifestOutputFileName,

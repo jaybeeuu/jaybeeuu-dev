@@ -5,13 +5,13 @@ import { jest } from "@jest/globals";
 import type {
   PostManifest,
   PostMetaFileData,
-} from "../../src/content/processors/index.js";
-import { isPostManifest } from "../../src/content/processors/index.js";
+  PostMetadata,
+} from "../../src/content/index.js";
+import { isPostManifest } from "../../src/content/index.js";
 import path from "path";
 import type * as ReadingTime from "reading-time";
-import { update } from "../../src/content/index.js";
-import type { UpdateOptions } from "../../src/content/types.js";
-import type { UpdateFailureReason } from "../../src/content/update.js";
+import { processContent } from "../../src/content/index.js";
+import type { UpdateOptions } from "../../src/exec/compost.js";
 import type { File } from "../../src/files/index";
 import {
   deleteDirectories,
@@ -226,11 +226,19 @@ export const getPostManifest = async (
     "version" in parsedContent &&
     "entries" in parsedContent
   ) {
-    // New versioned format
-    return parsedContent.entries as PostManifest;
-  } else {
-    // Legacy format - direct object
+    // New versioned format - return the full manifest structure
     return parsedContent as PostManifest;
+  } else {
+    // Legacy format - wrap in V2 structure for consistency
+    return {
+      version: 1,
+      metadata: {
+        generatedAt: new Date().toISOString(),
+        entryCount: Object.keys(parsedContent || {}).length,
+        overallHash: "legacy",
+      },
+      entries: parsedContent || {},
+    } as PostManifest;
   }
 };
 
@@ -240,7 +248,7 @@ export const getPost = async (
 ): Promise<string> => {
   const manifest = await getPostManifest(options);
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
-  const manifestEntry = manifest[slug];
+  const manifestEntry = manifest.entries[slug];
   assertIsNotNullish(manifestEntry);
 
   const relativePath = path.relative(
@@ -253,16 +261,25 @@ export const getPost = async (
 
 export const compilePosts = async (
   options?: Partial<UpdateOptions>,
-): Promise<Result<PostManifest, UpdateFailureReason>> => {
+): Promise<Result<PostManifest, string>> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
-  const updateResult = await update(defaultedUpdateOptions);
+  const updateResult = await processContent(defaultedUpdateOptions);
   if (!updateResult.success) {
     return updateResult;
   }
 
-  // Extract post manifest from the ManifestMap
-  const postManifest = updateResult.value.post || {};
-  return success(postManifest as PostManifest);
+  // Extract post manifest from the ManifestMap and wrap in V2 structure
+  const postEntries = updateResult.value.post || {};
+  const postManifest: PostManifest = {
+    version: 2,
+    metadata: {
+      generatedAt: new Date().toISOString(),
+      entryCount: Object.keys(postEntries).length,
+      overallHash: "test",
+    },
+    entries: postEntries as { [slug: string]: PostMetadata },
+  };
+  return success(postManifest);
 };
 
 export const getCompiledPostWithContent = async (

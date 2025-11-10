@@ -21,7 +21,7 @@ describe("post resolver integration", () => {
       // Should succeed but skip unreadable files
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(Object.keys(result.value)).toHaveLength(0);
+        expect(Object.keys(result.value.entries)).toHaveLength(0);
       }
     });
 
@@ -42,7 +42,7 @@ describe("post resolver integration", () => {
       // Should succeed but skip the file
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(Object.keys(result.value)).toHaveLength(0);
+        expect(Object.keys(result.value.entries)).toHaveLength(0);
       }
     });
 
@@ -71,7 +71,7 @@ This is test content.`,
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.reason).toBe("content-resolve-failure");
+        expect(result.reason).toBe("file processing failed");
       }
     });
   });
@@ -101,7 +101,7 @@ This is test content.`,
       // Should succeed but skip unreadable files
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(Object.keys(result.value)).toHaveLength(0);
+        expect(Object.keys(result.value.entries)).toHaveLength(0);
       }
     });
 
@@ -123,7 +123,7 @@ This is test content.`,
       // Should succeed but skip the file
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(Object.keys(result.value)).toHaveLength(0);
+        expect(Object.keys(result.value.entries)).toHaveLength(0);
       }
     });
 
@@ -150,7 +150,7 @@ This is test content.`,
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.reason).toBe("content-resolve-failure");
+        expect(result.reason).toBe("file processing failed");
       }
     });
   });
@@ -175,7 +175,7 @@ This is test content.`,
       // Should succeed but skip all files
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(Object.keys(result.value)).toHaveLength(0);
+        expect(Object.keys(result.value.entries)).toHaveLength(0);
       }
     });
   });
@@ -198,7 +198,7 @@ This is test content.`,
       // Should succeed but skip unreadable files
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(Object.keys(result.value)).toHaveLength(0);
+        expect(Object.keys(result.value.entries)).toHaveLength(0);
       }
     });
 
@@ -226,7 +226,7 @@ This is test content.`,
       // Should succeed but skip unreadable files
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(Object.keys(result.value)).toHaveLength(0);
+        expect(Object.keys(result.value.entries)).toHaveLength(0);
       }
     });
   });
@@ -256,9 +256,9 @@ This is test content.`,
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(Object.keys(result.value)).toHaveLength(1);
-        expect(result.value[slug]).toBeDefined();
-        expect(result.value[slug]?.title).toBe("Test Post");
+        expect(Object.keys(result.value.entries)).toHaveLength(1);
+        expect(result.value.entries[slug]).toBeDefined();
+        expect(result.value.entries[slug]?.title).toBe("Test Post");
       }
     });
 
@@ -286,9 +286,9 @@ This is test content.`,
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(Object.keys(result.value)).toHaveLength(1);
-        expect(result.value[slug]).toBeDefined();
-        expect(result.value[slug]?.title).toBe("Test Post");
+        expect(Object.keys(result.value.entries)).toHaveLength(1);
+        expect(result.value.entries[slug]).toBeDefined();
+        expect(result.value.entries[slug]?.title).toBe("Test Post");
       }
     });
   });

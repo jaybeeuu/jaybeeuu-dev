@@ -30,7 +30,7 @@ describe("front matter error handling", () => {
 
     expect(result).toMatchObject({
       success: false,
-      reason: "content-resolve-failure",
+      reason: "file processing failed",
     });
   });
 
@@ -61,7 +61,7 @@ describe("front matter error handling", () => {
 
     expect(result).toMatchObject({
       success: false,
-      reason: "content-resolve-failure",
+      reason: "file processing failed",
     });
   });
 
@@ -90,7 +90,7 @@ describe("front matter error handling", () => {
 
     expect(result).toMatchObject({
       success: false,
-      reason: "content-resolve-failure",
+      reason: "file processing failed",
     });
   });
 
@@ -119,11 +119,10 @@ describe("front matter error handling", () => {
     // This should succeed because the file gets skipped (has no properly closed front matter)
     expect(result).toMatchObject({
       success: true,
-      value: {},
     });
     // The manifest should be empty since no valid posts were processed
     if (result.success) {
-      expect(Object.keys(result.value)).toHaveLength(0);
+      expect(Object.keys(result.value.entries)).toHaveLength(0);
     }
   });
 });

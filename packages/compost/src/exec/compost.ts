@@ -3,18 +3,34 @@ import { debounce, failure, log, success } from "@jaybeeuu/utilities";
 import chokidar from "chokidar";
 import yargsFactory from "yargs";
 import { hideBin } from "yargs/helpers";
-import { update } from "../content/index.js";
-import type { UpdateOptions } from "../content/types.js";
-import type { UpdateFailureReason } from "../content/update.js";
+import { processContent } from "../content/index.js";
+
+/**
+ * Configuration options for the compost CLI.
+ */
+export interface UpdateOptions {
+  additionalWatchPaths: string[];
+  hrefRoot: string;
+  includeUnpublished: boolean;
+  codeLineNumbers: boolean;
+  manifestFileName: string;
+  oldManifestLocators: string[];
+  outputDir: string;
+  requireOldManifest: boolean;
+  sourceDir: string;
+  watch: boolean;
+  removeH1: boolean;
+  clean: boolean;
+}
 
 const yargs = yargsFactory(hideBin(process.argv));
 
 const run = async (
   options: UpdateOptions,
-): Promise<Result<never, "error" | UpdateFailureReason>> => {
+): Promise<Result<never, "error" | string>> => {
   try {
     log.info("Composting...");
-    const result = await update(options);
+    const result = await processContent(options);
     if (result.success) {
       // Format output for all content types
       const outputLines = Object.entries(result.value)

@@ -19,6 +19,6 @@ export {
   writeTextFiles,
 } from "./text-files.js";
 
-import fs from "fs";
+import fs from "node:fs";
 const { copyFile } = fs.promises;
 export { copyFile };

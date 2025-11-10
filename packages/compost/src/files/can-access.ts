@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 
 export type Mode =
   /** File is visible to the calling process. */

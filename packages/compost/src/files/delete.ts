@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 
 export const deleteFile = (filePath: string): Promise<void> =>
   fs.promises.unlink(filePath);

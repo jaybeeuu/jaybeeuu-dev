@@ -1,9 +1,15 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 
 const getSha1Hash = (data: string): string => {
   const hash = crypto.createHash("sha1");
   hash.update(data);
   return hash.digest("base64");
+};
+
+export const getSha1Hex = (data: string): string => {
+  const hash = crypto.createHash("sha1");
+  hash.update(data);
+  return hash.digest("hex");
 };
 
 export interface HashOptions {
@@ -13,7 +19,7 @@ export interface HashOptions {
 
 const defaultHashOptions: HashOptions = {
   length: 6,
-  allowedChars: "0-9A-z",
+  allowedChars: "0-9A-Za-z",
 };
 
 export const getHash = (

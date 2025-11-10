@@ -108,32 +108,40 @@ describe("manifest versioning compatibility", () => {
     const newManifest = await getPostManifest();
 
     // Verify both posts are in the manifest
-    expect(newManifest[slug1]).toBeDefined();
-    expect(newManifest[slug2]).toBeDefined();
+    expect(newManifest.entries[slug1]).toBeDefined();
+    expect(newManifest.entries[slug2]).toBeDefined();
 
     // Verify v2 format - all entries should now have hash fields
-    expect(newManifest[slug1]!.hash).toMatch(/^[a-f0-9]{32}$/);
-    expect(newManifest[slug2]!.hash).toMatch(/^[a-f0-9]{32}$/);
+    expect(newManifest.entries[slug1]!.hash).toMatch(/^[a-f0-9]{40}$/);
+    expect(newManifest.entries[slug2]!.hash).toMatch(/^[a-f0-9]{40}$/);
 
     // First post: Content changed, so should detect update
-    expect(newManifest[slug1]!.publishDate).toBe("2020-01-15T10:00:00.000Z"); // Preserved from v1
-    expect(newManifest[slug1]!.lastUpdateDate).toBe("2020-02-10T00:00:00.000Z"); // Updated to current time
-    expect(newManifest[slug1]!.fileName).not.toBe("first-post-oldHash.html"); // New filename due to content change
+    expect(newManifest.entries[slug1]!.publishDate).toBe(
+      "2020-01-15T10:00:00.000Z",
+    ); // Preserved from v1
+    expect(newManifest.entries[slug1]!.lastUpdateDate).toBe(
+      "2020-02-10T00:00:00.000Z",
+    ); // Updated to current time
+    expect(newManifest.entries[slug1]!.fileName).not.toBe(
+      "first-post-oldHash.html",
+    ); // New filename due to content change
 
     // Second post: If content produces same filename, preserve dates but use filename fallback for change detection
-    expect(newManifest[slug2]!.publishDate).toBe("2020-01-20T14:30:00.000Z"); // Preserved from v1
+    expect(newManifest.entries[slug2]!.publishDate).toBe(
+      "2020-01-20T14:30:00.000Z",
+    ); // Preserved from v1
 
     // For the second post, the behavior depends on whether the content produces the same filename
     // If filename is different, it will be treated as updated
     // If filename is same, it will preserve lastUpdateDate
-    if (newManifest[slug2]!.fileName === "second-post-oldHash.html") {
+    if (newManifest.entries[slug2]!.fileName === "second-post-oldHash.html") {
       // No change detected (same filename)
-      expect(newManifest[slug2]!.lastUpdateDate).toBe(
+      expect(newManifest.entries[slug2]!.lastUpdateDate).toBe(
         "2020-01-25T09:15:00.000Z",
       ); // Preserved from v1
     } else {
       // Change detected (different filename)
-      expect(newManifest[slug2]!.lastUpdateDate).toBe(
+      expect(newManifest.entries[slug2]!.lastUpdateDate).toBe(
         "2020-02-10T00:00:00.000Z",
       ); // Updated to current time
     }
@@ -162,13 +170,15 @@ describe("manifest versioning compatibility", () => {
     await compilePosts();
 
     const initialManifest = await getPostManifest();
-    const initialHash = initialManifest[slug]!.hash;
-    const initialFileName = initialManifest[slug]!.fileName;
+    const initialHash = initialManifest.entries[slug]!.hash;
+    const initialFileName = initialManifest.entries[slug]!.fileName;
 
     // Verify initial v2 manifest
-    expect(initialHash).toMatch(/^[a-f0-9]{32}$/);
-    expect(initialManifest[slug]!.publishDate).toBe("2020-03-01T00:00:00.000Z");
-    expect(initialManifest[slug]!.lastUpdateDate).toBe(null);
+    expect(initialHash).toMatch(/^[a-f0-9]{40}$/);
+    expect(initialManifest.entries[slug]!.publishDate).toBe(
+      "2020-03-01T00:00:00.000Z",
+    );
+    expect(initialManifest.entries[slug]!.lastUpdateDate).toBe(null);
 
     // Step 2: Update content and recompile
     const updateDate = "2020-03-15";
@@ -190,11 +200,13 @@ describe("manifest versioning compatibility", () => {
     const updatedManifest = await getPostManifest();
 
     // Verify hash-based change detection worked
-    expect(updatedManifest[slug]!.hash).toMatch(/^[a-f0-9]{32}$/);
-    expect(updatedManifest[slug]!.hash).not.toBe(initialHash); // Hash should be different
-    expect(updatedManifest[slug]!.fileName).not.toBe(initialFileName); // Filename should be different
-    expect(updatedManifest[slug]!.publishDate).toBe("2020-03-01T00:00:00.000Z"); // Preserved
-    expect(updatedManifest[slug]!.lastUpdateDate).toBe(
+    expect(updatedManifest.entries[slug]!.hash).toMatch(/^[a-f0-9]{40}$/);
+    expect(updatedManifest.entries[slug]!.hash).not.toBe(initialHash); // Hash should be different
+    expect(updatedManifest.entries[slug]!.fileName).not.toBe(initialFileName); // Filename should be different
+    expect(updatedManifest.entries[slug]!.publishDate).toBe(
+      "2020-03-01T00:00:00.000Z",
+    ); // Preserved
+    expect(updatedManifest.entries[slug]!.lastUpdateDate).toBe(
       "2020-03-15T00:00:00.000Z",
     ); // Updated
 
@@ -207,14 +219,16 @@ describe("manifest versioning compatibility", () => {
     const unchangedManifest = await getPostManifest();
 
     // Verify no change was detected
-    expect(unchangedManifest[slug]!.hash).toBe(updatedManifest[slug]!.hash); // Same hash
-    expect(unchangedManifest[slug]!.fileName).toBe(
-      updatedManifest[slug]!.fileName,
+    expect(unchangedManifest.entries[slug]!.hash).toBe(
+      updatedManifest.entries[slug]!.hash,
+    ); // Same hash
+    expect(unchangedManifest.entries[slug]!.fileName).toBe(
+      updatedManifest.entries[slug]!.fileName,
     ); // Same filename
-    expect(unchangedManifest[slug]!.publishDate).toBe(
+    expect(unchangedManifest.entries[slug]!.publishDate).toBe(
       "2020-03-01T00:00:00.000Z",
     ); // Still preserved
-    expect(unchangedManifest[slug]!.lastUpdateDate).toBe(
+    expect(unchangedManifest.entries[slug]!.lastUpdateDate).toBe(
       "2020-03-15T00:00:00.000Z",
     ); // Still preserved (not updated to noChangeDate)
   });
@@ -242,7 +256,7 @@ describe("manifest versioning compatibility", () => {
     await compilePosts();
 
     const initialManifest = await getPostManifest();
-    const initialHash = initialManifest[slug]!.hash;
+    const initialHash = initialManifest.entries[slug]!.hash;
 
     // Step 2: Change only metadata, keep content the same
     const metadataChangeDate = "2020-04-10";
@@ -264,11 +278,13 @@ describe("manifest versioning compatibility", () => {
     const updatedManifest = await getPostManifest();
 
     // Verify metadata changes are detected via hash (content + metadata hash)
-    expect(updatedManifest[slug]!.hash).not.toBe(initialHash); // Hash should change due to metadata change
-    expect(updatedManifest[slug]!.title).toBe("Updated Title"); // New metadata present
-    expect(updatedManifest[slug]!.abstract).toBe("Updated abstract"); // New metadata present
-    expect(updatedManifest[slug]!.publishDate).toBe("2020-04-01T00:00:00.000Z"); // Preserved
-    expect(updatedManifest[slug]!.lastUpdateDate).toBe(
+    expect(updatedManifest.entries[slug]!.hash).not.toBe(initialHash); // Hash should change due to metadata change
+    expect(updatedManifest.entries[slug]!.title).toBe("Updated Title"); // New metadata present
+    expect(updatedManifest.entries[slug]!.abstract).toBe("Updated abstract"); // New metadata present
+    expect(updatedManifest.entries[slug]!.publishDate).toBe(
+      "2020-04-01T00:00:00.000Z",
+    ); // Preserved
+    expect(updatedManifest.entries[slug]!.lastUpdateDate).toBe(
       "2020-04-10T00:00:00.000Z",
     ); // Updated due to metadata change
   });
@@ -299,7 +315,7 @@ describe("manifest versioning compatibility", () => {
     expect(rawManifest.version).toBe(2);
     expect(rawManifest.entries).toBeDefined();
     expect(rawManifest.entries[slug]).toBeDefined();
-    expect(rawManifest.entries[slug].hash).toMatch(/^[a-f0-9]{32}$/);
+    expect(rawManifest.entries[slug].hash).toMatch(/^[a-f0-9]{40}$/);
 
     // Verify new metadata fields
     expect(rawManifest.metadata).toBeDefined();
@@ -307,10 +323,10 @@ describe("manifest versioning compatibility", () => {
       /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
     ); // ISO timestamp
     expect(rawManifest.metadata.entryCount).toBe(1); // One post
-    expect(rawManifest.metadata.overallHash).toMatch(/^[a-f0-9]{32}$/); // MD5 hash
+    expect(rawManifest.metadata.overallHash).toMatch(/^[a-f0-9]{40}$/); // MD5 hash
 
     // Verify the helper function correctly extracts entries
     const manifest = await getPostManifest();
-    expect(manifest[slug]).toEqual(rawManifest.entries[slug]);
+    expect(manifest.entries[slug]).toEqual(rawManifest.entries[slug]);
   });
 });

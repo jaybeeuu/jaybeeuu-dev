@@ -18,10 +18,10 @@ export type ParseYamlMetaFailureReason =
   | LoadYamlFailureReason
   | "yaml metadata invalid";
 
-export const parseYamlMeta = <T>(
+export const parseYamlMeta = <Metadata>(
   yamlMeta: string,
-  validator: TypePredicate<T>,
-): Result<T, ParseYamlMetaFailureReason> => {
+  validator: TypePredicate<Metadata>,
+): Result<Metadata, ParseYamlMetaFailureReason> => {
   const yamlResult = loadYaml(yamlMeta);
   if (!yamlResult.success) {
     return yamlResult;
@@ -31,7 +31,7 @@ export const parseYamlMeta = <T>(
   const validationResult = validator.validate(parsedYaml);
 
   if (validationResult.valid) {
-    return success(parsedYaml as T);
+    return success(parsedYaml as Metadata);
   }
 
   return failure(
