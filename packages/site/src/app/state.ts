@@ -40,7 +40,7 @@ export const currentPostMeta: DerivedValue<Promise<PostMetaDataLookupResult>> =
       if (!slug) {
         return failure("no-slug-set");
       }
-      const entry = manifest[slug];
+      const entry = manifest.entries[slug];
       return entry
         ? success(entry)
         : failure("post-does-not-exist", `The slug "${slug}" is not a post.`);

@@ -6,7 +6,6 @@ import {
   isIntersectionOf,
   isLiteral,
   isObject,
-  isRecordOf,
   isUnionOf,
 } from "@jaybeeuu/is";
 import { isV2Entry } from "./types.js";
@@ -50,7 +49,7 @@ export interface ContentConfig<Type extends string, MetaData> {
   readonly generateFileName: (slug: string, html: string) => string;
 
   /** Enhance metadata with computed fields */
-  readonly enhanceMetadata: (
+  readonly getAdditionalMetadata: (
     metadata: MetaData,
     content: string,
   ) => { [key: string]: unknown };
@@ -93,72 +92,50 @@ export type MetadataMapFromConfig<Config> = {
 };
 
 /**
- * Metadata interface for post source files.
- * Represents the metadata from frontmatter or JSON files before compilation.
- */
-export interface PostMetaFileData {
-  readonly title: string;
-  readonly abstract: string;
-  readonly publish: boolean;
-}
-
-/**
  * Tech radar quadrant categories for technology classification.
  */
-export type TechRadarQuadrant =
-  | "languages"
-  | "tools"
-  | "techniques"
-  | "platforms";
+const techRadarQuadrantValidator = isUnionOf(
+  isLiteral("languages"),
+  isLiteral("tools"),
+  isLiteral("techniques"),
+  isLiteral("platforms"),
+);
+export type TechRadarQuadrant = CheckedBy<typeof techRadarQuadrantValidator>;
 
 /**
  * Tech radar adoption rings indicating recommendation level.
  */
-export type TechRadarRing = "adopt" | "trial" | "assess" | "hold";
-
-/**
- * Metadata interface for tech radar entry source files.
- * Defines technology position and descriptive information.
- */
-export interface TechRadarMetaFileData {
-  readonly title: string;
-  readonly quadrant: TechRadarQuadrant;
-  readonly ring: TechRadarRing;
-  readonly description: string;
-  readonly publish: boolean;
-}
+const techRadarRingValidator = isUnionOf(
+  isLiteral("adopt"),
+  isLiteral("trial"),
+  isLiteral("assess"),
+  isLiteral("hold"),
+);
+export type TechRadarRing = CheckedBy<typeof techRadarRingValidator>;
 
 /**
  * Type-safe validator for post metadata.
- * Ensures runtime validation matches compile-time types.
+ * Represents the metadata from frontmatter or JSON files before compilation.
  */
-export const isPostMetaData = isObject<PostMetaFileData>({
+export const isPostMetaData = isObject({
   title: is("string"),
   abstract: is("string"),
   publish: is("boolean"),
 } as const);
+export type PostMetaFileData = CheckedBy<typeof isPostMetaData>;
 
 /**
  * Type-safe validator for tech radar metadata.
- * Ensures runtime validation matches compile-time types.
+ * Defines technology position and descriptive information.
  */
-export const isTechRadarMetaData = isObject<TechRadarMetaFileData>({
+export const isTechRadarMetaData = isObject({
   title: is("string"),
-  quadrant: isUnionOf(
-    isLiteral("languages"),
-    isLiteral("tools"),
-    isLiteral("techniques"),
-    isLiteral("platforms"),
-  ) satisfies TypePredicate<TechRadarQuadrant>,
-  ring: isUnionOf(
-    isLiteral("adopt"),
-    isLiteral("trial"),
-    isLiteral("assess"),
-    isLiteral("hold"),
-  ) satisfies TypePredicate<TechRadarRing>,
+  quadrant: techRadarQuadrantValidator,
+  ring: techRadarRingValidator,
   description: is("string"),
   publish: is("boolean"),
 } as const);
+export type TechRadarMetaFileData = CheckedBy<typeof isTechRadarMetaData>;
 
 /**
  * Reading time calculation result for posts.
@@ -205,10 +182,7 @@ export const isPostManifest = isV2ManifestFile(isPostMetadata);
  * type MyContentTypes = ContentTypesFromConfig<typeof contentResolverConfig>;
  * ```
  */
-export const contentResolverConfig: {
-  readonly post: ContentConfig<"post", PostMetaFileData>;
-  readonly "tech-radar": ContentConfig<"tech-radar", TechRadarMetaFileData>;
-} = {
+export const contentResolverConfig = {
   post: {
     contentType: "post",
     validator: isPostMetaData,
@@ -226,7 +200,7 @@ export const contentResolverConfig: {
     generateFileName: (slug: string, html: string) => {
       return getCompiledPostFileName(slug, html);
     },
-    enhanceMetadata: (_metadata: PostMetaFileData, content: string) => {
+    getAdditionalMetadata: (_metadata: PostMetaFileData, content: string) => {
       const readingTime = getReadingTime(content);
       return { readingTime };
     },
@@ -248,15 +222,20 @@ export const contentResolverConfig: {
     generateFileName: (slug: string) => {
       return `${slug}.html`;
     },
-    enhanceMetadata: (metadata: TechRadarMetaFileData, _content: string) => {
+    getAdditionalMetadata: (
+      metadata: TechRadarMetaFileData,
+      content: string,
+    ) => {
+      const readingTime = getReadingTime(content);
       return {
         quadrant: metadata.quadrant,
         ring: metadata.ring,
         description: metadata.description,
+        readingTime,
       };
     },
   },
-};
+} as const;
 
 // Now derive types from the actual config
 export type ContentTypes = ContentTypesFromConfig<typeof contentResolverConfig>;

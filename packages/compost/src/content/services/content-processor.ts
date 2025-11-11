@@ -320,10 +320,13 @@ function generateTypedManifestEntry(
       ? new Date(oldEntry.lastUpdateDate).toISOString()
       : null;
 
-  const enhancedMetadata = contentConfig.enhanceMetadata(metadata, content);
+  const enhancedMetadata = contentConfig.getAdditionalMetadata(
+    metadata,
+    content,
+  );
 
   return {
-    ...(metadata as { [key: string]: unknown }),
+    ...metadata,
     ...enhancedMetadata,
     fileName,
     href,

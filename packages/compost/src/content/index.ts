@@ -2,7 +2,6 @@
 // Note: Metadata type has been simplified - export specific types instead
 export { parseYamlMeta } from "./services/metadata.js";
 export type { ParseYamlMetaFailureReason } from "./services/metadata.js";
-// Export post-related types that may still be used externally
 export type {
   PostManifest,
   PostMetadata,
