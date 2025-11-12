@@ -269,7 +269,7 @@ export const compilePosts = async (
   }
 
   // Extract post manifest from the ManifestMap and wrap in V2 structure
-  const postEntries = updateResult.value.post || {};
+  const postEntries = updateResult.value.manifests.post || {};
   const postManifest: PostManifest = {
     version: 2,
     metadata: {

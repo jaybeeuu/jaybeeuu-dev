@@ -33,7 +33,7 @@ const run = async (
     const result = await processContent(options);
     if (result.success) {
       // Format output for all content types
-      const outputLines = Object.entries(result.value)
+      const outputLines = Object.entries(result.value.manifests)
         .filter(([, manifest]) => Object.keys(manifest).length > 0)
         .flatMap(([contentType, manifest]) => {
           const contentTypeHeader = `  ${contentType}:`;

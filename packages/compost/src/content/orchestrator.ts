@@ -1,5 +1,4 @@
 import type { Result } from "@jaybeeuu/utilities";
-import type { TypePredicate } from "@jaybeeuu/is";
 import { failure, success } from "@jaybeeuu/utilities";
 import path from "node:path";
 import { deleteDirectories } from "../files/index.js";
@@ -19,6 +18,7 @@ import {
 } from "./content-types.js";
 
 export type { ProcessedContent, ManifestMap, BaseManifestEntry };
+export type { ContentTypeManifest };
 
 export interface OrchestratorConfig {
   sourceDir: string;
@@ -105,7 +105,7 @@ function applyContentConfigDefaults(
   };
 }
 
-async function writeContentTypeManifest(
+async function writeManifest(
   contentType: string,
   entries: Map<string, ManifestEntry>,
   config: ContentConfig<string, object>,
@@ -181,7 +181,7 @@ async function discoverFilesForContentType(
   }
 }
 
-async function loadSingleManifestData(
+async function loadManifestData(
   contentType: string,
   contentConfig: ContentConfig<string, object>,
 ): Promise<
@@ -242,12 +242,18 @@ async function loadSingleManifestData(
   }
 }
 
+interface ContentTypeManifest {
+  contentType: string;
+  config: ContentConfig<string, object>;
+  entries: Map<string, ManifestEntry>;
+}
+
 async function processContentType(
   contentType: string,
   contentConfig: ContentConfig<string, object>,
   orchestratorConfig: OrchestratorConfig,
-): Promise<Result<{ [slug: string]: ManifestEntry }, string>> {
-  const manifestData = await loadSingleManifestData(contentType, contentConfig);
+): Promise<Result<ContentTypeManifest, string>> {
+  const manifestData = await loadManifestData(contentType, contentConfig);
   if (!manifestData.success) {
     return manifestData;
   }
@@ -282,16 +288,34 @@ async function processContentType(
     }
   }
 
-  const writeResult = await writeContentTypeManifest(
+  return success({
     contentType,
-    manifestEntries,
-    contentConfig,
-  );
-  if (!writeResult.success) {
-    return writeResult;
+    config: contentConfig,
+    entries: manifestEntries,
+  });
+}
+
+async function writeAllManifests(
+  contentTypeManifests: ContentTypeManifest[],
+): Promise<Result<void, string>> {
+  for (const manifest of contentTypeManifests) {
+    const writeResult = await writeManifest(
+      manifest.contentType,
+      manifest.entries,
+      manifest.config,
+    );
+
+    if (!writeResult.success) {
+      return writeResult;
+    }
   }
 
-  return success(Object.fromEntries(manifestEntries));
+  return success(undefined);
+}
+
+export interface ProcessContentResult {
+  manifests: ManifestMap;
+  individualManifests: { [contentType: string]: ContentTypeManifest };
 }
 
 export async function processContent(
@@ -301,7 +325,7 @@ export async function processContent(
   } = contentResolverConfig as {
     [key: string]: ContentTypeDefinition<string, object>;
   },
-): Promise<Result<ManifestMap, string>> {
+): Promise<Result<ProcessContentResult, string>> {
   const orchestratorConfig: OrchestratorConfig =
     "globalOutputDir" in config
       ? (config as OrchestratorConfig)
@@ -318,6 +342,7 @@ export async function processContent(
     await deleteDirectories(path.resolve(orchestratorConfig.outputDir));
   }
 
+  const contentTypeManifests: ContentTypeManifest[] = [];
   const allManifests: ManifestMap = {};
 
   for (const [contentType, definition] of Object.entries(
@@ -339,8 +364,20 @@ export async function processContent(
       return failure(`${contentType} processing failed`, result.message);
     }
 
-    allManifests[contentType] = result.value;
+    contentTypeManifests.push(result.value);
+    allManifests[contentType] = Object.fromEntries(result.value.entries);
   }
 
-  return success(allManifests);
+  // Write all manifests at orchestration level
+  const writeResult = await writeAllManifests(contentTypeManifests);
+  if (!writeResult.success) {
+    return writeResult;
+  }
+
+  return success({
+    manifests: allManifests,
+    individualManifests: Object.fromEntries(
+      contentTypeManifests.map((m) => [m.contentType, m]),
+    ),
+  });
 }
