@@ -1,14 +1,25 @@
+// New functional API - preferred approach
 export {
-  ManifestManager,
+  loadManifestData,
+  getOldManifestEntries,
+  getOldManifestsForAllContentTypes,
+  createManifestBuilder,
+  addManifestEntry,
+  writeManifests,
+  getManifestMap,
+  type LoadedManifestData,
+  type ManifestBuilder,
   type ProcessingManifest,
-  type ManifestConfig,
-  type V1ManifestFile,
+  type OldManifest,
+  type OldManifestEntry,
   type V2ManifestFile,
-  type LoadedManifestFile,
-} from "./manifest-manager.js";
+  isV2ManifestFile,
+} from "./manifest-operations.js";
 
 // Re-export for backward compatibility
-export type { ProcessingManifest as ManifestMap } from "./manifest-manager.js";
+export type { ProcessingManifest as ManifestMap } from "./manifest-operations.js";
+
+// Low-level utilities
 export {
   getOldManifest,
   type GetOldManifestFailureReason,

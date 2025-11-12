@@ -11,11 +11,25 @@ import {
   type V1Entry,
   type V2Entry,
 } from "../../types.js";
-import { isV1ManifestFile, isV2ManifestFile } from "./manifest-manager.js";
-import { is } from "@jaybeeuu/is";
+import { is, isObject, isRecordOf, isUnionOf } from "@jaybeeuu/is";
+import { isV2ManifestFile } from "./manifest-operations.js";
 import { getSha1Hex } from "../../../hash.js";
 
 export type GetOldManifestFailureReason = "read manifest failed";
+
+/**
+ * V1 manifest file format (flat object).
+ */
+export type V1ManifestFile = { [slug: string]: V1Entry };
+
+export const isV1ManifestFile = isRecordOf(
+  isObject({
+    fileName: is("string"),
+    href: is("string"),
+    lastUpdateDate: isUnionOf(is("string"), is("null")),
+    publishDate: is("string"),
+  }),
+);
 
 /**
  * Extract hash from filename for v1 manifest upgrade.
@@ -80,23 +94,14 @@ const getManifestFromOldManifestLocator = async (
 
   const data = readResult.value;
 
-  // Use version field to determine which validation to apply
-  if (typeof data === "object" && "version" in data) {
-    // Has version field - validate as v2 manifest
-    // Use isV2Entry for basic V2 validation (we don't know specific content type here)
-    const v2Validator = isV2ManifestFile(isV2Entry);
-    if (v2Validator(data)) {
-      // V2 format - extract the entries (already have hash fields)
-      return { success: true, value: data.entries };
-    } else {
-      return failure(
-        "validation failed" as ReadJsonFileFailureReason,
-        "Invalid v2 manifest format",
-      );
-    }
+  // Test V2 format first using schema validation
+  const v2Validator = isV2ManifestFile(isV2Entry);
+  if (v2Validator(data)) {
+    // V2 format - extract the entries (already have hash fields)
+    return { success: true, value: data.entries };
   }
 
-  // No version field - check if it's v1 format and upgrade
+  // Test V1 format using schema validation
   if (isV1ManifestFile(data)) {
     // V1 format - upgrade to v2 by adding hash fields
     const upgradedManifest = upgradeV1Manifest(data);

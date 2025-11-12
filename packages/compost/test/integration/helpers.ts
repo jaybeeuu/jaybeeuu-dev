@@ -4,8 +4,8 @@ import { assertIsNotNullish, success } from "@jaybeeuu/utilities";
 import { jest } from "@jest/globals";
 import type {
   PostManifest,
-  PostMetaFileData,
-  PostMetadata,
+  PostFileMetadata,
+  PostManifestEntry,
 } from "../../src/content/index.js";
 import { isPostManifest } from "../../src/content/index.js";
 import path from "path";
@@ -55,7 +55,7 @@ export const cleanUpDirectories = async (): Promise<void> => {
 
 interface BasePostFile {
   content: string | string[];
-  meta: PostMetaFileData | null;
+  meta: PostFileMetadata | null;
   path?: string;
   slug: string;
   otherFiles?: {
@@ -111,7 +111,7 @@ export const writeOutputManifestFile = async (
 
 const getMarkdownContent = (
   content: string | string[],
-  meta: PostMetaFileData | null,
+  meta: PostFileMetadata | null,
 ): string => {
   const markdownContent = Array.isArray(content) ? content.join("\n") : content;
 
@@ -277,7 +277,7 @@ export const compilePosts = async (
       entryCount: Object.keys(postEntries).length,
       overallHash: "test",
     },
-    entries: postEntries as { [slug: string]: PostMetadata },
+    entries: postEntries as { [slug: string]: PostManifestEntry },
   };
   return success(postManifest);
 };

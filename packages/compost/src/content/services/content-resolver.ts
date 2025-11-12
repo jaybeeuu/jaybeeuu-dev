@@ -9,13 +9,13 @@ import type { ContentConfig } from "../content-types.js";
 // Re-export the unified ContentConfig as ContentResolverConfig for backward compatibility
 export type ContentResolverConfig<
   Type extends string,
-  MetaData,
-> = ContentConfig<Type, MetaData>;
+  Metadata,
+> = ContentConfig<Type, Metadata>;
 export type ContentResolverConfigMap<
   Type extends string,
-  MetaDataMap extends { [type in Type]: unknown },
+  MetadataMap extends { [type in Type]: unknown },
 > = {
-  [K in Type]: ContentResolverConfig<K, MetaDataMap[K]>;
+  [K in Type]: ContentResolverConfig<K, MetadataMap[K]>;
 };
 
 /**
@@ -24,14 +24,14 @@ export type ContentResolverConfigMap<
  * Contains the parsed content, validated metadata, and identified content type.
  *
  * @template Type - The content type identifier
- * @template MetaData - The metadata interface for this content type
+ * @template Metadata - The metadata interface for this content type
  */
-export type ResolvedContent<Type extends string, MetaData> = {
+export type ResolvedContent<Type extends string, Metadata> = {
   /** The identified content type */
   type: Type;
 
   /** The validated and typed metadata */
-  metadata: MetaData;
+  metadata: Metadata;
 
   /** The markdown content (without frontmatter) */
   content: string;
@@ -70,11 +70,11 @@ const hasFrontMatter = (sourceFileText: string): boolean => {
   );
 };
 
-const resolveFrontmatterContent = async <Type extends string, MetaData>(
+const resolveFrontmatterContent = async <Type extends string, Metadata>(
   markdownFilePath: string,
-  config: ContentResolverConfig<Type, MetaData>,
+  config: ContentResolverConfig<Type, Metadata>,
 ): Promise<
-  Result<ResolvedContent<Type, MetaData>, ResolveContentFailureReason>
+  Result<ResolvedContent<Type, Metadata>, ResolveContentFailureReason>
 > => {
   const sourceFileTextResult = await loadSourceText(markdownFilePath);
   if (!sourceFileTextResult.success) {
@@ -106,11 +106,11 @@ const resolveFrontmatterContent = async <Type extends string, MetaData>(
   });
 };
 
-const resolveJsonContent = async <Type extends string, MetaData>(
+const resolveJsonContent = async <Type extends string, Metadata>(
   markdownFilePath: string,
-  config: ContentResolverConfig<Type, MetaData>,
+  config: ContentResolverConfig<Type, Metadata>,
 ): Promise<
-  Result<ResolvedContent<Type, MetaData>, ResolveContentFailureReason>
+  Result<ResolvedContent<Type, Metadata>, ResolveContentFailureReason>
 > => {
   const sourceFileTextResult = await loadSourceText(markdownFilePath);
   if (!sourceFileTextResult.success) {
@@ -149,7 +149,7 @@ const resolveJsonContent = async <Type extends string, MetaData>(
  * and routes to the appropriate resolver with proper metadata validation.
  *
  * @template Type - Union of supported content type identifiers
- * @template ContentMetaDataMap - Mapping of content types to their metadata interfaces
+ * @template ContentMetadataMap - Mapping of content types to their metadata interfaces
  * @param markdownFilePath - Path to the markdown file to resolve
  * @param configMap - Configuration mapping for all supported content types
  * @returns Promise resolving to typed content with metadata, or failure reason
@@ -158,27 +158,27 @@ const resolveJsonContent = async <Type extends string, MetaData>(
  * ```typescript
  * const result = await resolveContent("./post.md", contentResolverConfig);
  * if (result.success && result.value.type === "post") {
- *   // TypeScript knows this is PostMetaFileData
+ *   // TypeScript knows this is PostFileMetadata
  *   console.log(result.value.metadata.title);
  * }
  * ```
  */
 export const resolveContent = async <
   Type extends string,
-  ContentMetaDataMap extends { [type in Type]: unknown },
+  ContentMetadataMap extends { [type in Type]: unknown },
 >(
   markdownFilePath: string,
-  configMap: ContentResolverConfigMap<Type, ContentMetaDataMap>,
+  configMap: ContentResolverConfigMap<Type, ContentMetadataMap>,
 ): Promise<
   Result<
-    ResolvedContent<Type, ContentMetaDataMap[Type]>,
+    ResolvedContent<Type, ContentMetadataMap[Type]>,
     ResolveContentFailureReason
   >
 > => {
   // Find matching config based on file pattern
   const configs = Object.values(configMap) as ContentResolverConfig<
     Type,
-    ContentMetaDataMap[Type]
+    ContentMetadataMap[Type]
   >[];
   for (const config of configs) {
     // Check frontmatter patterns

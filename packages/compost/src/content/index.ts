@@ -4,8 +4,8 @@ export { parseYamlMeta } from "./services/metadata.js";
 export type { ParseYamlMetaFailureReason } from "./services/metadata.js";
 export type {
   PostManifest,
-  PostMetadata,
-  PostMetaFileData,
+  PostManifestEntry,
+  PostFileMetadata,
   ReadingTime,
 } from "./content-types.js";
 export { isPostManifest } from "./content-types.js";
@@ -17,7 +17,7 @@ export type {
 } from "./services/content-resolver.js";
 export type {
   ContentTypes,
-  ContentMetaDataMap,
+  ContentMetadataMap,
   AnyContentConfig,
   AnyContentConfigMap,
 } from "./content-types.js";

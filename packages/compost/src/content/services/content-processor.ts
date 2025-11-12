@@ -107,7 +107,7 @@ interface ProcessingContext {
  * @returns Promise resolving to processed content
  */
 async function processTypedContent(
-  resolvedContent: ResolvedContent<string, any>,
+  resolvedContent: ResolvedContent<string, unknown>,
   filePath: string,
   oldManifests: { [contentType: string]: OldManifest },
   context: ProcessingContext,
@@ -225,7 +225,7 @@ export async function processFile(
 
     // Now process the content
     const result = await processTypedContent(
-      contentResult.value as ResolvedContent<string, any>,
+      contentResult.value,
       filePath,
       oldManifests,
       context,

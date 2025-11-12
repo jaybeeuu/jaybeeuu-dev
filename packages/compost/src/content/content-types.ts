@@ -10,8 +10,8 @@ import {
 } from "@jaybeeuu/is";
 import { isV2Entry } from "./types.js";
 import { getCompiledPostFileName } from "./file-paths.js";
-import type { V2ManifestFile } from "./services/manifest/manifest-manager.js";
-import { isV2ManifestFile } from "./services/manifest/manifest-manager.js";
+import type { V2ManifestFile } from "./services/manifest/manifest-operations.js";
+import { isV2ManifestFile } from "./services/manifest/manifest-operations.js";
 
 /**
  * File patterns for content type detection.
@@ -26,18 +26,18 @@ export interface ContentFilePatterns {
 }
 
 /**
- * Complete configuration for a content type.
- * Combines resolution, processing, and output generation capabilities.
+ * User-facing configuration definition for a content type.
+ * Allows optional manifest fields that will be defaulted at runtime.
  *
  * @template Type - Content type identifier (must be string literal)
- * @template MetaData - Metadata interface (object with known properties)
+ * @template Metadata - Metadata interface (object with known properties)
  */
-export interface ContentConfig<Type extends string, MetaData> {
+export interface ContentConfigDefinition<Type extends string, Metadata> {
   /** Content type identifier */
   readonly contentType: Type;
 
   /** Validator function for metadata */
-  readonly validator: TypePredicate<MetaData>;
+  readonly validator: TypePredicate<Metadata>;
 
   /** File patterns for content type detection */
   readonly filePatterns: ContentFilePatterns;
@@ -50,24 +50,95 @@ export interface ContentConfig<Type extends string, MetaData> {
 
   /** Enhance metadata with computed fields */
   readonly getAdditionalMetadata: (
-    metadata: MetaData,
+    metadata: Metadata,
     content: string,
   ) => { [key: string]: unknown };
+
+  /** Whether this content type requires old manifest for change detection (default: true) */
+  readonly requireOldManifest?: boolean;
+
+  /** Custom manifest filename pattern (default: `${contentType}-manifest.json`) */
+  readonly manifestFileName?: string;
+
+  /** Output directory for this content type (default: "lib") */
+  readonly outputDir?: string;
+
+  /** Additional old manifest file locations for backward compatibility (default: []) */
+  readonly oldManifestLocators?: string[];
 }
 
 /**
- * Type-safe map of content types to their configurations.
+ * Complete runtime configuration for a content type.
+ * All manifest fields are required and populated with defaults.
+ *
+ * @template Type - Content type identifier (must be string literal)
+ * @template Metadata - Metadata interface (object with known properties)
+ */
+export interface ContentConfig<Type extends string, Metadata> {
+  /** Content type identifier */
+  readonly contentType: Type;
+
+  /** Validator function for metadata */
+  readonly validator: TypePredicate<Metadata>;
+
+  /** File patterns for content type detection */
+  readonly filePatterns: ContentFilePatterns;
+
+  /** Generate slug from file path */
+  readonly generateSlug: (filePath: string, sourceDir: string) => string;
+
+  /** Generate output filename from slug and compiled HTML */
+  readonly generateFileName: (slug: string, html: string) => string;
+
+  /** Enhance metadata with computed fields */
+  readonly getAdditionalMetadata: (
+    metadata: Metadata,
+    content: string,
+  ) => { [key: string]: unknown };
+
+  /** Whether this content type requires old manifest for change detection */
+  readonly requireOldManifest: boolean;
+
+  /** Manifest filename for this content type */
+  readonly manifestFileName: string;
+
+  /** Output directory for this content type */
+  readonly outputDir: string;
+
+  /** Old manifest file locations for backward compatibility */
+  readonly oldManifestLocators: string[];
+}
+
+/**
+ * Type-safe map of content types to their configuration definitions (user-facing).
  * Ensures each config matches its key and has proper typing.
+ */
+export type ContentConfigDefinitionMap<
+  ConfigMap extends { [key: string]: ContentConfigDefinition<string, unknown> },
+> = {
+  readonly [K in keyof ConfigMap]: ConfigMap[K] extends ContentConfigDefinition<
+    infer Type,
+    infer Metadata
+  >
+    ? Type extends K
+      ? ContentConfigDefinition<Type, Metadata>
+      : never
+    : never;
+};
+
+/**
+ * Type-safe map of content types to their runtime configurations.
+ * All manifest fields are required and populated.
  */
 export type ContentConfigMap<
   ConfigMap extends { [key: string]: ContentConfig<string, unknown> },
 > = {
   readonly [K in keyof ConfigMap]: ConfigMap[K] extends ContentConfig<
     infer Type,
-    infer MetaData
+    infer Metadata
   >
     ? Type extends K
-      ? ContentConfig<Type, MetaData>
+      ? ContentConfig<Type, Metadata>
       : never
     : never;
 };
@@ -85,9 +156,9 @@ export type ContentTypesFromConfig<Config> = keyof Config;
 export type MetadataMapFromConfig<Config> = {
   readonly [K in keyof Config]: Config[K] extends ContentConfig<
     string,
-    infer MetaData
+    infer Metadata
   >
-    ? MetaData
+    ? Metadata
     : never;
 };
 
@@ -114,28 +185,28 @@ const techRadarRingValidator = isUnionOf(
 export type TechRadarRing = CheckedBy<typeof techRadarRingValidator>;
 
 /**
- * Type-safe validator for post metadata.
+ * Type-safe validator for post file metadata.
  * Represents the metadata from frontmatter or JSON files before compilation.
  */
-export const isPostMetaData = isObject({
+export const isPostFileMetadata = isObject({
   title: is("string"),
   abstract: is("string"),
   publish: is("boolean"),
 } as const);
-export type PostMetaFileData = CheckedBy<typeof isPostMetaData>;
+export type PostFileMetadata = CheckedBy<typeof isPostFileMetadata>;
 
 /**
- * Type-safe validator for tech radar metadata.
+ * Type-safe validator for tech radar file metadata.
  * Defines technology position and descriptive information.
  */
-export const isTechRadarMetaData = isObject({
+export const isTechRadarFileMetadata = isObject({
   title: is("string"),
   quadrant: techRadarQuadrantValidator,
   ring: techRadarRingValidator,
   description: is("string"),
   publish: is("boolean"),
 } as const);
-export type TechRadarMetaFileData = CheckedBy<typeof isTechRadarMetaData>;
+export type TechRadarFileMetadata = CheckedBy<typeof isTechRadarFileMetadata>;
 
 /**
  * Reading time calculation result for posts.
@@ -149,25 +220,23 @@ export const isReadingTime = isObject({
 export type ReadingTime = CheckedBy<typeof isReadingTime>;
 
 /**
- * Complete metadata interface for compiled posts.
+ * Complete metadata interface for compiled post manifest entries.
  */
-export const isPostMetadata = isIntersectionOf(
+export const isPostManifestEntry = isIntersectionOf(
   isV2Entry,
+  isPostFileMetadata,
   isObject({
-    abstract: is("string"),
     slug: is("string"),
-    title: is("string"),
-    publish: is("boolean"),
     readingTime: isReadingTime,
   }),
 );
-export type PostMetadata = CheckedBy<typeof isPostMetadata>;
+export type PostManifestEntry = CheckedBy<typeof isPostManifestEntry>;
 
 /**
  * Post manifest type with V2 structure and typed metadata.
  */
-export type PostManifest = V2ManifestFile<PostMetadata>;
-export const isPostManifest = isV2ManifestFile(isPostMetadata);
+export type PostManifest = V2ManifestFile<PostManifestEntry>;
+export const isPostManifest = isV2ManifestFile(isPostManifestEntry);
 
 /**
  * Configuration for all supported content types.
@@ -185,7 +254,7 @@ export const isPostManifest = isV2ManifestFile(isPostMetadata);
 export const contentResolverConfig = {
   post: {
     contentType: "post",
-    validator: isPostMetaData,
+    validator: isPostFileMetadata,
     filePatterns: {
       frontmatter: [".post.md"],
       jsonMetadata: [".md"],
@@ -200,14 +269,15 @@ export const contentResolverConfig = {
     generateFileName: (slug: string, html: string) => {
       return getCompiledPostFileName(slug, html);
     },
-    getAdditionalMetadata: (_metadata: PostMetaFileData, content: string) => {
+    getAdditionalMetadata: (_metadata: PostFileMetadata, content: string) => {
       const readingTime = getReadingTime(content);
       return { readingTime };
     },
+    // Use defaults: requireOldManifest: true, manifestFileName: "post-manifest.json", outputDir: "lib"
   },
   "tech-radar": {
     contentType: "tech-radar",
-    validator: isTechRadarMetaData,
+    validator: isTechRadarFileMetadata,
     filePatterns: {
       frontmatter: [".tech.md", ".tech-radar.md"],
       jsonMetadata: [".md"],
@@ -223,7 +293,7 @@ export const contentResolverConfig = {
       return `${slug}.html`;
     },
     getAdditionalMetadata: (
-      metadata: TechRadarMetaFileData,
+      metadata: TechRadarFileMetadata,
       content: string,
     ) => {
       const readingTime = getReadingTime(content);
@@ -234,12 +304,15 @@ export const contentResolverConfig = {
         readingTime,
       };
     },
+    // Custom manifest settings
+    requireOldManifest: false, // Tech radar doesn't need change detection
+    manifestFileName: "tech-radar-manifest.json", // Custom filename
   },
 } as const;
 
 // Now derive types from the actual config
 export type ContentTypes = ContentTypesFromConfig<typeof contentResolverConfig>;
-export type ContentMetaDataMap = MetadataMapFromConfig<
+export type ContentMetadataMap = MetadataMapFromConfig<
   typeof contentResolverConfig
 >;
 
@@ -251,5 +324,9 @@ export type { ContentTypes as ContentType };
  * Uses any for metadata to eliminate complex generic constraints and allow
  * compatibility with existing strongly-typed configs.
  */
+export type AnyContentConfigDefinition = ContentConfigDefinition<string, any>;
+export type AnyContentConfigDefinitionMap = {
+  [key: string]: AnyContentConfigDefinition;
+};
 export type AnyContentConfig = ContentConfig<string, any>;
 export type AnyContentConfigMap = { [key: string]: AnyContentConfig };
