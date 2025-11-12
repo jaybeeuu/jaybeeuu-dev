@@ -19,7 +19,7 @@ export interface ContentFilePatterns {
   jsonSuffix: string;
 }
 
-export interface ContentConfigDefinition<Type extends string, Metadata> {
+export interface ContentTypeDefinition<Type extends string, Metadata> {
   readonly contentType: Type;
   readonly validator: TypePredicate<Metadata>;
   readonly filePatterns: ContentFilePatterns;
@@ -52,14 +52,14 @@ export interface ContentConfig<Type extends string, Metadata> {
 }
 
 export type ContentConfigDefinitionMap<
-  ConfigMap extends { [key: string]: ContentConfigDefinition<string, unknown> },
+  ConfigMap extends { [key: string]: ContentTypeDefinition<string, unknown> },
 > = {
-  readonly [K in keyof ConfigMap]: ConfigMap[K] extends ContentConfigDefinition<
+  readonly [K in keyof ConfigMap]: ConfigMap[K] extends ContentTypeDefinition<
     infer Type,
     infer Metadata
   >
     ? Type extends K
-      ? ContentConfigDefinition<Type, Metadata>
+      ? ContentTypeDefinition<Type, Metadata>
       : never
     : never;
 };
@@ -222,10 +222,7 @@ export type ContentMetadataMap = MetadataMapFromConfig<
 
 export type { ContentTypes as ContentType };
 
-export type AnyContentConfigDefinition = ContentConfigDefinition<
-  string,
-  object
->;
+export type AnyContentConfigDefinition = ContentTypeDefinition<string, object>;
 export type AnyContentConfigDefinitionMap = {
   [key: string]: AnyContentConfigDefinition;
 };

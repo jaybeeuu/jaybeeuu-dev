@@ -3,29 +3,18 @@ import type { TypePredicate } from "@jaybeeuu/is";
 import { failure, success } from "@jaybeeuu/utilities";
 import path from "node:path";
 import { deleteDirectories } from "../files/index.js";
-import {
-  loadManifestData,
-  getOldManifestsForAllContentTypes,
-  createManifestBuilder,
-  addManifestEntry,
-  writeManifests,
-  getManifestMap,
-  type ManifestBuilder,
-  type ProcessingManifest as ManifestMap,
-} from "./services/manifest/index.js";
-import { discoverContentFiles } from "./services/file-discovery.js";
+import type { ProcessingManifest as ManifestMap } from "./services/manifest/index.js";
+import { writeJsonFile } from "../files/index.js";
+import { getSha1Hex } from "../hash.js";
 import {
   processFile,
   type ProcessedContent,
   type BaseManifestEntry,
 } from "./services/content-processor.js";
+import type { ManifestEntry } from "./types.js";
 import {
   contentResolverConfig,
-  type AnyContentConfigDefinitionMap,
-  type AnyContentConfigMap,
-  type AnyContentConfigDefinition,
-  type AnyContentConfig,
-  type ContentConfigDefinition,
+  type ContentTypeDefinition,
   type ContentConfig,
 } from "./content-types.js";
 
@@ -81,7 +70,7 @@ function convertLegacyOptions(
 }
 
 function applyContentConfigDefaults(
-  definition: ContentConfigDefinition<string, object>,
+  definition: ContentTypeDefinition<string, object>,
   config: OrchestratorConfig,
   orchestratorOverrides: {
     outputDir?: string;
@@ -116,36 +105,208 @@ function applyContentConfigDefaults(
   };
 }
 
-function buildManifestFromProcessedContent(
-  processedContent: ProcessedContent<string>[],
-): ManifestBuilder {
-  let builder = createManifestBuilder();
+async function writeContentTypeManifest(
+  contentType: string,
+  entries: Map<string, ManifestEntry>,
+  config: ContentConfig<string, object>,
+): Promise<Result<void, string>> {
+  try {
+    const manifestPath = path.resolve(
+      config.outputDir,
+      config.manifestFileName,
+    );
 
-  for (const content of processedContent) {
-    builder = addManifestEntry(
-      builder,
-      content.contentType,
-      content.slug,
-      content.manifestEntry,
+    const entriesObject = Object.fromEntries(entries);
+    const entriesHash = getSha1Hex(
+      JSON.stringify(entriesObject, Object.keys(entriesObject).sort()),
+    );
+
+    const manifest = {
+      version: 2,
+      metadata: {
+        generatedAt: new Date().toISOString(),
+        entryCount: entries.size,
+        overallHash: entriesHash,
+      },
+      entries: entriesObject,
+    };
+
+    await writeJsonFile(manifestPath, manifest);
+    return success(undefined);
+  } catch (error) {
+    return failure(
+      "manifest write failed",
+      `Failed to write manifest for ${contentType}: ${error}`,
     );
   }
+}
 
-  return builder;
+async function discoverFilesForContentType(
+  sourceDir: string,
+  filePatterns: {
+    frontmatter: readonly string[];
+    jsonMetadata: readonly string[];
+    jsonSuffix: string;
+  },
+): Promise<Result<string[], string>> {
+  try {
+    const { recurseDirectory } = await import("../files/index.js");
+    const patterns = [
+      ...filePatterns.frontmatter,
+      ...filePatterns.jsonMetadata,
+    ];
+    const includePatterns = patterns.map(
+      (pattern) => new RegExp(`\\${pattern}$`),
+    );
+
+    const files: string[] = [];
+
+    try {
+      for await (const fileInfo of recurseDirectory(sourceDir, {
+        include: includePatterns,
+      })) {
+        files.push(fileInfo.filePath);
+      }
+    } catch {
+      // If source directory doesn't exist, return empty array
+      return success([]);
+    }
+
+    return success(files);
+  } catch (error) {
+    return failure(
+      "file discovery failed",
+      `Failed to discover files for content type: ${error}`,
+    );
+  }
+}
+
+async function loadSingleManifestData(
+  contentType: string,
+  contentConfig: ContentConfig<string, object>,
+): Promise<
+  Result<
+    {
+      [slug: string]: {
+        fileName?: string;
+        hash?: string;
+        publishDate?: string | Date;
+        lastUpdateDate?: string | Date | null;
+        [key: string]: unknown;
+      };
+    },
+    string
+  >
+> {
+  try {
+    const { getOldManifest } = await import(
+      "./services/manifest/old-manifest.js"
+    );
+
+    const manifestPath = path.resolve(
+      contentConfig.outputDir,
+      contentConfig.manifestFileName,
+    );
+
+    const result = await getOldManifest(
+      manifestPath,
+      contentConfig.oldManifestLocators,
+    );
+
+    if (!result.success) {
+      if (contentConfig.requireOldManifest) {
+        return failure("manifest load failed", result.message);
+      }
+      return success({});
+    }
+
+    const entriesObject: {
+      [slug: string]: {
+        fileName?: string;
+        hash?: string;
+        publishDate?: string | Date;
+        lastUpdateDate?: string | Date | null;
+        [key: string]: unknown;
+      };
+    } = {};
+    for (const [slug, entry] of Object.entries(result.value)) {
+      entriesObject[slug] = entry;
+    }
+
+    return success(entriesObject);
+  } catch (error) {
+    return failure(
+      "manifest load failed",
+      `Failed to load manifest for ${contentType}: ${error}`,
+    );
+  }
+}
+
+async function processContentType(
+  contentType: string,
+  contentConfig: ContentConfig<string, object>,
+  orchestratorConfig: OrchestratorConfig,
+): Promise<Result<{ [slug: string]: ManifestEntry }, string>> {
+  const manifestData = await loadSingleManifestData(contentType, contentConfig);
+  if (!manifestData.success) {
+    return manifestData;
+  }
+
+  const filesResult = await discoverFilesForContentType(
+    orchestratorConfig.sourceDir,
+    contentConfig.filePatterns,
+  );
+  if (!filesResult.success) {
+    return filesResult;
+  }
+
+  const oldManifests = { [contentType]: manifestData.value };
+  const contentConfigs = { [contentType]: contentConfig };
+
+  const manifestEntries = new Map<string, ManifestEntry>();
+
+  for (const filePath of filesResult.value) {
+    const result = await processFile(
+      filePath,
+      oldManifests,
+      orchestratorConfig,
+      contentConfigs,
+    );
+
+    if (!result.success) {
+      return failure(`file processing failed: ${filePath}`, result.message);
+    }
+
+    if (result.value) {
+      manifestEntries.set(result.value.slug, result.value.manifestEntry);
+    }
+  }
+
+  const writeResult = await writeContentTypeManifest(
+    contentType,
+    manifestEntries,
+    contentConfig,
+  );
+  if (!writeResult.success) {
+    return writeResult;
+  }
+
+  return success(Object.fromEntries(manifestEntries));
 }
 
 export async function processContent(
   config: OrchestratorConfig | LegacyUpdateOptions,
   contentConfigDefinitions: {
-    [key: string]: ContentConfigDefinition<string, object>;
+    [key: string]: ContentTypeDefinition<string, object>;
   } = contentResolverConfig as {
-    [key: string]: ContentConfigDefinition<string, object>;
+    [key: string]: ContentTypeDefinition<string, object>;
   },
 ): Promise<Result<ManifestMap, string>> {
   const orchestratorConfig: OrchestratorConfig =
     "globalOutputDir" in config
       ? (config as OrchestratorConfig)
       : convertLegacyOptions(config as LegacyUpdateOptions);
-  const contentConfigs: { [key: string]: ContentConfig<string, object> } = {};
+
   const orchestratorOverrides = {
     outputDir: orchestratorConfig.globalOutputDir,
     manifestFileName: orchestratorConfig.globalManifestFileName,
@@ -153,88 +314,33 @@ export async function processContent(
     requireOldManifest: orchestratorConfig.globalRequireOldManifest,
   };
 
-  for (const [contentType, definition] of Object.entries(
-    contentConfigDefinitions,
-  )) {
-    contentConfigs[contentType] = applyContentConfigDefaults(
-      definition,
-      orchestratorConfig,
-      orchestratorOverrides,
-    );
-  }
-
-  const manifestConfigs: {
-    [contentType: string]: {
-      outputDir: string;
-      manifestFileName: string;
-      oldManifestLocators: string[];
-      requireOldManifest: boolean;
-      validator: TypePredicate<object>;
-    };
-  } = {};
-  for (const [contentType, config] of Object.entries(contentConfigs)) {
-    manifestConfigs[contentType] = {
-      outputDir: config.outputDir,
-      manifestFileName: config.manifestFileName,
-      oldManifestLocators: config.oldManifestLocators,
-      requireOldManifest: config.requireOldManifest,
-      validator: config.validator,
-    };
-  }
-  const manifestDataResult = await loadManifestData(manifestConfigs);
-  if (!manifestDataResult.success) {
-    return manifestDataResult;
-  }
-  const manifestData = manifestDataResult.value;
-
   if (orchestratorConfig.clean) {
     await deleteDirectories(path.resolve(orchestratorConfig.outputDir));
   }
 
-  const filesResult = await discoverContentFiles(
-    orchestratorConfig,
-    contentConfigs,
-  );
-  if (!filesResult.success) {
-    return filesResult;
-  }
+  const allManifests: ManifestMap = {};
 
-  const allOldManifests = getOldManifestsForAllContentTypes(
-    manifestData,
-    contentConfigs,
-  );
-
-  const processedContent: ProcessedContent<string>[] = [];
-  for (const filePath of filesResult.value) {
-    const result = await processFile(
-      filePath,
-      allOldManifests,
+  for (const [contentType, definition] of Object.entries(
+    contentConfigDefinitions,
+  )) {
+    const contentConfig = applyContentConfigDefaults(
+      definition,
       orchestratorConfig,
-      contentConfigs,
+      orchestratorOverrides,
     );
+
+    const result = await processContentType(
+      contentType,
+      contentConfig,
+      orchestratorConfig,
+    );
+
     if (!result.success) {
-      return failure("file processing failed", result.message);
+      return failure(`${contentType} processing failed`, result.message);
     }
-    if (result.value) {
-      processedContent.push(result.value);
-    }
+
+    allManifests[contentType] = result.value;
   }
 
-  const manifestBuilder = buildManifestFromProcessedContent(processedContent);
-
-  const writeConfigs: {
-    [contentType: string]: { outputDir: string; manifestFileName: string };
-  } = {};
-  for (const [contentType, config] of Object.entries(contentConfigs)) {
-    writeConfigs[contentType] = {
-      outputDir: config.outputDir,
-      manifestFileName: config.manifestFileName,
-    };
-  }
-  const writeResult = await writeManifests(manifestBuilder, writeConfigs);
-  if (!writeResult.success) {
-    return writeResult;
-  }
-
-  return success(getManifestMap(manifestBuilder));
+  return success(allManifests);
 }

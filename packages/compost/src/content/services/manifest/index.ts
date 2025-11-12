@@ -1,14 +1,7 @@
-// New functional API - preferred approach
+// Simplified API - direct operations only
 export {
-  loadManifestData,
   getOldManifestEntries,
-  getOldManifestsForAllContentTypes,
-  createManifestBuilder,
-  addManifestEntry,
-  writeManifests,
-  getManifestMap,
   type LoadedManifestData,
-  type ManifestBuilder,
   type ProcessingManifest,
   type OldManifest,
   type OldManifestEntry,
