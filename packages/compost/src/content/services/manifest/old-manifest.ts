@@ -13,7 +13,7 @@ import {
 } from "../../types.js";
 import { is, isObject, isRecordOf, isUnionOf } from "@jaybeeuu/is";
 import { isV2ManifestFile } from "./manifest-operations.js";
-import { getSha1Hex } from "../../../hash.js";
+import { generateV1UpgradeHash } from "./v1-upgrade-utils.js";
 
 export type GetOldManifestFailureReason = "read manifest failed";
 
@@ -32,33 +32,6 @@ export const isV1ManifestFile = isRecordOf(
 );
 
 /**
- * Extract hash from filename for v1 manifest upgrade.
- * Generates a hash based on the filename to provide a reasonable
- * approximation for change detection during v1→v2 migration.
- */
-const extractHashFromFilename = (fileName: string, slug: string): string => {
-  // Pattern: slug-hash.html where hash is typically 6-8 characters
-  const pattern = new RegExp(`^${escapeRegExp(slug)}-(\\w+)\\.html$`);
-  const match = fileName.match(pattern);
-
-  if (match && match[1]) {
-    // Use the filename hash as a basis for the v2 hash
-    // This provides reasonable change detection for most cases
-    return getSha1Hex(`v1-upgrade-${match[1]}`);
-  }
-
-  // Fallback: generate hash from the entire filename
-  return getSha1Hex(`v1-upgrade-${fileName}`);
-};
-
-/**
- * Escape special regex characters in string
- */
-const escapeRegExp = (string: string): string => {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-};
-
-/**
  * Upgrade v1 manifest entries to v2 format by adding hash field
  */
 const upgradeV1Manifest = (v1Manifest: {
@@ -69,7 +42,7 @@ const upgradeV1Manifest = (v1Manifest: {
   for (const [slug, entry] of Object.entries(v1Manifest)) {
     upgradedEntries[slug] = {
       ...entry,
-      hash: extractHashFromFilename(entry.fileName, slug),
+      hash: generateV1UpgradeHash(entry.fileName),
     };
   }
 

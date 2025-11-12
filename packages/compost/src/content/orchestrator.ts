@@ -25,14 +25,12 @@ import {
   type AnyContentConfigMap,
   type AnyContentConfigDefinition,
   type AnyContentConfig,
+  type ContentConfigDefinition,
+  type ContentConfig,
 } from "./content-types.js";
 
-// Re-export types for backwards compatibility
 export type { ProcessedContent, ManifestMap, BaseManifestEntry };
 
-/**
- * Configuration for the content orchestrator.
- */
 export interface OrchestratorConfig {
   sourceDir: string;
   outputDir: string; // Required for compatibility with content processor
@@ -42,17 +40,12 @@ export interface OrchestratorConfig {
   removeH1: boolean;
   clean: boolean;
 
-  // Global overrides for content-specific settings
   globalOutputDir?: string;
   globalManifestFileName?: string;
   globalOldManifestLocators?: string[];
   globalRequireOldManifest?: boolean;
 }
 
-/**
- * Legacy configuration format for backward compatibility.
- * Used by CLI and tests.
- */
 export interface LegacyUpdateOptions {
   additionalWatchPaths?: string[];
   hrefRoot: string;
@@ -68,9 +61,6 @@ export interface LegacyUpdateOptions {
   clean: boolean;
 }
 
-/**
- * Convert legacy UpdateOptions to new OrchestratorConfig format.
- */
 function convertLegacyOptions(
   options: LegacyUpdateOptions,
 ): OrchestratorConfig {
@@ -83,23 +73,15 @@ function convertLegacyOptions(
     removeH1: options.removeH1,
     clean: options.clean,
 
-    // Convert legacy global settings to new global overrides
-    globalOutputDir: undefined, // Don't override - use content-specific defaults
+    globalOutputDir: undefined,
     globalManifestFileName: options.manifestFileName,
     globalOldManifestLocators: options.oldManifestLocators,
     globalRequireOldManifest: options.requireOldManifest,
   };
 }
 
-/**
- * Update all manifests with processed content.
- */
-/**
- * Apply default values to content configuration definitions.
- * Converts user-facing optional configs to runtime required configs.
- */
-function applyContentConfigDefaults<T extends string, M>(
-  definition: AnyContentConfigDefinition,
+function applyContentConfigDefaults(
+  definition: ContentConfigDefinition<string, object>,
   config: OrchestratorConfig,
   orchestratorOverrides: {
     outputDir?: string;
@@ -107,30 +89,29 @@ function applyContentConfigDefaults<T extends string, M>(
     oldManifestLocators?: string[];
     requireOldManifest?: boolean;
   } = {},
-): AnyContentConfig {
+): ContentConfig<string, object> {
   return {
     ...definition,
     requireOldManifest:
       orchestratorOverrides.requireOldManifest ??
       definition.requireOldManifest ??
-      true, // Default
+      true,
 
     manifestFileName:
       orchestratorOverrides.manifestFileName ??
       definition.manifestFileName ??
-      `${definition.contentType}-manifest.json`, // Default
+      `${definition.contentType}-manifest.json`,
 
     outputDir:
       orchestratorOverrides.outputDir ??
       definition.outputDir ??
-      config.outputDir, // Use orchestrator outputDir as fallback
+      config.outputDir,
 
     oldManifestLocators: [
       ...(orchestratorOverrides.oldManifestLocators ?? []),
       ...(definition.oldManifestLocators ?? []),
     ],
 
-    // Pass through the validator for content-specific manifest validation
     validator: definition.validator,
   };
 }
@@ -152,21 +133,19 @@ function buildManifestFromProcessedContent(
   return builder;
 }
 
-/**
- * Main orchestration function - replaces the old update() function.
- * Supports both new OrchestratorConfig and legacy UpdateOptions for backward compatibility.
- */
 export async function processContent(
   config: OrchestratorConfig | LegacyUpdateOptions,
-  contentConfigDefinitions: AnyContentConfigDefinitionMap = contentResolverConfig,
+  contentConfigDefinitions: {
+    [key: string]: ContentConfigDefinition<string, object>;
+  } = contentResolverConfig as {
+    [key: string]: ContentConfigDefinition<string, object>;
+  },
 ): Promise<Result<ManifestMap, string>> {
-  // Convert legacy options to new format if needed
   const orchestratorConfig: OrchestratorConfig =
     "globalOutputDir" in config
       ? (config as OrchestratorConfig)
       : convertLegacyOptions(config as LegacyUpdateOptions);
-  // Apply defaults early - convert definitions to fully populated runtime configs
-  const contentConfigs: AnyContentConfigMap = {};
+  const contentConfigs: { [key: string]: ContentConfig<string, object> } = {};
   const orchestratorOverrides = {
     outputDir: orchestratorConfig.globalOutputDir,
     manifestFileName: orchestratorConfig.globalManifestFileName,
@@ -184,8 +163,6 @@ export async function processContent(
     );
   }
 
-  // Load all manifest data upfront using fully populated configs
-  // Extract just the properties needed for manifest loading
   const manifestConfigs: {
     [contentType: string]: {
       outputDir: string;
@@ -222,7 +199,6 @@ export async function processContent(
     return filesResult;
   }
 
-  // Convert loaded manifest data to legacy format for content processor
   const allOldManifests = getOldManifestsForAllContentTypes(
     manifestData,
     contentConfigs,
