@@ -1,6 +1,8 @@
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
 
+export type DiscoverFilesFailureReason = "file discovery failed";
+
 export async function discoverFilesForContentType(
   sourceDir: string,
   filePatterns: {
@@ -8,7 +10,7 @@ export async function discoverFilesForContentType(
     jsonMetadata: readonly string[];
     jsonSuffix: string;
   },
-): Promise<Result<string[], "file discovery failed">> {
+): Promise<Result<string[], DiscoverFilesFailureReason>> {
   try {
     const { recurseDirectory } = await import("../../files/index.js");
     const patterns = [

@@ -54,6 +54,10 @@ export interface ProcessedContent<
   manifestEntry: BaseManifestEntry & Metadata & CalculatedMetadata;
 }
 
+export type ProcessTypedContentFailureReason =
+  | "content skipped"
+  | "compilation failed";
+
 async function processTypedContent<
   Type extends string,
   Metadata extends { [key: string]: unknown },
@@ -68,7 +72,7 @@ async function processTypedContent<
 ): Promise<
   Result<
     ProcessedContent<Type, Metadata, CalculatedMetadata>,
-    "content skipped" | "compilation failed"
+    ProcessTypedContentFailureReason
   >
 > {
   const { type: contentType, metadata, content } = resolvedContent;
@@ -120,6 +124,13 @@ async function processTypedContent<
   });
 }
 
+export type ProcessFileFailureReason =
+  | "content resolution failed"
+  | "content type not configured"
+  | "content skipped"
+  | "compilation failed"
+  | "file processing failed";
+
 export async function processFile<
   Type extends string,
   Metadata extends { [key: string]: unknown },
@@ -133,11 +144,7 @@ export async function processFile<
 ): Promise<
   Result<
     ProcessedContent<Type, Metadata, CalculatedMetadata> | null,
-    | "content resolution failed"
-    | "content type not configured"
-    | "content skipped"
-    | "compilation failed"
-    | "file processing failed"
+    ProcessFileFailureReason
   >
 > {
   try {
@@ -190,6 +197,8 @@ export async function processFile<
   }
 }
 
+export type CompileContentFailureReason = "compilation failed";
+
 async function compileContent<
   Type extends string,
   Metadata extends { [key: string]: unknown },
@@ -206,7 +215,7 @@ async function compileContent<
       html: string;
       assets: Array<{ sourcePath: string; destinationPath: string }>;
     },
-    "compilation failed"
+    CompileContentFailureReason
   >
 > {
   const result = await compileMarkdown({

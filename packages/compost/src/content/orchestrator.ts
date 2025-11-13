@@ -50,6 +50,13 @@ function applyContentConfigDefaults<
   };
 }
 
+export type ProcessContentTypeFailureReason =
+  | "manifest load failed"
+  | "file discovery failed"
+  | "file processing failed"
+  | "slug already exists"
+  | "manifest write failed";
+
 async function processContentType<
   Type extends string,
   Metadata extends { [key: string]: unknown },
@@ -62,11 +69,7 @@ async function processContentType<
 ): Promise<
   Result<
     V2ManifestFile<Metadata, CalculatedMetadata>,
-    | "manifest load failed"
-    | "file discovery failed"
-    | "file processing failed"
-    | "slug already exists"
-    | "manifest write failed"
+    ProcessContentTypeFailureReason
   >
 > {
   const manifestPath = path.resolve(
@@ -133,6 +136,8 @@ async function processContentType<
   return success(manifest as V2ManifestFile<Metadata, CalculatedMetadata>);
 }
 
+export type ProcessContentFailureReason = "content type processing failed";
+
 export async function processContent(
   config: OrchestratorConfig,
   contentConfigDefinitions: {
@@ -156,7 +161,7 @@ export async function processContent(
         { [key: string]: unknown }
       >;
     },
-    "content type processing failed"
+    ProcessContentFailureReason
   >
 > {
   const orchestratorConfig = config;

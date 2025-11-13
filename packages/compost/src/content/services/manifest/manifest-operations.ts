@@ -359,6 +359,8 @@ export type V2Manifest<
   },
 > = V2ManifestFile<Metadata, CalculatedMetadata>;
 
+export type WriteManifestFailureReason = "manifest write failed";
+
 export async function writeManifest<
   Metadata extends { [key: string]: unknown },
   CalculatedMetadata extends { [key: string]: unknown },
@@ -366,7 +368,7 @@ export async function writeManifest<
   contentType: string,
   manifest: V2ManifestFile<Metadata, CalculatedMetadata>,
   config: { outputDir: string; manifestFileName: string },
-): Promise<Result<void, "manifest write failed">> {
+): Promise<Result<void, WriteManifestFailureReason>> {
   try {
     const path = await import("node:path");
     const { writeJsonFile } = await import("../../../files/index.js");
