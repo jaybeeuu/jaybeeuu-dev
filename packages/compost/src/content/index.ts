@@ -23,8 +23,4 @@ export type {
 } from "./content-types.js";
 export { contentResolverConfig } from "./content-types.js";
 export { processContent } from "./orchestrator.js";
-export type {
-  ProcessedContent,
-  ManifestMap,
-  OrchestratorConfig,
-} from "./orchestrator.js";
+export type { ProcessedContent, OrchestratorConfig } from "./orchestrator.js";

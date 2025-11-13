@@ -1,13 +1,16 @@
 import type Utilities from "@jaybeeuu/utilities";
 import type { Result } from "@jaybeeuu/utilities";
-import { assertIsNotNullish, success } from "@jaybeeuu/utilities";
+import { assertIsNotNullish, success, failure } from "@jaybeeuu/utilities";
 import { jest } from "@jest/globals";
 import type {
   PostManifest,
   PostFileMetadata,
   PostManifestEntry,
 } from "../../src/content/index.js";
-import { isPostManifest } from "../../src/content/index.js";
+import {
+  isPostManifest,
+  contentResolverConfig,
+} from "../../src/content/index.js";
 import path from "path";
 import type * as ReadingTime from "reading-time";
 import { processContent } from "../../src/content/index.js";
@@ -263,23 +266,40 @@ export const compilePosts = async (
   options?: Partial<UpdateOptions>,
 ): Promise<Result<PostManifest, string>> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
-  const updateResult = await processContent(defaultedUpdateOptions);
+  // Convert to new orchestrator config
+  const orchestratorConfig = { clean: defaultedUpdateOptions.clean };
+
+  // Create content config overrides for posts based on legacy options
+  const contentConfigOverrides = {
+    post: {
+      ...contentResolverConfig.post,
+      sourceDir: defaultedUpdateOptions.sourceDir,
+      outputDir: defaultedUpdateOptions.outputDir,
+      hrefRoot: defaultedUpdateOptions.hrefRoot,
+      includeUnpublished: defaultedUpdateOptions.includeUnpublished,
+      codeLineNumbers: defaultedUpdateOptions.codeLineNumbers,
+      removeH1: defaultedUpdateOptions.removeH1,
+      manifestFileName: defaultedUpdateOptions.manifestFileName,
+      oldManifestLocators: defaultedUpdateOptions.oldManifestLocators,
+      requireOldManifest: defaultedUpdateOptions.requireOldManifest,
+    } as any,
+  };
+
+  const updateResult = await processContent(
+    orchestratorConfig,
+    contentConfigOverrides,
+  );
   if (!updateResult.success) {
     return updateResult;
   }
 
-  // Extract post manifest from the ManifestMap and wrap in V2 structure
-  const postEntries = updateResult.value.manifests.post || {};
-  const postManifest: PostManifest = {
-    version: 2,
-    metadata: {
-      generatedAt: new Date().toISOString(),
-      entryCount: Object.keys(postEntries).length,
-      overallHash: "test",
-    },
-    entries: postEntries as { [slug: string]: PostManifestEntry },
-  };
-  return success(postManifest);
+  // Extract post manifest from the result
+  const postManifest = updateResult.value.post;
+  if (!postManifest) {
+    return failure("post processing failed", "No post manifest generated");
+  }
+
+  return success(postManifest as PostManifest);
 };
 
 export const getCompiledPostWithContent = async (

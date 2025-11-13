@@ -30,18 +30,21 @@ const run = async (
 ): Promise<Result<never, "error" | string>> => {
   try {
     log.info("Composting...");
-    const result = await processContent(options);
+    // Convert old CLI options to new config structure
+    const orchestratorConfig = { clean: options.clean };
+    const result = await processContent(orchestratorConfig);
     if (result.success) {
       // Format output for all content types
-      const outputLines = Object.entries(result.value.manifests)
-        .filter(([, manifest]) => Object.keys(manifest).length > 0)
+      const outputLines = Object.entries(result.value)
+        .filter(([, manifest]) => Object.keys(manifest.entries).length > 0)
         .flatMap(([contentType, manifest]) => {
           const contentTypeHeader = `  ${contentType}:`;
-          const manifestLines = Object.entries(manifest).map(([slug, meta]) => {
-            const fileName =
-              (meta as { fileName?: string }).fileName ?? "unknown";
-            return `    ${slug}: ${fileName}`;
-          });
+          const manifestLines = Object.entries(manifest.entries).map(
+            ([slug, meta]) => {
+              const fileName = meta.fileName ?? "unknown";
+              return `    ${slug}: ${fileName}`;
+            },
+          );
           return [contentTypeHeader, ...manifestLines];
         });
 

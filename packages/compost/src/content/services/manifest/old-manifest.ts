@@ -43,6 +43,7 @@ const upgradeV1Manifest = (v1Manifest: {
     upgradedEntries[slug] = {
       ...entry,
       hash: generateV1UpgradeHash(entry.fileName),
+      slug,
     };
   }
 
@@ -113,4 +114,19 @@ export const getOldManifest = async (
     "read manifest failed",
     failures.map((fail) => fail.stack ?? fail.message).join("\n"),
   );
+};
+
+export const getOldManifestWithFallback = async (
+  manifestOutputFileName: string,
+  manifestLocators: string[],
+  required: boolean,
+): Promise<Result<{ [key: string]: V2Entry }, GetOldManifestFailureReason>> => {
+  const result = await getOldManifest(manifestOutputFileName, manifestLocators);
+
+  if (!result.success && !required) {
+    // If not required and failed, return empty manifest instead of failure
+    return { success: true, value: {} };
+  }
+
+  return result;
 };

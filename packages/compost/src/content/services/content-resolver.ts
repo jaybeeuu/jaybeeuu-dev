@@ -4,16 +4,21 @@ import type { ReadJsonFileFailureReason } from "../../files/index.js";
 import { canAccess, readJsonFile, readTextFile } from "../../files/index.js";
 import type { ParseYamlMetaFailureReason } from "./metadata.js";
 import { parseYamlMeta } from "./metadata.js";
-import type { ContentConfig } from "../content-types.js";
+import type {
+  ResolvedContentDefinition,
+  ContentTypeDefinition,
+} from "../content-types.js";
 
-// Re-export the unified ContentConfig as ContentResolverConfig for backward compatibility
+// Re-export the ResolvedContentDefinition as ContentResolverConfig for backward compatibility
 export type ContentResolverConfig<
   Type extends string,
-  Metadata,
-> = ContentConfig<Type, Metadata>;
+  Metadata extends Record<string, unknown>,
+> = ResolvedContentDefinition<
+  ContentTypeDefinition<Type, Metadata, Record<string, unknown>>
+>;
 export type ContentResolverConfigMap<
   Type extends string,
-  MetadataMap extends { [type in Type]: unknown },
+  MetadataMap extends { [type in Type]: Record<string, unknown> },
 > = {
   [K in Type]: ContentResolverConfig<K, MetadataMap[K]>;
 };
@@ -70,7 +75,10 @@ const hasFrontMatter = (sourceFileText: string): boolean => {
   );
 };
 
-const resolveFrontmatterContent = async <Type extends string, Metadata>(
+const resolveFrontmatterContent = async <
+  Type extends string,
+  Metadata extends Record<string, unknown>,
+>(
   markdownFilePath: string,
   config: ContentResolverConfig<Type, Metadata>,
 ): Promise<
@@ -106,7 +114,10 @@ const resolveFrontmatterContent = async <Type extends string, Metadata>(
   });
 };
 
-const resolveJsonContent = async <Type extends string, Metadata>(
+const resolveJsonContent = async <
+  Type extends string,
+  Metadata extends Record<string, unknown>,
+>(
   markdownFilePath: string,
   config: ContentResolverConfig<Type, Metadata>,
 ): Promise<
@@ -165,7 +176,7 @@ const resolveJsonContent = async <Type extends string, Metadata>(
  */
 export const resolveContent = async <
   Type extends string,
-  ContentMetadataMap extends { [type in Type]: unknown },
+  ContentMetadataMap extends { [type in Type]: Record<string, unknown> },
 >(
   markdownFilePath: string,
   configMap: ContentResolverConfigMap<Type, ContentMetadataMap>,

@@ -16,20 +16,26 @@ import { isV2Entry } from "../../types.js";
 import { is, isObject, isRecordOf, isIntersectionOf } from "@jaybeeuu/is";
 import type { TypePredicate } from "@jaybeeuu/is";
 
-export interface V2ManifestFile<TEntry extends V2Entry = V2Entry> {
+export interface V2ManifestFile<
+  Metadata extends Record<string, unknown> = Record<string, unknown>,
+  CalculatedMetadata extends Record<string, unknown> = Record<string, unknown>,
+> {
   version: number;
   metadata: {
     generatedAt: string;
     entryCount: number;
     overallHash: string;
   };
-  entries: { [slug: string]: TEntry };
+  entries: { [slug: string]: V2Entry & Metadata & CalculatedMetadata };
 }
 
-export const isV2ManifestFile = <TEntry extends V2Entry = V2Entry>(
-  entryPredicate?: TypePredicate<TEntry>,
-) =>
-  isObject({
+export const isV2ManifestFile = <
+  Metadata extends Record<string, unknown> = Record<string, unknown>,
+  CalculatedMetadata extends Record<string, unknown> = Record<string, unknown>,
+>(
+  entryPredicate?: TypePredicate<V2Entry & Metadata & CalculatedMetadata>,
+): TypePredicate<V2ManifestFile<Metadata, CalculatedMetadata>> => {
+  const validator = isObject({
     version: is("number"),
     metadata: isObject({
       generatedAt: is("string"),
@@ -38,6 +44,10 @@ export const isV2ManifestFile = <TEntry extends V2Entry = V2Entry>(
     }),
     entries: isRecordOf(entryPredicate ?? isV2Entry),
   });
+  return validator as TypePredicate<
+    V2ManifestFile<Metadata, CalculatedMetadata>
+  >;
+};
 
 export const isV2ManifestFileWithContentValidation = (
   contentValidator: TypePredicate<object>,
@@ -162,6 +172,7 @@ async function loadManifestForContentType(
       const upgradedEntry: V2Entry = {
         ...v1Entry,
         hash: generateV1UpgradeHash(v1Entry.fileName),
+        slug,
       };
       entriesMap.set(slug, upgradedEntry);
     }
@@ -280,6 +291,60 @@ export function getManifestMap(builder: ManifestBuilder): ProcessingManifest {
     result[contentType] = Object.fromEntries(entries);
   }
   return result;
+}
+
+export function buildManifest<
+  Metadata extends Record<string, unknown>,
+  CalculatedMetadata extends Record<string, unknown>,
+>(
+  entries: Map<string, V2Entry & Metadata & CalculatedMetadata>,
+): V2ManifestFile<Metadata, CalculatedMetadata> {
+  const entriesObject = Object.fromEntries(entries);
+  const entriesHash = generateHash(
+    JSON.stringify(entriesObject, Object.keys(entriesObject).sort()),
+  );
+
+  return {
+    version: 2,
+    metadata: {
+      generatedAt: new Date().toISOString(),
+      entryCount: entries.size,
+      overallHash: entriesHash,
+    },
+    entries: entriesObject,
+  };
+}
+
+export type V2Manifest<
+  Metadata extends Record<string, unknown> = Record<string, unknown>,
+  CalculatedMetadata extends Record<string, unknown> = Record<string, unknown>,
+> = V2ManifestFile<Metadata, CalculatedMetadata>;
+
+export async function writeManifest<
+  Metadata extends Record<string, unknown>,
+  CalculatedMetadata extends Record<string, unknown>,
+>(
+  contentType: string,
+  manifest: V2ManifestFile<Metadata, CalculatedMetadata>,
+  config: { outputDir: string; manifestFileName: string },
+): Promise<Result<void, "manifest write failed">> {
+  try {
+    const path = await import("node:path");
+    const { writeJsonFile } = await import("../../../files/index.js");
+
+    const manifestPath = path.default.resolve(
+      config.outputDir,
+      config.manifestFileName,
+    );
+
+    await writeJsonFile(manifestPath, manifest);
+    return success(undefined);
+  } catch (error) {
+    return failure(
+      "manifest write failed",
+      `Failed to write manifest for ${contentType}: ${error}`,
+    );
+  }
 }
 
 function generateHash(content: string): string {

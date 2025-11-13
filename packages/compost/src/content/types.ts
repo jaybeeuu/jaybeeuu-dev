@@ -21,6 +21,7 @@ export const isV2Entry = isObject({
   lastUpdateDate: isUnionOf(is("string"), is("null")),
   publishDate: is("string"),
   hash: is("string"),
+  slug: is("string"),
 });
 export type V2Entry = CheckedBy<typeof isV2Entry>;
 

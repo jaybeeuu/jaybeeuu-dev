@@ -19,7 +19,11 @@ export interface ContentFilePatterns {
   jsonSuffix: string;
 }
 
-export interface ContentTypeDefinition<Type extends string, Metadata> {
+export interface ContentTypeDefinition<
+  Type extends string,
+  Metadata extends Record<string, unknown>,
+  CalculatedMetadata extends Record<string, unknown>,
+> {
   readonly contentType: Type;
   readonly validator: TypePredicate<Metadata>;
   readonly filePatterns: ContentFilePatterns;
@@ -28,61 +32,50 @@ export interface ContentTypeDefinition<Type extends string, Metadata> {
   readonly getAdditionalMetadata: (
     metadata: Metadata,
     content: string,
-  ) => { [key: string]: unknown };
+  ) => CalculatedMetadata;
   readonly requireOldManifest?: boolean;
   readonly manifestFileName?: string;
+  readonly sourceDir?: string;
   readonly outputDir?: string;
   readonly oldManifestLocators?: string[];
+  readonly hrefRoot: string;
+  readonly includeUnpublished: boolean;
+  readonly codeLineNumbers: boolean;
+  readonly removeH1: boolean;
 }
 
-export interface ContentConfig<Type extends string, Metadata> {
-  readonly contentType: Type;
-  readonly validator: TypePredicate<Metadata>;
-  readonly filePatterns: ContentFilePatterns;
-  readonly generateSlug: (filePath: string, sourceDir: string) => string;
-  readonly generateFileName: (slug: string, html: string) => string;
-  readonly getAdditionalMetadata: (
-    metadata: Metadata,
-    content: string,
-  ) => { [key: string]: unknown };
-  readonly requireOldManifest: boolean;
-  readonly manifestFileName: string;
-  readonly outputDir: string;
-  readonly oldManifestLocators: string[];
-}
-
-export type ContentConfigDefinitionMap<
-  ConfigMap extends { [key: string]: ContentTypeDefinition<string, unknown> },
-> = {
-  readonly [K in keyof ConfigMap]: ConfigMap[K] extends ContentTypeDefinition<
+/**
+ * ResolvedContentDefinition is derived directly from a ContentTypeDefinition with all optional fields filled in.
+ * This represents the configuration after applying defaults.
+ */
+export type ResolvedContentDefinition<TDefinition> =
+  TDefinition extends ContentTypeDefinition<
     infer Type,
-    infer Metadata
+    infer Metadata,
+    infer CalculatedMetadata
   >
-    ? Type extends K
-      ? ContentTypeDefinition<Type, Metadata>
-      : never
+    ? Required<ContentTypeDefinition<Type, Metadata, CalculatedMetadata>>
     : never;
-};
 
-export type ContentConfigMap<
-  ConfigMap extends { [key: string]: ContentConfig<string, unknown> },
+export type ResolvedContentDefinitionMap<
+  ConfigMap extends {
+    [key: string]: ContentTypeDefinition<
+      string,
+      Record<string, unknown>,
+      Record<string, unknown>
+    >;
+  },
 > = {
-  readonly [K in keyof ConfigMap]: ConfigMap[K] extends ContentConfig<
-    infer Type,
-    infer Metadata
-  >
-    ? Type extends K
-      ? ContentConfig<Type, Metadata>
-      : never
-    : never;
+  readonly [K in keyof ConfigMap]: ResolvedContentDefinition<ConfigMap[K]>;
 };
 
 export type ContentTypesFromConfig<Config> = keyof Config;
 
 export type MetadataMapFromConfig<Config> = {
-  readonly [K in keyof Config]: Config[K] extends ContentConfig<
+  readonly [K in keyof Config]: Config[K] extends ContentTypeDefinition<
     string,
-    infer Metadata
+    infer Metadata,
+    Record<string, unknown>
   >
     ? Metadata
     : never;
@@ -158,6 +151,22 @@ export type PostManifestEntry = CheckedBy<typeof isPostManifestEntry>;
 export type PostManifest = V2ManifestFile<PostManifestEntry>;
 export const isPostManifest = isV2ManifestFile(isPostManifestEntry);
 
+/**
+ * Complete metadata interface for compiled tech radar manifest entries.
+ */
+export const isTechRadarManifestEntry = isIntersectionOf(
+  isV2Entry,
+  isTechRadarFileMetadata,
+  isObject({
+    slug: is("string"),
+    readingTime: isReadingTime,
+  }),
+);
+export type TechRadarManifestEntry = CheckedBy<typeof isTechRadarManifestEntry>;
+
+export type TechRadarManifest = V2ManifestFile<TechRadarManifestEntry>;
+export const isTechRadarManifest = isV2ManifestFile(isTechRadarManifestEntry);
+
 export const contentResolverConfig = {
   post: {
     contentType: "post",
@@ -180,7 +189,17 @@ export const contentResolverConfig = {
       const readingTime = getReadingTime(content);
       return { readingTime };
     },
-  },
+    sourceDir: "src",
+    outputDir: "out",
+    hrefRoot: "/",
+    includeUnpublished: false,
+    codeLineNumbers: false,
+    removeH1: false,
+  } satisfies ContentTypeDefinition<
+    "post",
+    PostFileMetadata,
+    { readingTime: ReadingTime }
+  >,
   "tech-radar": {
     contentType: "tech-radar",
     validator: isTechRadarFileMetadata,
@@ -212,7 +231,22 @@ export const contentResolverConfig = {
     },
     requireOldManifest: false,
     manifestFileName: "tech-radar-manifest.json",
-  },
+    sourceDir: "src",
+    outputDir: "out",
+    hrefRoot: "/",
+    includeUnpublished: false,
+    codeLineNumbers: false,
+    removeH1: false,
+  } satisfies ContentTypeDefinition<
+    "tech-radar",
+    TechRadarFileMetadata,
+    {
+      quadrant: TechRadarQuadrant;
+      ring: TechRadarRing;
+      description: string;
+      readingTime: ReadingTime;
+    }
+  >,
 } as const;
 
 export type ContentTypes = ContentTypesFromConfig<typeof contentResolverConfig>;
@@ -222,9 +256,24 @@ export type ContentMetadataMap = MetadataMapFromConfig<
 
 export type { ContentTypes as ContentType };
 
-export type AnyContentConfigDefinition = ContentTypeDefinition<string, object>;
-export type AnyContentConfigDefinitionMap = {
-  [key: string]: AnyContentConfigDefinition;
-};
-export type AnyContentConfig = ContentConfig<string, object>;
+export type AnyResolvedContentDefinition = ResolvedContentDefinition<
+  ContentTypeDefinition<
+    string,
+    Record<string, unknown>,
+    Record<string, unknown>
+  >
+>;
+
+// Legacy aliases for backward compatibility
+export type ContentConfig<TDefinition> = ResolvedContentDefinition<TDefinition>;
+export type AnyContentConfig = AnyResolvedContentDefinition;
+export type ContentConfigMap<
+  T extends {
+    [key: string]: ContentTypeDefinition<
+      string,
+      Record<string, unknown>,
+      Record<string, unknown>
+    >;
+  },
+> = ResolvedContentDefinitionMap<T>;
 export type AnyContentConfigMap = { [key: string]: AnyContentConfig };

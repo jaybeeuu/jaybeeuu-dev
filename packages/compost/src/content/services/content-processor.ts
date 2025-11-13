@@ -8,23 +8,18 @@ import {
 } from "./content-resolver.js";
 import { compileMarkdown } from "./markdown-compilation.js";
 import { copyFile, writeTextFile } from "../../files/index.js";
-import type { ContentConfig, AnyContentConfigMap } from "../content-types.js";
+import type {
+  AnyResolvedContentDefinition,
+  ResolvedContentDefinition,
+  ContentTypeDefinition,
+} from "../content-types.js";
 import { getSha1Hex } from "../../hash.js";
 import { detectContentChange } from "./manifest/v1-upgrade-utils.js";
-
-export interface ContentProcessorConfig {
-  sourceDir: string;
-  outputDir: string;
-  hrefRoot: string;
-  includeUnpublished: boolean;
-  codeLineNumbers: boolean;
-  removeH1: boolean;
-}
 
 export interface BaseManifestEntry {
   fileName: string;
   href: string;
-  lastUpdateDate: string | null;
+  lastUpdateDate: string;
   publishDate: string;
   hash: string;
   slug: string;
@@ -42,56 +37,53 @@ export type OldManifest = { [slug: string]: OldManifestEntry };
 
 export interface ProcessedContent<
   Type extends string,
-  ManifestEntry extends BaseManifestEntry = BaseManifestEntry & {
-    [key: string]: unknown;
-  },
+  Metadata extends Record<string, unknown> = Record<string, unknown>,
+  CalculatedMetadata extends Record<string, unknown> = Record<string, unknown>,
 > {
   slug: string;
   contentType: Type;
-  metadata: unknown;
+  metadata: Metadata;
   compiledHtml: string;
   assets: Array<{
     sourcePath: string;
     destinationPath: string;
   }>;
   contentHash: string;
-  manifestEntry: ManifestEntry;
+  manifestEntry: BaseManifestEntry & Metadata & CalculatedMetadata;
 }
 
-interface ProcessingContext {
-  config: ContentProcessorConfig;
-  resolverConfig: AnyContentConfigMap;
-}
-
-async function processTypedContent(
-  resolvedContent: ResolvedContent<string, unknown>,
+async function processTypedContent<
+  Type extends string,
+  Metadata extends Record<string, unknown>,
+  CalculatedMetadata extends Record<string, unknown>,
+>(
+  resolvedContent: ResolvedContent<Type, Metadata>,
   filePath: string,
-  oldManifests: { [contentType: string]: OldManifest },
-  context: ProcessingContext,
-): Promise<Result<ProcessedContent<string>, string>> {
+  oldManifest: OldManifest,
+  contentConfig: ResolvedContentDefinition<
+    ContentTypeDefinition<Type, Metadata, CalculatedMetadata>
+  >,
+): Promise<
+  Result<
+    ProcessedContent<Type, Metadata, CalculatedMetadata>,
+    "content skipped" | "compilation failed"
+  >
+> {
   const { type: contentType, metadata, content } = resolvedContent;
-
-  const contentConfig = context.resolverConfig[contentType];
-  if (!contentConfig) {
-    return failure(
-      "content type not supported",
-      `No configuration found for content type: ${contentType}`,
-    );
-  }
 
   const metadataWithPublish = metadata as unknown as { publish?: boolean };
   if (
     "publish" in metadataWithPublish &&
     typeof metadataWithPublish.publish === "boolean" &&
     !metadataWithPublish.publish &&
-    !context.config.includeUnpublished
+    !contentConfig.includeUnpublished
   ) {
     return failure("content skipped", "Content is not published");
   }
 
-  const slug = contentConfig.generateSlug(filePath, context.config.sourceDir);
+  const slug = contentConfig.generateSlug(filePath, contentConfig.sourceDir);
 
-  const compileResult = await compileContent(filePath, content, context);
+  const compileResult = await compileContent(filePath, content, contentConfig);
   if (!compileResult.success) {
     return failure(
       "compilation failed",
@@ -103,8 +95,6 @@ async function processTypedContent(
 
   const contentHash = generateHash(content + JSON.stringify(metadata));
 
-  const oldManifest = oldManifests[contentType as string] || {};
-
   const manifestEntry = generateTypedManifestEntry(
     slug,
     metadata,
@@ -113,20 +103,13 @@ async function processTypedContent(
     contentHash,
     oldManifest,
     contentConfig,
-    context,
   );
 
-  await writeTypedCompiledContent(
-    slug,
-    compiledHtml,
-    assets,
-    contentConfig,
-    context,
-  );
+  await writeTypedCompiledContent(slug, compiledHtml, assets, contentConfig);
 
   return success({
     slug,
-    contentType: contentType as string,
+    contentType: contentType as Type,
     metadata,
     compiledHtml,
     assets,
@@ -135,22 +118,33 @@ async function processTypedContent(
   });
 }
 
-export async function processFile(
+export async function processFile<
+  Type extends string,
+  Metadata extends Record<string, unknown>,
+  CalculatedMetadata extends Record<string, unknown>,
+>(
   filePath: string,
-  oldManifests: { [contentType: string]: OldManifest },
-  config: ContentProcessorConfig,
-  resolverConfig: AnyContentConfigMap,
-): Promise<Result<ProcessedContent<string> | null, string>> {
-  const context: ProcessingContext = { config, resolverConfig };
-
+  oldManifest: OldManifest,
+  contentConfig: ResolvedContentDefinition<
+    ContentTypeDefinition<Type, Metadata, CalculatedMetadata>
+  >,
+): Promise<
+  Result<
+    ProcessedContent<Type, Metadata, CalculatedMetadata> | null,
+    | "content resolution failed"
+    | "content type not configured"
+    | "content skipped"
+    | "compilation failed"
+    | "file processing failed"
+  >
+> {
   try {
-    const contentResult = await resolveContent(
-      filePath,
-      resolverConfig as ContentResolverConfigMap<
-        string,
-        { [type: string]: unknown }
-      >,
-    );
+    const contentResult = await resolveContent(filePath, {
+      [contentConfig.contentType]: contentConfig,
+    } as ContentResolverConfigMap<
+      string,
+      { [type: string]: Record<string, unknown> }
+    >);
     if (!contentResult.success) {
       // Skip files with no metadata
       if (
@@ -165,7 +159,7 @@ export async function processFile(
       );
     }
 
-    if (!(contentResult.value.type in resolverConfig)) {
+    if (contentResult.value.type !== contentConfig.contentType) {
       return failure(
         "content type not configured",
         `No configuration found for content type: ${contentResult.value.type}`,
@@ -173,10 +167,10 @@ export async function processFile(
     }
 
     const result = await processTypedContent(
-      contentResult.value,
+      contentResult.value as ResolvedContent<Type, Metadata>,
       filePath,
-      oldManifests,
-      context,
+      oldManifest,
+      contentConfig,
     );
     if (!result.success) {
       if (result.reason === "content skipped") {
@@ -194,40 +188,57 @@ export async function processFile(
   }
 }
 
-async function compileContent(
+async function compileContent<
+  Type extends string,
+  Metadata extends Record<string, unknown>,
+  CalculatedMetadata extends Record<string, unknown>,
+>(
   filePath: string,
   content: string,
-  context: ProcessingContext,
+  contentConfig: ResolvedContentDefinition<
+    ContentTypeDefinition<Type, Metadata, CalculatedMetadata>
+  >,
 ): Promise<
   Result<
     {
       html: string;
       assets: Array<{ sourcePath: string; destinationPath: string }>;
     },
-    string
+    "compilation failed"
   >
 > {
-  return await compileMarkdown({
+  const result = await compileMarkdown({
     sourceFilePath: filePath,
     sourceFileText: content,
-    hrefRoot: context.config.hrefRoot,
-    codeLineNumbers: context.config.codeLineNumbers,
-    removeH1: context.config.removeH1,
+    hrefRoot: contentConfig.hrefRoot,
+    codeLineNumbers: contentConfig.codeLineNumbers,
+    removeH1: contentConfig.removeH1,
   });
+
+  if (!result.success) {
+    return failure("compilation failed", result.message);
+  }
+
+  return success(result.value);
 }
 
-function generateTypedManifestEntry(
+function generateTypedManifestEntry<
+  Type extends string,
+  Metadata extends Record<string, unknown>,
+  CalculatedMetadata extends Record<string, unknown>,
+>(
   slug: string,
-  metadata: unknown,
+  metadata: Metadata,
   content: string,
   compiledHtml: string,
   contentHash: string,
   oldManifest: OldManifest,
-  contentConfig: ContentConfig<string, object>,
-  context: ProcessingContext,
-): BaseManifestEntry & { [key: string]: unknown } {
+  contentConfig: ResolvedContentDefinition<
+    ContentTypeDefinition<Type, Metadata, CalculatedMetadata>
+  >,
+): BaseManifestEntry & Metadata & CalculatedMetadata {
   const fileName = contentConfig.generateFileName(slug, compiledHtml);
-  const href = joinUrlPath(context.config.hrefRoot, fileName);
+  const href = joinUrlPath(contentConfig.hrefRoot, fileName);
 
   const oldEntryRaw = oldManifest[slug];
   const oldEntry = isValidOldEntry(oldEntryRaw) ? oldEntryRaw : undefined;
@@ -243,21 +254,24 @@ function generateTypedManifestEntry(
     slug,
   );
 
-  const lastUpdateDate = hasBeenUpdated
-    ? new Date().toISOString()
-    : oldEntry?.lastUpdateDate
-      ? new Date(oldEntry.lastUpdateDate).toISOString()
-      : null;
+  // For new posts (no oldEntry), lastUpdateDate should be null
+  // For existing posts that have been updated, set to current date
+  // For existing posts that haven't been updated, preserve existing lastUpdateDate or null
+  const lastUpdateDate = !oldEntry
+    ? null // New post, no update date
+    : hasBeenUpdated
+      ? new Date().toISOString() // Content changed, set current time
+      : oldEntry.lastUpdateDate
+        ? new Date(oldEntry.lastUpdateDate).toISOString() // Preserve existing update date
+        : null; // Old post with no previous update date
 
   const enhancedMetadata = contentConfig.getAdditionalMetadata(
-    metadata as object,
+    metadata,
     content,
   );
 
-  const typedMetadata = metadata as Record<string, unknown>;
-
   return {
-    ...typedMetadata,
+    ...metadata,
     ...enhancedMetadata,
     fileName,
     href,
@@ -265,25 +279,30 @@ function generateTypedManifestEntry(
     lastUpdateDate,
     hash: contentHash,
     slug,
-  } as BaseManifestEntry & { [key: string]: unknown };
+  } as BaseManifestEntry & Metadata & CalculatedMetadata;
 }
 
-async function writeTypedCompiledContent(
+async function writeTypedCompiledContent<
+  Type extends string,
+  Metadata extends Record<string, unknown>,
+  CalculatedMetadata extends Record<string, unknown>,
+>(
   slug: string,
   html: string,
   assets: Array<{ sourcePath: string; destinationPath: string }>,
-  contentConfig: ContentConfig<string, object>,
-  context: ProcessingContext,
+  contentConfig: ResolvedContentDefinition<
+    ContentTypeDefinition<Type, Metadata, CalculatedMetadata>
+  >,
 ): Promise<void> {
   const htmlFileName = contentConfig.generateFileName(slug, html);
-  const htmlPath = path.join(context.config.outputDir, htmlFileName);
+  const htmlPath = path.join(contentConfig.outputDir, htmlFileName);
   await writeTextFile(htmlPath, html);
 
   await Promise.all(
     assets.map((asset) =>
       copyFile(
         asset.sourcePath,
-        path.join(context.config.outputDir, asset.destinationPath),
+        path.join(contentConfig.outputDir, asset.destinationPath),
       ),
     ),
   );
