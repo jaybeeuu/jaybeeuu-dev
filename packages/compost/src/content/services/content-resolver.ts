@@ -12,13 +12,13 @@ import type {
 // Re-export the ResolvedContentDefinition as ContentResolverConfig for backward compatibility
 export type ContentResolverConfig<
   Type extends string,
-  Metadata extends Record<string, unknown>,
+  Metadata extends { [key: string]: unknown },
 > = ResolvedContentDefinition<
-  ContentTypeDefinition<Type, Metadata, Record<string, unknown>>
+  ContentTypeDefinition<Type, Metadata, { [key: string]: unknown }>
 >;
 export type ContentResolverConfigMap<
   Type extends string,
-  MetadataMap extends { [type in Type]: Record<string, unknown> },
+  MetadataMap extends { [type in Type]: { [key: string]: unknown } },
 > = {
   [K in Type]: ContentResolverConfig<K, MetadataMap[K]>;
 };
@@ -77,7 +77,7 @@ const hasFrontMatter = (sourceFileText: string): boolean => {
 
 const resolveFrontmatterContent = async <
   Type extends string,
-  Metadata extends Record<string, unknown>,
+  Metadata extends { [key: string]: unknown },
 >(
   markdownFilePath: string,
   config: ContentResolverConfig<Type, Metadata>,
@@ -116,7 +116,7 @@ const resolveFrontmatterContent = async <
 
 const resolveJsonContent = async <
   Type extends string,
-  Metadata extends Record<string, unknown>,
+  Metadata extends { [key: string]: unknown },
 >(
   markdownFilePath: string,
   config: ContentResolverConfig<Type, Metadata>,
@@ -176,7 +176,7 @@ const resolveJsonContent = async <
  */
 export const resolveContent = async <
   Type extends string,
-  ContentMetadataMap extends { [type in Type]: Record<string, unknown> },
+  ContentMetadataMap extends { [type in Type]: { [key: string]: unknown } },
 >(
   markdownFilePath: string,
   configMap: ContentResolverConfigMap<Type, ContentMetadataMap>,

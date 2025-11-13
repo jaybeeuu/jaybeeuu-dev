@@ -37,8 +37,10 @@ export type OldManifest = { [slug: string]: OldManifestEntry };
 
 export interface ProcessedContent<
   Type extends string,
-  Metadata extends Record<string, unknown> = Record<string, unknown>,
-  CalculatedMetadata extends Record<string, unknown> = Record<string, unknown>,
+  Metadata extends { [key: string]: unknown } = { [key: string]: unknown },
+  CalculatedMetadata extends { [key: string]: unknown } = {
+    [key: string]: unknown;
+  },
 > {
   slug: string;
   contentType: Type;
@@ -54,8 +56,8 @@ export interface ProcessedContent<
 
 async function processTypedContent<
   Type extends string,
-  Metadata extends Record<string, unknown>,
-  CalculatedMetadata extends Record<string, unknown>,
+  Metadata extends { [key: string]: unknown },
+  CalculatedMetadata extends { [key: string]: unknown },
 >(
   resolvedContent: ResolvedContent<Type, Metadata>,
   filePath: string,
@@ -109,7 +111,7 @@ async function processTypedContent<
 
   return success({
     slug,
-    contentType: contentType as Type,
+    contentType: contentType,
     metadata,
     compiledHtml,
     assets,
@@ -120,8 +122,8 @@ async function processTypedContent<
 
 export async function processFile<
   Type extends string,
-  Metadata extends Record<string, unknown>,
-  CalculatedMetadata extends Record<string, unknown>,
+  Metadata extends { [key: string]: unknown },
+  CalculatedMetadata extends { [key: string]: unknown },
 >(
   filePath: string,
   oldManifest: OldManifest,
@@ -143,7 +145,7 @@ export async function processFile<
       [contentConfig.contentType]: contentConfig,
     } as ContentResolverConfigMap<
       string,
-      { [type: string]: Record<string, unknown> }
+      { [type: string]: { [key: string]: unknown } }
     >);
     if (!contentResult.success) {
       // Skip files with no metadata
@@ -190,8 +192,8 @@ export async function processFile<
 
 async function compileContent<
   Type extends string,
-  Metadata extends Record<string, unknown>,
-  CalculatedMetadata extends Record<string, unknown>,
+  Metadata extends { [key: string]: unknown },
+  CalculatedMetadata extends { [key: string]: unknown },
 >(
   filePath: string,
   content: string,
@@ -224,8 +226,8 @@ async function compileContent<
 
 function generateTypedManifestEntry<
   Type extends string,
-  Metadata extends Record<string, unknown>,
-  CalculatedMetadata extends Record<string, unknown>,
+  Metadata extends { [key: string]: unknown },
+  CalculatedMetadata extends { [key: string]: unknown },
 >(
   slug: string,
   metadata: Metadata,
@@ -284,8 +286,8 @@ function generateTypedManifestEntry<
 
 async function writeTypedCompiledContent<
   Type extends string,
-  Metadata extends Record<string, unknown>,
-  CalculatedMetadata extends Record<string, unknown>,
+  Metadata extends { [key: string]: unknown },
+  CalculatedMetadata extends { [key: string]: unknown },
 >(
   slug: string,
   html: string,

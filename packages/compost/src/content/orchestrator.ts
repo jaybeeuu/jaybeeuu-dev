@@ -32,8 +32,8 @@ export interface OrchestratorConfig {
 
 function applyContentConfigDefaults<
   Type extends string,
-  Metadata extends Record<string, unknown>,
-  CalculatedMetadata extends Record<string, unknown>,
+  Metadata extends { [key: string]: unknown },
+  CalculatedMetadata extends { [key: string]: unknown },
 >(
   definition: ContentTypeDefinition<Type, Metadata, CalculatedMetadata>,
 ): ResolvedContentDefinition<
@@ -52,8 +52,8 @@ function applyContentConfigDefaults<
 
 async function processContentType<
   Type extends string,
-  Metadata extends Record<string, unknown>,
-  CalculatedMetadata extends Record<string, unknown>,
+  Metadata extends { [key: string]: unknown },
+  CalculatedMetadata extends { [key: string]: unknown },
 >(
   contentType: Type,
   contentConfig: ResolvedContentDefinition<
@@ -138,22 +138,22 @@ export async function processContent(
   contentConfigDefinitions: {
     [key: string]: ContentTypeDefinition<
       string,
-      Record<string, unknown>,
-      Record<string, unknown>
+      { [key: string]: unknown },
+      { [key: string]: unknown }
     >;
   } = contentResolverConfig as unknown as {
     [key: string]: ContentTypeDefinition<
       string,
-      Record<string, unknown>,
-      Record<string, unknown>
+      { [key: string]: unknown },
+      { [key: string]: unknown }
     >;
   },
 ): Promise<
   Result<
     {
       [contentType: string]: V2Manifest<
-        Record<string, unknown>,
-        Record<string, unknown>
+        { [key: string]: unknown },
+        { [key: string]: unknown }
       >;
     },
     "content type processing failed"
@@ -175,8 +175,8 @@ export async function processContent(
 
   const manifests: {
     [contentType: string]: V2Manifest<
-      Record<string, unknown>,
-      Record<string, unknown>
+      { [key: string]: unknown },
+      { [key: string]: unknown }
     >;
   } = {};
 

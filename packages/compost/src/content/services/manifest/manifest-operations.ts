@@ -17,8 +17,10 @@ import { is, isObject, isRecordOf, isIntersectionOf } from "@jaybeeuu/is";
 import type { TypePredicate } from "@jaybeeuu/is";
 
 export interface V2ManifestFile<
-  Metadata extends Record<string, unknown> = Record<string, unknown>,
-  CalculatedMetadata extends Record<string, unknown> = Record<string, unknown>,
+  Metadata extends { [key: string]: unknown } = { [key: string]: unknown },
+  CalculatedMetadata extends { [key: string]: unknown } = {
+    [key: string]: unknown;
+  },
 > {
   version: number;
   metadata: {
@@ -30,8 +32,10 @@ export interface V2ManifestFile<
 }
 
 export const isV2ManifestFile = <
-  Metadata extends Record<string, unknown> = Record<string, unknown>,
-  CalculatedMetadata extends Record<string, unknown> = Record<string, unknown>,
+  Metadata extends { [key: string]: unknown } = { [key: string]: unknown },
+  CalculatedMetadata extends { [key: string]: unknown } = {
+    [key: string]: unknown;
+  },
 >(
   entryPredicate?: TypePredicate<V2Entry & Metadata & CalculatedMetadata>,
 ): TypePredicate<V2ManifestFile<Metadata, CalculatedMetadata>> => {
@@ -294,8 +298,8 @@ export function getManifestMap(builder: ManifestBuilder): ProcessingManifest {
 }
 
 export function buildManifest<
-  Metadata extends Record<string, unknown>,
-  CalculatedMetadata extends Record<string, unknown>,
+  Metadata extends { [key: string]: unknown },
+  CalculatedMetadata extends { [key: string]: unknown },
 >(
   entries: Map<string, V2Entry & Metadata & CalculatedMetadata>,
 ): V2ManifestFile<Metadata, CalculatedMetadata> {
@@ -316,13 +320,15 @@ export function buildManifest<
 }
 
 export type V2Manifest<
-  Metadata extends Record<string, unknown> = Record<string, unknown>,
-  CalculatedMetadata extends Record<string, unknown> = Record<string, unknown>,
+  Metadata extends { [key: string]: unknown } = { [key: string]: unknown },
+  CalculatedMetadata extends { [key: string]: unknown } = {
+    [key: string]: unknown;
+  },
 > = V2ManifestFile<Metadata, CalculatedMetadata>;
 
 export async function writeManifest<
-  Metadata extends Record<string, unknown>,
-  CalculatedMetadata extends Record<string, unknown>,
+  Metadata extends { [key: string]: unknown },
+  CalculatedMetadata extends { [key: string]: unknown },
 >(
   contentType: string,
   manifest: V2ManifestFile<Metadata, CalculatedMetadata>,

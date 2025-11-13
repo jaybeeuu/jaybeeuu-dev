@@ -21,8 +21,8 @@ export interface ContentFilePatterns {
 
 export interface ContentTypeDefinition<
   Type extends string,
-  Metadata extends Record<string, unknown>,
-  CalculatedMetadata extends Record<string, unknown>,
+  Metadata extends { [key: string]: unknown },
+  CalculatedMetadata extends { [key: string]: unknown },
 > {
   readonly contentType: Type;
   readonly validator: TypePredicate<Metadata>;
@@ -61,8 +61,8 @@ export type ResolvedContentDefinitionMap<
   ConfigMap extends {
     [key: string]: ContentTypeDefinition<
       string,
-      Record<string, unknown>,
-      Record<string, unknown>
+      { [key: string]: unknown },
+      { [key: string]: unknown }
     >;
   },
 > = {
@@ -75,7 +75,7 @@ export type MetadataMapFromConfig<Config> = {
   readonly [K in keyof Config]: Config[K] extends ContentTypeDefinition<
     string,
     infer Metadata,
-    Record<string, unknown>
+    { [key: string]: unknown }
   >
     ? Metadata
     : never;
@@ -259,8 +259,8 @@ export type { ContentTypes as ContentType };
 export type AnyResolvedContentDefinition = ResolvedContentDefinition<
   ContentTypeDefinition<
     string,
-    Record<string, unknown>,
-    Record<string, unknown>
+    { [key: string]: unknown },
+    { [key: string]: unknown }
   >
 >;
 
@@ -271,8 +271,8 @@ export type ContentConfigMap<
   T extends {
     [key: string]: ContentTypeDefinition<
       string,
-      Record<string, unknown>,
-      Record<string, unknown>
+      { [key: string]: unknown },
+      { [key: string]: unknown }
     >;
   },
 > = ResolvedContentDefinitionMap<T>;
