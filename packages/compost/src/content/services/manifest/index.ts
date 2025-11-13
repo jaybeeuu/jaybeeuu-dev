@@ -10,6 +10,12 @@ export {
   type V2ManifestFile,
   type V2Manifest,
   isV2ManifestFile,
+  // Entry types
+  type V1Entry,
+  type V2Entry,
+  type ManifestEntry,
+  isV1Entry,
+  isV2Entry,
 } from "./manifest-operations.js";
 
 // Re-export for backward compatibility

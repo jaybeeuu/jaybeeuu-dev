@@ -10,7 +10,7 @@ import {
   isV2Entry,
   type V1Entry,
   type V2Entry,
-} from "../../types.js";
+} from "./manifest-operations.js";
 import { is, isObject, isRecordOf, isUnionOf } from "@jaybeeuu/is";
 import { isV2ManifestFile } from "./manifest-operations.js";
 import { generateV1UpgradeHash } from "./v1-upgrade-utils.js";

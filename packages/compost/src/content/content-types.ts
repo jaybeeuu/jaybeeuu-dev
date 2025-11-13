@@ -8,7 +8,7 @@ import {
   isObject,
   isUnionOf,
 } from "@jaybeeuu/is";
-import { isV2Entry } from "./types.js";
+import { isV2Entry } from "./services/manifest/index.js";
 import { getCompiledPostFileName } from "./file-paths.js";
 import type { V2ManifestFile } from "./services/manifest/manifest-operations.js";
 import { isV2ManifestFile } from "./services/manifest/manifest-operations.js";

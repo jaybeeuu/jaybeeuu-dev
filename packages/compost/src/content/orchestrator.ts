@@ -16,7 +16,7 @@ import {
   type BaseManifestEntry,
 } from "./services/content-processor.js";
 import { ManifestEntriesManager } from "./services/manifest-entries-manager.js";
-import { type V2Entry } from "./types.js";
+import { type V2Entry } from "./services/manifest/index.js";
 import {
   contentResolverConfig,
   type ContentTypeDefinition,

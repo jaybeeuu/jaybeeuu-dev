@@ -1,6 +1,6 @@
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
-import type { V2Entry } from "../types.js";
+import type { V2Entry } from "./manifest/index.js";
 
 export class ManifestEntriesManager<TEntry extends V2Entry> {
   private readonly entries = new Map<string, TEntry>();
