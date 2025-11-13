@@ -143,7 +143,7 @@ export async function processFile<
   try {
     const contentResult = await resolveContent(filePath, {
       [contentConfig.contentType]: contentConfig,
-    } as ContentResolverConfigMap<
+    } as unknown as ContentResolverConfigMap<
       string,
       { [type: string]: { [key: string]: unknown } }
     >);
