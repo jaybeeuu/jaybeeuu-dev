@@ -1,15 +1,10 @@
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success, joinUrlPath } from "@jaybeeuu/utilities";
 import path from "node:path";
-import {
-  resolveContent,
-  type ResolvedContent,
-  type ContentResolverConfigMap,
-} from "./content-resolver.js";
+import { resolveContent, type ResolvedContent } from "./content-resolver.js";
 import { compileMarkdown } from "./markdown-compilation.js";
 import { copyFile, writeTextFile } from "../../files/index.js";
 import type {
-  AnyResolvedContentDefinition,
   ResolvedContentDefinition,
   ContentTypeDefinition,
 } from "../content-types.js";
@@ -148,12 +143,7 @@ export async function processFile<
   >
 > {
   try {
-    const contentResult = await resolveContent(filePath, {
-      [contentConfig.contentType]: contentConfig,
-    } as unknown as ContentResolverConfigMap<
-      string,
-      { [type: string]: { [key: string]: unknown } }
-    >);
+    const contentResult = await resolveContent(filePath, contentConfig);
     if (!contentResult.success) {
       // Skip files with no metadata
       if (

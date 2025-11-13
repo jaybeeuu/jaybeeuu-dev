@@ -30,7 +30,7 @@ describe("front matter error handling", () => {
 
     expect(result).toMatchObject({
       success: false,
-      reason: "file processing failed",
+      reason: "content type processing failed",
     });
   });
 
@@ -61,7 +61,7 @@ describe("front matter error handling", () => {
 
     expect(result).toMatchObject({
       success: false,
-      reason: "file processing failed",
+      reason: "content type processing failed",
     });
   });
 
@@ -90,7 +90,7 @@ describe("front matter error handling", () => {
 
     expect(result).toMatchObject({
       success: false,
-      reason: "file processing failed",
+      reason: "content type processing failed",
     });
   });
 

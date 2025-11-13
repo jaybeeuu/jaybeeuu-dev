@@ -71,7 +71,7 @@ This is test content.`,
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.reason).toBe("file processing failed");
+        expect(result.reason).toBe("content type processing failed");
       }
     });
   });
@@ -150,7 +150,7 @@ This is test content.`,
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.reason).toBe("file processing failed");
+        expect(result.reason).toBe("content type processing failed");
       }
     });
   });

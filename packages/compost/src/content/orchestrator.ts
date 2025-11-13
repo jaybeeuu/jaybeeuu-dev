@@ -1,5 +1,5 @@
 import type { Result } from "@jaybeeuu/utilities";
-import { failure, success } from "@jaybeeuu/utilities";
+import { failure, repackError, success } from "@jaybeeuu/utilities";
 import path from "node:path";
 import { deleteDirectories } from "../files/index.js";
 import type { V2Manifest } from "./services/manifest/index.js";
@@ -21,7 +21,6 @@ import {
   contentResolverConfig,
   type ContentTypeDefinition,
   type ResolvedContentDefinition,
-  type AnyResolvedContentDefinition,
 } from "./content-types.js";
 
 export type { ProcessedContent, BaseManifestEntry };
@@ -66,6 +65,7 @@ async function processContentType<
   contentConfig: ResolvedContentDefinition<
     ContentTypeDefinition<Type, Metadata, CalculatedMetadata>
   >,
+  clean: boolean,
 ): Promise<
   Result<
     V2ManifestFile<Metadata, CalculatedMetadata>,
@@ -77,6 +77,7 @@ async function processContentType<
     contentConfig.manifestFileName,
   );
 
+  // Load old manifest BEFORE cleaning to preserve migration data
   const manifestResult = await getOldManifestWithFallback(
     manifestPath,
     contentConfig.oldManifestLocators,
@@ -85,6 +86,11 @@ async function processContentType<
 
   if (!manifestResult.success) {
     return failure("manifest load failed", manifestResult.message);
+  }
+
+  // Clean output directory AFTER loading old manifest
+  if (clean) {
+    await deleteDirectories(path.resolve(contentConfig.outputDir));
   }
 
   const manifestData = manifestResult.value;
@@ -166,18 +172,6 @@ export async function processContent(
 > {
   const orchestratorConfig = config;
 
-  if (orchestratorConfig.clean) {
-    // Clean output directories for all content types
-    const outputDirs = new Set(
-      Object.values(contentConfigDefinitions).map(
-        (def) => def.outputDir ?? "out",
-      ),
-    );
-    for (const outputDir of outputDirs) {
-      await deleteDirectories(path.resolve(outputDir));
-    }
-  }
-
   const manifests: {
     [contentType: string]: V2Manifest<
       { [key: string]: unknown },
@@ -190,10 +184,15 @@ export async function processContent(
   )) {
     const contentConfig = applyContentConfigDefaults(definition);
 
-    const result = await processContentType(contentType, contentConfig);
+    const result = await processContentType(
+      contentType,
+      contentConfig,
+      orchestratorConfig.clean,
+    );
 
     if (!result.success) {
-      return failure(
+      return repackError(
+        result,
         "content type processing failed",
         `${contentType}: ${result.message}`,
       );
