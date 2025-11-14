@@ -33,7 +33,7 @@ export interface ContentFilePatterns {
 export interface ContentTypeDefinition<
   Type extends string,
   InputMeta extends BaseInputMetadata,
-  OutputMeta extends Record<string, unknown>,
+  OutputMeta extends { [key: string]: unknown },
 > {
   readonly contentType: Type;
   readonly filePatterns: ContentFilePatterns;
@@ -41,10 +41,12 @@ export interface ContentTypeDefinition<
   readonly generateFileName: (slug: string, html: string) => string;
 
   /** Validates raw input data from frontmatter/JSON files */
-  readonly validateInput: (data: unknown) => Result<InputMeta, ValidationError>;
+  readonly validateInputMeta: (
+    data: unknown,
+  ) => Result<InputMeta, ValidationError>;
 
-  /** Maps validated input metadata and content to output metadata (no auto-merging) */
-  readonly mapToOutput: (input: InputMeta, content: string) => OutputMeta;
+  /** Maps validated input metadata and content to output metadata. If not provided, all InputMeta fields will be merged into output */
+  readonly mapToOutputMeta?: (input: InputMeta, content: string) => OutputMeta;
 
   readonly requireOldManifest?: boolean;
   readonly manifestFileName?: string;
@@ -75,7 +77,7 @@ export type ResolvedContentDefinitionMap<
     [key: string]: ContentTypeDefinition<
       string,
       BaseInputMetadata,
-      Record<string, unknown>
+      { [key: string]: unknown }
     >;
   },
 > = {
@@ -88,7 +90,7 @@ export type MetadataMapFromConfig<Config> = {
   readonly [K in keyof Config]: Config[K] extends ContentTypeDefinition<
     string,
     infer InputMeta,
-    Record<string, unknown>
+    { [key: string]: unknown }
   >
     ? InputMeta
     : never;
@@ -211,12 +213,12 @@ export const contentResolverConfig = {
     generateFileName: (slug: string, html: string) => {
       return getCompiledPostFileName(slug, html);
     },
-    validateInput: (data: unknown) => {
+    validateInputMeta: (data: unknown) => {
       return isPostInputMetadata(data)
         ? success(data)
         : failure("Invalid post metadata structure");
     },
-    mapToOutput: (input: PostInputMetadata, content: string) => {
+    mapToOutputMeta: (input: PostInputMetadata, content: string) => {
       const readingTime = getReadingTime(content);
       return {
         title: input.title,
@@ -251,12 +253,12 @@ export const contentResolverConfig = {
     generateFileName: (slug: string) => {
       return `${slug}.html`;
     },
-    validateInput: (data: unknown) => {
+    validateInputMeta: (data: unknown) => {
       return isTechRadarInputMetadata(data)
         ? success(data)
         : failure("Invalid tech radar metadata structure");
     },
-    mapToOutput: (input: TechRadarInputMetadata) => {
+    mapToOutputMeta: (input: TechRadarInputMetadata) => {
       return {
         title: input.title,
         quadrant: input.quadrant,

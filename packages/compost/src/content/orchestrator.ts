@@ -46,6 +46,9 @@ function applyContentConfigDefaults<
     sourceDir: definition.sourceDir ?? "src",
     outputDir: definition.outputDir ?? "out",
     oldManifestLocators: definition.oldManifestLocators ?? [],
+    mapToOutputMeta:
+      definition.mapToOutputMeta ??
+      ((input: InputMeta) => input as unknown as OutputMeta),
   };
 }
 
