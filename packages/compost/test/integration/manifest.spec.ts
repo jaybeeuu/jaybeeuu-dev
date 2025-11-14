@@ -26,29 +26,6 @@ interface PostFileWithStringArrayContent extends Omit<PostFile, "content"> {
   content: string[];
 }
 
-const writeOutputManifestFile = (
-  metaData: Pick<PostManifestEntry, "slug"> &
-    Partial<Omit<PostManifestEntry, "slug">>,
-): Promise<void> => {
-  const defaultedManifest: any = {
-    [metaData.slug]: {
-      title: "{title}",
-      abstract: "{abstract}",
-      publish: false,
-      publishDate: "Fri, 30 Jul 2021 20:18:43 GMT",
-      lastUpdateDate: "Sun, 06 Jun 2021 22:08:34 GMT",
-      fileName: "{fileName}",
-      href: "{href}",
-      // No hash field - this is a v1 manifest being tested
-      readingTime: { minutes: 1, words: 1, text: "1 min read", time: 60000 },
-      ...metaData,
-      slug: metaData.slug,
-    },
-  };
-
-  return baseWriteOutputManifestFile(defaultedManifest);
-};
-
 describe("manifest", () => {
   it("has an entry for a new post with the correct properties.", async () => {
     await cleanUpDirectories();
@@ -89,7 +66,8 @@ describe("manifest", () => {
       },
       entries: {
         [slug]: {
-          ...meta,
+          title: meta.title,
+          abstract: meta.abstract,
           fileName: expect.stringMatching(
             new RegExp(`${slug}-[A-z0-9]{6}.html`),
           ) as unknown,
@@ -291,7 +269,6 @@ describe("manifest", () => {
     await compilePosts();
     const initialManifest = await getPostManifest();
     const actualFileName = initialManifest.entries[slug]?.fileName;
-    const actualHash = initialManifest.entries[slug]?.hash;
 
     // Clean up and start fresh
     await cleanUpDirectories();
@@ -531,7 +508,8 @@ describe("manifest", () => {
         },
         entries: {
           [slug]: {
-            ...meta,
+            title: meta.title,
+            abstract: meta.abstract,
             fileName: expect.stringMatching(
               new RegExp(`${slug}-[A-z0-9]{6}.html`),
             ) as unknown,

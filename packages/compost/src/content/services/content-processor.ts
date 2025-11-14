@@ -7,18 +7,11 @@ import { copyFile, writeTextFile } from "../../files/index.js";
 import type {
   ResolvedContentDefinition,
   ContentTypeDefinition,
+  BaseInputMetadata,
 } from "../content-types.js";
 import { getSha1Hex } from "../../hash.js";
 import { detectContentChange } from "./manifest/v1-upgrade-utils.js";
-
-export interface BaseManifestEntry {
-  fileName: string;
-  href: string;
-  lastUpdateDate: string;
-  publishDate: string;
-  hash: string;
-  slug: string;
-}
+import type { V2Entry } from "./manifest/index.js";
 
 export interface OldManifestEntry {
   fileName?: string;
@@ -32,21 +25,19 @@ export type OldManifest = { [slug: string]: OldManifestEntry };
 
 export interface ProcessedContent<
   Type extends string,
-  Metadata extends { [key: string]: unknown } = { [key: string]: unknown },
-  CalculatedMetadata extends { [key: string]: unknown } = {
-    [key: string]: unknown;
-  },
+  InputMeta extends BaseInputMetadata,
+  OutputMeta extends Record<string, unknown>,
 > {
   slug: string;
   contentType: Type;
-  metadata: Metadata;
+  inputMetadata: InputMeta;
   compiledHtml: string;
   assets: Array<{
     sourcePath: string;
     destinationPath: string;
   }>;
   contentHash: string;
-  manifestEntry: BaseManifestEntry & Metadata & CalculatedMetadata;
+  manifestEntry: V2Entry & OutputMeta;
 }
 
 export type ProcessTypedContentFailureReason =
@@ -55,30 +46,24 @@ export type ProcessTypedContentFailureReason =
 
 async function processTypedContent<
   Type extends string,
-  Metadata extends { [key: string]: unknown },
-  CalculatedMetadata extends { [key: string]: unknown },
+  InputMeta extends BaseInputMetadata,
+  OutputMeta extends Record<string, unknown>,
 >(
-  resolvedContent: ResolvedContent<Type, Metadata>,
+  inputMetadata: InputMeta,
+  content: string,
   filePath: string,
   oldManifest: OldManifest,
   contentConfig: ResolvedContentDefinition<
-    ContentTypeDefinition<Type, Metadata, CalculatedMetadata>
+    ContentTypeDefinition<Type, InputMeta, OutputMeta>
   >,
 ): Promise<
   Result<
-    ProcessedContent<Type, Metadata, CalculatedMetadata>,
+    ProcessedContent<Type, InputMeta, OutputMeta>,
     ProcessTypedContentFailureReason
   >
 > {
-  const { type: contentType, metadata, content } = resolvedContent;
-
-  const metadataWithPublish = metadata as unknown as { publish?: boolean };
-  if (
-    "publish" in metadataWithPublish &&
-    typeof metadataWithPublish.publish === "boolean" &&
-    !metadataWithPublish.publish &&
-    !contentConfig.includeUnpublished
-  ) {
+  // Check if content should be published (filtering based on input metadata)
+  if (!inputMetadata.publish && !contentConfig.includeUnpublished) {
     return failure("content skipped", "Content is not published");
   }
 
@@ -88,18 +73,20 @@ async function processTypedContent<
   if (!compileResult.success) {
     return failure(
       "compilation failed",
-      `Failed to compile ${String(contentType)}: ${compileResult.message}`,
+      `Failed to compile ${contentConfig.contentType}: ${compileResult.message}`,
     );
   }
 
   const { html: compiledHtml, assets } = compileResult.value;
 
-  const contentHash = generateHash(content + JSON.stringify(metadata));
+  // Map input metadata to output metadata using the mapping function
+  const outputMetadata = contentConfig.mapToOutput(inputMetadata, content);
+
+  const contentHash = generateHash(content + JSON.stringify(inputMetadata));
 
   const manifestEntry = generateTypedManifestEntry(
     slug,
-    metadata,
-    content,
+    outputMetadata,
     compiledHtml,
     contentHash,
     oldManifest,
@@ -110,8 +97,8 @@ async function processTypedContent<
 
   return success({
     slug,
-    contentType: contentType,
-    metadata,
+    contentType: contentConfig.contentType,
+    inputMetadata,
     compiledHtml,
     assets,
     contentHash,
@@ -128,17 +115,17 @@ export type ProcessFileFailureReason =
 
 export async function processFile<
   Type extends string,
-  Metadata extends { [key: string]: unknown },
-  CalculatedMetadata extends { [key: string]: unknown },
+  InputMeta extends BaseInputMetadata,
+  OutputMeta extends Record<string, unknown>,
 >(
   filePath: string,
   oldManifest: OldManifest,
   contentConfig: ResolvedContentDefinition<
-    ContentTypeDefinition<Type, Metadata, CalculatedMetadata>
+    ContentTypeDefinition<Type, InputMeta, OutputMeta>
   >,
 ): Promise<
   Result<
-    ProcessedContent<Type, Metadata, CalculatedMetadata> | null,
+    ProcessedContent<Type, InputMeta, OutputMeta> | null,
     ProcessFileFailureReason
   >
 > {
@@ -165,8 +152,20 @@ export async function processFile<
       );
     }
 
+    // Validate input metadata using the new validation function
+    const validationResult = contentConfig.validateInput(
+      contentResult.value.metadata,
+    );
+    if (!validationResult.success) {
+      return failure(
+        "content resolution failed",
+        `Invalid metadata: ${validationResult.message}`,
+      );
+    }
+
     const result = await processTypedContent(
-      contentResult.value as ResolvedContent<Type, Metadata>,
+      validationResult.value,
+      contentResult.value.content,
       filePath,
       oldManifest,
       contentConfig,
@@ -191,13 +190,13 @@ export type CompileContentFailureReason = "compilation failed";
 
 async function compileContent<
   Type extends string,
-  Metadata extends { [key: string]: unknown },
-  CalculatedMetadata extends { [key: string]: unknown },
+  InputMeta extends BaseInputMetadata,
+  OutputMeta extends Record<string, unknown>,
 >(
   filePath: string,
   content: string,
   contentConfig: ResolvedContentDefinition<
-    ContentTypeDefinition<Type, Metadata, CalculatedMetadata>
+    ContentTypeDefinition<Type, InputMeta, OutputMeta>
   >,
 ): Promise<
   Result<
@@ -225,19 +224,18 @@ async function compileContent<
 
 function generateTypedManifestEntry<
   Type extends string,
-  Metadata extends { [key: string]: unknown },
-  CalculatedMetadata extends { [key: string]: unknown },
+  InputMeta extends BaseInputMetadata,
+  OutputMeta extends Record<string, unknown>,
 >(
   slug: string,
-  metadata: Metadata,
-  content: string,
+  outputMetadata: OutputMeta,
   compiledHtml: string,
   contentHash: string,
   oldManifest: OldManifest,
   contentConfig: ResolvedContentDefinition<
-    ContentTypeDefinition<Type, Metadata, CalculatedMetadata>
+    ContentTypeDefinition<Type, InputMeta, OutputMeta>
   >,
-): BaseManifestEntry & Metadata & CalculatedMetadata {
+): V2Entry & OutputMeta {
   const fileName = contentConfig.generateFileName(slug, compiledHtml);
   const href = joinUrlPath(contentConfig.hrefRoot, fileName);
 
@@ -266,33 +264,27 @@ function generateTypedManifestEntry<
         ? new Date(oldEntry.lastUpdateDate).toISOString() // Preserve existing update date
         : null; // Old post with no previous update date
 
-  const enhancedMetadata = contentConfig.getAdditionalMetadata(
-    metadata,
-    content,
-  );
-
   return {
-    ...metadata,
-    ...enhancedMetadata,
+    ...outputMetadata,
     fileName,
     href,
     publishDate,
     lastUpdateDate,
     hash: contentHash,
     slug,
-  } as BaseManifestEntry & Metadata & CalculatedMetadata;
+  } as V2Entry & OutputMeta;
 }
 
 async function writeTypedCompiledContent<
   Type extends string,
-  Metadata extends { [key: string]: unknown },
-  CalculatedMetadata extends { [key: string]: unknown },
+  InputMeta extends BaseInputMetadata,
+  OutputMeta extends Record<string, unknown>,
 >(
   slug: string,
   html: string,
   assets: Array<{ sourcePath: string; destinationPath: string }>,
   contentConfig: ResolvedContentDefinition<
-    ContentTypeDefinition<Type, Metadata, CalculatedMetadata>
+    ContentTypeDefinition<Type, InputMeta, OutputMeta>
   >,
 ): Promise<void> {
   const htmlFileName = contentConfig.generateFileName(slug, html);

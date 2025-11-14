@@ -13,7 +13,6 @@ import { discoverFilesForContentType } from "./services/file-discovery.js";
 import {
   processFile,
   type ProcessedContent,
-  type BaseManifestEntry,
 } from "./services/content-processor.js";
 import { ManifestEntriesManager } from "./services/manifest-entries-manager.js";
 import { type V2Entry } from "./services/manifest/index.js";
@@ -21,9 +20,10 @@ import {
   contentResolverConfig,
   type ContentTypeDefinition,
   type ResolvedContentDefinition,
+  type BaseInputMetadata,
 } from "./content-types.js";
 
-export type { ProcessedContent, BaseManifestEntry };
+export type { ProcessedContent } from "./services/content-processor.js";
 
 export interface OrchestratorConfig {
   clean: boolean;
@@ -31,12 +31,12 @@ export interface OrchestratorConfig {
 
 function applyContentConfigDefaults<
   Type extends string,
-  Metadata extends { [key: string]: unknown },
-  CalculatedMetadata extends { [key: string]: unknown },
+  InputMeta extends BaseInputMetadata,
+  OutputMeta extends Record<string, unknown>,
 >(
-  definition: ContentTypeDefinition<Type, Metadata, CalculatedMetadata>,
+  definition: ContentTypeDefinition<Type, InputMeta, OutputMeta>,
 ): ResolvedContentDefinition<
-  ContentTypeDefinition<Type, Metadata, CalculatedMetadata>
+  ContentTypeDefinition<Type, InputMeta, OutputMeta>
 > {
   return {
     ...definition,
@@ -58,19 +58,16 @@ export type ProcessContentTypeFailureReason =
 
 async function processContentType<
   Type extends string,
-  Metadata extends { [key: string]: unknown },
-  CalculatedMetadata extends { [key: string]: unknown },
+  InputMeta extends BaseInputMetadata,
+  OutputMeta extends Record<string, unknown>,
 >(
   contentType: Type,
   contentConfig: ResolvedContentDefinition<
-    ContentTypeDefinition<Type, Metadata, CalculatedMetadata>
+    ContentTypeDefinition<Type, InputMeta, OutputMeta>
   >,
   clean: boolean,
 ): Promise<
-  Result<
-    V2ManifestFile<Metadata, CalculatedMetadata>,
-    ProcessContentTypeFailureReason
-  >
+  Result<V2ManifestFile<V2Entry & OutputMeta>, ProcessContentTypeFailureReason>
 > {
   const manifestPath = path.resolve(
     contentConfig.outputDir,
@@ -103,9 +100,7 @@ async function processContentType<
     return filesResult;
   }
 
-  const manifestEntries = new ManifestEntriesManager<
-    V2Entry & Metadata & CalculatedMetadata
-  >();
+  const manifestEntries = new ManifestEntriesManager<V2Entry & OutputMeta>();
 
   for (const filePath of filesResult.value) {
     const result = await processFile(filePath, manifestData, contentConfig);
@@ -120,7 +115,7 @@ async function processContentType<
     if (result.value) {
       const addResult = manifestEntries.addEntry(
         result.value.slug,
-        result.value.manifestEntry as V2Entry & Metadata & CalculatedMetadata,
+        result.value.manifestEntry,
         filePath,
       );
 
@@ -139,33 +134,18 @@ async function processContentType<
     return failure("manifest write failed", writeResult.message);
   }
 
-  return success(manifest as V2ManifestFile<Metadata, CalculatedMetadata>);
+  return success(manifest as V2ManifestFile<V2Entry & OutputMeta>);
 }
 
 export type ProcessContentFailureReason = "content type processing failed";
 
 export async function processContent(
   config: OrchestratorConfig,
-  contentConfigDefinitions: {
-    [key: string]: ContentTypeDefinition<
-      string,
-      { [key: string]: unknown },
-      { [key: string]: unknown }
-    >;
-  } = contentResolverConfig as unknown as {
-    [key: string]: ContentTypeDefinition<
-      string,
-      { [key: string]: unknown },
-      { [key: string]: unknown }
-    >;
-  },
+  contentConfigDefinitions: Record<string, any> = contentResolverConfig,
 ): Promise<
   Result<
     {
-      [contentType: string]: V2Manifest<
-        { [key: string]: unknown },
-        { [key: string]: unknown }
-      >;
+      [contentType: string]: V2Manifest<Record<string, unknown>>;
     },
     ProcessContentFailureReason
   >
@@ -173,10 +153,7 @@ export async function processContent(
   const orchestratorConfig = config;
 
   const manifests: {
-    [contentType: string]: V2Manifest<
-      { [key: string]: unknown },
-      { [key: string]: unknown }
-    >;
+    [contentType: string]: V2Manifest<Record<string, unknown>>;
   } = {};
 
   for (const [contentType, definition] of Object.entries(

@@ -7,10 +7,7 @@ import type {
   PostFileMetadata,
   PostManifestEntry,
 } from "../../src/content/index.js";
-import {
-  isPostManifest,
-  contentResolverConfig,
-} from "../../src/content/index.js";
+import { contentResolverConfig } from "../../src/content/index.js";
 import path from "path";
 import type * as ReadingTime from "reading-time";
 import { processContent } from "../../src/content/index.js";

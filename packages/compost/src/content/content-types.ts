@@ -1,17 +1,28 @@
 import path from "node:path";
 import getReadingTime from "reading-time";
-import type { CheckedBy, TypePredicate } from "@jaybeeuu/is";
-import {
-  is,
-  isIntersectionOf,
-  isLiteral,
-  isObject,
-  isUnionOf,
-} from "@jaybeeuu/is";
-import { isV2Entry } from "./services/manifest/index.js";
+import type { CheckedBy } from "@jaybeeuu/is";
+import type { Result } from "@jaybeeuu/utilities";
+import { success, failure } from "@jaybeeuu/utilities";
+import { is, isLiteral, isObject, isUnionOf } from "@jaybeeuu/is";
+import { type V2Entry } from "./services/manifest/index.js";
 import { getCompiledPostFileName } from "./file-paths.js";
 import type { V2ManifestFile } from "./services/manifest/manifest-operations.js";
-import { isV2ManifestFile } from "./services/manifest/manifest-operations.js";
+
+/**
+ * Base input metadata interface that all content types must extend.
+ * Contains the minimum required fields for content processing.
+ */
+export interface BaseInputMetadata {
+  /** Title of the content */
+  title: string;
+  /** Whether content should be published (used for filtering, not stored in output) */
+  publish: boolean;
+}
+
+/**
+ * Validation error type for input metadata validation.
+ */
+export type ValidationError = string;
 
 export interface ContentFilePatterns {
   frontmatter: readonly string[];
@@ -21,18 +32,20 @@ export interface ContentFilePatterns {
 
 export interface ContentTypeDefinition<
   Type extends string,
-  Metadata extends { [key: string]: unknown },
-  CalculatedMetadata extends { [key: string]: unknown },
+  InputMeta extends BaseInputMetadata,
+  OutputMeta extends Record<string, unknown>,
 > {
   readonly contentType: Type;
-  readonly validator: TypePredicate<Metadata>;
   readonly filePatterns: ContentFilePatterns;
   readonly generateSlug: (filePath: string, sourceDir: string) => string;
   readonly generateFileName: (slug: string, html: string) => string;
-  readonly getAdditionalMetadata: (
-    metadata: Metadata,
-    content: string,
-  ) => CalculatedMetadata;
+
+  /** Validates raw input data from frontmatter/JSON files */
+  readonly validateInput: (data: unknown) => Result<InputMeta, ValidationError>;
+
+  /** Maps validated input metadata and content to output metadata (no auto-merging) */
+  readonly mapToOutput: (input: InputMeta, content: string) => OutputMeta;
+
   readonly requireOldManifest?: boolean;
   readonly manifestFileName?: string;
   readonly sourceDir?: string;
@@ -51,18 +64,18 @@ export interface ContentTypeDefinition<
 export type ResolvedContentDefinition<TDefinition> =
   TDefinition extends ContentTypeDefinition<
     infer Type,
-    infer Metadata,
-    infer CalculatedMetadata
+    infer InputMeta,
+    infer OutputMeta
   >
-    ? Required<ContentTypeDefinition<Type, Metadata, CalculatedMetadata>>
+    ? Required<ContentTypeDefinition<Type, InputMeta, OutputMeta>>
     : never;
 
 export type ResolvedContentDefinitionMap<
   ConfigMap extends {
     [key: string]: ContentTypeDefinition<
       string,
-      { [key: string]: unknown },
-      { [key: string]: unknown }
+      BaseInputMetadata,
+      Record<string, unknown>
     >;
   },
 > = {
@@ -74,10 +87,10 @@ export type ContentTypesFromConfig<Config> = keyof Config;
 export type MetadataMapFromConfig<Config> = {
   readonly [K in keyof Config]: Config[K] extends ContentTypeDefinition<
     string,
-    infer Metadata,
-    { [key: string]: unknown }
+    infer InputMeta,
+    Record<string, unknown>
   >
-    ? Metadata
+    ? InputMeta
     : never;
 };
 
@@ -101,28 +114,38 @@ const techRadarRingValidator = isUnionOf(
 export type TechRadarRing = CheckedBy<typeof techRadarRingValidator>;
 
 /**
- * Type-safe validator for post file metadata.
- * Represents the metadata from frontmatter or JSON files before compilation.
+ * Input metadata for post files (from frontmatter/JSON).
  */
-export const isPostFileMetadata = isObject({
+export const isPostInputMetadata = isObject({
   title: is("string"),
   abstract: is("string"),
   publish: is("boolean"),
 } as const);
-export type PostFileMetadata = CheckedBy<typeof isPostFileMetadata>;
+export type PostInputMetadata = CheckedBy<typeof isPostInputMetadata>;
 
 /**
- * Type-safe validator for tech radar file metadata.
- * Defines technology position and descriptive information.
+ * @deprecated Use PostInputMetadata instead
  */
-export const isTechRadarFileMetadata = isObject({
+export const isPostFileMetadata = isPostInputMetadata;
+export type PostFileMetadata = PostInputMetadata;
+
+/**
+ * Input metadata for tech radar files (from frontmatter/JSON).
+ */
+export const isTechRadarInputMetadata = isObject({
   title: is("string"),
   quadrant: techRadarQuadrantValidator,
   ring: techRadarRingValidator,
   description: is("string"),
   publish: is("boolean"),
 } as const);
-export type TechRadarFileMetadata = CheckedBy<typeof isTechRadarFileMetadata>;
+export type TechRadarInputMetadata = CheckedBy<typeof isTechRadarInputMetadata>;
+
+/**
+ * @deprecated Use TechRadarInputMetadata instead
+ */
+export const isTechRadarFileMetadata = isTechRadarInputMetadata;
+export type TechRadarFileMetadata = TechRadarInputMetadata;
 
 /**
  * Reading time calculation result for posts.
@@ -136,41 +159,44 @@ export const isReadingTime = isObject({
 export type ReadingTime = CheckedBy<typeof isReadingTime>;
 
 /**
- * Complete metadata interface for compiled post manifest entries.
+ * Output metadata for posts (goes into manifest entries).
+ * This is what gets stored after processing and transformation.
  */
-export const isPostManifestEntry = isIntersectionOf(
-  isV2Entry,
-  isPostFileMetadata,
-  isObject({
-    slug: is("string"),
-    readingTime: isReadingTime,
-  }),
-);
-export type PostManifestEntry = CheckedBy<typeof isPostManifestEntry>;
+export interface PostOutputMetadata extends Record<string, unknown> {
+  title: string;
+  abstract: string;
+  readingTime: ReadingTime;
+}
+
+/**
+ * Output metadata for tech radar items (goes into manifest entries).
+ */
+export interface TechRadarOutputMetadata extends Record<string, unknown> {
+  title: string;
+  quadrant: TechRadarQuadrant;
+  ring: TechRadarRing;
+  description: string;
+}
+
+/**
+ * Complete metadata interface for compiled post manifest entries.
+ * Combines V2Entry base fields with post-specific output metadata.
+ */
+export type PostManifestEntry = V2Entry & PostOutputMetadata;
 
 export type PostManifest = V2ManifestFile<PostManifestEntry>;
-export const isPostManifest = isV2ManifestFile(isPostManifestEntry);
 
 /**
  * Complete metadata interface for compiled tech radar manifest entries.
+ * Combines V2Entry base fields with tech radar-specific output metadata.
  */
-export const isTechRadarManifestEntry = isIntersectionOf(
-  isV2Entry,
-  isTechRadarFileMetadata,
-  isObject({
-    slug: is("string"),
-    readingTime: isReadingTime,
-  }),
-);
-export type TechRadarManifestEntry = CheckedBy<typeof isTechRadarManifestEntry>;
+export type TechRadarManifestEntry = V2Entry & TechRadarOutputMetadata;
 
 export type TechRadarManifest = V2ManifestFile<TechRadarManifestEntry>;
-export const isTechRadarManifest = isV2ManifestFile(isTechRadarManifestEntry);
 
 export const contentResolverConfig = {
   post: {
     contentType: "post",
-    validator: isPostFileMetadata,
     filePatterns: {
       frontmatter: [".post.md"],
       jsonMetadata: [".md"],
@@ -185,9 +211,18 @@ export const contentResolverConfig = {
     generateFileName: (slug: string, html: string) => {
       return getCompiledPostFileName(slug, html);
     },
-    getAdditionalMetadata: (_metadata: PostFileMetadata, content: string) => {
+    validateInput: (data: unknown) => {
+      return isPostInputMetadata(data)
+        ? success(data)
+        : failure("Invalid post metadata structure");
+    },
+    mapToOutput: (input: PostInputMetadata, content: string) => {
       const readingTime = getReadingTime(content);
-      return { readingTime };
+      return {
+        title: input.title,
+        abstract: input.abstract,
+        readingTime,
+      };
     },
     sourceDir: "src",
     outputDir: "out",
@@ -197,12 +232,11 @@ export const contentResolverConfig = {
     removeH1: false,
   } satisfies ContentTypeDefinition<
     "post",
-    PostFileMetadata,
-    { readingTime: ReadingTime }
+    PostInputMetadata,
+    PostOutputMetadata
   >,
   "tech-radar": {
     contentType: "tech-radar",
-    validator: isTechRadarFileMetadata,
     filePatterns: {
       frontmatter: [".tech.md", ".tech-radar.md"],
       jsonMetadata: [".md"],
@@ -217,16 +251,17 @@ export const contentResolverConfig = {
     generateFileName: (slug: string) => {
       return `${slug}.html`;
     },
-    getAdditionalMetadata: (
-      metadata: TechRadarFileMetadata,
-      content: string,
-    ) => {
-      const readingTime = getReadingTime(content);
+    validateInput: (data: unknown) => {
+      return isTechRadarInputMetadata(data)
+        ? success(data)
+        : failure("Invalid tech radar metadata structure");
+    },
+    mapToOutput: (input: TechRadarInputMetadata) => {
       return {
-        quadrant: metadata.quadrant,
-        ring: metadata.ring,
-        description: metadata.description,
-        readingTime,
+        title: input.title,
+        quadrant: input.quadrant,
+        ring: input.ring,
+        description: input.description,
       };
     },
     requireOldManifest: false,
@@ -239,41 +274,7 @@ export const contentResolverConfig = {
     removeH1: false,
   } satisfies ContentTypeDefinition<
     "tech-radar",
-    TechRadarFileMetadata,
-    {
-      quadrant: TechRadarQuadrant;
-      ring: TechRadarRing;
-      description: string;
-      readingTime: ReadingTime;
-    }
+    TechRadarInputMetadata,
+    TechRadarOutputMetadata
   >,
 } as const;
-
-export type ContentTypes = ContentTypesFromConfig<typeof contentResolverConfig>;
-export type ContentMetadataMap = MetadataMapFromConfig<
-  typeof contentResolverConfig
->;
-
-export type { ContentTypes as ContentType };
-
-export type AnyResolvedContentDefinition = ResolvedContentDefinition<
-  ContentTypeDefinition<
-    string,
-    { [key: string]: unknown },
-    { [key: string]: unknown }
-  >
->;
-
-// Legacy aliases for backward compatibility
-export type ContentConfig<TDefinition> = ResolvedContentDefinition<TDefinition>;
-export type AnyContentConfig = AnyResolvedContentDefinition;
-export type ContentConfigMap<
-  T extends {
-    [key: string]: ContentTypeDefinition<
-      string,
-      { [key: string]: unknown },
-      { [key: string]: unknown }
-    >;
-  },
-> = ResolvedContentDefinitionMap<T>;
-export type AnyContentConfigMap = { [key: string]: AnyContentConfig };

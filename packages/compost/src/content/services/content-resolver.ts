@@ -4,24 +4,12 @@ import type { ReadJsonFileFailureReason } from "../../files/index.js";
 import { canAccess, readJsonFile, readTextFile } from "../../files/index.js";
 import type { ParseYamlMetaFailureReason } from "./metadata.js";
 import { parseYamlMeta } from "./metadata.js";
+import { is } from "@jaybeeuu/is";
 import type {
   ResolvedContentDefinition,
   ContentTypeDefinition,
+  BaseInputMetadata,
 } from "../content-types.js";
-
-// Re-export the ResolvedContentDefinition as ContentResolverConfig for backward compatibility
-export type ContentResolverConfig<
-  Type extends string,
-  Metadata extends { [key: string]: unknown },
-> = ResolvedContentDefinition<
-  ContentTypeDefinition<Type, Metadata, { [key: string]: unknown }>
->;
-export type ContentResolverConfigMap<
-  Type extends string,
-  MetadataMap extends { [type in Type]: { [key: string]: unknown } },
-> = {
-  [K in Type]: ContentResolverConfig<K, MetadataMap[K]>;
-};
 
 /**
  * The result of successfully resolving content from a markdown file.
@@ -35,7 +23,7 @@ export type ResolvedContent<Type extends string, Metadata> = {
   /** The identified content type */
   type: Type;
 
-  /** The validated and typed metadata */
+  /** The raw metadata (validation happens later in the processing pipeline) */
   metadata: Metadata;
 
   /** The markdown content (without frontmatter) */
@@ -77,12 +65,15 @@ const hasFrontMatter = (sourceFileText: string): boolean => {
 
 const resolveFrontmatterContent = async <
   Type extends string,
-  Metadata extends { [key: string]: unknown },
+  InputMeta extends BaseInputMetadata,
+  OutputMeta extends Record<string, unknown>,
 >(
   markdownFilePath: string,
-  config: ContentResolverConfig<Type, Metadata>,
+  config: ResolvedContentDefinition<
+    ContentTypeDefinition<Type, InputMeta, OutputMeta>
+  >,
 ): Promise<
-  Result<ResolvedContent<Type, Metadata>, ResolveContentFailureReason>
+  Result<ResolvedContent<Type, unknown>, ResolveContentFailureReason>
 > => {
   const sourceFileTextResult = await loadSourceText(markdownFilePath);
   if (!sourceFileTextResult.success) {
@@ -102,7 +93,7 @@ const resolveFrontmatterContent = async <
   const frontMatterText = sourceFileText.slice(4, frontMatterEnd);
   const content = sourceFileText.slice(frontMatterEnd + 5);
 
-  const yamlResult = parseYamlMeta(frontMatterText, config.validator);
+  const yamlResult = parseYamlMeta(frontMatterText, is("object"));
   if (!yamlResult.success) {
     return yamlResult;
   }
@@ -116,12 +107,15 @@ const resolveFrontmatterContent = async <
 
 const resolveJsonContent = async <
   Type extends string,
-  Metadata extends { [key: string]: unknown },
+  InputMeta extends BaseInputMetadata,
+  OutputMeta extends Record<string, unknown>,
 >(
   markdownFilePath: string,
-  config: ContentResolverConfig<Type, Metadata>,
+  config: ResolvedContentDefinition<
+    ContentTypeDefinition<Type, InputMeta, OutputMeta>
+  >,
 ): Promise<
-  Result<ResolvedContent<Type, Metadata>, ResolveContentFailureReason>
+  Result<ResolvedContent<Type, unknown>, ResolveContentFailureReason>
 > => {
   const sourceFileTextResult = await loadSourceText(markdownFilePath);
   if (!sourceFileTextResult.success) {
@@ -141,7 +135,7 @@ const resolveJsonContent = async <
     );
   }
 
-  const metadataResult = await readJsonFile(jsonFilePath, config.validator);
+  const metadataResult = await readJsonFile(jsonFilePath, is("object"));
   if (!metadataResult.success) {
     return metadataResult;
   }
@@ -154,56 +148,41 @@ const resolveJsonContent = async <
 };
 
 /**
- * Resolves content from a markdown file using type-safe configuration mapping.
+ * Resolves content from a markdown file using a single content type configuration.
  *
- * This function automatically detects the content type based on file patterns
- * and routes to the appropriate resolver with proper metadata validation.
+ * This function detects whether to use frontmatter or JSON metadata based on
+ * file patterns and validates the metadata according to the content type.
  *
- * @template Type - Union of supported content type identifiers
- * @template ContentMetadataMap - Mapping of content types to their metadata interfaces
+ * @template Type - The content type identifier
+ * @template Metadata - The metadata interface for this content type
+ * @template CalculatedMetadata - Additional metadata calculated from content
  * @param markdownFilePath - Path to the markdown file to resolve
- * @param configMap - Configuration mapping for all supported content types
+ * @param config - Configuration for the specific content type
  * @returns Promise resolving to typed content with metadata, or failure reason
- *
- * @example
- * ```typescript
- * const result = await resolveContent("./post.md", contentResolverConfig);
- * if (result.success && result.value.type === "post") {
- *   // TypeScript knows this is PostFileMetadata
- *   console.log(result.value.metadata.title);
- * }
- * ```
  */
 export const resolveContent = async <
   Type extends string,
-  ContentMetadataMap extends { [type in Type]: { [key: string]: unknown } },
+  InputMeta extends BaseInputMetadata,
+  OutputMeta extends Record<string, unknown>,
 >(
   markdownFilePath: string,
-  configMap: ContentResolverConfigMap<Type, ContentMetadataMap>,
+  config: ResolvedContentDefinition<
+    ContentTypeDefinition<Type, InputMeta, OutputMeta>
+  >,
 ): Promise<
-  Result<
-    ResolvedContent<Type, ContentMetadataMap[Type]>,
-    ResolveContentFailureReason
-  >
+  Result<ResolvedContent<Type, unknown>, ResolveContentFailureReason>
 > => {
-  // Find matching config based on file pattern
-  const configs = Object.values(configMap) as ContentResolverConfig<
-    Type,
-    ContentMetadataMap[Type]
-  >[];
-  for (const config of configs) {
-    // Check frontmatter patterns
-    for (const pattern of config.filePatterns.frontmatter) {
-      if (markdownFilePath.endsWith(pattern)) {
-        return resolveFrontmatterContent(markdownFilePath, config);
-      }
+  // Check frontmatter patterns
+  for (const pattern of config.filePatterns.frontmatter) {
+    if (markdownFilePath.endsWith(pattern)) {
+      return resolveFrontmatterContent(markdownFilePath, config);
     }
+  }
 
-    // Check JSON metadata patterns
-    for (const pattern of config.filePatterns.jsonMetadata) {
-      if (markdownFilePath.endsWith(pattern)) {
-        return resolveJsonContent(markdownFilePath, config);
-      }
+  // Check JSON metadata patterns
+  for (const pattern of config.filePatterns.jsonMetadata) {
+    if (markdownFilePath.endsWith(pattern)) {
+      return resolveJsonContent(markdownFilePath, config);
     }
   }
 
