@@ -34,10 +34,10 @@ export interface ContentTypeDefinition<
   readonly generateSlug: (filePath: string, sourceDir: string) => string;
   readonly generateFileName: (slug: string, html: string) => string;
 
-  /** Validates raw input data from frontmatter/JSON files and intersects with BaseInputMetadata */
+  /** Validates raw input data from frontmatter/JSON files - TypeScript user-defined type guard */
   readonly validateInputMeta: (
     data: unknown,
-  ) => (InputMeta & BaseInputMetadata) | false;
+  ) => data is InputMeta & BaseInputMetadata;
 
   /** Maps validated input metadata and content to output metadata. If not provided, all InputMeta fields will be merged into output */
   readonly mapToOutputMeta?: (
@@ -210,8 +210,10 @@ export const contentResolverConfig = {
     generateFileName: (slug: string, html: string) => {
       return getCompiledPostFileName(slug, html);
     },
-    validateInputMeta: (data: unknown) => {
-      return isPostInputMetadata(data) ? data : false;
+    validateInputMeta: (
+      data: unknown,
+    ): data is PostInputMetadata & BaseInputMetadata => {
+      return isPostInputMetadata(data);
     },
     mapToOutputMeta: (input: PostInputMetadata, content: string) => {
       const readingTime = getReadingTime(content);
@@ -248,8 +250,10 @@ export const contentResolverConfig = {
     generateFileName: (slug: string) => {
       return `${slug}.html`;
     },
-    validateInputMeta: (data: unknown) => {
-      return isTechRadarInputMetadata(data) ? data : false;
+    validateInputMeta: (
+      data: unknown,
+    ): data is TechRadarInputMetadata & BaseInputMetadata => {
+      return isTechRadarInputMetadata(data);
     },
     mapToOutputMeta: (input: TechRadarInputMetadata) => {
       return {

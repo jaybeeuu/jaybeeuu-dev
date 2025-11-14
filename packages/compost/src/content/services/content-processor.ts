@@ -152,16 +152,13 @@ export async function processFile<
       );
     }
 
-    // Validate input metadata using the new validation function
-    const validatedMetadata = contentConfig.validateInputMeta(
-      contentResult.value.metadata,
-    );
-    if (validatedMetadata === false) {
+    // Validate input metadata using TypeScript type guard
+    if (!contentConfig.validateInputMeta(contentResult.value.metadata)) {
       return failure("content resolution failed", "Invalid metadata structure");
     }
 
     const result = await processTypedContent(
-      validatedMetadata,
+      contentResult.value.metadata,
       contentResult.value.content,
       filePath,
       oldManifest,
