@@ -1,10 +1,5 @@
-import path from "node:path";
-import getReadingTime from "reading-time";
 import type { CheckedBy } from "@jaybeeuu/is";
-import { is, isLiteral, isObject, isUnionOf } from "@jaybeeuu/is";
-import { type V2Entry } from "./services/manifest/index.js";
-import { getCompiledPostFileName } from "./file-paths.js";
-import type { V2ManifestFile } from "./services/manifest/manifest-operations.js";
+import { is, isObject } from "@jaybeeuu/is";
 
 /**
  * Base input metadata interface that all content types must extend.
@@ -34,9 +29,9 @@ export interface ContentFilePatterns {
 }
 
 export interface ContentTypeDefinition<
-  Type extends string,
-  InputMeta extends { [key: string]: unknown },
-  OutputMeta extends { [key: string]: unknown },
+  Type extends string = string,
+  InputMeta extends UnknownRecord = UnknownRecord,
+  OutputMeta extends UnknownRecord = UnknownRecord,
 > {
   readonly contentType: Type;
   readonly filePatterns: ContentFilePatterns;
@@ -67,8 +62,8 @@ export interface ContentTypeDefinition<
  * ResolvedContentDefinition is derived directly from a ContentTypeDefinition with all optional fields filled in.
  * This represents the configuration after applying defaults.
  */
-export type ResolvedContentDefinition<TDefinition> =
-  TDefinition extends ContentTypeDefinition<
+export type ResolvedContentDefinition<Definition> =
+  Definition extends ContentTypeDefinition<
     infer Type,
     infer InputMeta,
     infer OutputMeta
@@ -78,11 +73,7 @@ export type ResolvedContentDefinition<TDefinition> =
 
 export type ResolvedContentDefinitionMap<
   ConfigMap extends {
-    [key: string]: ContentTypeDefinition<
-      string,
-      { [key: string]: unknown },
-      { [key: string]: unknown }
-    >;
+    [key: string]: ContentTypeDefinition<string, UnknownRecord, UnknownRecord>;
   },
 > = {
   readonly [K in keyof ConfigMap]: ResolvedContentDefinition<ConfigMap[K]>;
@@ -94,177 +85,8 @@ export type MetadataMapFromConfig<Config> = {
   readonly [K in keyof Config]: Config[K] extends ContentTypeDefinition<
     string,
     infer InputMeta,
-    { [key: string]: unknown }
+    UnknownRecord
   >
     ? InputMeta & BaseInputMetadata
     : never;
 };
-
-const techRadarQuadrantValidator = isUnionOf(
-  isLiteral("languages"),
-  isLiteral("tools"),
-  isLiteral("techniques"),
-  isLiteral("platforms"),
-);
-export type TechRadarQuadrant = CheckedBy<typeof techRadarQuadrantValidator>;
-
-/**
- * Tech radar adoption rings indicating recommendation level.
- */
-const techRadarRingValidator = isUnionOf(
-  isLiteral("adopt"),
-  isLiteral("trial"),
-  isLiteral("assess"),
-  isLiteral("hold"),
-);
-export type TechRadarRing = CheckedBy<typeof techRadarRingValidator>;
-
-/**
- * Input metadata for post files (from frontmatter/JSON).
- */
-export const isPostInputMetadata = isObject({
-  title: is("string"),
-  abstract: is("string"),
-  publish: is("boolean"),
-} as const);
-export type PostInputMetadata = CheckedBy<typeof isPostInputMetadata>;
-
-/**
- * Input metadata for tech radar files (from frontmatter/JSON).
- */
-export const isTechRadarInputMetadata = isObject({
-  title: is("string"),
-  quadrant: techRadarQuadrantValidator,
-  ring: techRadarRingValidator,
-  description: is("string"),
-  publish: is("boolean"),
-} as const);
-export type TechRadarInputMetadata = CheckedBy<typeof isTechRadarInputMetadata>;
-
-/**
- * Reading time calculation result for posts.
- */
-export const isReadingTime = isObject({
-  text: is("string"),
-  time: is("number"),
-  words: is("number"),
-  minutes: is("number"),
-});
-export type ReadingTime = CheckedBy<typeof isReadingTime>;
-
-/**
- * Output metadata for posts (goes into manifest entries).
- * This is what gets stored after processing and transformation.
- */
-export interface PostOutputMetadata extends Record<string, unknown> {
-  title: string;
-  abstract: string;
-  readingTime: ReadingTime;
-}
-
-/**
- * Output metadata for tech radar items (goes into manifest entries).
- */
-export interface TechRadarOutputMetadata extends Record<string, unknown> {
-  title: string;
-  quadrant: TechRadarQuadrant;
-  ring: TechRadarRing;
-  description: string;
-}
-
-/**
- * Complete metadata interface for compiled post manifest entries.
- * Combines V2Entry base fields with post-specific output metadata.
- */
-export type PostManifestEntry = V2Entry & PostOutputMetadata;
-
-export type PostManifest = V2ManifestFile<PostManifestEntry>;
-
-/**
- * Complete metadata interface for compiled tech radar manifest entries.
- * Combines V2Entry base fields with tech radar-specific output metadata.
- */
-export type TechRadarManifestEntry = V2Entry & TechRadarOutputMetadata;
-
-export type TechRadarManifest = V2ManifestFile<TechRadarManifestEntry>;
-
-export const contentResolverConfig = {
-  post: {
-    contentType: "post",
-    filePatterns: {
-      frontmatter: [".post.md"],
-      jsonMetadata: [".md"],
-      jsonSuffix: ".post.json",
-    },
-    generateSlug: (filePath: string, sourceDir: string) => {
-      const relativePath = path.relative(sourceDir, filePath);
-      return path
-        .basename(relativePath, path.extname(relativePath))
-        .replace(/\.post$/, "");
-    },
-    generateFileName: (slug: string, html: string) => {
-      return getCompiledPostFileName(slug, html);
-    },
-    validateInputMeta: (data: unknown): data is PostInputMetadata => {
-      return isPostInputMetadata(data);
-    },
-    mapToOutputMeta: (input: PostInputMetadata, content: string) => {
-      const readingTime = getReadingTime(content);
-      return {
-        title: input.title,
-        abstract: input.abstract,
-        readingTime,
-      };
-    },
-    sourceDir: "src",
-    outputDir: "out",
-    hrefRoot: "/",
-    includeUnpublished: false,
-    codeLineNumbers: false,
-    removeH1: false,
-  } satisfies ContentTypeDefinition<
-    "post",
-    PostInputMetadata,
-    PostOutputMetadata
-  >,
-  "tech-radar": {
-    contentType: "tech-radar",
-    filePatterns: {
-      frontmatter: [".tech.md", ".tech-radar.md"],
-      jsonMetadata: [".md"],
-      jsonSuffix: ".tech.json",
-    },
-    generateSlug: (filePath: string, sourceDir: string) => {
-      const relativePath = path.relative(sourceDir, filePath);
-      return path
-        .basename(relativePath, path.extname(relativePath))
-        .replace(/\.(tech|tech-radar)$/, "");
-    },
-    generateFileName: (slug: string) => {
-      return `${slug}.html`;
-    },
-    validateInputMeta: (data: unknown): data is TechRadarInputMetadata => {
-      return isTechRadarInputMetadata(data);
-    },
-    mapToOutputMeta: (input: TechRadarInputMetadata) => {
-      return {
-        title: input.title,
-        quadrant: input.quadrant,
-        ring: input.ring,
-        description: input.description,
-      };
-    },
-    requireOldManifest: false,
-    manifestFileName: "tech-radar-manifest.json",
-    sourceDir: "src",
-    outputDir: "out",
-    hrefRoot: "/",
-    includeUnpublished: false,
-    codeLineNumbers: false,
-    removeH1: false,
-  } satisfies ContentTypeDefinition<
-    "tech-radar",
-    TechRadarInputMetadata,
-    TechRadarOutputMetadata
-  >,
-} as const;

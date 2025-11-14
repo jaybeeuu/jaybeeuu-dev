@@ -3,7 +3,7 @@ import { debounce, failure, log, success } from "@jaybeeuu/utilities";
 import chokidar from "chokidar";
 import yargsFactory from "yargs";
 import { hideBin } from "yargs/helpers";
-import { processContent } from "../content/index.js";
+import { processContent, contentTypeDefinitions } from "../content/index.js";
 
 /**
  * Configuration options for the compost CLI.
@@ -27,12 +27,15 @@ const yargs = yargsFactory(hideBin(process.argv));
 
 const run = async (
   options: UpdateOptions,
-): Promise<Result<never, "error" | string>> => {
+): Promise<Result<never, "content type processing failed">> => {
   try {
     log.info("Composting...");
     // Convert old CLI options to new config structure
     const orchestratorConfig = { clean: options.clean };
-    const result = await processContent(orchestratorConfig);
+    const result = await processContent(
+      orchestratorConfig,
+      contentTypeDefinitions,
+    );
     if (result.success) {
       // Format output for all content types
       const outputLines = Object.entries(result.value)

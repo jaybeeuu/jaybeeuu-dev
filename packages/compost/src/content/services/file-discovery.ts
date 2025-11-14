@@ -38,7 +38,7 @@ export async function discoverFilesForContentType(
   } catch (error) {
     return failure(
       "file discovery failed",
-      `Failed to discover files for content type: ${error}`,
+      `Failed to discover files for content type: ${String(error)}`,
     );
   }
 }

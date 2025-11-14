@@ -20,20 +20,20 @@ import {
 import type { TypePredicate, CheckedBy } from "@jaybeeuu/is";
 
 /**
- * V1 manifest entry (legacy format without hash).
+ * V1 base output metadata (legacy format without hash).
  */
-export const isV1Entry = isObject({
+export const isV1BaseOutputMeta = isObject({
   fileName: is("string"),
   href: is("string"),
   lastUpdateDate: isUnionOf(is("string"), is("null")),
   publishDate: is("string"),
 });
-export type V1Entry = CheckedBy<typeof isV1Entry>;
+export type V1BaseOutputMeta = CheckedBy<typeof isV1BaseOutputMeta>;
 
 /**
- * V2 manifest entry (current format with hash).
+ * Base output metadata for all manifest entries (current format with hash).
  */
-export const isV2Entry = isObject({
+export const isBaseOutputMeta = isObject({
   fileName: is("string"),
   href: is("string"),
   lastUpdateDate: isUnionOf(is("string"), is("null")),
@@ -41,19 +41,17 @@ export const isV2Entry = isObject({
   hash: is("string"),
   slug: is("string"),
 });
-export type V2Entry = CheckedBy<typeof isV2Entry>;
+export type BaseOutputMeta = CheckedBy<typeof isBaseOutputMeta>;
 
 /**
  * Entry type for new manifests we generate.
- * Always V2 format with content-specific fields.
+ * Always includes base output metadata with content-specific fields.
  */
-export type ManifestEntry = V2Entry & { [key: string]: unknown };
+export type ManifestEntry = BaseOutputMeta & UnknownRecord;
 
 export interface V2ManifestFile<
-  Metadata extends { [key: string]: unknown } = { [key: string]: unknown },
-  CalculatedMetadata extends { [key: string]: unknown } = {
-    [key: string]: unknown;
-  },
+  Metadata extends UnknownRecord = UnknownRecord,
+  CalculatedMetadata extends UnknownRecord = UnknownRecord,
 > {
   version: number;
   metadata: {
@@ -61,16 +59,16 @@ export interface V2ManifestFile<
     entryCount: number;
     overallHash: string;
   };
-  entries: { [slug: string]: V2Entry & Metadata & CalculatedMetadata };
+  entries: { [slug: string]: BaseOutputMeta & Metadata & CalculatedMetadata };
 }
 
 export const isV2ManifestFile = <
-  Metadata extends { [key: string]: unknown } = { [key: string]: unknown },
-  CalculatedMetadata extends { [key: string]: unknown } = {
-    [key: string]: unknown;
-  },
+  Metadata extends UnknownRecord = UnknownRecord,
+  CalculatedMetadata extends UnknownRecord = UnknownRecord,
 >(
-  entryPredicate?: TypePredicate<V2Entry & Metadata & CalculatedMetadata>,
+  entryPredicate?: TypePredicate<
+    BaseOutputMeta & Metadata & CalculatedMetadata
+  >,
 ): TypePredicate<V2ManifestFile<Metadata, CalculatedMetadata>> => {
   const validator = isObject({
     version: is("number"),
@@ -79,7 +77,7 @@ export const isV2ManifestFile = <
       entryCount: is("number"),
       overallHash: is("string"),
     }),
-    entries: isRecordOf(entryPredicate ?? isV2Entry),
+    entries: isRecordOf(entryPredicate ?? isBaseOutputMeta),
   });
   return validator as TypePredicate<
     V2ManifestFile<Metadata, CalculatedMetadata>
@@ -88,8 +86,11 @@ export const isV2ManifestFile = <
 
 export const isV2ManifestFileWithContentValidation = (
   contentValidator: TypePredicate<object>,
-) => {
-  const composedEntryValidator = isIntersectionOf(isV2Entry, contentValidator);
+): TypePredicate<V2ManifestFile> => {
+  const composedEntryValidator = isIntersectionOf(
+    isBaseOutputMeta,
+    contentValidator,
+  );
   return isObject({
     version: is("number"),
     metadata: isObject({
@@ -98,11 +99,14 @@ export const isV2ManifestFileWithContentValidation = (
       overallHash: is("string"),
     }),
     entries: isRecordOf(composedEntryValidator),
-  });
+  }) as TypePredicate<V2ManifestFile>;
 };
 
 export interface LoadedManifestData {
-  readonly oldManifests: ReadonlyMap<string, ReadonlyMap<string, V2Entry>>;
+  readonly oldManifests: ReadonlyMap<
+    string,
+    ReadonlyMap<string, BaseOutputMeta>
+  >;
 }
 
 export interface ManifestBuilder {
@@ -133,7 +137,7 @@ export async function loadManifestData(contentConfigs: {
   };
 }): Promise<Result<LoadedManifestData, string>> {
   try {
-    const oldManifests = new Map<string, Map<string, V2Entry>>();
+    const oldManifests = new Map<string, Map<string, BaseOutputMeta>>();
 
     for (const [contentType, contentConfig] of Object.entries(contentConfigs)) {
       const manifestResult = await loadManifestForContentType(
@@ -159,7 +163,7 @@ export async function loadManifestData(contentConfigs: {
     return success({
       oldManifests: oldManifests as ReadonlyMap<
         string,
-        ReadonlyMap<string, V2Entry>
+        ReadonlyMap<string, BaseOutputMeta>
       >,
     });
   } catch (error) {
@@ -178,7 +182,7 @@ async function loadManifestForContentType(
     oldManifestLocators: string[];
     validator: TypePredicate<object>;
   },
-): Promise<Result<Map<string, V2Entry>, string>> {
+): Promise<Result<Map<string, BaseOutputMeta>, string>> {
   const manifestPath = path.resolve(
     contentConfig.outputDir,
     contentConfig.manifestFileName,
@@ -193,7 +197,7 @@ async function loadManifestForContentType(
   }
 
   const manifestData = result.value;
-  const entriesMap = new Map<string, V2Entry>();
+  const entriesMap = new Map<string, BaseOutputMeta>();
 
   const v2Validator = isV2ManifestFileWithContentValidation(
     contentConfig.validator,
@@ -201,12 +205,12 @@ async function loadManifestForContentType(
 
   if (v2Validator(manifestData)) {
     for (const [slug, entry] of Object.entries(manifestData.entries)) {
-      entriesMap.set(slug, entry as V2Entry);
+      entriesMap.set(slug, entry as BaseOutputMeta);
     }
   } else if (isV1ManifestFile(manifestData)) {
     const v1Manifest = manifestData as V1ManifestFile;
     for (const [slug, v1Entry] of Object.entries(v1Manifest)) {
-      const upgradedEntry: V2Entry = {
+      const upgradedEntry: BaseOutputMeta = {
         ...v1Entry,
         hash: generateV1UpgradeHash(v1Entry.fileName),
         slug,
@@ -223,10 +227,15 @@ async function loadManifestForContentType(
   return success(entriesMap);
 }
 
+export type V2Manifest<
+  Metadata extends UnknownRecord = UnknownRecord,
+  CalculatedMetadata extends UnknownRecord = UnknownRecord,
+> = V2ManifestFile<Metadata, CalculatedMetadata>;
+
 export function getOldManifestEntries(
   manifestData: LoadedManifestData,
   contentType: string,
-): ReadonlyMap<string, V2Entry> {
+): ReadonlyMap<string, BaseOutputMeta> {
   return manifestData.oldManifests.get(contentType) ?? new Map();
 }
 
@@ -331,10 +340,10 @@ export function getManifestMap(builder: ManifestBuilder): ProcessingManifest {
 }
 
 export function buildManifest<
-  Metadata extends { [key: string]: unknown },
-  CalculatedMetadata extends { [key: string]: unknown },
+  Metadata extends UnknownRecord,
+  CalculatedMetadata extends UnknownRecord,
 >(
-  entries: Map<string, V2Entry & Metadata & CalculatedMetadata>,
+  entries: Map<string, BaseOutputMeta & Metadata & CalculatedMetadata>,
 ): V2ManifestFile<Metadata, CalculatedMetadata> {
   const entriesObject = Object.fromEntries(entries);
   const entriesHash = generateHash(
@@ -352,38 +361,33 @@ export function buildManifest<
   };
 }
 
-export type V2Manifest<
-  Metadata extends { [key: string]: unknown } = { [key: string]: unknown },
-  CalculatedMetadata extends { [key: string]: unknown } = {
-    [key: string]: unknown;
-  },
-> = V2ManifestFile<Metadata, CalculatedMetadata>;
-
 export type WriteManifestFailureReason = "manifest write failed";
 
 export async function writeManifest<
-  Metadata extends { [key: string]: unknown },
-  CalculatedMetadata extends { [key: string]: unknown },
+  Metadata extends UnknownRecord,
+  CalculatedMetadata extends UnknownRecord,
 >(
   contentType: string,
   manifest: V2ManifestFile<Metadata, CalculatedMetadata>,
   config: { outputDir: string; manifestFileName: string },
 ): Promise<Result<void, WriteManifestFailureReason>> {
   try {
-    const path = await import("node:path");
-    const { writeJsonFile } = await import("../../../files/index.js");
+    const pathModule = await import("node:path");
+    const { writeJsonFile: writeJsonFileFunc } = await import(
+      "../../../files/index.js"
+    );
 
-    const manifestPath = path.default.resolve(
+    const manifestPath = pathModule.default.resolve(
       config.outputDir,
       config.manifestFileName,
     );
 
-    await writeJsonFile(manifestPath, manifest);
+    await writeJsonFileFunc(manifestPath, manifest);
     return success(undefined);
   } catch (error) {
     return failure(
       "manifest write failed",
-      `Failed to write manifest for ${contentType}: ${error}`,
+      `Failed to write manifest for ${contentType}: ${String(error)}`,
     );
   }
 }
@@ -391,3 +395,9 @@ export async function writeManifest<
 function generateHash(content: string): string {
   return getSha1Hex(content);
 }
+
+// Backward compatibility aliases
+export const isV1Entry = isV1BaseOutputMeta;
+export type V1Entry = V1BaseOutputMeta;
+export const isV2Entry = isBaseOutputMeta;
+export type V2Entry = BaseOutputMeta;

@@ -6,6 +6,11 @@ import type {
 } from "../../../files/index.js";
 import { fetchJsonFile, readJsonFile } from "../../../files/index.js";
 import {
+  isV1BaseOutputMeta,
+  isBaseOutputMeta,
+  type V1BaseOutputMeta,
+  type BaseOutputMeta,
+  // Keep aliases for backward compatibility
   isV1Entry,
   isV2Entry,
   type V1Entry,
@@ -20,7 +25,7 @@ export type GetOldManifestFailureReason = "read manifest failed";
 /**
  * V1 manifest file format (flat object).
  */
-export type V1ManifestFile = { [slug: string]: V1Entry };
+export type V1ManifestFile = { [slug: string]: V1BaseOutputMeta };
 
 export const isV1ManifestFile = isRecordOf(
   isObject({
@@ -35,9 +40,9 @@ export const isV1ManifestFile = isRecordOf(
  * Upgrade v1 manifest entries to v2 format by adding hash field
  */
 const upgradeV1Manifest = (v1Manifest: {
-  [slug: string]: V1Entry;
-}): { [key: string]: V2Entry } => {
-  const upgradedEntries: { [key: string]: V2Entry } = {};
+  [slug: string]: V1BaseOutputMeta;
+}): { [key: string]: BaseOutputMeta } => {
+  const upgradedEntries: { [key: string]: BaseOutputMeta } = {};
 
   for (const [slug, entry] of Object.entries(v1Manifest)) {
     upgradedEntries[slug] = {
@@ -54,7 +59,7 @@ const getManifestFromOldManifestLocator = async (
   manifestLocator: string,
 ): Promise<
   Result<
-    { [key: string]: V2Entry },
+    { [key: string]: BaseOutputMeta },
     FetchJsonFileFailureReason | ReadJsonFileFailureReason
   >
 > => {
@@ -69,7 +74,7 @@ const getManifestFromOldManifestLocator = async (
   const data = readResult.value;
 
   // Test V2 format first using schema validation
-  const v2Validator = isV2ManifestFile(isV2Entry);
+  const v2Validator = isV2ManifestFile(isBaseOutputMeta);
   if (v2Validator(data)) {
     // V2 format - extract the entries (already have hash fields)
     return { success: true, value: data.entries };
@@ -92,7 +97,9 @@ const getManifestFromOldManifestLocator = async (
 export const getOldManifest = async (
   manifestOutputFileName: string,
   manifestLocators: string[],
-): Promise<Result<{ [key: string]: V2Entry }, GetOldManifestFailureReason>> => {
+): Promise<
+  Result<{ [key: string]: BaseOutputMeta }, GetOldManifestFailureReason>
+> => {
   const defaultedManifestLocators = [
     ...manifestLocators,
     manifestOutputFileName,
@@ -120,7 +127,9 @@ export const getOldManifestWithFallback = async (
   manifestOutputFileName: string,
   manifestLocators: string[],
   required: boolean,
-): Promise<Result<{ [key: string]: V2Entry }, GetOldManifestFailureReason>> => {
+): Promise<
+  Result<{ [key: string]: BaseOutputMeta }, GetOldManifestFailureReason>
+> => {
   const result = await getOldManifest(manifestOutputFileName, manifestLocators);
 
   if (!result.success && !required) {

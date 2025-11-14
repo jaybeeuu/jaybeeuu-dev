@@ -8,12 +8,12 @@ export type {
   PostManifestEntry as PostMetadata,
   PostInputMetadata,
   ReadingTime,
-} from "./content-types.js";
+} from "../content-types/index.js";
 export { resolveContent } from "./services/content-resolver.js";
 export type {
   ResolvedContent,
   ResolveContentFailureReason,
 } from "./services/content-resolver.js";
-export { contentResolverConfig } from "./content-types.js";
+export { contentTypeDefinitions } from "../content-types/index.js";
 export { processContent } from "./orchestrator.js";
-export type { ProcessedContent, OrchestratorConfig } from "./orchestrator.js";
+export type { OrchestratorConfig } from "./orchestrator.js";

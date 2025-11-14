@@ -7,7 +7,7 @@ import type {
   PostInputMetadata,
   PostManifestEntry,
 } from "../../src/content/index.js";
-import { contentResolverConfig } from "../../src/content/index.js";
+import { contentTypeDefinitions } from "../../src/content/index.js";
 import path from "path";
 import type * as ReadingTime from "reading-time";
 import { processContent } from "../../src/content/index.js";
@@ -268,8 +268,9 @@ export const compilePosts = async (
 
   // Create content config overrides for posts based on legacy options
   const contentConfigOverrides = {
+    ...contentTypeDefinitions,
     post: {
-      ...contentResolverConfig.post,
+      ...contentTypeDefinitions.post,
       sourceDir: defaultedUpdateOptions.sourceDir,
       outputDir: defaultedUpdateOptions.outputDir,
       hrefRoot: defaultedUpdateOptions.hrefRoot,
@@ -279,7 +280,7 @@ export const compilePosts = async (
       manifestFileName: defaultedUpdateOptions.manifestFileName,
       oldManifestLocators: defaultedUpdateOptions.oldManifestLocators,
       requireOldManifest: defaultedUpdateOptions.requireOldManifest,
-    } as any,
+    },
   };
 
   const updateResult = await processContent(

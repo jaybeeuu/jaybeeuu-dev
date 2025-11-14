@@ -13,7 +13,7 @@ import { gfmHeadingId } from "marked-gfm-heading-id";
 import type { SynchronousOptions } from "marked-highlight";
 import { markedHighlight } from "marked-highlight";
 import { mangle } from "marked-mangle";
-import Prism from "prismjs";
+import prism from "prismjs";
 import loadLanguages from "prismjs/components/index.js";
 import type { IOptions } from "sanitize-html";
 import sanitizeHtml from "sanitize-html";
@@ -238,9 +238,9 @@ const markedHighlightOptions: SynchronousOptions = {
     }
 
     loadLanguages(language);
-    const prismLanguage = Prism.languages[language];
+    const prismLanguage = prism.languages[language];
     assertIsNotNullish(prismLanguage);
-    const highlighted = Prism.highlight(code, prismLanguage, "language");
+    const highlighted = prism.highlight(code, prismLanguage, "language");
 
     return highlighted;
   },

@@ -12,7 +12,7 @@ import type {
 import { isBaseInputMetadata } from "../content-types.js";
 import { getSha1Hex } from "../../hash.js";
 import { detectContentChange } from "./manifest/v1-upgrade-utils.js";
-import type { V2Entry } from "./manifest/index.js";
+import type { BaseOutputMeta } from "./manifest/index.js";
 
 export interface OldManifestEntry {
   fileName?: string;
@@ -26,8 +26,8 @@ export type OldManifest = { [slug: string]: OldManifestEntry };
 
 export interface ProcessedContent<
   Type extends string,
-  InputMeta extends { [key: string]: unknown },
-  OutputMeta extends { [key: string]: unknown },
+  InputMeta extends UnknownRecord,
+  OutputMeta extends UnknownRecord,
 > {
   slug: string;
   contentType: Type;
@@ -38,7 +38,7 @@ export interface ProcessedContent<
     destinationPath: string;
   }>;
   contentHash: string;
-  manifestEntry: V2Entry & OutputMeta;
+  manifestEntry: BaseOutputMeta & OutputMeta;
 }
 
 export type ProcessTypedContentFailureReason =
@@ -47,8 +47,8 @@ export type ProcessTypedContentFailureReason =
 
 async function processTypedContent<
   Type extends string,
-  InputMeta extends { [key: string]: unknown },
-  OutputMeta extends { [key: string]: unknown },
+  InputMeta extends UnknownRecord,
+  OutputMeta extends UnknownRecord,
 >(
   inputMetadata: InputMeta & BaseInputMetadata,
   content: string,
@@ -116,8 +116,8 @@ export type ProcessFileFailureReason =
 
 export async function processFile<
   Type extends string,
-  InputMeta extends { [key: string]: unknown },
-  OutputMeta extends { [key: string]: unknown },
+  InputMeta extends UnknownRecord,
+  OutputMeta extends UnknownRecord,
 >(
   filePath: string,
   oldManifest: OldManifest,
@@ -188,8 +188,8 @@ export type CompileContentFailureReason = "compilation failed";
 
 async function compileContent<
   Type extends string,
-  InputMeta extends { [key: string]: unknown },
-  OutputMeta extends { [key: string]: unknown },
+  InputMeta extends UnknownRecord,
+  OutputMeta extends UnknownRecord,
 >(
   filePath: string,
   content: string,
@@ -222,8 +222,8 @@ async function compileContent<
 
 function generateTypedManifestEntry<
   Type extends string,
-  InputMeta extends { [key: string]: unknown },
-  OutputMeta extends { [key: string]: unknown },
+  InputMeta extends UnknownRecord,
+  OutputMeta extends UnknownRecord,
 >(
   slug: string,
   outputMetadata: OutputMeta,
@@ -233,7 +233,7 @@ function generateTypedManifestEntry<
   contentConfig: ResolvedContentDefinition<
     ContentTypeDefinition<Type, InputMeta, OutputMeta>
   >,
-): V2Entry & OutputMeta {
+): BaseOutputMeta & OutputMeta {
   const fileName = contentConfig.generateFileName(slug, compiledHtml);
   const href = joinUrlPath(contentConfig.hrefRoot, fileName);
 
@@ -270,13 +270,13 @@ function generateTypedManifestEntry<
     lastUpdateDate,
     hash: contentHash,
     slug,
-  } as V2Entry & OutputMeta;
+  } as BaseOutputMeta & OutputMeta;
 }
 
 async function writeTypedCompiledContent<
   Type extends string,
-  InputMeta extends { [key: string]: unknown },
-  OutputMeta extends { [key: string]: unknown },
+  InputMeta extends UnknownRecord,
+  OutputMeta extends UnknownRecord,
 >(
   slug: string,
   html: string,

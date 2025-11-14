@@ -8,7 +8,6 @@ import { is } from "@jaybeeuu/is";
 import type {
   ResolvedContentDefinition,
   ContentTypeDefinition,
-  BaseInputMetadata,
 } from "../content-types.js";
 
 /**
@@ -65,8 +64,8 @@ const hasFrontMatter = (sourceFileText: string): boolean => {
 
 const resolveFrontmatterContent = async <
   Type extends string,
-  InputMeta extends { [key: string]: unknown },
-  OutputMeta extends Record<string, unknown>,
+  InputMeta extends UnknownRecord,
+  OutputMeta extends UnknownRecord,
 >(
   markdownFilePath: string,
   config: ResolvedContentDefinition<
@@ -107,8 +106,8 @@ const resolveFrontmatterContent = async <
 
 const resolveJsonContent = async <
   Type extends string,
-  InputMeta extends { [key: string]: unknown },
-  OutputMeta extends Record<string, unknown>,
+  InputMeta extends UnknownRecord,
+  OutputMeta extends UnknownRecord,
 >(
   markdownFilePath: string,
   config: ResolvedContentDefinition<
@@ -162,8 +161,8 @@ const resolveJsonContent = async <
  */
 export const resolveContent = async <
   Type extends string,
-  InputMeta extends { [key: string]: unknown },
-  OutputMeta extends Record<string, unknown>,
+  InputMeta extends UnknownRecord,
+  OutputMeta extends UnknownRecord,
 >(
   markdownFilePath: string,
   config: ResolvedContentDefinition<

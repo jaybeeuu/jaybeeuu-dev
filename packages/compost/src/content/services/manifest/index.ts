@@ -8,12 +8,16 @@ export {
   type OldManifest,
   type OldManifestEntry,
   type V2ManifestFile,
-  type V2Manifest,
   isV2ManifestFile,
-  // Entry types
+  // Entry types - using new names
+  type V1BaseOutputMeta,
+  type BaseOutputMeta,
+  type ManifestEntry,
+  isV1BaseOutputMeta,
+  isBaseOutputMeta,
+  // Backward compatibility aliases
   type V1Entry,
   type V2Entry,
-  type ManifestEntry,
   isV1Entry,
   isV2Entry,
 } from "./manifest-operations.js";

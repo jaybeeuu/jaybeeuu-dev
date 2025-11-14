@@ -1,13 +1,13 @@
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
-import type { V2Entry } from "./manifest/index.js";
+import type { BaseOutputMeta } from "./manifest/index.js";
 
-export class ManifestEntriesManager<TEntry extends V2Entry> {
-  private readonly entries = new Map<string, TEntry>();
+export class ManifestEntriesManager<Entry extends BaseOutputMeta> {
+  private readonly entries = new Map<string, Entry>();
 
   addEntry(
     slug: string,
-    manifestEntry: TEntry,
+    manifestEntry: Entry,
     filePath: string,
   ): Result<void, "slug already exists"> {
     if (this.entries.has(slug)) {
@@ -21,7 +21,7 @@ export class ManifestEntriesManager<TEntry extends V2Entry> {
     return success(undefined);
   }
 
-  getEntries(): Map<string, TEntry> {
+  getEntries(): Map<string, Entry> {
     return new Map(this.entries);
   }
 

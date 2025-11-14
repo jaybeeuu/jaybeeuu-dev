@@ -1,5 +1,4 @@
 import type { PostFile } from "./helpers";
-import { writeOutputManifestFile as baseWriteOutputManifestFile } from "./helpers";
 import {
   cleanUpDirectories,
   compilePosts,
@@ -12,7 +11,6 @@ import path from "path";
 import { advanceTo, clear } from "jest-date-mock";
 import type { Response } from "node-fetch";
 import fetch from "node-fetch";
-import type { PostManifestEntry } from "../../src/index.js";
 import type { PostInputMetadata } from "../../src/content/index.js";
 import readingTime from "reading-time";
 
