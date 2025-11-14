@@ -6,7 +6,7 @@ export type {
   PostManifest,
   PostManifestEntry,
   PostManifestEntry as PostMetadata,
-  PostFileMetadata,
+  PostInputMetadata,
   ReadingTime,
 } from "./content-types.js";
 export { resolveContent } from "./services/content-resolver.js";

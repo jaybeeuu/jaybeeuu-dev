@@ -13,7 +13,7 @@ import { advanceTo, clear } from "jest-date-mock";
 import type { Response } from "node-fetch";
 import fetch from "node-fetch";
 import type { PostManifestEntry } from "../../src/index.js";
-import type { PostFileMetadata } from "../../src/content/index.js";
+import type { PostInputMetadata } from "../../src/content/index.js";
 import readingTime from "reading-time";
 
 import { describe, expect, it, jest } from "@jest/globals";
@@ -40,7 +40,7 @@ describe("manifest", () => {
     const publishDate = "2020-03-11";
     advanceTo(publishDate);
     const slug = "first-post";
-    const meta: PostFileMetadata = {
+    const meta: PostInputMetadata = {
       title: "This is the first post",
       abstract: "This is the very first post.",
       publish: true,
@@ -476,7 +476,7 @@ describe("manifest", () => {
       const publishDate = "2023-05-20";
       advanceTo(publishDate);
       const slug = "test-post";
-      const meta: PostFileMetadata = {
+      const meta: PostInputMetadata = {
         title: "Test Post Title",
         abstract: "This is a test post abstract.",
         publish: true,

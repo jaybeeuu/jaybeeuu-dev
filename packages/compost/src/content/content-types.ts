@@ -130,12 +130,6 @@ export const isPostInputMetadata = isObject({
 export type PostInputMetadata = CheckedBy<typeof isPostInputMetadata>;
 
 /**
- * @deprecated Use PostInputMetadata instead
- */
-export const isPostFileMetadata = isPostInputMetadata;
-export type PostFileMetadata = PostInputMetadata;
-
-/**
  * Input metadata for tech radar files (from frontmatter/JSON).
  */
 export const isTechRadarInputMetadata = isObject({
@@ -146,12 +140,6 @@ export const isTechRadarInputMetadata = isObject({
   publish: is("boolean"),
 } as const);
 export type TechRadarInputMetadata = CheckedBy<typeof isTechRadarInputMetadata>;
-
-/**
- * @deprecated Use TechRadarInputMetadata instead
- */
-export const isTechRadarFileMetadata = isTechRadarInputMetadata;
-export type TechRadarFileMetadata = TechRadarInputMetadata;
 
 /**
  * Reading time calculation result for posts.

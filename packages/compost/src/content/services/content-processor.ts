@@ -1,7 +1,7 @@
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success, joinUrlPath } from "@jaybeeuu/utilities";
 import path from "node:path";
-import { resolveContent, type ResolvedContent } from "./content-resolver.js";
+import { resolveContent } from "./content-resolver.js";
 import { compileMarkdown } from "./markdown-compilation.js";
 import { copyFile, writeTextFile } from "../../files/index.js";
 import type {
