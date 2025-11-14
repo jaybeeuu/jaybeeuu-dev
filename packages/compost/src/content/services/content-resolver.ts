@@ -65,7 +65,7 @@ const hasFrontMatter = (sourceFileText: string): boolean => {
 
 const resolveFrontmatterContent = async <
   Type extends string,
-  InputMeta extends BaseInputMetadata,
+  InputMeta extends { [key: string]: unknown },
   OutputMeta extends Record<string, unknown>,
 >(
   markdownFilePath: string,
@@ -107,7 +107,7 @@ const resolveFrontmatterContent = async <
 
 const resolveJsonContent = async <
   Type extends string,
-  InputMeta extends BaseInputMetadata,
+  InputMeta extends { [key: string]: unknown },
   OutputMeta extends Record<string, unknown>,
 >(
   markdownFilePath: string,
@@ -162,7 +162,7 @@ const resolveJsonContent = async <
  */
 export const resolveContent = async <
   Type extends string,
-  InputMeta extends BaseInputMetadata,
+  InputMeta extends { [key: string]: unknown },
   OutputMeta extends Record<string, unknown>,
 >(
   markdownFilePath: string,

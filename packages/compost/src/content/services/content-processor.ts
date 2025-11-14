@@ -25,12 +25,12 @@ export type OldManifest = { [slug: string]: OldManifestEntry };
 
 export interface ProcessedContent<
   Type extends string,
-  InputMeta extends BaseInputMetadata,
+  InputMeta extends { [key: string]: unknown },
   OutputMeta extends { [key: string]: unknown },
 > {
   slug: string;
   contentType: Type;
-  inputMetadata: InputMeta;
+  inputMetadata: InputMeta & BaseInputMetadata;
   compiledHtml: string;
   assets: Array<{
     sourcePath: string;
@@ -46,10 +46,10 @@ export type ProcessTypedContentFailureReason =
 
 async function processTypedContent<
   Type extends string,
-  InputMeta extends BaseInputMetadata,
+  InputMeta extends { [key: string]: unknown },
   OutputMeta extends { [key: string]: unknown },
 >(
-  inputMetadata: InputMeta,
+  inputMetadata: InputMeta & BaseInputMetadata,
   content: string,
   filePath: string,
   oldManifest: OldManifest,
@@ -115,7 +115,7 @@ export type ProcessFileFailureReason =
 
 export async function processFile<
   Type extends string,
-  InputMeta extends BaseInputMetadata,
+  InputMeta extends { [key: string]: unknown },
   OutputMeta extends { [key: string]: unknown },
 >(
   filePath: string,
@@ -164,7 +164,7 @@ export async function processFile<
     }
 
     const result = await processTypedContent(
-      validationResult.value,
+      validationResult.value as InputMeta & BaseInputMetadata,
       contentResult.value.content,
       filePath,
       oldManifest,
@@ -190,7 +190,7 @@ export type CompileContentFailureReason = "compilation failed";
 
 async function compileContent<
   Type extends string,
-  InputMeta extends BaseInputMetadata,
+  InputMeta extends { [key: string]: unknown },
   OutputMeta extends { [key: string]: unknown },
 >(
   filePath: string,
@@ -224,7 +224,7 @@ async function compileContent<
 
 function generateTypedManifestEntry<
   Type extends string,
-  InputMeta extends BaseInputMetadata,
+  InputMeta extends { [key: string]: unknown },
   OutputMeta extends { [key: string]: unknown },
 >(
   slug: string,
@@ -277,7 +277,7 @@ function generateTypedManifestEntry<
 
 async function writeTypedCompiledContent<
   Type extends string,
-  InputMeta extends BaseInputMetadata,
+  InputMeta extends { [key: string]: unknown },
   OutputMeta extends { [key: string]: unknown },
 >(
   slug: string,

@@ -17,6 +17,7 @@ export interface BaseInputMetadata {
   title: string;
   /** Whether content should be published (used for filtering, not stored in output) */
   publish: boolean;
+  [key: string]: unknown;
 }
 
 /**
@@ -32,7 +33,7 @@ export interface ContentFilePatterns {
 
 export interface ContentTypeDefinition<
   Type extends string,
-  InputMeta extends BaseInputMetadata,
+  InputMeta extends { [key: string]: unknown },
   OutputMeta extends { [key: string]: unknown },
 > {
   readonly contentType: Type;
@@ -40,13 +41,16 @@ export interface ContentTypeDefinition<
   readonly generateSlug: (filePath: string, sourceDir: string) => string;
   readonly generateFileName: (slug: string, html: string) => string;
 
-  /** Validates raw input data from frontmatter/JSON files */
+  /** Validates raw input data from frontmatter/JSON files and intersects with BaseInputMetadata */
   readonly validateInputMeta: (
     data: unknown,
-  ) => Result<InputMeta, ValidationError>;
+  ) => Result<InputMeta & BaseInputMetadata, ValidationError>;
 
   /** Maps validated input metadata and content to output metadata. If not provided, all InputMeta fields will be merged into output */
-  readonly mapToOutputMeta?: (input: InputMeta, content: string) => OutputMeta;
+  readonly mapToOutputMeta?: (
+    input: InputMeta & BaseInputMetadata,
+    content: string,
+  ) => OutputMeta;
 
   readonly requireOldManifest?: boolean;
   readonly manifestFileName?: string;
@@ -76,7 +80,7 @@ export type ResolvedContentDefinitionMap<
   ConfigMap extends {
     [key: string]: ContentTypeDefinition<
       string,
-      BaseInputMetadata,
+      { [key: string]: unknown },
       { [key: string]: unknown }
     >;
   },
@@ -92,7 +96,7 @@ export type MetadataMapFromConfig<Config> = {
     infer InputMeta,
     { [key: string]: unknown }
   >
-    ? InputMeta
+    ? InputMeta & BaseInputMetadata
     : never;
 };
 

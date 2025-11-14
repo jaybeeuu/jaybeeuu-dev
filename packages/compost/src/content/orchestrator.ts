@@ -31,7 +31,7 @@ export interface OrchestratorConfig {
 
 function applyContentConfigDefaults<
   Type extends string,
-  InputMeta extends BaseInputMetadata,
+  InputMeta extends { [key: string]: unknown },
   OutputMeta extends Record<string, unknown>,
 >(
   definition: ContentTypeDefinition<Type, InputMeta, OutputMeta>,
@@ -48,7 +48,8 @@ function applyContentConfigDefaults<
     oldManifestLocators: definition.oldManifestLocators ?? [],
     mapToOutputMeta:
       definition.mapToOutputMeta ??
-      ((input: InputMeta) => input as unknown as OutputMeta),
+      ((input: InputMeta & BaseInputMetadata) =>
+        input as unknown as OutputMeta),
   };
 }
 
@@ -61,7 +62,7 @@ export type ProcessContentTypeFailureReason =
 
 async function processContentType<
   Type extends string,
-  InputMeta extends BaseInputMetadata,
+  InputMeta extends { [key: string]: unknown },
   OutputMeta extends Record<string, unknown>,
 >(
   contentType: Type,
