@@ -9,6 +9,7 @@ import type {
   ContentTypeDefinition,
   BaseInputMetadata,
 } from "../content-types.js";
+import { isBaseInputMetadata } from "../content-types.js";
 import { getSha1Hex } from "../../hash.js";
 import { detectContentChange } from "./manifest/v1-upgrade-utils.js";
 import type { V2Entry } from "./manifest/index.js";
@@ -152,13 +153,16 @@ export async function processFile<
       );
     }
 
-    // Validate input metadata using TypeScript type guard
-    if (!contentConfig.validateInputMeta(contentResult.value.metadata)) {
+    // Validate input metadata: both user-defined and base metadata must be valid
+    if (
+      !contentConfig.validateInputMeta(contentResult.value.metadata) ||
+      !isBaseInputMetadata(contentResult.value.metadata)
+    ) {
       return failure("content resolution failed", "Invalid metadata structure");
     }
 
     const result = await processTypedContent(
-      contentResult.value.metadata,
+      contentResult.value.metadata as InputMeta & BaseInputMetadata,
       contentResult.value.content,
       filePath,
       oldManifest,
