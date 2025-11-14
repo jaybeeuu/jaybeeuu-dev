@@ -1,8 +1,6 @@
 import path from "node:path";
 import getReadingTime from "reading-time";
 import type { CheckedBy } from "@jaybeeuu/is";
-import type { Result } from "@jaybeeuu/utilities";
-import { success, failure } from "@jaybeeuu/utilities";
 import { is, isLiteral, isObject, isUnionOf } from "@jaybeeuu/is";
 import { type V2Entry } from "./services/manifest/index.js";
 import { getCompiledPostFileName } from "./file-paths.js";
@@ -19,11 +17,6 @@ export interface BaseInputMetadata {
   publish: boolean;
   [key: string]: unknown;
 }
-
-/**
- * Validation error type for input metadata validation.
- */
-export type ValidationError = string;
 
 export interface ContentFilePatterns {
   frontmatter: readonly string[];
@@ -44,7 +37,7 @@ export interface ContentTypeDefinition<
   /** Validates raw input data from frontmatter/JSON files and intersects with BaseInputMetadata */
   readonly validateInputMeta: (
     data: unknown,
-  ) => Result<InputMeta & BaseInputMetadata, ValidationError>;
+  ) => (InputMeta & BaseInputMetadata) | false;
 
   /** Maps validated input metadata and content to output metadata. If not provided, all InputMeta fields will be merged into output */
   readonly mapToOutputMeta?: (
@@ -218,9 +211,7 @@ export const contentResolverConfig = {
       return getCompiledPostFileName(slug, html);
     },
     validateInputMeta: (data: unknown) => {
-      return isPostInputMetadata(data)
-        ? success(data)
-        : failure("Invalid post metadata structure");
+      return isPostInputMetadata(data) ? data : false;
     },
     mapToOutputMeta: (input: PostInputMetadata, content: string) => {
       const readingTime = getReadingTime(content);
@@ -258,9 +249,7 @@ export const contentResolverConfig = {
       return `${slug}.html`;
     },
     validateInputMeta: (data: unknown) => {
-      return isTechRadarInputMetadata(data)
-        ? success(data)
-        : failure("Invalid tech radar metadata structure");
+      return isTechRadarInputMetadata(data) ? data : false;
     },
     mapToOutputMeta: (input: TechRadarInputMetadata) => {
       return {

@@ -153,18 +153,15 @@ export async function processFile<
     }
 
     // Validate input metadata using the new validation function
-    const validationResult = contentConfig.validateInputMeta(
+    const validatedMetadata = contentConfig.validateInputMeta(
       contentResult.value.metadata,
     );
-    if (!validationResult.success) {
-      return failure(
-        "content resolution failed",
-        `Invalid metadata: ${validationResult.message}`,
-      );
+    if (validatedMetadata === false) {
+      return failure("content resolution failed", "Invalid metadata structure");
     }
 
     const result = await processTypedContent(
-      validationResult.value as InputMeta & BaseInputMetadata,
+      validatedMetadata,
       contentResult.value.content,
       filePath,
       oldManifest,
