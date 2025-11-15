@@ -30,8 +30,8 @@ export interface ContentFilePatterns {
 
 export interface ContentTypeDefinition<
   Type extends string = string,
-  InputMeta extends UnknownRecord = UnknownRecord,
-  OutputMeta extends UnknownRecord = UnknownRecord,
+  InputMeta = UnknownRecord,
+  OutputMeta = UnknownRecord,
 > {
   readonly contentType: Type;
   readonly filePatterns: ContentFilePatterns;
@@ -73,7 +73,7 @@ export type ResolvedContentDefinition<Definition> =
 
 export type ResolvedContentDefinitionMap<
   ConfigMap extends {
-    [key: string]: ContentTypeDefinition<string, UnknownRecord, UnknownRecord>;
+    [key: string]: ContentTypeDefinition;
   },
 > = {
   readonly [K in keyof ConfigMap]: ResolvedContentDefinition<ConfigMap[K]>;
@@ -84,8 +84,7 @@ export type ContentTypesFromConfig<Config> = keyof Config;
 export type MetadataMapFromConfig<Config> = {
   readonly [K in keyof Config]: Config[K] extends ContentTypeDefinition<
     string,
-    infer InputMeta,
-    UnknownRecord
+    infer InputMeta
   >
     ? InputMeta & BaseInputMetadata
     : never;

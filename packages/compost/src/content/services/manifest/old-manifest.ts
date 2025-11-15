@@ -6,18 +6,12 @@ import type {
 } from "../../../files/index.js";
 import { fetchJsonFile, readJsonFile } from "../../../files/index.js";
 import {
-  isV1BaseOutputMeta,
   isBaseOutputMeta,
   type V1BaseOutputMeta,
   type BaseOutputMeta,
-  // Keep aliases for backward compatibility
-  isV1Entry,
-  isV2Entry,
-  type V1Entry,
-  type V2Entry,
 } from "./manifest-operations.js";
 import { is, isObject, isRecordOf, isUnionOf } from "@jaybeeuu/is";
-import { isV2ManifestFile } from "./manifest-operations.js";
+import { isManifest } from "./manifest-operations.js";
 import { generateV1UpgradeHash } from "./v1-upgrade-utils.js";
 
 export type GetOldManifestFailureReason = "read manifest failed";
@@ -74,7 +68,7 @@ const getManifestFromOldManifestLocator = async (
   const data = readResult.value;
 
   // Test V2 format first using schema validation
-  const v2Validator = isV2ManifestFile(isBaseOutputMeta);
+  const v2Validator = isManifest(isBaseOutputMeta);
   if (v2Validator(data)) {
     // V2 format - extract the entries (already have hash fields)
     return { success: true, value: data.entries };

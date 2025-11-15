@@ -10,6 +10,9 @@ import {
 } from "./helpers.js";
 import { writeJsonFile } from "../../src/files/index.js";
 import path from "path";
+import { assert } from "console";
+import { BaseInputMetadata } from "packages/compost/src/content/content-types.js";
+import type { BaseOutputMeta } from "packages/compost/src/content/services/manifest/manifest-operations.js";
 
 interface PostFileWithStringArrayContent extends Omit<PostFile, "content"> {
   content: string[];
@@ -27,7 +30,7 @@ describe("manifest versioning compatibility", () => {
     const slug2 = "second-post";
 
     // Step 1: Create a legacy v1 manifest (no version field, direct entries, no hash)
-    const legacyManifest = {
+    const legacyManifest: { [slug: string]: BaseOutputMeta & {} } = {
       [slug1]: {
         title: "First Post",
         abstract: "First abstract",
@@ -309,7 +312,8 @@ describe("manifest versioning compatibility", () => {
 
     // Read the raw manifest file to verify it has version structure
     const rawManifestContent = await getOutputFile("post-manifest.json");
-    const rawManifest = JSON.parse(rawManifestContent);
+    const rawManifest = JSON.parse(rawManifestContent) as unknown;
+    assert(isPostManifest(rawManifest));
 
     // Verify v2 structure
     expect(rawManifest.version).toBe(2);

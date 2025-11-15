@@ -24,11 +24,7 @@ export interface OldManifestEntry {
 
 export type OldManifest = { [slug: string]: OldManifestEntry };
 
-export interface ProcessedContent<
-  Type extends string,
-  InputMeta extends UnknownRecord,
-  OutputMeta extends UnknownRecord,
-> {
+export interface ProcessedContent<Type extends string, InputMeta, OutputMeta> {
   slug: string;
   contentType: Type;
   inputMetadata: InputMeta & BaseInputMetadata;
@@ -45,11 +41,7 @@ export type ProcessTypedContentFailureReason =
   | "content skipped"
   | "compilation failed";
 
-async function processTypedContent<
-  Type extends string,
-  InputMeta extends UnknownRecord,
-  OutputMeta extends UnknownRecord,
->(
+async function processTypedContent<Type extends string, InputMeta, OutputMeta>(
   inputMetadata: InputMeta & BaseInputMetadata,
   content: string,
   filePath: string,
@@ -114,11 +106,7 @@ export type ProcessFileFailureReason =
   | "compilation failed"
   | "file processing failed";
 
-export async function processFile<
-  Type extends string,
-  InputMeta extends UnknownRecord,
-  OutputMeta extends UnknownRecord,
->(
+export async function processFile<Type extends string, InputMeta, OutputMeta>(
   filePath: string,
   oldManifest: OldManifest,
   contentConfig: ResolvedContentDefinition<
@@ -186,11 +174,7 @@ export async function processFile<
 
 export type CompileContentFailureReason = "compilation failed";
 
-async function compileContent<
-  Type extends string,
-  InputMeta extends UnknownRecord,
-  OutputMeta extends UnknownRecord,
->(
+async function compileContent<Type extends string, InputMeta, OutputMeta>(
   filePath: string,
   content: string,
   contentConfig: ResolvedContentDefinition<
@@ -220,11 +204,7 @@ async function compileContent<
   return success(result.value);
 }
 
-function generateTypedManifestEntry<
-  Type extends string,
-  InputMeta extends UnknownRecord,
-  OutputMeta extends UnknownRecord,
->(
+function generateTypedManifestEntry<Type extends string, InputMeta, OutputMeta>(
   slug: string,
   outputMetadata: OutputMeta,
   compiledHtml: string,
@@ -262,21 +242,20 @@ function generateTypedManifestEntry<
         ? new Date(oldEntry.lastUpdateDate).toISOString() // Preserve existing update date
         : null; // Old post with no previous update date
 
-  return {
-    ...outputMetadata,
+  return Object.assign({}, outputMetadata, {
     fileName,
     href,
     publishDate,
     lastUpdateDate,
     hash: contentHash,
     slug,
-  } as BaseOutputMeta & OutputMeta;
+  });
 }
 
 async function writeTypedCompiledContent<
   Type extends string,
-  InputMeta extends UnknownRecord,
-  OutputMeta extends UnknownRecord,
+  InputMeta,
+  OutputMeta,
 >(
   slug: string,
   html: string,

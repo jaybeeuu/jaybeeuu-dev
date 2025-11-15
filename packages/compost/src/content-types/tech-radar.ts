@@ -2,7 +2,7 @@ import path from "node:path";
 import type { CheckedBy } from "@jaybeeuu/is";
 import { is, isLiteral, isObject, isUnionOf } from "@jaybeeuu/is";
 import type { BaseOutputMeta } from "../content/services/manifest/index.js";
-import type { V2ManifestFile } from "../content/services/manifest/manifest-operations.js";
+import type { Manifest } from "../content/services/manifest/manifest-operations.js";
 import type { ContentTypeDefinition } from "../content/content-types.js";
 
 const techRadarQuadrantValidator = isUnionOf(
@@ -39,7 +39,7 @@ export type TechRadarInputMetadata = CheckedBy<typeof isTechRadarInputMetadata>;
 /**
  * Output metadata for tech radar items (goes into manifest entries).
  */
-export interface TechRadarOutputMetadata extends UnknownRecord {
+export interface TechRadarOutputMetadata {
   title: string;
   quadrant: TechRadarQuadrant;
   ring: TechRadarRing;
@@ -52,7 +52,7 @@ export interface TechRadarOutputMetadata extends UnknownRecord {
  */
 export type TechRadarManifestEntry = BaseOutputMeta & TechRadarOutputMetadata;
 
-export type TechRadarManifest = V2ManifestFile<TechRadarOutputMetadata>;
+export type TechRadarManifest = Manifest<TechRadarOutputMetadata>;
 
 /**
  * Content type definition for tech radar items.

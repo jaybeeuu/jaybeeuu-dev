@@ -293,9 +293,6 @@ export const compilePosts = async (
 
   // Extract post manifest from the result
   const postManifest = updateResult.value.post;
-  if (!postManifest) {
-    return failure("post processing failed", "No post manifest generated");
-  }
 
   return success(postManifest as PostManifest);
 };

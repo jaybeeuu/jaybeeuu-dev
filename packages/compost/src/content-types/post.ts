@@ -4,7 +4,7 @@ import type { CheckedBy } from "@jaybeeuu/is";
 import { is, isObject } from "@jaybeeuu/is";
 import type { BaseOutputMeta } from "../content/services/manifest/index.js";
 import { getCompiledPostFileName } from "../content/file-paths.js";
-import type { V2ManifestFile } from "../content/services/manifest/manifest-operations.js";
+import type { Manifest } from "../content/services/manifest/manifest-operations.js";
 import type { ContentTypeDefinition } from "../content/content-types.js";
 
 /**
@@ -28,23 +28,15 @@ export const isReadingTime = isObject({
 });
 export type ReadingTime = CheckedBy<typeof isReadingTime>;
 
-/**
- * Output metadata for posts (goes into manifest entries).
- * This is what gets stored after processing and transformation.
- */
-export interface PostOutputMetadata extends UnknownRecord {
-  title: string;
-  abstract: string;
-  readingTime: ReadingTime;
-}
+export const isPostOutputMetadata = isObject({
+  abstract: is("string"),
+  readingTime: isReadingTime,
+});
+export type PostOutputMetadata = CheckedBy<typeof isPostOutputMetadata>;
 
-/**
- * Complete metadata interface for compiled post manifest entries.
- * Combines base output metadata with post-specific output metadata.
- */
 export type PostManifestEntry = BaseOutputMeta & PostOutputMetadata;
 
-export type PostManifest = V2ManifestFile<PostOutputMetadata>;
+export type PostManifest = Manifest<PostOutputMetadata>;
 
 /**
  * Content type definition for posts.

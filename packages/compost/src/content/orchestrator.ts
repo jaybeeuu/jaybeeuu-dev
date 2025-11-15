@@ -22,11 +22,7 @@ export interface OrchestratorConfig {
   clean: boolean;
 }
 
-function applyContentConfigDefaults<
-  Type extends string,
-  InputMeta extends UnknownRecord,
-  OutputMeta extends UnknownRecord,
->(
+function applyContentConfigDefaults<Type extends string, InputMeta, OutputMeta>(
   definition: ContentTypeDefinition<Type, InputMeta, OutputMeta>,
 ): ResolvedContentDefinition<
   ContentTypeDefinition<Type, InputMeta, OutputMeta>
@@ -53,11 +49,7 @@ export type ProcessContentTypeFailureReason =
   | "slug already exists"
   | "manifest write failed";
 
-async function processContentType<
-  Type extends string,
-  InputMeta extends UnknownRecord,
-  OutputMeta extends UnknownRecord,
->(
+async function processContentType<Type extends string, InputMeta, OutputMeta>(
   contentType: Type,
   contentConfig: ResolvedContentDefinition<
     ContentTypeDefinition<Type, InputMeta, OutputMeta>
@@ -169,7 +161,7 @@ export async function processContent<
   const orchestratorConfig = config;
 
   const manifests = {} as {
-    [type: string]: V2ManifestFile<UnknownRecord>;
+    [type: string]: V2ManifestFile;
   };
 
   for (const [contentType, definition] of Object.entries(

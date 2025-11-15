@@ -1,3 +1,4 @@
+import { describe, expect, it } from "@jest/globals";
 import {
   cleanUpDirectories,
   compilePosts,
@@ -6,7 +7,6 @@ import {
   writePostFile,
 } from "./helpers";
 
-import { describe, expect, it } from "@jest/globals";
 describe("file-selection", () => {
   it("ignores unpublished articles.", async () => {
     await cleanUpDirectories();

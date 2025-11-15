@@ -27,7 +27,7 @@ const yargs = yargsFactory(hideBin(process.argv));
 
 const run = async (
   options: UpdateOptions,
-): Promise<Result<never, "content type processing failed">> => {
+): Promise<Result<never, "content type processing failed" | "error">> => {
   try {
     log.info("Composting...");
     // Convert old CLI options to new config structure
@@ -44,7 +44,8 @@ const run = async (
           const contentTypeHeader = `  ${contentType}:`;
           const manifestLines = Object.entries(manifest.entries).map(
             ([slug, meta]) => {
-              const fileName = meta.fileName ?? "unknown";
+              const fileName =
+                (meta as { fileName?: string }).fileName ?? "unknown";
               return `    ${slug}: ${fileName}`;
             },
           );

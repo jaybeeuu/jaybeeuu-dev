@@ -31,18 +31,12 @@ export type ResolvedContent<Type extends string, Metadata> = {
 
 export type LoadSourceFailureReason = "load source failure";
 export type NoFrontMatterFailureReason = "no frontmatter in markdown file";
+export type ValidateFrontmatterMetaFailureReason =
+  "invalid frontmatter metadata";
+export type ValidateJsonMetaFailureReason = "invalid json metadata";
 export type JsonFileNotFoundReason = "json file not found";
 export type UnsupportedFileExtensionReason = "unsupported file extension";
 export type ContentTypeNotConfiguredReason = "content type not configured";
-
-export type ResolveContentFailureReason =
-  | LoadSourceFailureReason
-  | NoFrontMatterFailureReason
-  | ParseYamlMetaFailureReason
-  | JsonFileNotFoundReason
-  | ReadJsonFileFailureReason
-  | UnsupportedFileExtensionReason
-  | ContentTypeNotConfiguredReason;
 
 const loadSourceText = async (
   sourceFilePath: string,
@@ -62,17 +56,28 @@ const hasFrontMatter = (sourceFileText: string): boolean => {
   );
 };
 
+export type ResolveFrontmatterContentFailureReason =
+  | LoadSourceFailureReason
+  | JsonFileNotFoundReason
+  | ReadJsonFileFailureReason
+  | NoFrontMatterFailureReason
+  | ValidateFrontmatterMetaFailureReason
+  | ParseYamlMetaFailureReason;
+
 const resolveFrontmatterContent = async <
   Type extends string,
-  InputMeta extends UnknownRecord,
-  OutputMeta extends UnknownRecord,
+  InputMeta,
+  OutputMeta,
 >(
   markdownFilePath: string,
   config: ResolvedContentDefinition<
     ContentTypeDefinition<Type, InputMeta, OutputMeta>
   >,
 ): Promise<
-  Result<ResolvedContent<Type, unknown>, ResolveContentFailureReason>
+  Result<
+    ResolvedContent<Type, InputMeta>,
+    ResolveFrontmatterContentFailureReason
+  >
 > => {
   const sourceFileTextResult = await loadSourceText(markdownFilePath);
   if (!sourceFileTextResult.success) {
@@ -97,6 +102,15 @@ const resolveFrontmatterContent = async <
     return yamlResult;
   }
 
+  if (!config.validateInputMeta(yamlResult.value)) {
+    return failure(
+      "invalid frontmatter metadata",
+      new Error(
+        `Frontmatter metadata validation failed for file: ${markdownFilePath}`,
+      ),
+    );
+  }
+
   return success({
     type: config.contentType,
     metadata: yamlResult.value,
@@ -104,17 +118,19 @@ const resolveFrontmatterContent = async <
   });
 };
 
-const resolveJsonContent = async <
-  Type extends string,
-  InputMeta extends UnknownRecord,
-  OutputMeta extends UnknownRecord,
->(
+export type ResolveJsonContentFailureReason =
+  | LoadSourceFailureReason
+  | JsonFileNotFoundReason
+  | ReadJsonFileFailureReason
+  | ValidateJsonMetaFailureReason;
+
+const resolveJsonContent = async <Type extends string, InputMeta, OutputMeta>(
   markdownFilePath: string,
   config: ResolvedContentDefinition<
     ContentTypeDefinition<Type, InputMeta, OutputMeta>
   >,
 ): Promise<
-  Result<ResolvedContent<Type, unknown>, ResolveContentFailureReason>
+  Result<ResolvedContent<Type, InputMeta>, ResolveJsonContentFailureReason>
 > => {
   const sourceFileTextResult = await loadSourceText(markdownFilePath);
   if (!sourceFileTextResult.success) {
@@ -139,12 +155,24 @@ const resolveJsonContent = async <
     return metadataResult;
   }
 
+  if (!config.validateInputMeta(metadataResult.value)) {
+    return failure(
+      "invalid json metadata",
+      new Error(`JSON metadata validation failed for file: ${jsonFilePath}`),
+    );
+  }
+
   return success({
     type: config.contentType,
     metadata: metadataResult.value,
     content: sourceFileTextResult.value,
   });
 };
+
+export type ResolveContentFailureReason =
+  | ResolveFrontmatterContentFailureReason
+  | ResolveJsonContentFailureReason
+  | UnsupportedFileExtensionReason;
 
 /**
  * Resolves content from a markdown file using a single content type configuration.
@@ -161,15 +189,18 @@ const resolveJsonContent = async <
  */
 export const resolveContent = async <
   Type extends string,
-  InputMeta extends UnknownRecord,
-  OutputMeta extends UnknownRecord,
+  InputMeta,
+  OutputMeta,
 >(
   markdownFilePath: string,
   config: ResolvedContentDefinition<
     ContentTypeDefinition<Type, InputMeta, OutputMeta>
   >,
 ): Promise<
-  Result<ResolvedContent<Type, unknown>, ResolveContentFailureReason>
+  Result<
+    ResolvedContent<Type, InputMeta>,
+    ResolveContentFailureReason | "invalid json metadata"
+  >
 > => {
   // Check frontmatter patterns
   for (const pattern of config.filePatterns.frontmatter) {
