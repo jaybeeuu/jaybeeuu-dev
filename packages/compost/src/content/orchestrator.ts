@@ -17,6 +17,7 @@ import {
   type ContentTypeDefinition,
   type ResolvedContentDefinition,
   type BaseInputMetadata,
+  type UnknownRecord,
 } from "./content-types.js";
 
 export interface OrchestratorConfig {
@@ -62,12 +63,13 @@ async function processContentType<Type extends string, InputMeta, OutputMeta>(
     ProcessContentTypeFailureReason
   >
 > {
+  const resolvedOutputDir = path.resolve(contentConfig.outputDir);
+
   const manifestPath = path.resolve(
-    contentConfig.outputDir,
+    resolvedOutputDir,
     contentConfig.manifestFileName,
   );
 
-  // Load old manifest BEFORE cleaning to preserve migration data
   const manifestResult = await getOldManifestWithFallback(
     manifestPath,
     contentConfig.oldManifestLocators,
@@ -78,13 +80,11 @@ async function processContentType<Type extends string, InputMeta, OutputMeta>(
     return failure("manifest load failed", manifestResult.message);
   }
 
-  // Clean output directory AFTER loading old manifest
   if (clean) {
-    await deleteDirectories(contentConfig.outputDir);
+    await deleteDirectories(resolvedOutputDir);
   }
 
-  // Ensure output directory exists
-  await fs.promises.mkdir(contentConfig.outputDir, { recursive: true });
+  await fs.promises.mkdir(resolvedOutputDir, { recursive: true });
 
   const manifestData = manifestResult.value;
 
@@ -123,11 +123,9 @@ async function processContentType<Type extends string, InputMeta, OutputMeta>(
     }
   }
 
-  // Build manifest object
   const manifest = buildManifest(manifestEntries.getEntries());
 
-  // Write manifest immediately for this content type
-  const writeResult = await writeManifest(contentType, manifest, contentConfig);
+  const writeResult = await writeManifest(contentType, manifest, manifestPath);
   if (!writeResult.success) {
     return failure("manifest write failed", writeResult.message);
   }

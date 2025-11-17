@@ -1,4 +1,7 @@
-import type { PostManifest, PostMetadata } from "@jaybeeuu/compost";
+import type {
+  PostManifest,
+  PostManifestEntry as PostMetadata,
+} from "@jaybeeuu/posts/types";
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
 import { fetchJson, fetchText } from "../utils/request";

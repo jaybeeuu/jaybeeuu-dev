@@ -1,6 +1,7 @@
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
 import { getSha1Hex } from "../../../hash.js";
+import type { UnknownRecord } from "../../content-types.js";
 
 import {
   is,
@@ -134,17 +135,11 @@ export type WriteManifestFailureReason = "manifest write failed";
 export async function writeManifest<Metadata>(
   contentType: string,
   manifest: Manifest<Metadata>,
-  config: { outputDir: string; manifestFileName: string },
+  manifestPath: string,
 ): Promise<Result<void, WriteManifestFailureReason>> {
   try {
-    const pathModule = await import("node:path");
     const { writeJsonFile: writeJsonFileFunc } = await import(
       "../../../files/index.js"
-    );
-
-    const manifestPath = pathModule.default.resolve(
-      config.outputDir,
-      config.manifestFileName,
     );
 
     await writeJsonFileFunc(manifestPath, manifest);

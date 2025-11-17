@@ -3,7 +3,9 @@ import { debounce, failure, log, success } from "@jaybeeuu/utilities";
 import chokidar from "chokidar";
 import yargsFactory from "yargs";
 import { hideBin } from "yargs/helpers";
-import { processContent, contentTypeDefinitions } from "../content/index.js";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+import { processContent, type CompostConfig } from "../content/index.js";
 
 /**
  * Configuration options for the compost CLI.
@@ -21,20 +23,49 @@ export interface UpdateOptions {
   watch: boolean;
   removeH1: boolean;
   clean: boolean;
+  config: string;
 }
 
 const yargs = yargsFactory(hideBin(process.argv));
+
+const loadConfig = async (configPath: string): Promise<CompostConfig> => {
+  try {
+    const resolvedPath = path.resolve(configPath);
+    const configUrl = pathToFileURL(resolvedPath).href;
+    const configModule = await import(configUrl);
+
+    // Support both default export and named export
+    const config =
+      configModule.default ?? configModule.contentTypes ?? configModule;
+
+    if (!config || typeof config !== "object" || !config.contentTypes) {
+      throw new Error(
+        "Config must export contentTypes or be a CompostConfig object",
+      );
+    }
+
+    return config as CompostConfig;
+  } catch (err) {
+    throw new Error(
+      `Failed to load config from ${configPath}: ${log.getErrorMessage(err)}`,
+    );
+  }
+};
 
 const run = async (
   options: UpdateOptions,
 ): Promise<Result<never, "content type processing failed" | "error">> => {
   try {
     log.info("Composting...");
+
+    // Load content types from config file
+    const config = await loadConfig(options.config);
+
     // Convert old CLI options to new config structure
     const orchestratorConfig = { clean: options.clean };
     const result = await processContent(
       orchestratorConfig,
-      contentTypeDefinitions,
+      config.contentTypes,
     );
     if (result.success) {
       // Format output for all content types
@@ -158,6 +189,11 @@ yargs.command(
       description: "Clean the output directory before compiling.",
       type: "boolean",
       default: false,
+    },
+    config: {
+      description: "Path to the compost configuration file.",
+      type: "string",
+      demandOption: true,
     },
   },
   async (rawOptions) => {

@@ -1,4 +1,4 @@
-import type { PostMetadata } from "@jaybeeuu/compost";
+import type { PostManifestEntry as PostMetadata } from "@jaybeeuu/posts/types";
 import { post as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import { useAction, useValue } from "@jaybeeuu/preact-recoilless";
 import type { TypeAssertion } from "@jaybeeuu/is";

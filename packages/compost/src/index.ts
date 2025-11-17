@@ -1,5 +1,1 @@
-export type {
-  PostManifest,
-  PostManifestEntry,
-  PostMetadata,
-} from "./content/index.js";
+export type { CompostConfig, ContentTypeDefinition } from "./content/index.js";

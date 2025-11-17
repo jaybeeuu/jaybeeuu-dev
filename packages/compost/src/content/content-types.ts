@@ -2,6 +2,11 @@ import type { CheckedBy } from "@jaybeeuu/is";
 import { is, isObject } from "@jaybeeuu/is";
 
 /**
+ * Utility type for representing an unknown object with string keys
+ */
+export type UnknownRecord = { [key: string]: unknown };
+
+/**
  * Base input metadata interface that all content types must extend.
  * Contains the minimum required fields for content processing.
  */
@@ -89,3 +94,16 @@ export type MetadataMapFromConfig<Config> = {
     ? InputMeta & BaseInputMetadata
     : never;
 };
+
+/**
+ * Configuration object that defines content types for a compost project
+ */
+export interface CompostConfig {
+  readonly contentTypes: { [key: string]: ContentTypeDefinition };
+}
+
+/**
+ * Type helper to extract content type definitions from a config
+ */
+export type ContentTypeDefinitionsFromConfig<Config extends CompostConfig> =
+  Config["contentTypes"];
