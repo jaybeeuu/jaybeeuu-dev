@@ -1,6 +1,6 @@
+import { cleanUpDirectories, compilePosts, writePostFile } from "./helpers.js";
 import { describe, expect, it } from "@jest/globals";
 import { writeTextFiles } from "../../src/files/index.js";
-import { cleanUpDirectories, compilePosts, writePostFile } from "./helpers.js";
 
 describe("front matter error handling", () => {
   it("fails compilation when front matter YAML is invalid", async () => {

@@ -3,14 +3,7 @@ import type { Result } from "@jaybeeuu/utilities";
 import { assertIsNotNullish, success } from "@jaybeeuu/utilities";
 import { jest } from "@jest/globals";
 import path from "node:path";
-import type {
-  PostInputMetadata,
-  PostManifest,
-} from "../../src/content/index.js";
-import {
-  contentTypeDefinitions,
-  processContent,
-} from "../../src/content/index.js";
+import { processContent } from "../../src/content/index.js";
 import type { UpdateOptions } from "../../src/exec/compost.js";
 import type { File } from "../../src/files/index";
 import {
@@ -19,6 +12,14 @@ import {
   writeJsonFile,
   writeTextFiles,
 } from "../../src/files/index";
+import type { BaseOutputMeta } from "../../src/content/services/manifest/manifest-operations.js";
+import type { Manifest } from "../../src/content/services/manifest/manifest-operations.js";
+import { isManifest } from "../../src/content/services/manifest/manifest-operations.js";
+import { is, isObject } from "@jaybeeuu/is";
+import type { CheckedBy } from "@jaybeeuu/is";
+import type { ContentTypeDefinition } from "../../src/content/content-types.js";
+import getReadingTime from "reading-time";
+import { getCompiledPostFileName } from "../../src/content/file-paths.js";
 
 jest.mock("reading-time", () => {
   return jest.fn().mockReturnValue({
@@ -41,15 +42,89 @@ jest.mock<typeof utilities>("@jaybeeuu/utilities", () => {
   return utils;
 });
 
+// Test content type definitions - isolated from real configuration
+export const isTestPostInputMetadata = isObject({
+  title: is("string"),
+  abstract: is("string"),
+  publish: is("boolean"),
+} as const);
+export type TestPostInputMetadata = CheckedBy<typeof isTestPostInputMetadata>;
+
+export const isTestReadingTime = isObject({
+  text: is("string"),
+  time: is("number"),
+  words: is("number"),
+  minutes: is("number"),
+});
+export type TestReadingTime = CheckedBy<typeof isTestReadingTime>;
+
+export const isTestPostOutputMetadata = isObject({
+  title: is("string"),
+  abstract: is("string"),
+  readingTime: isTestReadingTime,
+});
+export type TestPostOutputMetadata = CheckedBy<typeof isTestPostOutputMetadata>;
+
+export type TestPostManifestEntry = BaseOutputMeta & TestPostOutputMetadata;
+
+export type TestPostManifest = Manifest<TestPostOutputMetadata>;
+
+export const isTestPostManifest = isManifest<TestPostOutputMetadata>(
+  isTestPostOutputMetadata,
+);
+
+export const testPostContentTypeDefinition = {
+  contentType: "post",
+  filePatterns: {
+    frontmatter: [".post.md"],
+    jsonMetadata: [".md"],
+    jsonSuffix: ".post.json",
+  },
+  generateSlug: (filePath: string, sourceDir: string) => {
+    const relativePath = path.relative(sourceDir, filePath);
+    return path
+      .basename(relativePath, path.extname(relativePath))
+      .replace(/\.post$/, "");
+  },
+  generateFileName: (slug: string, html: string) => {
+    return getCompiledPostFileName(slug, html);
+  },
+  validateInputMeta: (data: unknown): data is TestPostInputMetadata => {
+    return isTestPostInputMetadata(data);
+  },
+  mapToOutputMeta: (input: TestPostInputMetadata, content: string) => {
+    const readingTime = getReadingTime(content);
+    return {
+      title: input.title,
+      abstract: input.abstract,
+      readingTime,
+    };
+  },
+  sourceDir: "src",
+  outputDir: "out",
+  hrefRoot: "/",
+  includeUnpublished: false,
+  codeLineNumbers: false,
+  removeH1: false,
+} satisfies ContentTypeDefinition<
+  "post",
+  TestPostInputMetadata,
+  TestPostOutputMetadata
+>;
+
+export const testContentTypeDefinitions = {
+  post: testPostContentTypeDefinition,
+} as const;
+
 export const cleanUpDirectories = async (): Promise<void> => {
   // Reset the mocked file system by clearing all entries
-  // Since we're using a mock, we don't need to actually delete directories
-  await deleteDirectories("out");
+  // This clears the entire mock file system to ensure test isolation
+  await deleteDirectories("/");
 };
 
 interface BasePostFile {
   content: string | string[];
-  meta: PostInputMetadata | null;
+  meta: TestPostInputMetadata | null;
   path?: string;
   slug: string;
   otherFiles?: {
@@ -90,7 +165,7 @@ const getDefaultedUpdateOptions = (
 };
 
 export const writeOutputManifestFile = async (
-  manifest: PostManifest,
+  manifest: TestPostManifest,
   options: Partial<UpdateOptions> = {},
 ): Promise<void> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
@@ -105,7 +180,7 @@ export const writeOutputManifestFile = async (
 
 const getMarkdownContent = (
   content: string | string[],
-  meta: PostInputMetadata | null,
+  meta: TestPostInputMetadata | null,
 ): string => {
   const markdownContent = Array.isArray(content) ? content.join("\n") : content;
 
@@ -203,7 +278,7 @@ export const getOutputFile = async (
 
 export const getValidatedManifestFile = async (
   options: Partial<UpdateOptions> = {},
-): Promise<PostManifest> => {
+): Promise<TestPostManifest> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
 
   const fileContent = await getOutputFile(
@@ -212,15 +287,7 @@ export const getValidatedManifestFile = async (
   );
   const parsedContent: unknown = JSON.parse(fileContent);
 
-  // Import the manifest validator and validate the content
-  const { isManifest } = await import(
-    "../../src/content/services/manifest/manifest-operations.js"
-  );
-  const { isPostOutputMetadata } = await import(
-    "../../src/content-types/post.js"
-  );
-
-  const manifestValidator = isManifest(isPostOutputMetadata);
+  const manifestValidator = isTestPostManifest;
 
   if (!manifestValidator(parsedContent)) {
     throw new Error("Invalid manifest structure found in post-manifest.json");
@@ -231,7 +298,7 @@ export const getValidatedManifestFile = async (
 
 export const getPostManifest = async (
   options: Partial<UpdateOptions> = {},
-): Promise<PostManifest> => {
+): Promise<TestPostManifest> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
 
   // With the new orchestrator, post manifests are in post-manifest.json
@@ -249,7 +316,7 @@ export const getPostManifest = async (
     "entries" in parsedContent
   ) {
     // New versioned format - return the full manifest structure
-    return parsedContent as PostManifest;
+    return parsedContent as TestPostManifest;
   } else {
     // Legacy format - wrap in V2 structure for consistency
     return {
@@ -260,7 +327,7 @@ export const getPostManifest = async (
         overallHash: "legacy",
       },
       entries: parsedContent || {},
-    } as PostManifest;
+    } as TestPostManifest;
   }
 };
 
@@ -283,25 +350,17 @@ export const getPost = async (
 
 export const compilePosts = async (
   options?: Partial<UpdateOptions>,
-): Promise<Result<PostManifest, string>> => {
+): Promise<Result<TestPostManifest, string>> => {
   const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
   // Convert to new orchestrator config
   const orchestratorConfig = { clean: defaultedUpdateOptions.clean };
 
   // Create content config overrides for posts based on legacy options
   const contentConfigOverrides = {
-    ...contentTypeDefinitions,
+    ...testContentTypeDefinitions,
     post: {
-      ...contentTypeDefinitions.post,
-      sourceDir: defaultedUpdateOptions.sourceDir,
-      outputDir: defaultedUpdateOptions.outputDir,
-      hrefRoot: defaultedUpdateOptions.hrefRoot,
-      includeUnpublished: defaultedUpdateOptions.includeUnpublished,
-      codeLineNumbers: defaultedUpdateOptions.codeLineNumbers,
-      removeH1: defaultedUpdateOptions.removeH1,
-      manifestFileName: defaultedUpdateOptions.manifestFileName,
-      oldManifestLocators: defaultedUpdateOptions.oldManifestLocators,
-      requireOldManifest: defaultedUpdateOptions.requireOldManifest,
+      ...testContentTypeDefinitions.post,
+      ...defaultedUpdateOptions,
     },
   };
 
@@ -316,7 +375,7 @@ export const compilePosts = async (
   // Extract post manifest from the result
   const postManifest = updateResult.value.post;
 
-  return success(postManifest as PostManifest);
+  return success(postManifest as TestPostManifest);
 };
 
 export const getCompiledPostWithContent = async (
