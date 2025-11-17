@@ -1,6 +1,7 @@
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, repackError, success } from "@jaybeeuu/utilities";
 import path from "node:path";
+import fs from "node:fs";
 import { deleteDirectories } from "../files/index.js";
 import {
   buildManifest,
@@ -79,8 +80,11 @@ async function processContentType<Type extends string, InputMeta, OutputMeta>(
 
   // Clean output directory AFTER loading old manifest
   if (clean) {
-    await deleteDirectories(path.resolve(contentConfig.outputDir));
+    await deleteDirectories(contentConfig.outputDir);
   }
+
+  // Ensure output directory exists
+  await fs.promises.mkdir(contentConfig.outputDir, { recursive: true });
 
   const manifestData = manifestResult.value;
 

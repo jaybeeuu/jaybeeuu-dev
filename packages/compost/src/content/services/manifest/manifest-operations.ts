@@ -32,7 +32,6 @@ export const isBaseOutputMeta = isObject({
   publishDate: is("string"),
   hash: is("string"),
   slug: is("string"),
-  title: is("string"),
 });
 export type BaseOutputMeta = CheckedBy<typeof isBaseOutputMeta>;
 
@@ -43,7 +42,7 @@ export type BaseOutputMeta = CheckedBy<typeof isBaseOutputMeta>;
 export type ManifestEntry = BaseOutputMeta & UnknownRecord;
 
 export const isManifest = <Metadata = UnknownRecord>(
-  entryPredicate: TypePredicate<BaseOutputMeta & Metadata>,
+  entryPredicate: TypePredicate<Metadata>,
 ): TypePredicate<Manifest<Metadata>> => {
   return isObject({
     version: is("number"),

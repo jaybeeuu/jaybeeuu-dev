@@ -5,6 +5,7 @@ import { is, isObject } from "@jaybeeuu/is";
 import type { BaseOutputMeta } from "../content/services/manifest/index.js";
 import { getCompiledPostFileName } from "../content/file-paths.js";
 import type { Manifest } from "../content/services/manifest/manifest-operations.js";
+import { isManifest } from "../content/services/manifest/manifest-operations.js";
 import type { ContentTypeDefinition } from "../content/content-types.js";
 
 /**
@@ -29,6 +30,7 @@ export const isReadingTime = isObject({
 export type ReadingTime = CheckedBy<typeof isReadingTime>;
 
 export const isPostOutputMetadata = isObject({
+  title: is("string"),
   abstract: is("string"),
   readingTime: isReadingTime,
 });
@@ -37,6 +39,9 @@ export type PostOutputMetadata = CheckedBy<typeof isPostOutputMetadata>;
 export type PostManifestEntry = BaseOutputMeta & PostOutputMetadata;
 
 export type PostManifest = Manifest<PostOutputMetadata>;
+
+export const isPostManifest =
+  isManifest<PostOutputMetadata>(isPostOutputMetadata);
 
 /**
  * Content type definition for posts.

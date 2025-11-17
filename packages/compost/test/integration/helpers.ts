@@ -1,45 +1,37 @@
-import type Utilities from "@jaybeeuu/utilities";
+import type utilities from "@jaybeeuu/utilities";
 import type { Result } from "@jaybeeuu/utilities";
-import { assertIsNotNullish, success, failure } from "@jaybeeuu/utilities";
+import { assertIsNotNullish, success } from "@jaybeeuu/utilities";
 import { jest } from "@jest/globals";
+import path from "node:path";
 import type {
-  PostManifest,
   PostInputMetadata,
-  PostManifestEntry,
+  PostManifest,
 } from "../../src/content/index.js";
-import { contentTypeDefinitions } from "../../src/content/index.js";
-import path from "path";
-import type * as ReadingTime from "reading-time";
-import { processContent } from "../../src/content/index.js";
+import {
+  contentTypeDefinitions,
+  processContent,
+} from "../../src/content/index.js";
 import type { UpdateOptions } from "../../src/exec/compost.js";
 import type { File } from "../../src/files/index";
 import {
   deleteDirectories,
-  readJsonFile,
   readTextFile,
   writeJsonFile,
   writeTextFiles,
 } from "../../src/files/index";
 
-jest.mock<typeof ReadingTime>("reading-time", (): typeof ReadingTime => {
-  const readingTime = jest.requireActual<typeof ReadingTime>("reading-time");
-
-  return {
-    // @ts-expect-error __esModule tesll jes what to do, but is not included in the ReadingTime type.
-    __esModule: true,
-    ...readingTime,
-    default: jest.fn<typeof ReadingTime.default>().mockReturnValue({
-      text: "1 min read.",
-      time: 1,
-      words: 1,
-      minutes: 1,
-    }),
-  };
+jest.mock("reading-time", () => {
+  return jest.fn().mockReturnValue({
+    text: "1 min read.",
+    time: 1,
+    words: 1,
+    minutes: 1,
+  });
 });
 
-jest.mock("fs");
-jest.mock<typeof Utilities>("@jaybeeuu/utilities", () => {
-  const utils = jest.requireActual<typeof Utilities>("@jaybeeuu/utilities");
+jest.mock("node:fs");
+jest.mock<typeof utilities>("@jaybeeuu/utilities", () => {
+  const utils = jest.requireActual<typeof utilities>("@jaybeeuu/utilities");
   utils.log = {
     error: jest.fn(),
     getErrorMessage: jest.fn<(err: unknown) => string>(),
@@ -50,7 +42,9 @@ jest.mock<typeof Utilities>("@jaybeeuu/utilities", () => {
 });
 
 export const cleanUpDirectories = async (): Promise<void> => {
-  await deleteDirectories("/");
+  // Reset the mocked file system by clearing all entries
+  // Since we're using a mock, we don't need to actually delete directories
+  await deleteDirectories("out");
 };
 
 interface BasePostFile {
@@ -207,6 +201,34 @@ export const getOutputFile = async (
   return readTextFile(resolvedFilePath);
 };
 
+export const getValidatedManifestFile = async (
+  options: Partial<UpdateOptions> = {},
+): Promise<PostManifest> => {
+  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
+
+  const fileContent = await getOutputFile(
+    "post-manifest.json",
+    defaultedUpdateOptions,
+  );
+  const parsedContent: unknown = JSON.parse(fileContent);
+
+  // Import the manifest validator and validate the content
+  const { isManifest } = await import(
+    "../../src/content/services/manifest/manifest-operations.js"
+  );
+  const { isPostOutputMetadata } = await import(
+    "../../src/content-types/post.js"
+  );
+
+  const manifestValidator = isManifest(isPostOutputMetadata);
+
+  if (!manifestValidator(parsedContent)) {
+    throw new Error("Invalid manifest structure found in post-manifest.json");
+  }
+
+  return parsedContent;
+};
+
 export const getPostManifest = async (
   options: Partial<UpdateOptions> = {},
 ): Promise<PostManifest> => {
@@ -217,7 +239,7 @@ export const getPostManifest = async (
     "post-manifest.json",
     defaultedUpdateOptions,
   );
-  const parsedContent = JSON.parse(fileContent);
+  const parsedContent: unknown = JSON.parse(fileContent);
 
   // Handle both versioned (v2+) and legacy (v1) manifest formats
   if (

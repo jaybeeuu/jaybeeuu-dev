@@ -607,11 +607,11 @@ jest
         resolvedPath,
       );
       const segments = pathLeft.split(pathUtils.sep);
+
       segments.reduce<Directory>((dir, segment) => {
-        const newDir = makeDirectory(
-          pathUtils.join(dir.path, segment),
-          new Map(),
-        );
+        const newDirPath = pathUtils.join(dir.path, segment);
+
+        const newDir = makeDirectory(newDirPath, new Map());
 
         dir.entries.set(segment, newDir);
 
