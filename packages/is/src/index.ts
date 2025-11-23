@@ -7,7 +7,6 @@ export {
   ValidationResult,
   assert,
   failValidation,
-  isType,
   passValidation,
   type TypeAssertion,
   type TypePredicate,

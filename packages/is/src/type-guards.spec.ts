@@ -336,6 +336,119 @@ root.b: Expected "string", but received "number"`),
         errorMessages: [`root: Expected "number", but received "string"`],
       });
     });
+
+    describe("user-defined type guard overload", () => {
+      interface TestUser {
+        id: number;
+        name: string;
+      }
+
+      const isTestUser = (data: unknown): data is TestUser => {
+        return (
+          data !== null &&
+          typeof data === "object" &&
+          "id" in data &&
+          "name" in data &&
+          typeof (data as any).id === "number" &&
+          typeof (data as any).name === "string"
+        );
+      };
+
+      it("returns true when user-defined type guard passes", () => {
+        const userPredicate = is(isTestUser);
+        const validUser = { id: 1, name: "Alice" };
+        expect(userPredicate(validUser)).toBe(true);
+      });
+
+      it("returns false when user-defined type guard fails", () => {
+        const userPredicate = is(isTestUser);
+        const invalidUser = { id: "not-a-number", name: "Alice" };
+        expect(userPredicate(invalidUser)).toBe(false);
+      });
+
+      it("has proper type description for user-defined guards", () => {
+        const userPredicate = is(isTestUser);
+        expect(userPredicate.typeDescription).toBe("user-defined type guard");
+      });
+
+      it("returns useful validation error messages for user-defined guards", () => {
+        const userPredicate = is(isTestUser);
+        const invalidData = "not an object";
+        expect(userPredicate.validate(invalidData)).toStrictEqual({
+          valid: false,
+          errorMessages: [
+            `root: User-defined type guard failed for value of type "string"`,
+          ],
+        });
+      });
+
+      it("works with complex objects in validation errors", () => {
+        const userPredicate = is(isTestUser);
+        const invalidData = { wrong: "structure" };
+        expect(userPredicate.validate(invalidData)).toStrictEqual({
+          valid: false,
+          errorMessages: [
+            `root: User-defined type guard failed for value of type "object": Object`,
+          ],
+        });
+      });
+
+      it("integrates with isObject for complex validation patterns", () => {
+        const complexValidator = isObject({
+          user: is(isTestUser),
+          count: is("number"),
+        });
+
+        const validData = {
+          user: { id: 1, name: "Alice" },
+          count: 5,
+        };
+        expect(complexValidator(validData)).toBe(true);
+
+        const invalidData = {
+          user: { id: "invalid", name: "Alice" },
+          count: 5,
+        };
+        expect(complexValidator(invalidData)).toBe(false);
+      });
+
+      it("works with assertion methods", () => {
+        const userPredicate = is(isTestUser);
+        const validUser = { id: 1, name: "Alice" };
+
+        // Should not throw
+        expect(() => userPredicate.assert(validUser)).not.toThrow();
+
+        // Should throw for invalid data
+        expect(() => userPredicate.assert("invalid")).toThrow(
+          new TypeError(
+            `Expected user-defined type guard but received string.\nroot: User-defined type guard failed for value of type "string"`,
+          ),
+        );
+      });
+
+      it("works with check method", () => {
+        const userPredicate = is(isTestUser);
+        const validUser = { id: 1, name: "Alice" };
+
+        // Should return the validated data
+        expect(userPredicate.check(validUser)).toBe(validUser);
+
+        // Should throw for invalid data
+        expect(() => userPredicate.check("invalid")).toThrow();
+      });
+
+      it("works with optional method", () => {
+        const optionalUserPredicate = is(isTestUser).optional();
+
+        expect(optionalUserPredicate({ id: 1, name: "Alice" })).toBe(true);
+        expect(optionalUserPredicate(undefined)).toBe(true);
+        expect(optionalUserPredicate("invalid")).toBe(false);
+        expect(optionalUserPredicate.typeDescription).toBe(
+          "user-defined type guard | undefined",
+        );
+      });
+    });
   });
 
   describe("isLiteral", () => {
