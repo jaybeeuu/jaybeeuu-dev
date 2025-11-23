@@ -1,7 +1,27 @@
 import path from "node:path";
 import getReadingTime from "reading-time";
-import type { CompostConfig } from "@jaybeeuu/compost";
-import { isPostInputMetadata, type PostInputMetadata } from "./src/types.js";
+import type {
+  BaseInputMetadata,
+  ContentTypeDefinition,
+} from "@jaybeeuu/compost";
+import { createCompostConfig } from "@jaybeeuu/compost";
+import type { CheckedBy } from "@jaybeeuu/is";
+import { is, isObject } from "@jaybeeuu/is";
+
+// Internal types for compost configuration - not exported in public API
+const isPostInputMetadata = isObject({
+  title: is("string"),
+  abstract: is("string"),
+  publish: is("boolean"),
+} as const);
+type PostInputMetadata = CheckedBy<typeof isPostInputMetadata> &
+  BaseInputMetadata;
+
+type PostOutputMetadata = {
+  title: string;
+  abstract: string;
+  readingTime: ReturnType<typeof getReadingTime>;
+};
 
 /**
  * Generates a compiled post filename with content hash for cache busting
@@ -18,43 +38,55 @@ const getCompiledPostFileName = (slug: string, html: string): string => {
   return `${slug}-${hashString}.html`;
 };
 
-const config: CompostConfig = {
-  contentTypes: {
-    post: {
-      contentType: "post",
-      filePatterns: {
-        frontmatter: [".post.md"],
-        jsonMetadata: [".md"],
-        jsonSuffix: ".post.json",
-      },
-      generateSlug: (filePath: string, sourceDir: string) => {
-        const relativePath = path.relative(sourceDir, filePath);
-        return path
-          .basename(relativePath, path.extname(relativePath))
-          .replace(/\.post$/, "");
-      },
-      generateFileName: (slug: string, html: string) => {
-        return getCompiledPostFileName(slug, html);
-      },
-      validateInputMeta: (data: unknown): data is PostInputMetadata => {
-        return isPostInputMetadata(data);
-      },
-      mapToOutputMeta: (input: PostInputMetadata, content: string) => {
-        const readingTime = getReadingTime(content);
-        return {
-          title: input.title,
-          abstract: input.abstract,
-          readingTime,
-        };
-      },
-      sourceDir: "src",
-      outputDir: "lib",
-      hrefRoot: "/blog",
-      includeUnpublished: false,
-      codeLineNumbers: true,
-      removeH1: true,
-    },
+const postContentType: ContentTypeDefinition<
+  "post",
+  PostInputMetadata,
+  PostOutputMetadata
+> = {
+  contentType: "post",
+  filePatterns: {
+    frontmatter: [".post.md"],
+    jsonMetadata: [".md"],
+    jsonSuffix: ".post.json",
   },
+  generateSlug: (filePath: string, sourceDir: string) => {
+    const relativePath = path.relative(sourceDir, filePath);
+    return path
+      .basename(relativePath, path.extname(relativePath))
+      .replace(/\.post$/, "");
+  },
+  generateFileName: (slug: string, html: string) => {
+    return getCompiledPostFileName(slug, html);
+  },
+  validateInputMeta: (data: unknown): data is PostInputMetadata => {
+    return isPostInputMetadata(data);
+  },
+  mapToOutputMeta: (
+    input: PostInputMetadata,
+    content: string,
+  ): PostOutputMetadata => {
+    const readingTime = getReadingTime(content);
+    return {
+      title: input.title,
+      abstract: input.abstract,
+      readingTime,
+    };
+  },
+  sourceDir: "src",
+  outputDir: "lib",
+  hrefRoot: "/blog",
+  includeUnpublished: false,
+  codeLineNumbers: true,
+  removeH1: true,
+  requireOldManifest: false,
+  oldManifestLocators: [
+    "https://jaybeeuu.dev/blog/post-manifest.json", // v2 format
+    "https://jaybeeuu.dev/blog/manifest.json", // v1 format (fallback)
+  ],
 };
+
+const config = createCompostConfig({
+  post: postContentType,
+});
 
 export default config;

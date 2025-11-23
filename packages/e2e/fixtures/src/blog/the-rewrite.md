@@ -2,6 +2,8 @@
 
 My advice is always not to rewrite your application all in one go.
 
+**Note**: This content has been updated for testing lastUpdateDate functionality.
+
 If you do that every time you add or change a technology they your productivity will tank. We have something like 100,000 lines of code in our app and have just decided to start using TypeScript - imagine how long it would take if we tried to rewrite the whole thing in one go.
 
 There's also a lot of risk in changing things over. Each time you develop a feature you spend a lot of time testing it. If you change something about it then you should repeat those tests otherwise you have unproven software i.e. there will be bugs (trust me there will be) that you are releasing to your users. Buggy software makes for unhappy users, PO's and stakeholders. So keep your quality bar high and retest things when you change something. If you rewrite every feature in your app that means retesting everything in your app.

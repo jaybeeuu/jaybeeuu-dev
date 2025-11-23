@@ -32,6 +32,16 @@ export function shouldUseV1CompatMode(
 ): boolean {
   if (!oldEntry) return false;
   if (!oldEntry.hash) return true;
+
+  // Check if hash matches v1 upgrade pattern using the OLD fileName
+  if (oldEntry.fileName) {
+    const expectedV1Hash = generateV1UpgradeHash(oldEntry.fileName);
+    if (oldEntry.hash === expectedV1Hash) {
+      return true;
+    }
+  }
+
+  // Fallback to existing logic for edge cases
   return isV1UpgradeHash(oldEntry.hash, fileName, slug);
 }
 
@@ -45,9 +55,16 @@ export function detectContentChange(
 
   const useV1Compat = shouldUseV1CompatMode(oldEntry, fileName, slug);
 
-  return useV1Compat
-    ? oldEntry.fileName !== fileName
-    : oldEntry.hash !== contentHash;
+  if (useV1Compat) {
+    // For v1 entries, we can't reliably detect content changes since:
+    // 1. No content hash exists in v1
+    // 2. Filename generation may have changed between versions
+    // Therefore, we conservatively assume content hasn't changed
+    // to preserve lastUpdateDate values from the original manifest
+    return false;
+  }
+
+  return oldEntry.hash !== contentHash;
 }
 
 function escapeRegExp(string: string): string {
