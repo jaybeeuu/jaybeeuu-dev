@@ -5,7 +5,11 @@ import yargsFactory from "yargs";
 import { hideBin } from "yargs/helpers";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { processContent, type CompostConfig } from "../content/index.js";
+import {
+  processContent,
+  type CompostConfig,
+  validateCompostConfig,
+} from "../content/index.js";
 
 /**
  * Configuration options for the compost CLI.
@@ -38,13 +42,13 @@ const loadConfig = async (configPath: string): Promise<CompostConfig> => {
     const config =
       configModule.default ?? configModule.contentTypes ?? configModule;
 
-    if (!config || typeof config !== "object" || !config.contentTypes) {
+    if (!validateCompostConfig(config)) {
       throw new Error(
-        "Config must export contentTypes or be a CompostConfig object",
+        "Invalid config structure: must be a CompostConfig object with valid contentTypes",
       );
     }
 
-    return config as CompostConfig;
+    return config;
   } catch (err) {
     throw new Error(
       `Failed to load config from ${configPath}: ${log.getErrorMessage(err)}`,
@@ -136,7 +140,7 @@ yargs.command(
     },
     manifestFileName: {
       alias: ["m"],
-      description: "The nam of the output JSON manifest file.",
+      description: "The name of the output JSON manifest file.",
       type: "string",
       default: "manifest.json",
     },

@@ -1,38 +1,21 @@
 import type { CheckedBy } from "@jaybeeuu/is";
-import { is, isObject } from "@jaybeeuu/is";
-
-/**
- * Input metadata for post files (from frontmatter/JSON).
- */
-export const isPostInputMetadata = isObject({
-  title: is("string"),
-  abstract: is("string"),
-  publish: is("boolean"),
-} as const);
-export type PostInputMetadata = CheckedBy<typeof isPostInputMetadata>;
+import { is, isObject, isUnionOf, isRecordOf } from "@jaybeeuu/is";
 
 /**
  * Reading time calculation result for posts.
  */
-export const isReadingTime = isObject({
+const isReadingTime = isObject({
   text: is("string"),
   time: is("number"),
   words: is("number"),
   minutes: is("number"),
 });
-export type ReadingTime = CheckedBy<typeof isReadingTime>;
-
-export const isPostOutputMetadata = isObject({
-  title: is("string"),
-  abstract: is("string"),
-  readingTime: isReadingTime,
-});
-export type PostOutputMetadata = CheckedBy<typeof isPostOutputMetadata>;
+type ReadingTime = CheckedBy<typeof isReadingTime>;
 
 /**
  * Base output metadata fields that all content types have
  */
-export interface BaseOutputMeta {
+interface BaseOutputMeta {
   readonly fileName: string;
   readonly href: string;
   readonly publishDate: string;
@@ -41,10 +24,29 @@ export interface BaseOutputMeta {
   readonly hash: string;
 }
 
-export type PostManifestEntry = BaseOutputMeta & PostOutputMetadata;
+/**
+ * Individual post entry in the manifest
+ */
+export interface PostManifestEntry extends BaseOutputMeta {
+  readonly title: string;
+  readonly abstract: string;
+  readonly readingTime: ReadingTime;
+}
+
+export const isPostManifestEntry = isObject({
+  fileName: is("string"),
+  href: is("string"),
+  publishDate: is("string"),
+  lastUpdateDate: isUnionOf(is("string"), is("null")),
+  slug: is("string"),
+  hash: is("string"),
+  title: is("string"),
+  abstract: is("string"),
+  readingTime: isReadingTime,
+});
 
 /**
- * Manifest structure with versioning
+ * Complete post manifest structure
  */
 export interface PostManifest {
   readonly version: number;
@@ -55,3 +57,13 @@ export interface PostManifest {
   };
   readonly entries: { [slug: string]: PostManifestEntry };
 }
+
+export const isPostManifest = isObject({
+  version: is("number"),
+  metadata: isObject({
+    generatedAt: is("string"),
+    entryCount: is("number"),
+    overallHash: is("string"),
+  }),
+  entries: isRecordOf(isPostManifestEntry),
+});

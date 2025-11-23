@@ -17,14 +17,19 @@
   ],
   "exports": {
     "./manifest": {
-      "default": "./lib/manifest.json"
+      "default": "./lib/post-manifest.json"
     },
     "./types": {
-      "default": "./src/types.js"
+      "types": "./src/types.ts",
+      "default": "./src/types.ts"
+    },
+    "./compost.config.ts": {
+      "default": "./compost.config.ts"
     }
   },
   "scripts": {
-    "build": "compost --config ./compost.config.ts --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\"",
+    "build": "tsc --project ./tsconfig.build.json --pretty && compost --config ./compost.config.ts --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\"",
+    "type-check": "tsc --noEmit --pretty",
     "lint": "markdownlint \"**/*.md\" --ignore node_modules",
     "spell-check-interactive": "mdspell --en-GB --ignore-numbers \"**/*.md\" \"!**/node_modules/**/*.md\"",
     "spell-check": "pnpm run spell-check-interactive --report",

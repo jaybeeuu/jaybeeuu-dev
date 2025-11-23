@@ -20,7 +20,7 @@ const compareDateString = (left: PostMetadata, right: PostMetadata): number =>
 
 const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
   usePageInfo({ title: "Blog posts", description: "Index of my blog posts" });
-  const manifestValues = Object.values(manifest);
+  const manifestValues = Object.values(manifest.entries);
   return (
     <div className={classNames(css.componentRoot, e2eHooks.block)}>
       {manifestValues.length === 0

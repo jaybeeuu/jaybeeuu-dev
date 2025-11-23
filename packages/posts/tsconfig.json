@@ -3,6 +3,9 @@
   "compilerOptions": {
     "types": ["node"],
     "module": "ESNext",
-    "esModuleInterop": true
-  }
+    "esModuleInterop": true,
+    "noEmit": true
+  },
+  "include": ["src/**/*", "compost.config.ts"],
+  "exclude": ["lib", "node_modules"]
 }

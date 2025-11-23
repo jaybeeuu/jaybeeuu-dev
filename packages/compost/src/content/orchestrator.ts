@@ -160,8 +160,6 @@ export async function processContent<
     ProcessContentFailureReason
   >
 > {
-  const orchestratorConfig = config;
-
   const manifests = {} as {
     [type: string]: V2ManifestFile;
   };
@@ -175,7 +173,7 @@ export async function processContent<
     const result = await processContentType(
       contentType,
       contentConfig,
-      orchestratorConfig.clean,
+      config.clean,
     );
 
     if (!result.success) {

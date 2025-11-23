@@ -1,7 +1,7 @@
 {
   "version": 2,
   "metadata": {
-    "generatedAt": "2025-11-11T20:22:33.806Z",
+    "generatedAt": "2025-11-17T22:50:02.702Z",
     "entryCount": 3,
     "overallHash": "1f55e16a35902f484d552bbc758a0e246a4b9a39"
   },
@@ -9,15 +9,14 @@
     "memoising-selectors": {
       "title": "Memoising Selectors",
       "abstract": "Complex operations in redux selectors can result in render thrashing, but why and how does it happen?",
-      "publish": true,
       "readingTime": {
         "text": "4 min read",
         "minutes": 3.525,
         "time": 211500,
         "words": 705
       },
-      "fileName": "memoising-selectors-aEIsnK.html",
-      "href": "/blog/memoising-selectors-aEIsnK.html",
+      "fileName": "memoising-selectors-2dde606b.html",
+      "href": "/blog/memoising-selectors-2dde606b.html",
       "publishDate": "2021-01-01T00:00:00.000Z",
       "lastUpdateDate": "2021-05-01T00:00:00.000Z",
       "hash": "8b59e445326d07313db6254c0516a9a0ac0087ec",
@@ -26,15 +25,14 @@
     "module-spotting": {
       "title": "Module Spotting",
       "abstract": "Modules in JavaScript have a long and complex history. Let's explore...",
-      "publish": true,
       "readingTime": {
         "text": "15 min read",
         "minutes": 14.645,
         "time": 878700,
         "words": 2929
       },
-      "fileName": "module-spotting-kKtH8a.html",
-      "href": "/blog/module-spotting-kKtH8a.html",
+      "fileName": "module-spotting-789303c4.html",
+      "href": "/blog/module-spotting-789303c4.html",
       "publishDate": "2021-02-01T00:00:00.000Z",
       "lastUpdateDate": "2024-09-18T21:30:42.515Z",
       "hash": "bcd7a428d00a511b47f0b7add432c0456ad61a4e",
@@ -43,15 +41,14 @@
     "the-rewrite": {
       "title": "The Rewrite",
       "abstract": "One of the grads at SL asked me if they should change their entire application. These were my thoughts...",
-      "publish": true,
       "readingTime": {
         "text": "3 min read",
         "minutes": 2.99,
         "time": 179400,
         "words": 598
       },
-      "fileName": "the-rewrite-qH4n3w.html",
-      "href": "/blog/the-rewrite-qH4n3w.html",
+      "fileName": "the-rewrite-24febc08.html",
+      "href": "/blog/the-rewrite-24febc08.html",
       "publishDate": "2021-03-01T00:00:00.000Z",
       "lastUpdateDate": "2024-03-20T14:15:15.236Z",
       "hash": "73b160c7d526404e7d7e482a6a08ca57bfb71745",

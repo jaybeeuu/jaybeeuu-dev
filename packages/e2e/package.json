@@ -12,7 +12,7 @@
   ],
   "type": "module",
   "scripts": {
-    "build": "compost --source-dir ./fixtures/src/blog --output-dir ./fixtures/blog --href-root blog --remove-h1 --code-line-numbers",
+    "build": "compost --config ./compost.config.ts --source-dir ./fixtures/src/blog --output-dir ./fixtures/blog --href-root blog --remove-h1 --code-line-numbers",
     "postbuild": "node ./fixtures/src/blog/post-processing.mjs",
     "e2e": "cypress",
     "lint": "eslint --format codeframe . --max-warnings 0",
@@ -21,6 +21,7 @@
   "devDependencies": {
     "@cypress/code-coverage": "^3.14.6",
     "@jaybeeuu/eslint-config": "workspace:*",
+    "@jaybeeuu/posts": "workspace:*",
     "@types/cypress": "^1.1.6",
     "@types/node": "^24.3.0",
     "@typescript-eslint/eslint-plugin": "^8.41.0",
@@ -35,8 +36,10 @@
     "@babel/preset-env": "^7.28.3",
     "@jaybeeuu/compost": "workspace:*",
     "@jaybeeuu/e2e-hooks": "workspace:*",
+    "@jaybeeuu/is": "workspace:*",
     "@jaybeeuu/utilities": "workspace:*",
     "core-js": "3.45.1",
-    "mocha-junit-reporter": "^2.2.1"
+    "mocha-junit-reporter": "^2.2.1",
+    "reading-time": "^1.5.0"
   }
 }

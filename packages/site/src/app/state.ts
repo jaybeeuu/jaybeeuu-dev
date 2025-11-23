@@ -2,6 +2,7 @@ import type {
   PostManifest,
   PostManifestEntry as PostMetadata,
 } from "@jaybeeuu/posts/types";
+import { isPostManifest } from "@jaybeeuu/posts/types";
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
 import { fetchJson, fetchText } from "../utils/request";
@@ -18,7 +19,7 @@ import { getMediaTheme, persistedTheme } from "./services/theme";
 export const postsManifest: DerivedValue<Promise<PostManifest>> = {
   name: "postManifest",
   derive: async (): Promise<PostManifest> => {
-    return fetchJson<PostManifest>("/blog/manifest.json");
+    return fetchJson("/blog/post-manifest.json", isPostManifest);
   },
   removalSchedule: { schedule: "delayed", delay: 500 },
 };

@@ -7,15 +7,16 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 import type { SiteMapUrl } from "./build-plugins";
 import { cssModuleTypes, feed, siteMap, version } from "./build-plugins";
 import { paths } from "./config/paths";
-import type { PostManifest } from "@jaybeeuu/compost";
+import type { PostManifest } from "@jaybeeuu/posts/types";
 import istanbulPlugin from "vite-plugin-istanbul";
 
 console.log("VITE_COVERAGE", process.env.VITE_COVERAGE);
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const postManifest: PostManifest = JSON.parse(
+const postManifestFile: PostManifest = JSON.parse(
   fs.readFileSync(paths.manifest, "utf8"),
 );
+const postManifest = postManifestFile.entries;
 
 const resolvedURLToBase = (...pathFragments: string[]): string => {
   const url = new URL(paths.baseUrl);

@@ -1,6 +1,5 @@
-import type fsModule from "fs";
-import { writeFile } from "fs";
-import type PathModule from "path";
+import type fsModule from "node:fs";
+import type pathModule from "node:path";
 
 // const jest.mocked = <T extends (...args: any[]) => any>(fn: T): jest.MockInstance<ReturnType<T>, Parameters<T>> => {
 //   if (!("mock" in fn)) {
@@ -10,7 +9,7 @@ import type PathModule from "path";
 //   return mockedFn;
 // };
 
-const pathUtils = jest.requireActual<typeof PathModule>("path");
+const pathUtils = jest.requireActual<typeof pathModule>("path");
 
 type FsModule = typeof fsModule;
 

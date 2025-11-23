@@ -1,5 +1,5 @@
 import type { CheckedBy } from "@jaybeeuu/is";
-import { is, isObject } from "@jaybeeuu/is";
+import { is, isObject, isArrayOf, isRecordOf } from "@jaybeeuu/is";
 
 /**
  * Utility type for representing an unknown object with string keys
@@ -98,9 +98,76 @@ export type MetadataMapFromConfig<Config> = {
 /**
  * Configuration object that defines content types for a compost project
  */
-export interface CompostConfig {
-  readonly contentTypes: { [key: string]: ContentTypeDefinition };
+export interface CompostConfig<
+  ContentTypeDefs extends {
+    [key: string]: ContentTypeDefinition<string, any, any>;
+  } = { [key: string]: ContentTypeDefinition },
+> {
+  readonly contentTypes: ContentTypeDefs;
 }
+
+/**
+ * Helper type to infer content type definitions from a config
+ */
+export type InferContentTypes<ConfigType> =
+  ConfigType extends CompostConfig<infer ContentTypeDefs>
+    ? ContentTypeDefs
+    : never;
+
+/**
+ * Helper function to create a properly typed CompostConfig
+ */
+export function createCompostConfig<
+  ContentTypeDefs extends {
+    [key: string]: ContentTypeDefinition<string, any, any>;
+  },
+>(contentTypes: ContentTypeDefs): CompostConfig<ContentTypeDefs> {
+  return { contentTypes };
+}
+
+/**
+ * Validates the structure of a ContentTypeDefinition
+ */
+export const isContentTypeDefinition = isObject({
+  contentType: is("string"),
+  filePatterns: isObject({
+    frontmatter: isArrayOf(is("string")),
+    jsonMetadata: isArrayOf(is("string")),
+    jsonSuffix: is("string"),
+  } as const),
+  generateSlug: is("function"),
+  generateFileName: is("function"),
+  validateInputMeta: is("function"),
+  hrefRoot: is("string"),
+  includeUnpublished: is("boolean"),
+  codeLineNumbers: is("boolean"),
+  removeH1: is("boolean"),
+} as const);
+
+/**
+ * Validates the structure of a CompostConfig object
+ */
+export const isCompostConfig = isObject({
+  contentTypes: isRecordOf(isContentTypeDefinition),
+} as const);
+
+/**
+ * Validates a CompostConfig with proper content type validation
+ */
+export const validateCompostConfig = (data: unknown): data is CompostConfig => {
+  if (!isCompostConfig(data)) {
+    return false;
+  }
+
+  // Check that all contentTypes entries are valid ContentTypeDefinitions
+  for (const [key, value] of Object.entries(data.contentTypes)) {
+    if (value.contentType !== key) {
+      return false;
+    }
+  }
+
+  return true;
+};
 
 /**
  * Type helper to extract content type definitions from a config

@@ -21,7 +21,7 @@ export const paths = {
     key: resolveApp("certs/key.key"),
     certificate: resolveApp("src/cert.crt"),
   },
-  manifest: resolveApp("node_modules/@jaybeeuu/posts/lib/manifest.json"),
+  manifest: resolveApp("node_modules/@jaybeeuu/posts/lib/post-manifest.json"),
   postsLib: "node_modules/@jaybeeuu/posts/lib",
   postsRoot: "blog",
   baseUrl: "https://jaybeeuu.dev",

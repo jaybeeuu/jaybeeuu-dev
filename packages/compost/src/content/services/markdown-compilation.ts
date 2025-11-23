@@ -1,5 +1,4 @@
 import path from "node:path";
-// import highlight from "highlight.js";
 import type { Result } from "@jaybeeuu/utilities";
 import {
   assertIsNotNullish,

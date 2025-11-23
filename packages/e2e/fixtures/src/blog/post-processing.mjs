@@ -3,11 +3,11 @@
 import fs from "node:fs";
 
 /**
- * @typedef {import("@jaybeeuu/compost").PostManifest} PostManifest
- * @typedef {import("@jaybeeuu/compost").PostMetadata} PostMetadata
+ * @typedef {import("@jaybeeuu/posts/types").PostManifest} PostManifest
+ * @typedef {import("@jaybeeuu/posts/types").PostManifestEntry} PostMetadata
  */
 
-const manifestPath = "./fixtures/blog/manifest.json";
+const manifestPath = "./fixtures/blog/post-manifest.json";
 
 /**
  * @return {Promise<PostManifest>}
@@ -50,23 +50,26 @@ const transformManifest = async () => {
   const original = await readManifest();
 
   /** @type {PostManifest} */
-  const transformedManifest = Object.entries(original).reduce(
-    /**
-     *
-     * @param {PostManifest} transformed
-     * @param {[string, PostMetadata]} param1
-     * @returns
-     */
-    (transformed, [slug, meta]) => {
-      transformed[slug] = {
-        ...meta,
-        // @ts-expect-error In practice I'm only overwriting some of the metadata.
-        ...manifestTransformations[slug],
-      };
-      return transformed;
-    },
-    {},
-  );
+  const transformedManifest = {
+    ...original,
+    entries: Object.entries(original.entries).reduce(
+      /**
+       *
+       * @param {{[slug: string]: PostMetadata}} transformed
+       * @param {[string, PostMetadata]} param1
+       * @returns
+       */
+      (transformed, [slug, meta]) => {
+        transformed[slug] = {
+          ...meta,
+          // @ts-expect-error In practice I'm only overwriting some of the metadata.
+          ...manifestTransformations[slug],
+        };
+        return transformed;
+      },
+      {},
+    ),
+  };
 
   await writeManifest(transformedManifest);
 };

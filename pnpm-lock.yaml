@@ -201,6 +201,9 @@ importers:
       '@jaybeeuu/e2e-hooks':
         specifier: workspace:*
         version: link:../e2e-hooks
+      '@jaybeeuu/is':
+        specifier: workspace:*
+        version: link:../is
       '@jaybeeuu/utilities':
         specifier: workspace:*
         version: link:../utilities
@@ -210,6 +213,9 @@ importers:
       mocha-junit-reporter:
         specifier: ^2.2.1
         version: 2.2.1(mocha@10.7.3)
+      reading-time:
+        specifier: ^1.5.0
+        version: 1.5.0
     devDependencies:
       '@cypress/code-coverage':
         specifier: ^3.14.6
@@ -217,6 +223,9 @@ importers:
       '@jaybeeuu/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@jaybeeuu/posts':
+        specifier: workspace:*
+        version: link:../posts
       '@types/cypress':
         specifier: ^1.1.6
         version: 1.1.6
@@ -729,9 +738,6 @@ importers:
       '@babel/preset-typescript':
         specifier: ^7.27.1
         version: 7.27.1(@babel/core@7.28.3)
-      '@jaybeeuu/compost':
-        specifier: workspace:*
-        version: link:../compost
       '@jaybeeuu/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config

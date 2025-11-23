@@ -13,4 +13,7 @@ export type {
   CompostConfig,
   ContentTypeDefinitionsFromConfig,
   ContentTypeDefinition,
+  BaseInputMetadata,
+  InferContentTypes,
 } from "./content-types.js";
+export { validateCompostConfig, createCompostConfig } from "./content-types.js";
