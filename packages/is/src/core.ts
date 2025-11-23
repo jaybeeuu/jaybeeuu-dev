@@ -59,6 +59,7 @@ export const assert =
 export interface TypePredicate<Type> extends UnassertedTypePredicate<Type> {
   assert: TypeAssertion<Type>;
   check: (candidate: unknown) => Type;
+  optional: () => TypePredicate<Type | undefined>;
 }
 
 export const isType = <Type>(
@@ -88,6 +89,17 @@ export const isType = <Type>(
     check: (candidate: unknown): Type => {
       doAssert(candidate);
       return candidate;
+    },
+    optional: (): TypePredicate<Type | undefined> => {
+      return isType<Type | undefined>(
+        (candidate: unknown, context: ValidationContext) => {
+          if (candidate === undefined) {
+            return passValidation(context);
+          }
+          return predicate.validate(candidate, context);
+        },
+        `${typeDescription} | undefined`,
+      );
     },
   });
 };
