@@ -17,18 +17,14 @@ const eslintConfig: Linter.Config[] = config(
   {
     files: ["src/**/*.tsx"],
     rules: {
+      // Use React's jsx-pascal-case rule for component naming instead of overriding function naming
+      "react/jsx-pascal-case": [
+        "error",
+        { allowAllCaps: false, allowLeadingUnderscore: false },
+      ],
+      // Override naming convention to allow PascalCase for React component variables
       "@typescript-eslint/naming-convention": [
         "error",
-        {
-          selector: "default",
-          format: ["camelCase"],
-          leadingUnderscore: "forbid",
-          trailingUnderscore: "forbid",
-        },
-        {
-          selector: "import",
-          format: ["camelCase"],
-        },
         {
           selector: "variable",
           format: ["camelCase", "PascalCase"],
@@ -37,27 +33,9 @@ const eslintConfig: Linter.Config[] = config(
         },
         {
           selector: "function",
-          format: ["camelCase", "PascalCase"],
-        },
-        {
-          selector: "typeLike",
-          format: ["PascalCase"],
-        },
-        {
-          selector: "typeParameter",
-          format: ["StrictPascalCase"],
-          custom: {
-            regex: "^[A-Z][a-zA-Z]{2,}$",
-            match: true,
-          },
-        },
-        {
-          selector: "property",
-          format: null,
-        },
-        {
-          selector: "objectLiteralProperty",
-          format: null,
+          format: ["camelCase"],
+          leadingUnderscore: "forbid",
+          trailingUnderscore: "forbid",
         },
       ],
     },
