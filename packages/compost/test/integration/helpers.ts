@@ -160,6 +160,7 @@ const getDefaultedUpdateOptions = (
     sourceDir: "src",
     watch: false,
     clean: true,
+    config: "test-config.ts",
     ...options,
   };
 };

@@ -145,6 +145,8 @@ export type ManifestEntry<ContentTypeDef extends ContentTypeDefinition> =
     : never;
 
 export async function processContent<
+  // Note: Using `any` here is necessary for generic variance compatibility.
+  // ContentTypeDefinition has complex generic constraints that make strict typing impractical.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ContentTypeDefs extends { [key: string]: any },
 >(
