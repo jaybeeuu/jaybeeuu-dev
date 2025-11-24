@@ -10,10 +10,22 @@ export type {
 export { processContent } from "./orchestrator.js";
 export type { OrchestratorConfig } from "./orchestrator.js";
 export type {
+  Manifest as V2ManifestFile,
+  BaseOutputMeta as ManifestEntry,
+} from "./services/manifest/index.js";
+export type {
   CompostConfig,
   ContentTypeDefinitionsFromConfig,
   ContentTypeDefinition,
-  BaseInputMetadata,
+  ContentTypeDefinitionInput,
+  BaseInputMeta as BaseInputMetadata,
   InferContentTypes,
 } from "./content-types.js";
-export { validateCompostConfig, createCompostConfig } from "./content-types.js";
+export {
+  validateCompostConfig,
+  createCompostConfig,
+  createContentType,
+  createSimpleContentType,
+  identityMapping,
+  createMapping,
+} from "./content-types.js";

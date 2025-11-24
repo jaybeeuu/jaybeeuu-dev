@@ -7,16 +7,16 @@ import {
   buildManifest,
   writeManifest,
   getOldManifestWithFallback,
-  type V2ManifestFile,
+  type Manifest,
 } from "./services/manifest/index.js";
 import { discoverFilesForContentType } from "./services/file-discovery.js";
 import { processFile } from "./services/content-processor.js";
 import { ManifestEntriesManager } from "./services/manifest-entries-manager.js";
 import { type BaseOutputMeta } from "./services/manifest/index.js";
+import type { ContentDefOutputMeta } from "./content-types.js";
 import {
   type ContentTypeDefinition,
   type ResolvedContentDefinition,
-  type BaseInputMetadata,
   type UnknownRecord,
 } from "./content-types.js";
 
@@ -24,11 +24,9 @@ export interface OrchestratorConfig {
   clean: boolean;
 }
 
-function applyContentConfigDefaults<Type extends string, InputMeta, OutputMeta>(
-  definition: ContentTypeDefinition<Type, InputMeta, OutputMeta>,
-): ResolvedContentDefinition<
-  ContentTypeDefinition<Type, InputMeta, OutputMeta>
-> {
+function applyContentConfigDefaults<Content extends ContentTypeDefinition>(
+  definition: Content,
+): ResolvedContentDefinition<Content> {
   return {
     ...definition,
     requireOldManifest: definition.requireOldManifest ?? true,
@@ -37,11 +35,8 @@ function applyContentConfigDefaults<Type extends string, InputMeta, OutputMeta>(
     sourceDir: definition.sourceDir ?? "src",
     outputDir: definition.outputDir ?? "out",
     oldManifestLocators: definition.oldManifestLocators ?? [],
-    mapToOutputMeta:
-      definition.mapToOutputMeta ??
-      ((input: InputMeta & BaseInputMetadata) =>
-        input as unknown as OutputMeta),
-  };
+    mapToOutputMeta: definition.mapToOutputMeta,
+  } as unknown as ResolvedContentDefinition<Content>;
 }
 
 export type ProcessContentTypeFailureReason =
@@ -51,15 +46,13 @@ export type ProcessContentTypeFailureReason =
   | "slug already exists"
   | "manifest write failed";
 
-async function processContentType<Type extends string, InputMeta, OutputMeta>(
-  contentType: Type,
-  contentConfig: ResolvedContentDefinition<
-    ContentTypeDefinition<Type, InputMeta, OutputMeta>
-  >,
+async function processContentType<Content extends ContentTypeDefinition>(
+  contentType: string,
+  contentConfig: ResolvedContentDefinition<Content>,
   clean: boolean,
 ): Promise<
   Result<
-    V2ManifestFile<BaseOutputMeta & OutputMeta>,
+    Manifest<ContentDefOutputMeta<Content>>,
     ProcessContentTypeFailureReason
   >
 > {
@@ -97,7 +90,7 @@ async function processContentType<Type extends string, InputMeta, OutputMeta>(
   }
 
   const manifestEntries = new ManifestEntriesManager<
-    BaseOutputMeta & OutputMeta
+    BaseOutputMeta & ContentDefOutputMeta<Content>
   >();
 
   for (const filePath of filesResult.value) {
@@ -126,11 +119,12 @@ async function processContentType<Type extends string, InputMeta, OutputMeta>(
   const manifest = buildManifest(manifestEntries.getEntries());
 
   const writeResult = await writeManifest(contentType, manifest, manifestPath);
+
   if (!writeResult.success) {
     return failure("manifest write failed", writeResult.message);
   }
 
-  return success(manifest as V2ManifestFile<BaseOutputMeta & OutputMeta>);
+  return success(manifest);
 }
 
 export type ProcessContentFailureReason = "content type processing failed";
@@ -141,35 +135,31 @@ export type ManifestEntry<ContentTypeDef extends ContentTypeDefinition> =
     UnknownRecord,
     infer OutputMeta
   >
-    ? V2ManifestFile<BaseOutputMeta & OutputMeta>["entries"][string]
-    : never;
+    ? Manifest<BaseOutputMeta & OutputMeta>["entries"][string]
+    : ContentTypeDef extends ContentTypeDefinition
+      ? Manifest<BaseOutputMeta & UnknownRecord>["entries"][string]
+      : never;
 
 export async function processContent<
-  // Note: Using `any` here is necessary for generic variance compatibility.
-  // ContentTypeDefinition has complex generic constraints that make strict typing impractical.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ContentTypeDefs extends { [key: string]: any },
+  ContentTypeDefs extends { [key: string]: ContentTypeDefinition },
 >(
   config: OrchestratorConfig,
   contentConfigDefinitions: ContentTypeDefs,
 ): Promise<
   Result<
     {
-      [K in keyof ContentTypeDefs]: V2ManifestFile<
-        ManifestEntry<ContentTypeDefs[K]>
-      >;
+      [K in keyof ContentTypeDefs]: Manifest<ManifestEntry<ContentTypeDefs[K]>>;
     },
     ProcessContentFailureReason
   >
 > {
   const manifests = {} as {
-    [type: string]: V2ManifestFile;
+    [type: string]: Manifest;
   };
 
   for (const [contentType, definition] of Object.entries(
     contentConfigDefinitions,
   )) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const contentConfig = applyContentConfigDefaults(definition);
 
     const result = await processContentType(
@@ -191,9 +181,7 @@ export async function processContent<
 
   return success(
     manifests as {
-      [K in keyof ContentTypeDefs]: V2ManifestFile<
-        ManifestEntry<ContentTypeDefs[K]>
-      >;
+      [K in keyof ContentTypeDefs]: Manifest<ManifestEntry<ContentTypeDefs[K]>>;
     },
   );
 }

@@ -6,12 +6,11 @@ export {
   type ProcessingManifest,
   type OldManifest,
   type OldManifestEntry,
-  type Manifest as V2ManifestFile,
-  isManifest as isV2ManifestFile,
+  type Manifest,
+  isManifest,
   // Entry types - using new names
   type V1BaseOutputMeta,
   type BaseOutputMeta,
-  type BaseOutputMeta as ManifestEntry,
   isV1BaseOutputMeta,
   isBaseOutputMeta,
   // Backward compatibility aliases

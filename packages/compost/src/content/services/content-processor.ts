@@ -7,7 +7,10 @@ import { copyFile, writeTextFile } from "../../files/index.js";
 import type {
   ResolvedContentDefinition,
   ContentTypeDefinition,
-  BaseInputMetadata,
+  BaseInputMeta,
+  ContentDefType,
+  ContentDefInputMeta,
+  ContentDefOutputMeta,
 } from "../content-types.js";
 import { isBaseInputMetadata } from "../content-types.js";
 import { getSha1Hex } from "../../hash.js";
@@ -24,36 +27,31 @@ export interface OldManifestEntry {
 
 export type OldManifest = { [slug: string]: OldManifestEntry };
 
-export interface ProcessedContent<Type extends string, InputMeta, OutputMeta> {
+export interface ProcessedContent<Content extends ContentTypeDefinition> {
   slug: string;
-  contentType: Type;
-  inputMetadata: InputMeta & BaseInputMetadata;
+  contentType: ContentDefType<Content>;
+  inputMetadata: ContentDefInputMeta<Content> & BaseInputMeta;
   compiledHtml: string;
   assets: Array<{
     sourcePath: string;
     destinationPath: string;
   }>;
   contentHash: string;
-  manifestEntry: BaseOutputMeta & OutputMeta;
+  manifestEntry: ContentDefOutputMeta<Content> & BaseOutputMeta;
 }
 
 export type ProcessTypedContentFailureReason =
   | "content skipped"
   | "compilation failed";
 
-async function processTypedContent<Type extends string, InputMeta, OutputMeta>(
-  inputMetadata: InputMeta & BaseInputMetadata,
+async function processTypedContent<Content extends ContentTypeDefinition>(
+  inputMetadata: ContentDefInputMeta<Content> & BaseInputMeta,
   content: string,
   filePath: string,
   oldManifest: OldManifest,
-  contentConfig: ResolvedContentDefinition<
-    ContentTypeDefinition<Type, InputMeta, OutputMeta>
-  >,
+  contentConfig: ResolvedContentDefinition<Content>,
 ): Promise<
-  Result<
-    ProcessedContent<Type, InputMeta, OutputMeta>,
-    ProcessTypedContentFailureReason
-  >
+  Result<ProcessedContent<Content>, ProcessTypedContentFailureReason>
 > {
   // Check if content should be published (filtering based on input metadata)
   if (!inputMetadata.publish && !contentConfig.includeUnpublished) {
@@ -73,7 +71,10 @@ async function processTypedContent<Type extends string, InputMeta, OutputMeta>(
   const { html: compiledHtml, assets } = compileResult.value;
 
   // Map input metadata to output metadata using the mapping function
-  const outputMetadata = contentConfig.mapToOutputMeta(inputMetadata, content);
+  const outputMetadata = contentConfig.mapToOutputMeta(
+    inputMetadata,
+    content,
+  ) as ContentDefOutputMeta<Content>;
 
   const contentHash = generateHash(content + JSON.stringify(inputMetadata));
 
@@ -90,7 +91,7 @@ async function processTypedContent<Type extends string, InputMeta, OutputMeta>(
 
   return success({
     slug,
-    contentType: contentConfig.contentType,
+    contentType: contentConfig.contentType as ContentDefType<Content>,
     inputMetadata,
     compiledHtml,
     assets,
@@ -106,18 +107,11 @@ export type ProcessFileFailureReason =
   | "compilation failed"
   | "file processing failed";
 
-export async function processFile<Type extends string, InputMeta, OutputMeta>(
+export async function processFile<Content extends ContentTypeDefinition>(
   filePath: string,
   oldManifest: OldManifest,
-  contentConfig: ResolvedContentDefinition<
-    ContentTypeDefinition<Type, InputMeta, OutputMeta>
-  >,
-): Promise<
-  Result<
-    ProcessedContent<Type, InputMeta, OutputMeta> | null,
-    ProcessFileFailureReason
-  >
-> {
+  contentConfig: ResolvedContentDefinition<Content>,
+): Promise<Result<ProcessedContent<Content> | null, ProcessFileFailureReason>> {
   try {
     const contentResult = await resolveContent(filePath, contentConfig);
     if (!contentResult.success) {
@@ -150,7 +144,7 @@ export async function processFile<Type extends string, InputMeta, OutputMeta>(
     }
 
     const result = await processTypedContent(
-      contentResult.value.metadata as InputMeta & BaseInputMetadata,
+      contentResult.value.metadata,
       contentResult.value.content,
       filePath,
       oldManifest,
@@ -174,12 +168,10 @@ export async function processFile<Type extends string, InputMeta, OutputMeta>(
 
 export type CompileContentFailureReason = "compilation failed";
 
-async function compileContent<Type extends string, InputMeta, OutputMeta>(
+async function compileContent<Content extends ContentTypeDefinition>(
   filePath: string,
   content: string,
-  contentConfig: ResolvedContentDefinition<
-    ContentTypeDefinition<Type, InputMeta, OutputMeta>
-  >,
+  contentConfig: ResolvedContentDefinition<Content>,
 ): Promise<
   Result<
     {
@@ -204,16 +196,14 @@ async function compileContent<Type extends string, InputMeta, OutputMeta>(
   return success(result.value);
 }
 
-function generateTypedManifestEntry<Type extends string, InputMeta, OutputMeta>(
+function generateTypedManifestEntry<Content extends ContentTypeDefinition>(
   slug: string,
-  outputMetadata: OutputMeta,
+  outputMetadata: ContentDefOutputMeta<Content>,
   compiledHtml: string,
   contentHash: string,
   oldManifest: OldManifest,
-  contentConfig: ResolvedContentDefinition<
-    ContentTypeDefinition<Type, InputMeta, OutputMeta>
-  >,
-): BaseOutputMeta & OutputMeta {
+  contentConfig: ResolvedContentDefinition<Content>,
+): BaseOutputMeta & ContentDefOutputMeta<Content> {
   const fileName = contentConfig.generateFileName(slug, compiledHtml);
   const href = joinUrlPath(contentConfig.hrefRoot, fileName);
 
@@ -252,17 +242,11 @@ function generateTypedManifestEntry<Type extends string, InputMeta, OutputMeta>(
   });
 }
 
-async function writeTypedCompiledContent<
-  Type extends string,
-  InputMeta,
-  OutputMeta,
->(
+async function writeTypedCompiledContent<Content extends ContentTypeDefinition>(
   slug: string,
   html: string,
   assets: Array<{ sourcePath: string; destinationPath: string }>,
-  contentConfig: ResolvedContentDefinition<
-    ContentTypeDefinition<Type, InputMeta, OutputMeta>
-  >,
+  contentConfig: ResolvedContentDefinition<Content>,
 ): Promise<void> {
   const htmlFileName = contentConfig.generateFileName(slug, html);
   const htmlPath = path.join(contentConfig.outputDir, htmlFileName);

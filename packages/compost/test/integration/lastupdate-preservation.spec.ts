@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import fs from "node:fs/promises";
 import {
   compost,
+  createContentType,
   type OrchestratorConfig,
   type ContentTypeDefinition,
 } from "../../src/index.js";
@@ -20,6 +21,7 @@ describe("LastUpdateDate Preservation (Programmatic API)", () => {
     publish: boolean;
     publishDate: string;
     type: string;
+    [key: string]: unknown;
   }
 
   interface PostOutputMeta {
@@ -31,51 +33,49 @@ describe("LastUpdateDate Preservation (Programmatic API)", () => {
       time: number;
       words: number;
     };
+    [key: string]: unknown;
   }
 
-  const createPostContentType = (): ContentTypeDefinition<
-    string,
-    PostInputMeta,
-    PostOutputMeta
-  > => ({
-    contentType: "post",
-    filePatterns: {
-      frontmatter: [".post.md"],
-      jsonMetadata: [".md"],
-      jsonSuffix: ".post.json",
-    },
-    generateSlug: (filePath: string, sourceDirPath: string) => {
-      return filePath
-        .replace(sourceDirPath + "/", "")
-        .replace(/\.(post\.)?md$/, "");
-    },
-    generateFileName: (slug: string) => `${slug}.html`,
-    validateInputMeta: (data: unknown): data is PostInputMeta => {
-      return (
-        data !== null &&
-        typeof data === "object" &&
-        "title" in data &&
-        "abstract" in data &&
-        "publish" in data &&
-        typeof (data as any).title === "string" &&
-        typeof (data as any).abstract === "string" &&
-        typeof (data as any).publish === "boolean"
-      );
-    },
-    mapToOutputMeta: (input: PostInputMeta) => ({
-      title: input.title,
-      abstract: input.abstract,
-      readingTime: { text: "1 min read", minutes: 1, time: 60000, words: 50 },
-    }),
-    sourceDir,
-    outputDir,
-    hrefRoot: "/test",
-    includeUnpublished: false,
-    codeLineNumbers: false,
-    removeH1: false,
-    requireOldManifest: false,
-    oldManifestLocators: [oldManifestPath],
-  });
+  const createPostContentType = () =>
+    createContentType({
+      contentType: "post",
+      filePatterns: {
+        frontmatter: [".post.md"],
+        jsonMetadata: [".md"],
+        jsonSuffix: ".post.json",
+      },
+      generateSlug: (filePath: string, sourceDirPath: string) => {
+        return filePath
+          .replace(sourceDirPath + "/", "")
+          .replace(/\.(post\.)?md$/, "");
+      },
+      generateFileName: (slug: string) => `${slug}.html`,
+      validateInputMeta: (data: unknown): data is PostInputMeta => {
+        return (
+          data !== null &&
+          typeof data === "object" &&
+          "title" in data &&
+          "abstract" in data &&
+          "publish" in data &&
+          typeof (data as any).title === "string" &&
+          typeof (data as any).abstract === "string" &&
+          typeof (data as any).publish === "boolean"
+        );
+      },
+      mapToOutputMeta: (input: PostInputMeta) => ({
+        title: input.title,
+        abstract: input.abstract,
+        readingTime: { text: "1 min read", minutes: 1, time: 60000, words: 50 },
+      }),
+      sourceDir,
+      outputDir,
+      hrefRoot: "/test",
+      includeUnpublished: false,
+      codeLineNumbers: false,
+      removeH1: false,
+      requireOldManifest: false,
+      oldManifestLocators: [oldManifestPath],
+    });
 
   async function runCompost(): Promise<void> {
     const orchestratorConfig: OrchestratorConfig = { clean: false };

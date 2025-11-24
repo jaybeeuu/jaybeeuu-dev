@@ -1,36 +1,44 @@
 import { describe, it, expect } from "@jest/globals";
-import { validateCompostConfig } from "../../src/content/content-types.js";
-import type { CompostConfig } from "../../src/content/content-types.js";
+import {
+  createCompostConfig,
+  validateCompostConfig,
+} from "../../src/content/content-types.js";
 
 describe("config validation", () => {
   it("should validate a proper CompostConfig", () => {
-    const validConfig: CompostConfig = {
-      contentTypes: {
-        posts: {
-          contentType: "posts",
-          filePatterns: {
-            frontmatter: ["**/*.md", "**/*.mdx"],
-            jsonMetadata: ["**/*.json"],
-            jsonSuffix: ".meta.json",
-          },
-          generateSlug: (filePath: string) => filePath,
-          generateFileName: (slug: string) => `${slug}.html`,
-          validateInputMeta: (
-            data: unknown,
-          ): data is { title: string; publish: boolean } =>
-            typeof data === "object" &&
-            data !== null &&
-            "title" in data &&
-            "publish" in data,
-          hrefRoot: "/",
-          includeUnpublished: false,
-          codeLineNumbers: false,
-          removeH1: false,
+    const validConfig = createCompostConfig({
+      posts: {
+        contentType: "posts",
+        filePatterns: {
+          frontmatter: ["**/*.md", "**/*.mdx"],
+          jsonMetadata: ["**/*.json"],
+          jsonSuffix: ".meta.json",
         },
+        generateSlug: (filePath: string) => filePath,
+        generateFileName: (slug: string) => `${slug}.html`,
+        validateInputMeta: (
+          data: unknown,
+        ): data is { title: string; publish: boolean } =>
+          typeof data === "object" &&
+          data !== null &&
+          "title" in data &&
+          "publish" in data,
+        hrefRoot: "/",
+        includeUnpublished: false,
+        codeLineNumbers: false,
+        removeH1: false,
       },
-    };
+    });
 
     expect(validateCompostConfig(validConfig)).toBe(true);
+
+    // Verify strong typing is preserved
+    const postsContentType = validConfig.contentTypes.posts;
+    expect(postsContentType.contentType).toBe("posts");
+    expect(postsContentType.hrefRoot).toBe("/");
+
+    // The mapToOutputMeta should have been automatically added by createCompostConfig
+    expect(typeof postsContentType.mapToOutputMeta).toBe("function");
   });
 
   it("should reject config with invalid structure", () => {

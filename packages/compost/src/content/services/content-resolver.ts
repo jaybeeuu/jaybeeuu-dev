@@ -4,10 +4,15 @@ import type { ReadJsonFileFailureReason } from "../../files/index.js";
 import { canAccess, readJsonFile, readTextFile } from "../../files/index.js";
 import type { ParseYamlMetaFailureReason } from "./metadata.js";
 import { parseYamlMeta } from "./metadata.js";
-import { is } from "@jaybeeuu/is";
-import type {
-  ResolvedContentDefinition,
-  ContentTypeDefinition,
+import { is, isIntersectionOf } from "@jaybeeuu/is";
+import type { BaseInputMeta } from "../content-types.js";
+import {
+  type ResolvedContentDefinition,
+  type ContentTypeDefinition,
+  type ContentDefResolvedContent,
+  type ContentDefInputMeta,
+  type ContentDefType,
+  isBaseInputMetadata,
 } from "../content-types.js";
 
 /**
@@ -23,7 +28,7 @@ export type ResolvedContent<Type extends string, Metadata> = {
   type: Type;
 
   /** The raw metadata (validation happens later in the processing pipeline) */
-  metadata: Metadata;
+  metadata: Metadata & BaseInputMeta;
 
   /** The markdown content (without frontmatter) */
   content: string;
@@ -64,18 +69,12 @@ export type ResolveFrontmatterContentFailureReason =
   | ValidateFrontmatterMetaFailureReason
   | ParseYamlMetaFailureReason;
 
-const resolveFrontmatterContent = async <
-  Type extends string,
-  InputMeta,
-  OutputMeta,
->(
+const resolveFrontmatterContent = async <Content extends ContentTypeDefinition>(
   markdownFilePath: string,
-  config: ResolvedContentDefinition<
-    ContentTypeDefinition<Type, InputMeta, OutputMeta>
-  >,
+  config: ResolvedContentDefinition<Content>,
 ): Promise<
   Result<
-    ResolvedContent<Type, InputMeta>,
+    ContentDefResolvedContent<Content>,
     ResolveFrontmatterContentFailureReason
   >
 > => {
@@ -102,7 +101,12 @@ const resolveFrontmatterContent = async <
     return yamlResult;
   }
 
-  if (!config.validateInputMeta(yamlResult.value)) {
+  if (
+    !isIntersectionOf(
+      is(config.validateInputMeta),
+      isBaseInputMetadata,
+    )(yamlResult.value)
+  ) {
     return failure(
       "invalid frontmatter metadata",
       new Error(
@@ -112,8 +116,8 @@ const resolveFrontmatterContent = async <
   }
 
   return success({
-    type: config.contentType,
-    metadata: yamlResult.value,
+    type: config.contentType as ContentDefType<Content>,
+    metadata: yamlResult.value as unknown as ContentDefInputMeta<Content>,
     content,
   });
 };
@@ -124,13 +128,11 @@ export type ResolveJsonContentFailureReason =
   | ReadJsonFileFailureReason
   | ValidateJsonMetaFailureReason;
 
-const resolveJsonContent = async <Type extends string, InputMeta, OutputMeta>(
+const resolveJsonContent = async <Content extends ContentTypeDefinition>(
   markdownFilePath: string,
-  config: ResolvedContentDefinition<
-    ContentTypeDefinition<Type, InputMeta, OutputMeta>
-  >,
+  config: ResolvedContentDefinition<Content>,
 ): Promise<
-  Result<ResolvedContent<Type, InputMeta>, ResolveJsonContentFailureReason>
+  Result<ContentDefResolvedContent<Content>, ResolveJsonContentFailureReason>
 > => {
   const sourceFileTextResult = await loadSourceText(markdownFilePath);
   if (!sourceFileTextResult.success) {
@@ -155,7 +157,12 @@ const resolveJsonContent = async <Type extends string, InputMeta, OutputMeta>(
     return metadataResult;
   }
 
-  if (!config.validateInputMeta(metadataResult.value)) {
+  if (
+    !isIntersectionOf(
+      is(config.validateInputMeta),
+      isBaseInputMetadata,
+    )(metadataResult.value)
+  ) {
     return failure(
       "invalid json metadata",
       new Error(`JSON metadata validation failed for file: ${jsonFilePath}`),
@@ -163,8 +170,8 @@ const resolveJsonContent = async <Type extends string, InputMeta, OutputMeta>(
   }
 
   return success({
-    type: config.contentType,
-    metadata: metadataResult.value,
+    type: config.contentType as ContentDefType<Content>,
+    metadata: metadataResult.value as unknown as ContentDefInputMeta<Content>,
     content: sourceFileTextResult.value,
   });
 };
@@ -187,18 +194,12 @@ export type ResolveContentFailureReason =
  * @param config - Configuration for the specific content type
  * @returns Promise resolving to typed content with metadata, or failure reason
  */
-export const resolveContent = async <
-  Type extends string,
-  InputMeta,
-  OutputMeta,
->(
+export const resolveContent = async <Content extends ContentTypeDefinition>(
   markdownFilePath: string,
-  config: ResolvedContentDefinition<
-    ContentTypeDefinition<Type, InputMeta, OutputMeta>
-  >,
+  config: ResolvedContentDefinition<Content>,
 ): Promise<
   Result<
-    ResolvedContent<Type, InputMeta>,
+    ContentDefResolvedContent<Content>,
     ResolveContentFailureReason | "invalid json metadata"
   >
 > => {

@@ -111,8 +111,8 @@ export interface OldManifestEntry {
 
 export type OldManifest = { [slug: string]: OldManifestEntry };
 
-export function buildManifest<Metadata, CalculatedMetadata>(
-  entries: Map<string, BaseOutputMeta & Metadata & CalculatedMetadata>,
+export function buildManifest<Metadata>(
+  entries: Map<string, BaseOutputMeta & Metadata>,
 ): Manifest<Metadata> {
   const entriesObject = Object.fromEntries(entries);
   const entriesHash = getSha1Hex(
