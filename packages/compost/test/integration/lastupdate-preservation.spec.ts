@@ -3,9 +3,8 @@ import { resolve } from "node:path";
 import fs from "node:fs/promises";
 import {
   compost,
-  createContentType,
+  createCompostConfig,
   type OrchestratorConfig,
-  type ContentTypeDefinition,
 } from "../../src/index.js";
 
 describe("LastUpdateDate Preservation (Programmatic API)", () => {
@@ -37,7 +36,7 @@ describe("LastUpdateDate Preservation (Programmatic API)", () => {
   }
 
   const createPostContentType = () =>
-    createContentType({
+    createCompostConfig({
       contentType: "post",
       filePatterns: {
         frontmatter: [".post.md"],
@@ -57,9 +56,9 @@ describe("LastUpdateDate Preservation (Programmatic API)", () => {
           "title" in data &&
           "abstract" in data &&
           "publish" in data &&
-          typeof (data as any).title === "string" &&
-          typeof (data as any).abstract === "string" &&
-          typeof (data as any).publish === "boolean"
+          data.title === "string" &&
+          data.abstract === "string" &&
+          data.publish === "boolean"
         );
       },
       mapToOutputMeta: (input: PostInputMeta) => ({
@@ -79,12 +78,14 @@ describe("LastUpdateDate Preservation (Programmatic API)", () => {
 
   async function runCompost(): Promise<void> {
     const orchestratorConfig: OrchestratorConfig = { clean: false };
-    const contentTypes = { post: createPostContentType() };
+    const contentTypes = createPostContentType();
 
     const result = await compost(orchestratorConfig, contentTypes);
     if (!result.success) {
       throw new Error(`Compost compilation failed: ${result.message}`);
     }
+
+    result.value.post?.metadata;
   }
 
   beforeEach(async () => {

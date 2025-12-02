@@ -8,7 +8,6 @@ describe("config validation", () => {
   it("should validate a proper CompostConfig", () => {
     const validConfig = createCompostConfig({
       posts: {
-        contentType: "posts",
         filePatterns: {
           frontmatter: ["**/*.md", "**/*.mdx"],
           jsonMetadata: ["**/*.json"],
@@ -32,13 +31,15 @@ describe("config validation", () => {
 
     expect(validateCompostConfig(validConfig)).toBe(true);
 
-    // Verify strong typing is preserved
-    const postsContentType = validConfig.contentTypes.posts;
-    expect(postsContentType.contentType).toBe("posts");
-    expect(postsContentType.hrefRoot).toBe("/");
+    // Verify runtime structure is correct
+    expect(validConfig.contentTypes.posts).toBeDefined();
+    expect(validConfig.contentTypes.posts.contentType).toBe("posts");
+    expect(validConfig.contentTypes.posts.hrefRoot).toBe("/");
 
     // The mapToOutputMeta should have been automatically added by createCompostConfig
-    expect(typeof postsContentType.mapToOutputMeta).toBe("function");
+    expect(typeof validConfig.contentTypes.posts.mapToOutputMeta).toBe(
+      "function",
+    );
   });
 
   it("should reject config with invalid structure", () => {

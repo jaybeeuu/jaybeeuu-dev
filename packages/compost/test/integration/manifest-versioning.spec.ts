@@ -7,18 +7,12 @@ import {
   getOutputFile,
   writePostFile,
   type PostFile,
-  type TestPostOutputMetadata,
   type TestPostManifestEntry,
   isTestPostOutputMetadata,
 } from "./helpers.js";
 import { writeJsonFile } from "../../src/files/index.js";
 import path from "path";
-import type { BaseOutputMeta } from "../../src/content/services/manifest/manifest-operations.js";
-import {
-  isManifest,
-  isBaseOutputMeta,
-} from "../../src/content/services/manifest/manifest-operations.js";
-import { isObject, isIntersectionOf, is } from "@jaybeeuu/is";
+import { isManifest } from "../../src/content/services/manifest/manifest-operations.js";
 
 interface PostFileWithStringArrayContent extends Omit<PostFile, "content"> {
   content: string[];
@@ -321,14 +315,9 @@ describe("manifest versioning compatibility", () => {
 
     await compilePosts();
 
-    // Read the raw manifest file to verify it has version structure
     const rawManifestContent = await getOutputFile("post-manifest.json");
     const parsedManifest = JSON.parse(rawManifestContent) as unknown;
-
-    // Use the actual isManifest validator from content module with proper type predicate
-    const manifestValidator = isManifest(
-      isIntersectionOf(isBaseOutputMeta, isTestPostOutputMetadata),
-    );
+    const manifestValidator = isManifest(isTestPostOutputMetadata);
 
     if (!manifestValidator(parsedManifest)) {
       throw new Error("Invalid manifest structure");

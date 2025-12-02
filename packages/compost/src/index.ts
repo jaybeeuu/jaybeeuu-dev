@@ -7,11 +7,10 @@ import type {
 import { processContent } from "./content/orchestrator.js";
 import type {
   Manifest as InternalManifest,
-  BaseOutputMeta as BaseManifestEntry,
+  BaseManifestEntry as BaseManifestEntry,
 } from "./content/services/manifest/index.js";
 import type { ContentTypeDefinition } from "./content/index.js";
 
-// Clean, version-agnostic public API types
 export type Manifest<EntryType = BaseManifestEntry> =
   InternalManifest<EntryType>;
 export type { BaseManifestEntry as ManifestEntry };
@@ -28,6 +27,14 @@ export {
   processContent,
 } from "./content/index.js";
 
+export type ContentTypeDefinitionMap = {
+  [ContentType in string]: ContentTypeDefinition<ContentType>;
+};
+
+export type CompostResult<Content extends ContentTypeDefinitionMap> = {
+  [K in keyof Content]: Manifest<ProcessedManifestEntry<Content[K]>>;
+};
+
 /**
  * Compile content using Compost with the provided configuration.
  * This is the main programmatic API for Compost.
@@ -36,22 +43,11 @@ export {
  * @param {ContentTypeDefs} contentConfigDefinitions - Content type definitions
  * @returns Promise resolving to manifest files for each content type
  */
-export function compost<
-  ContentTypeDefs extends {
-    [key: string]: ContentTypeDefinition;
-  },
->(
+export function compost<const ContentTypeDefs extends ContentTypeDefinitionMap>(
   config: OrchestratorConfig,
   contentConfigDefinitions: ContentTypeDefs,
 ): Promise<
-  Result<
-    {
-      [K in keyof ContentTypeDefs]: Manifest<
-        ProcessedManifestEntry<ContentTypeDefs[K]>
-      >;
-    },
-    ProcessContentFailureReason
-  >
+  Result<CompostResult<ContentTypeDefs>, ProcessContentFailureReason>
 > {
   return processContent(config, contentConfigDefinitions);
 }

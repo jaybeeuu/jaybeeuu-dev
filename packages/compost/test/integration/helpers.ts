@@ -17,7 +17,7 @@ import type { Manifest } from "../../src/content/services/manifest/manifest-oper
 import { isManifest } from "../../src/content/services/manifest/manifest-operations.js";
 import { is, isObject } from "@jaybeeuu/is";
 import type { CheckedBy } from "@jaybeeuu/is";
-import { createContentType } from "../../src/content/content-types.js";
+import { createContentTypeDef } from "../../src/content/content-types.js";
 import getReadingTime from "reading-time";
 import { getCompiledPostFileName } from "../../src/content/file-paths.js";
 
@@ -73,7 +73,7 @@ export const isTestPostManifest = isManifest<TestPostOutputMetadata>(
   isTestPostOutputMetadata,
 );
 
-export const testPostContentTypeDefinition = createContentType({
+export const testPostContentTypeDefinition = createContentTypeDef({
   contentType: "post",
   filePatterns: {
     frontmatter: [".post.md"],

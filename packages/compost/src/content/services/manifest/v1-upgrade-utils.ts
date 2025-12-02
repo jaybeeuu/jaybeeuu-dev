@@ -1,10 +1,10 @@
 import { getSha1Hex } from "../../../hash.js";
 
-export function generateV1UpgradeHash(fileName: string): string {
+function generateV1UpgradeHash(fileName: string): string {
   return getSha1Hex(`v1-upgrade-${fileName}`);
 }
 
-export function isV1UpgradeHash(
+function isV1UpgradeHash(
   hash: string,
   fileName: string,
   slug: string,
@@ -25,7 +25,7 @@ export function isV1UpgradeHash(
   return hash === fallbackV1Hash;
 }
 
-export function shouldUseV1CompatMode(
+function shouldUseV1CompatMode(
   oldEntry: { fileName?: string; hash?: string } | undefined,
   fileName: string,
   slug: string,

@@ -7,7 +7,6 @@ import { parseYamlMeta } from "./metadata.js";
 import { is, isIntersectionOf } from "@jaybeeuu/is";
 import type { BaseInputMeta } from "../content-types.js";
 import {
-  type ResolvedContentDefinition,
   type ContentTypeDefinition,
   type ContentDefResolvedContent,
   type ContentDefInputMeta,
@@ -69,12 +68,14 @@ export type ResolveFrontmatterContentFailureReason =
   | ValidateFrontmatterMetaFailureReason
   | ParseYamlMetaFailureReason;
 
-const resolveFrontmatterContent = async <Content extends ContentTypeDefinition>(
+const resolveFrontmatterContent = async <
+  ContentDef extends ContentTypeDefinition,
+>(
   markdownFilePath: string,
-  config: ResolvedContentDefinition<Content>,
+  config: ContentDef,
 ): Promise<
   Result<
-    ContentDefResolvedContent<Content>,
+    ContentDefResolvedContent<ContentDef>,
     ResolveFrontmatterContentFailureReason
   >
 > => {
@@ -116,8 +117,8 @@ const resolveFrontmatterContent = async <Content extends ContentTypeDefinition>(
   }
 
   return success({
-    type: config.contentType as ContentDefType<Content>,
-    metadata: yamlResult.value as unknown as ContentDefInputMeta<Content>,
+    type: config.contentType as ContentDefType<ContentDef>,
+    metadata: yamlResult.value as unknown as ContentDefInputMeta<ContentDef>,
     content,
   });
 };
@@ -128,11 +129,11 @@ export type ResolveJsonContentFailureReason =
   | ReadJsonFileFailureReason
   | ValidateJsonMetaFailureReason;
 
-const resolveJsonContent = async <Content extends ContentTypeDefinition>(
+const resolveJsonContent = async <ContentDef extends ContentTypeDefinition>(
   markdownFilePath: string,
-  config: ResolvedContentDefinition<Content>,
+  config: ContentDef,
 ): Promise<
-  Result<ContentDefResolvedContent<Content>, ResolveJsonContentFailureReason>
+  Result<ContentDefResolvedContent<ContentDef>, ResolveJsonContentFailureReason>
 > => {
   const sourceFileTextResult = await loadSourceText(markdownFilePath);
   if (!sourceFileTextResult.success) {
@@ -170,8 +171,9 @@ const resolveJsonContent = async <Content extends ContentTypeDefinition>(
   }
 
   return success({
-    type: config.contentType as ContentDefType<Content>,
-    metadata: metadataResult.value as unknown as ContentDefInputMeta<Content>,
+    type: config.contentType as ContentDefType<ContentDef>,
+    metadata:
+      metadataResult.value as unknown as ContentDefInputMeta<ContentDef>,
     content: sourceFileTextResult.value,
   });
 };
@@ -196,7 +198,7 @@ export type ResolveContentFailureReason =
  */
 export const resolveContent = async <Content extends ContentTypeDefinition>(
   markdownFilePath: string,
-  config: ResolvedContentDefinition<Content>,
+  config: Content,
 ): Promise<
   Result<
     ContentDefResolvedContent<Content>,

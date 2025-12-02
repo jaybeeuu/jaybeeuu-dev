@@ -1,5 +1,6 @@
 import type { CheckedBy } from "@jaybeeuu/is";
 import { is, isObject, isArrayOf, isRecordOf } from "@jaybeeuu/is";
+import path from "node:path";
 import type { Manifest } from "./services/manifest";
 
 /**
@@ -63,31 +64,45 @@ export interface ContentTypeDefinition<
   readonly removeH1: boolean;
 }
 
-export type ContentDefManifestFile<Content extends ContentTypeDefinition> =
-  Content extends ContentTypeDefinition<string, UnknownRecord, infer OutputMeta>
+export type ContentDefManifestFile<ContentDef extends ContentTypeDefinition> =
+  ContentDef extends ContentTypeDefinition<
+    string,
+    UnknownRecord,
+    infer OutputMeta
+  >
     ? Manifest<OutputMeta>
     : never;
 
-export type ContentDefOutputMeta<Content extends ContentTypeDefinition> =
-  Content extends ContentTypeDefinition<string, UnknownRecord, infer OutputMeta>
+export type ContentDefOutputMeta<ContentDef extends ContentTypeDefinition> =
+  ContentDef extends ContentTypeDefinition<
+    string,
+    UnknownRecord,
+    infer OutputMeta
+  >
     ? OutputMeta
     : never;
 
-export type ContentDefInputMeta<Content extends ContentTypeDefinition> =
-  Content extends ContentTypeDefinition<string, infer InputMeta, UnknownRecord>
+export type ContentDefInputMeta<ContentDef extends ContentTypeDefinition> =
+  ContentDef extends ContentTypeDefinition<
+    string,
+    infer InputMeta,
+    UnknownRecord
+  >
     ? InputMeta & BaseInputMeta
     : never;
 
-export type ContentDefType<Content extends ContentTypeDefinition> =
-  Content extends ContentTypeDefinition<string, UnknownRecord, UnknownRecord>
-    ? Content["contentType"]
+export type ContentDefType<ContentDef extends ContentTypeDefinition> =
+  ContentDef extends ContentTypeDefinition<string, UnknownRecord, UnknownRecord>
+    ? ContentDef["contentType"]
     : never;
 
-export type ContentDefResolvedContent<Content extends ContentTypeDefinition> = {
+export type ContentDefResolvedContent<
+  ContentDef extends ContentTypeDefinition,
+> = {
   /** The identified content type */
-  type: ContentDefType<Content>;
+  type: ContentDefType<ContentDef>;
   /** The raw metadata (validation happens later in the processing pipeline) */
-  metadata: ContentDefInputMeta<Content>;
+  metadata: ContentDefInputMeta<ContentDef>;
   /** The markdown content (without frontmatter) */
   content: string;
 };
@@ -129,26 +144,16 @@ export interface CompostConfig<
 }
 
 /**
- * Helper type to infer content type definitions from a config
- */
-export type InferContentTypes<ConfigType> =
-  ConfigType extends CompostConfig<infer ContentTypeDefs>
-    ? ContentTypeDefs
-    : never;
-
-/**
  * Input interface for content type definitions - allows optional properties for user convenience.
  * createCompostConfig will fill in all defaults.
  */
 export interface ContentTypeDefinitionInput<
-  Type extends string = string,
   InputMeta = UnknownRecord,
   OutputMeta = InputMeta & BaseInputMeta,
 > {
-  readonly contentType: Type;
   readonly filePatterns: ContentFilePatterns;
-  readonly generateSlug: (filePath: string, sourceDir: string) => string;
-  readonly generateFileName: (slug: string, html: string) => string;
+  readonly generateSlug?: (filePath: string, sourceDir: string) => string;
+  readonly generateFileName?: (slug: string, html: string) => string;
 
   /** Validates raw input data from frontmatter/JSON files - TypeScript user-defined type guard */
   readonly validateInputMeta: (data: unknown) => data is InputMeta;
@@ -165,17 +170,16 @@ export interface ContentTypeDefinitionInput<
   readonly outputDir?: string;
   readonly oldManifestLocators?: string[];
   readonly hrefRoot: string;
-  readonly includeUnpublished: boolean;
-  readonly codeLineNumbers: boolean;
-  readonly removeH1: boolean;
+  readonly includeUnpublished?: boolean;
+  readonly codeLineNumbers?: boolean;
+  readonly removeH1?: boolean;
 }
 
-/**
- * Helper type to transform ContentTypeDefinitionInput to ContentTypeDefinition
- */
-type ResolveContentTypeInput<Input> =
-  Input extends ContentTypeDefinitionInput<
-    infer Type,
+export type DefaultedContentTypeDefinition<
+  Type extends string,
+  ContentTypeInput extends ContentTypeDefinitionInput,
+> =
+  ContentTypeInput extends ContentTypeDefinitionInput<
     infer InputMeta,
     infer OutputMeta
   >
@@ -183,40 +187,51 @@ type ResolveContentTypeInput<Input> =
     : never;
 
 /**
- * Helper type to transform the input object to fully resolved content types
- */
-type ResolvedContentTypesFromInputs<
-  ContentTypeInputs extends Record<string, ContentTypeDefinitionInput>,
-> = {
-  [K in keyof ContentTypeInputs]: ResolveContentTypeInput<ContentTypeInputs[K]>;
-};
-
-/**
  * Helper function to create a properly typed CompostConfig.
  * Automatically fills in defaults for optional properties and provides identity mapping when missing.
+ *
+ * Note: For strongest type inference with specific types, use createContentTypeDef to create each content type first.
  */
 export function createCompostConfig<
-  ContentTypeInputs extends Record<string, ContentTypeDefinitionInput>,
+  const ContentDefKeys extends string,
+  const ContentTypeInputs extends {
+    [Key in ContentDefKeys]: ContentTypeDefinitionInput;
+  },
 >(
+  contentType: string,
   contentInputs: ContentTypeInputs,
-): CompostConfig<ResolvedContentTypesFromInputs<ContentTypeInputs>> {
+): CompostConfig<{
+  [K in ContentDefKeys]: DefaultedContentTypeDefinition<
+    K,
+    ContentTypeInputs[K]
+  >;
+}> {
   const contentTypes = Object.fromEntries(
     Object.entries(contentInputs).map(([key, input]) => [
       key,
       {
         ...input,
+        generateSlug: input.generateSlug ?? defaultGenerateSlug,
+        generateFileName: input.generateFileName ?? defaultGenerateFileName,
         requireOldManifest: input.requireOldManifest ?? true,
         manifestFileName:
-          input.manifestFileName ?? `${input.contentType}-manifest.json`,
+          input.manifestFileName ?? `${contentType}-manifest.json`,
         sourceDir: input.sourceDir ?? "src",
         outputDir: input.outputDir ?? "out",
         oldManifestLocators: input.oldManifestLocators ?? [],
         mapToOutputMeta: input.mapToOutputMeta ?? identityMapping,
-      } satisfies ContentTypeDefinition,
+        includeUnpublished: input.includeUnpublished ?? false,
+        codeLineNumbers: input.codeLineNumbers ?? true,
+        removeH1: input.removeH1 ?? true,
+      },
     ]),
-  ) as ResolvedContentTypesFromInputs<ContentTypeInputs>;
+  );
 
-  return { contentTypes };
+  return { contentTypes } as CompostConfig<{
+    [K in keyof ContentTypeInputs]: DefaultedContentTypeDefinition<
+      ContentTypeInputs[K]
+    >;
+  }>;
 }
 
 /**
@@ -237,6 +252,26 @@ export function createSimpleContentType<
     mapToOutputMeta: identityMapping,
   };
 }
+
+/**
+ * Default slug generation function - converts file path to URL-friendly slug.
+ */
+export const defaultGenerateSlug = (
+  filePath: string,
+  sourceDir: string,
+): string => {
+  const relativePath = path.relative(sourceDir, filePath);
+  const parsedPath = path.parse(relativePath);
+  const dirPath = parsedPath.dir ? `${parsedPath.dir}/` : "";
+  return `${dirPath}${parsedPath.name}`.replace(/\\/g, "/");
+};
+
+/**
+ * Default file name generation function - creates HTML filename from slug.
+ */
+export const defaultGenerateFileName = (slug: string): string => {
+  return `${slug}.html`;
+};
 
 /**
  * Identity mapping function - returns input metadata as-is.
@@ -265,25 +300,6 @@ export function createContentType<Type extends string, InputMeta, OutputMeta>(
 ): ContentTypeDefinition<Type, InputMeta, OutputMeta> {
   return definition;
 }
-
-/**
- * Validates the structure of a ContentTypeDefinitionCore
- */
-export const isContentTypeDefinitionCore = isObject({
-  contentType: is("string"),
-  filePatterns: isObject({
-    frontmatter: isArrayOf(is("string")),
-    jsonMetadata: isArrayOf(is("string")),
-    jsonSuffix: is("string"),
-  } as const),
-  generateSlug: is("function"),
-  generateFileName: is("function"),
-  validateInputMeta: is("function"),
-  hrefRoot: is("string"),
-  includeUnpublished: is("boolean"),
-  codeLineNumbers: is("boolean"),
-  removeH1: is("boolean"),
-} as const);
 
 /**
  * Validates the structure of a ContentTypeDefinition

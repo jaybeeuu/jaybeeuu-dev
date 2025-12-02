@@ -9,10 +9,10 @@ import {
   isBaseOutputMeta,
   type V1BaseOutputMeta,
   type BaseOutputMeta,
+  getUpgradedV1EntryHash,
 } from "./manifest-operations.js";
 import { is, isObject, isRecordOf, isUnionOf } from "@jaybeeuu/is";
 import { isManifest } from "./manifest-operations.js";
-import { generateV1UpgradeHash } from "./v1-upgrade-utils.js";
 
 export type GetOldManifestFailureReason = "read manifest failed";
 
@@ -41,7 +41,7 @@ const upgradeV1Manifest = (v1Manifest: {
   for (const [slug, entry] of Object.entries(v1Manifest)) {
     upgradedEntries[slug] = {
       ...entry,
-      hash: generateV1UpgradeHash(entry.fileName),
+      hash: getUpgradedV1EntryHash(entry.fileName),
       slug,
     };
   }

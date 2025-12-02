@@ -1,42 +1,26 @@
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, repackError, success } from "@jaybeeuu/utilities";
-import path from "node:path";
 import fs from "node:fs";
+import path from "node:path";
 import { deleteDirectories } from "../files/index.js";
-import {
-  buildManifest,
-  writeManifest,
-  getOldManifestWithFallback,
-  type Manifest,
-} from "./services/manifest/index.js";
-import { discoverFilesForContentType } from "./services/file-discovery.js";
-import { processFile } from "./services/content-processor.js";
-import { ManifestEntriesManager } from "./services/manifest-entries-manager.js";
-import { type BaseOutputMeta } from "./services/manifest/index.js";
 import type { ContentDefOutputMeta } from "./content-types.js";
 import {
   type ContentTypeDefinition,
-  type ResolvedContentDefinition,
   type UnknownRecord,
 } from "./content-types.js";
+import { processFile } from "./services/content-processor.js";
+import { discoverFilesForContentType } from "./services/file-discovery.js";
+import { ManifestEntriesManager } from "./services/manifest-entries-manager.js";
+import {
+  buildManifest,
+  getOldManifestWithFallback,
+  writeManifest,
+  type BaseManifestEntry,
+  type Manifest,
+} from "./services/manifest/index.js";
 
 export interface OrchestratorConfig {
   clean: boolean;
-}
-
-function applyContentConfigDefaults<Content extends ContentTypeDefinition>(
-  definition: Content,
-): ResolvedContentDefinition<Content> {
-  return {
-    ...definition,
-    requireOldManifest: definition.requireOldManifest ?? true,
-    manifestFileName:
-      definition.manifestFileName ?? `${definition.contentType}-manifest.json`,
-    sourceDir: definition.sourceDir ?? "src",
-    outputDir: definition.outputDir ?? "out",
-    oldManifestLocators: definition.oldManifestLocators ?? [],
-    mapToOutputMeta: definition.mapToOutputMeta,
-  } as unknown as ResolvedContentDefinition<Content>;
 }
 
 export type ProcessContentTypeFailureReason =
@@ -46,27 +30,27 @@ export type ProcessContentTypeFailureReason =
   | "slug already exists"
   | "manifest write failed";
 
-async function processContentType<Content extends ContentTypeDefinition>(
+async function processContentType<ContentDef extends ContentTypeDefinition>(
   contentType: string,
-  contentConfig: ResolvedContentDefinition<Content>,
+  contentDef: ContentDef,
   clean: boolean,
 ): Promise<
   Result<
-    Manifest<ContentDefOutputMeta<Content>>,
+    Manifest<ContentDefOutputMeta<ContentDef>>,
     ProcessContentTypeFailureReason
   >
 > {
-  const resolvedOutputDir = path.resolve(contentConfig.outputDir);
+  const resolvedOutputDir = path.resolve(contentDef.outputDir);
 
   const manifestPath = path.resolve(
     resolvedOutputDir,
-    contentConfig.manifestFileName,
+    contentDef.manifestFileName,
   );
 
   const manifestResult = await getOldManifestWithFallback(
     manifestPath,
-    contentConfig.oldManifestLocators,
-    contentConfig.requireOldManifest,
+    contentDef.oldManifestLocators,
+    contentDef.requireOldManifest,
   );
 
   if (!manifestResult.success) {
@@ -82,19 +66,19 @@ async function processContentType<Content extends ContentTypeDefinition>(
   const manifestData = manifestResult.value;
 
   const filesResult = await discoverFilesForContentType(
-    contentConfig.sourceDir,
-    contentConfig.filePatterns,
+    contentDef.sourceDir,
+    contentDef.filePatterns,
   );
   if (!filesResult.success) {
     return filesResult;
   }
 
   const manifestEntries = new ManifestEntriesManager<
-    BaseOutputMeta & ContentDefOutputMeta<Content>
+    BaseManifestEntry & ContentDefOutputMeta<ContentDef>
   >();
 
   for (const filePath of filesResult.value) {
-    const result = await processFile(filePath, manifestData, contentConfig);
+    const result = await processFile(filePath, manifestData, contentDef);
 
     if (!result.success) {
       return failure(
@@ -135,16 +119,16 @@ export type ManifestEntry<ContentTypeDef extends ContentTypeDefinition> =
     UnknownRecord,
     infer OutputMeta
   >
-    ? Manifest<BaseOutputMeta & OutputMeta>["entries"][string]
+    ? Manifest<BaseManifestEntry & OutputMeta>["entries"][string]
     : ContentTypeDef extends ContentTypeDefinition
-      ? Manifest<BaseOutputMeta & UnknownRecord>["entries"][string]
+      ? Manifest<BaseManifestEntry & UnknownRecord>["entries"][string]
       : never;
 
 export async function processContent<
-  ContentTypeDefs extends { [key: string]: ContentTypeDefinition },
+  const ContentTypeDefs extends { [key in string]: ContentTypeDefinition<key> },
 >(
   config: OrchestratorConfig,
-  contentConfigDefinitions: ContentTypeDefs,
+  contentDefDefinitions: ContentTypeDefs,
 ): Promise<
   Result<
     {
@@ -157,14 +141,13 @@ export async function processContent<
     [type: string]: Manifest;
   };
 
-  for (const [contentType, definition] of Object.entries(
-    contentConfigDefinitions,
+  for (const [contentType, contentDef] of Object.entries(
+    contentDefDefinitions,
   )) {
-    const contentConfig = applyContentConfigDefaults(definition);
-
     const result = await processContentType(
       contentType,
-      contentConfig,
+      // `Object.entries` yields `string`-typed values — assert as any
+      contentDef as any,
       config.clean,
     );
 
