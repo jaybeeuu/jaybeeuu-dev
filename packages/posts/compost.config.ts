@@ -1,9 +1,6 @@
 import path from "node:path";
 import getReadingTime from "reading-time";
-import type {
-  BaseInputMetadata,
-  ContentTypeDefinition,
-} from "@jaybeeuu/compost";
+import type { BaseInputMetadata, ContentDefinition } from "@jaybeeuu/compost";
 import { createCompostConfig } from "@jaybeeuu/compost";
 import type { CheckedBy } from "@jaybeeuu/is";
 import { is, isObject } from "@jaybeeuu/is";
@@ -38,7 +35,7 @@ const getCompiledPostFileName = (slug: string, html: string): string => {
   return `${slug}-${hashString}.html`;
 };
 
-const postContentType: ContentTypeDefinition<
+const postContentType: ContentDefinition<
   "post",
   PostInputMetadata,
   PostManifestEntrydata

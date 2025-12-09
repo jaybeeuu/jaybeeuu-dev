@@ -5,14 +5,14 @@ import { resolveContent } from "./content-resolver.js";
 import { compileMarkdown } from "./markdown-compilation.js";
 import { copyFile, writeTextFile } from "../../files/index.js";
 import type {
-  ContentTypeDefinition,
+  ContentDefinition,
   BaseInputMetadata,
   ContentDefType,
   ContentDefInputMeta,
   CustomManifestEntryProperties,
   ContentDefManifestEntry,
-} from "../content-types.js";
-import { isBaseInputMetadata } from "../content-types.js";
+} from "../content-definition.js";
+import { isBaseInputMetadata } from "../content-definition.js";
 import { getSha1Hex } from "../../hash.js";
 import { shouldTreatEntryAsChanged } from "./manifest/index.js";
 
@@ -26,7 +26,7 @@ export interface OldManifestEntry {
 
 export type OldManifest = { [slug: string]: OldManifestEntry };
 
-export interface ProcessedContent<ContentDef extends ContentTypeDefinition> {
+export interface ProcessedContent<ContentDef extends ContentDefinition> {
   slug: string;
   contentType: ContentDefType<ContentDef>;
   inputMetadata: ContentDefInputMeta<ContentDef> & BaseInputMetadata;
@@ -43,7 +43,7 @@ export type ProcessTypedContentFailureReason =
   | "content skipped"
   | "compilation failed";
 
-async function processTypedContent<ContentDef extends ContentTypeDefinition>(
+async function processTypedContent<ContentDef extends ContentDefinition>(
   inputMetadata: ContentDefInputMeta<ContentDef> & BaseInputMetadata,
   content: string,
   filePath: string,
@@ -106,7 +106,7 @@ export type ProcessFileFailureReason =
   | "compilation failed"
   | "file processing failed";
 
-export const processFile = async <ContentDef extends ContentTypeDefinition>(
+export const processFile = async <ContentDef extends ContentDefinition>(
   filePath: string,
   oldManifest: OldManifest,
   contentDef: ContentDef,
@@ -172,7 +172,7 @@ export type CompileContentFailureReason = "compilation failed";
 async function compileContent(
   filePath: string,
   content: string,
-  contentDef: ContentTypeDefinition,
+  contentDef: ContentDefinition,
 ): Promise<
   Result<
     {
@@ -197,7 +197,7 @@ async function compileContent(
   return success(result.value);
 }
 
-function generateManifestEntry<ContentDef extends ContentTypeDefinition>(
+function generateManifestEntry<ContentDef extends ContentDefinition>(
   slug: string,
   customManifestEntryProperties: CustomManifestEntryProperties<ContentDef>,
   compiledHtml: string,
@@ -247,7 +247,7 @@ async function writeTypedCompiledContent(
   slug: string,
   html: string,
   assets: Array<{ sourcePath: string; destinationPath: string }>,
-  contentDef: ContentTypeDefinition,
+  contentDef: ContentDefinition,
 ): Promise<void> {
   const htmlFileName = contentDef.generateFileName(slug, html);
   const htmlPath = path.join(contentDef.outputDir, htmlFileName);

@@ -1,14 +1,8 @@
 import type { Result } from "@jaybeeuu/utilities";
-import { failure, repackError, success } from "@jaybeeuu/utilities";
+import { failure, success } from "@jaybeeuu/utilities";
 import fs from "node:fs";
 import path from "node:path";
 import { deleteDirectories } from "../files/index.js";
-import type {
-  ContentDefManifest,
-  ContentDefManifestEntry,
-  CustomManifestEntryProperties,
-} from "./content-types.js";
-import { type ContentTypeDefinition } from "./content-types.js";
 import { processFile } from "./services/content-processor.js";
 import { discoverFilesForContentType } from "./services/file-discovery.js";
 import { ManifestEntriesManager } from "./services/manifest-entries-manager.js";
@@ -16,29 +10,30 @@ import {
   buildManifest,
   getOldManifestWithFallback,
   writeManifest,
-  type Manifest,
 } from "./services/manifest/index.js";
+import type {
+  ContentDefinition,
+  ContentDefManifest,
+  ContentDefManifestEntry,
+} from "./content-definition.js";
 
 export interface OrchestratorConfig {
   clean: boolean;
 }
 
-export type ProcessContentTypeFailureReason =
+export type ProcessContentFailureReason =
   | "manifest load failed"
   | "file discovery failed"
   | "file processing failed"
   | "slug already exists"
   | "manifest write failed";
 
-async function processContentType<ContentDef extends ContentTypeDefinition>(
+export const processContent = async <ContentDef extends ContentDefinition>(
   contentDef: ContentDef,
-  clean: boolean,
+  { clean }: OrchestratorConfig,
 ): Promise<
-  Result<
-    Manifest<CustomManifestEntryProperties<ContentDef>>,
-    ProcessContentTypeFailureReason
-  >
-> {
+  Result<ContentDefManifest<ContentDef>, ProcessContentFailureReason>
+> => {
   const resolvedOutputDir = path.resolve(contentDef.outputDir);
 
   const manifestPath = path.resolve(
@@ -112,46 +107,4 @@ async function processContentType<ContentDef extends ContentTypeDefinition>(
   }
 
   return success(manifest);
-}
-
-export type ProcessContentFailureReason = "content type processing failed";
-
-export type ContentTypeDefinitionMap = {
-  [ContentType in string]: ContentTypeDefinition<ContentType>;
 };
-
-export type ContentTypeManifestMap<Content extends ContentTypeDefinitionMap> = {
-  [K in keyof Content]: ContentDefManifest<Content[K]>;
-};
-
-export async function processContent<
-  const ContentTypeDefs extends ContentTypeDefinitionMap,
->(
-  config: OrchestratorConfig,
-  contentDefDefinitions: ContentTypeDefs,
-): Promise<
-  Result<ContentTypeManifestMap<ContentTypeDefs>, ProcessContentFailureReason>
-> {
-  const manifests = {} as ContentTypeManifestMap<ContentTypeDefs>;
-
-  for (const [contentType, contentDef] of Object.entries(
-    contentDefDefinitions,
-  )) {
-    const result = await processContentType(contentDef, config.clean);
-
-    if (!result.success) {
-      return repackError(
-        result,
-        "content type processing failed",
-        `${contentType}: ${result.message}`,
-      );
-    }
-
-    manifests[contentType as keyof ContentTypeDefs] =
-      result.value as ContentDefManifest<
-        ContentTypeDefs[keyof ContentTypeDefs]
-      >;
-  }
-
-  return success(manifests);
-}

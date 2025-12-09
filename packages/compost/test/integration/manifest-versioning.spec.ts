@@ -35,7 +35,6 @@ describe("manifest versioning compatibility", () => {
       [slug: string]: Omit<TestPostManifestEntry, "hash">;
     } = {
       [slug1]: {
-        title: "First Post",
         abstract: "First abstract",
         fileName: "first-post-oldHash.html",
         href: "/posts/first-post-oldHash.html",
@@ -50,7 +49,6 @@ describe("manifest versioning compatibility", () => {
         },
       },
       [slug2]: {
-        title: "Second Post",
         abstract: "Second abstract",
         fileName: "second-post-oldHash.html",
         href: "/posts/second-post-oldHash.html",
@@ -287,7 +285,6 @@ describe("manifest versioning compatibility", () => {
 
     // Verify metadata changes are detected via hash (content + metadata hash)
     expect(updatedManifest.entries[slug]?.hash).not.toBe(initialHash); // Hash should change due to metadata change
-    expect(updatedManifest.entries[slug]?.title).toBe("Updated Title"); // New metadata present
     expect(updatedManifest.entries[slug]?.abstract).toBe("Updated abstract"); // New metadata present
     expect(updatedManifest.entries[slug]?.publishDate).toBe(
       "2020-04-01T00:00:00.000Z",

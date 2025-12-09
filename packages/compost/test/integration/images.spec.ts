@@ -63,7 +63,7 @@ describe("images", () => {
 
   it("leaves https urls intact.", async () => {
     await cleanUpDirectories();
-    const updateOptions: Partial<UpdateOptions> = { hrefRoot: "posts-root" };
+    const updateOptions: UpdateOptions = { hrefRoot: "posts-root" };
     const post = await getCompiledPostWithContent(
       {
         content: [
@@ -84,7 +84,7 @@ describe("images", () => {
 
   it("leaves http urls intact.", async () => {
     await cleanUpDirectories();
-    const updateOptions: Partial<UpdateOptions> = { hrefRoot: "posts-root" };
+    const updateOptions: UpdateOptions = { hrefRoot: "posts-root" };
     const post = await getCompiledPostWithContent(
       {
         content: [
@@ -105,7 +105,7 @@ describe("images", () => {
 
   it("copies the image into the output dir in the right place.", async () => {
     await cleanUpDirectories();
-    const updateOptions: Partial<UpdateOptions> = { hrefRoot: "posts-root" };
+    const updateOptions: UpdateOptions = { hrefRoot: "posts-root" };
     void (await getCompiledPostWithContent(
       {
         content: [

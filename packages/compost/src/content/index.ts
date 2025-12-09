@@ -1,20 +1,17 @@
 export {
-  createCompostConfig,
-  createContentTypeDefinition,
-  validateCompostConfig,
-  type BaseInputMetadata,
-  type CompostConfig,
-  type ContentTypeDefinition,
-  type ContentTypeDefinitionInput,
+  assertIsContentDefinition,
   ContentDefInputMeta,
-  ContentDefType,
-  ContentDefManifestEntry,
   ContentDefManifest,
-} from "./content-types.js";
+  ContentDefManifestEntry,
+  ContentDefType,
+  createContentDefinition,
+  isContentDefinition,
+  type BaseInputMetadata,
+  type ContentDefinition,
+  type ContentDefinitionInput,
+} from "./content-definition.js";
 export {
   processContent,
-  type ContentTypeDefinitionMap,
-  type ContentTypeManifestMap,
   type OrchestratorConfig,
   type ProcessContentFailureReason,
 } from "./orchestrator.js";

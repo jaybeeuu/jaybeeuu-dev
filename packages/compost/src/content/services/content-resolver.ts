@@ -5,13 +5,13 @@ import { canAccess, readJsonFile, readTextFile } from "../../files/index.js";
 import type { ParseYamlMetaFailureReason } from "./metadata.js";
 import { parseYamlMeta } from "./metadata.js";
 import { is, isIntersectionOf } from "@jaybeeuu/is";
-import type { BaseInputMetadata } from "../content-types.js";
+import type { BaseInputMetadata } from "../content-definition.js";
 import {
-  type ContentTypeDefinition,
+  type ContentDefinition,
   type ContentDefInputMeta,
   type ContentDefType,
   isBaseInputMetadata,
-} from "../content-types.js";
+} from "../content-definition.js";
 
 /**
  * The result of successfully resolving content from a markdown file.
@@ -59,9 +59,7 @@ const hasFrontMatter = (sourceFileText: string): boolean => {
   );
 };
 
-export type ContentDefResolvedContent<
-  ContentDef extends ContentTypeDefinition,
-> = {
+export type ContentDefResolvedContent<ContentDef extends ContentDefinition> = {
   /** The identified content type */
   type: ContentDefType<ContentDef>;
   /** The raw metadata (validation happens later in the processing pipeline) */
@@ -78,9 +76,7 @@ export type ResolveFrontmatterContentFailureReason =
   | ValidateFrontmatterMetaFailureReason
   | ParseYamlMetaFailureReason;
 
-const resolveFrontmatterContent = async <
-  ContentDef extends ContentTypeDefinition,
->(
+const resolveFrontmatterContent = async <ContentDef extends ContentDefinition>(
   markdownFilePath: string,
   config: ContentDef,
 ): Promise<
@@ -139,7 +135,7 @@ export type ResolveJsonContentFailureReason =
   | ReadJsonFileFailureReason
   | ValidateJsonMetaFailureReason;
 
-const resolveJsonContent = async <ContentDef extends ContentTypeDefinition>(
+const resolveJsonContent = async <ContentDef extends ContentDefinition>(
   markdownFilePath: string,
   config: ContentDef,
 ): Promise<
@@ -206,7 +202,7 @@ export type ResolveContentFailureReason =
  * @param config - Configuration for the specific content type
  * @returns Promise resolving to typed content with metadata, or failure reason
  */
-export const resolveContent = async <Content extends ContentTypeDefinition>(
+export const resolveContent = async <Content extends ContentDefinition>(
   markdownFilePath: string,
   config: Content,
 ): Promise<

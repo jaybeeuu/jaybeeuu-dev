@@ -3,7 +3,8 @@ import { resolve } from "node:path";
 import fs from "node:fs/promises";
 import {
   compost,
-  createCompostConfig,
+  createContentDefinition,
+  type ContentDefinition,
   type OrchestratorConfig,
 } from "../../src/index.js";
 import { is, isObject } from "@jaybeeuu/is";
@@ -61,55 +62,47 @@ describe("LastUpdateDate Preservation (Programmatic API)", () => {
   });
   type PostInputMeta = CheckedBy<typeof isPostInputMeta>;
 
-  const createPostContentType = (): ReturnType<typeof createCompostConfig> => {
-    return createCompostConfig({
-      post: {
-        filePatterns: {
-          frontmatter: [".post.md"],
-          jsonMetadata: [".md"],
-          jsonSuffix: ".post.json",
-        },
-        generateSlug: (filePath: string, sourceDirPath: string) => {
-          return filePath
-            .replace(sourceDirPath + "/", "")
-            .replace(/\.(post\.)?md$/, "");
-        },
-        generateFileName: (slug: string) => `${slug}.html`,
-        validateInputMeta: (data: unknown): data is PostInputMeta => {
-          return isPostInputMeta(data);
-        },
-        mapToManifestEntry: (input) => ({
-          title: input.title,
-          abstract: input.abstract,
-          publish: input.publish,
-          publishDate: input.publishDate,
-          type: input.type,
-          readingTime: {
-            text: "1 min read",
-            minutes: 1,
-            time: 60000,
-            words: 50,
-          },
-        }),
-        sourceDir,
-        outputDir,
-        hrefRoot: "/test",
-        includeUnpublished: false,
-        codeLineNumbers: false,
-        removeH1: false,
-        requireOldManifest: false,
-        oldManifestLocators: [oldManifestPath],
+  const createPostContentType = (): ContentDefinition<
+    "post",
+    PostInputMeta,
+    {
+      abstract: string;
+    }
+  > => {
+    return createContentDefinition("post", {
+      filePatterns: {
+        frontmatter: [".post.md"],
+        jsonMetadata: [".md"],
+        jsonSuffix: ".post.json",
       },
+      generateSlug: (filePath: string, sourceDirPath: string) => {
+        return filePath
+          .replace(sourceDirPath + "/", "")
+          .replace(/\.(post\.)?md$/, "");
+      },
+      generateFileName: (slug: string) => `${slug}.html`,
+      validateInputMeta: (data: unknown): data is PostInputMeta => {
+        return isPostInputMeta(data);
+      },
+      mapToManifestEntry: (input: PostInputMeta) => ({
+        abstract: input.abstract,
+      }),
+      sourceDir,
+      outputDir,
+      hrefRoot: "/test",
+      includeUnpublished: false,
+      codeLineNumbers: false,
+      removeH1: false,
+      requireOldManifest: false,
+      oldManifestLocators: [oldManifestPath],
     });
   };
 
   async function runCompost(): Promise<void> {
     const orchestratorConfig: OrchestratorConfig = { clean: false };
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const config = createPostContentType();
+    const postDefinition = createPostContentType();
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const result = await compost(orchestratorConfig, config.contentTypes);
+    const result = await compost(orchestratorConfig, postDefinition);
     if (!result.success) {
       throw new Error(`Compost compilation failed: ${result.message}`);
     }

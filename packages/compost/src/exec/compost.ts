@@ -5,12 +5,12 @@ import yargsFactory from "yargs";
 import { hideBin } from "yargs/helpers";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import type { OrchestratorConfig as OrchestratorOptions } from "../content/index.js";
-import {
-  processContent,
-  type CompostConfig,
-  validateCompostConfig,
+import type {
+  OrchestratorConfig as OrchestratorOptions,
+  ContentDefinition,
 } from "../content/index.js";
+import { processContent, isContentDefinition } from "../content/index.js";
+import type { ProcessContentFailureReason } from "../content/orchestrator.js";
 
 /**
  * Configuration options for the compost CLI.
@@ -26,7 +26,7 @@ export interface UpdateOptions {
 
 const yargs = yargsFactory(hideBin(process.argv));
 
-const loadConfig = async (configPath: string): Promise<CompostConfig> => {
+const loadConfig = async (configPath: string): Promise<ContentDefinition> => {
   try {
     const resolvedPath = path.resolve(configPath);
     const configUrl = pathToFileURL(resolvedPath).href;
@@ -37,7 +37,7 @@ const loadConfig = async (configPath: string): Promise<CompostConfig> => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const config = configModule.default ?? configModule.config;
 
-    if (!validateCompostConfig(config)) {
+    if (!isContentDefinition(config)) {
       throw new Error(
         "Invalid config structure: must be a CompostConfig object with valid contentTypes",
       );
@@ -52,32 +52,24 @@ const loadConfig = async (configPath: string): Promise<CompostConfig> => {
 };
 
 const run = async (
+  contentType: ContentDefinition,
   orchestratorOptions: OrchestratorOptions,
-  compostConfig: CompostConfig,
-): Promise<Result<never, "content type processing failed" | "error">> => {
+): Promise<Result<never, ProcessContentFailureReason | "error">> => {
   try {
     log.info("Composting...");
 
-    const result = await processContent(
-      orchestratorOptions,
-      compostConfig.contentTypes,
-    );
+    const result = await processContent(contentType, orchestratorOptions);
 
     if (result.success) {
+      const manifest = result.value;
       // Format output for all content types
-      const outputLines = Object.entries(result.value)
-        .filter(([, manifest]) => Object.keys(manifest.entries).length > 0)
-        .flatMap(([contentType, manifest]) => {
-          const contentTypeHeader = `  ${contentType}:`;
-          const manifestLines = Object.entries(manifest.entries).map(
-            ([slug, meta]) => {
-              const fileName =
-                (meta as { fileName?: string }).fileName ?? "unknown";
-              return `    ${slug}: ${fileName}`;
-            },
-          );
-          return [contentTypeHeader, ...manifestLines];
-        });
+      const outputLines = Object.entries(manifest.entries).map(
+        ([slug, meta]) => {
+          const fileName =
+            (meta as { fileName?: string }).fileName ?? "unknown";
+          return `    ${slug}: ${fileName}`;
+        },
+      );
 
       log.info(
         `Complete:\n\n${outputLines.join("\n") || "  No content processed"}`,
@@ -94,21 +86,19 @@ const run = async (
 };
 
 const watch = (
+  contentType: ContentDefinition,
   orchestratorOptions: OrchestratorOptions,
-  compostConfig: CompostConfig,
 ): void => {
   log.info("Starting compost in watch mode...");
 
   const debouncedRun = debounce(async () => {
-    await run(orchestratorOptions, compostConfig);
+    await run(orchestratorOptions, contentType);
     log.info("Waiting for changes...");
   }, 250);
-  const watchPaths = Object.values(compostConfig.contentTypes).flatMap(
-    (contentType) =>
-      [contentType.sourceDir, ...contentType.additionalWatchPaths].filter(
-        Boolean,
-      ),
-  );
+  const watchPaths = [
+    contentType.sourceDir,
+    ...contentType.additionalWatchPaths,
+  ].filter(Boolean);
   chokidar.watch(watchPaths).on("all", debouncedRun);
 };
 

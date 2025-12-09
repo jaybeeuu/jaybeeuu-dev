@@ -258,7 +258,7 @@ This is test content.`,
       if (result.success) {
         expect(Object.keys(result.value.entries)).toHaveLength(1);
         expect(result.value.entries[slug]).toBeDefined();
-        expect(result.value.entries[slug]?.title).toBe("Test Post");
+        expect(result.value.entries[slug]?.abstract).toBe("A test post");
       }
     });
 
@@ -288,7 +288,7 @@ This is test content.`,
       if (result.success) {
         expect(Object.keys(result.value.entries)).toHaveLength(1);
         expect(result.value.entries[slug]).toBeDefined();
-        expect(result.value.entries[slug]?.title).toBe("Test Post");
+        expect(result.value.entries[slug]?.abstract).toBe("Test abstract");
       }
     });
   });

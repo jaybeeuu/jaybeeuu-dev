@@ -1,7 +1,7 @@
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
 import { getSha1Hex } from "../../../hash.js";
-import type { UnknownRecord } from "../../content-types.js";
+import type { UnknownRecord } from "../../content-definition.js";
 
 import {
   is,

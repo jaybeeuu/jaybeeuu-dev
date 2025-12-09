@@ -8,19 +8,19 @@ import type { CheckedBy } from "@jaybeeuu/is";
 import type {
   Manifest,
   BaseManifestEntry,
-  ContentTypeDefinition,
+  ContentDefinition,
+  OrchestratorConfig,
 } from "../../src/index.js";
-import { isManifest } from "../../src/index.js";
+import { isManifest, compost } from "../../src/index.js";
 import type { File } from "../../src/files/index.js";
-import { deleteDirectories, writeJsonFile } from "../../src/files/index.js";
-import type {
-  ContentTypeDefinitionInput,
-  ContentDefInputMeta,
-} from "../../src/content/index.js";
 import {
-  createCompostConfig,
-  createContentTypeDefinition,
-} from "../../src/content/index.js";
+  deleteDirectories,
+  writeJsonFile,
+  writeTextFiles,
+  readTextFile,
+} from "../../src/files/index.js";
+import type { ContentDefinitionInput } from "../../src/content/index.js";
+import { createContentDefinition } from "../../src/content/index.js";
 
 jest.mock("reading-time", () => {
   return jest.fn().mockReturnValue({
@@ -74,13 +74,13 @@ export const isTestPostManifest = isManifest<TestPostManifestEntry>(
   isTestPostCustomManifestEntryProperties,
 );
 
-export type TestContentTypeDefinition = ContentTypeDefinition<
+export type TestContentDefinition = ContentDefinition<
   "post",
   TestPostInputMetadata,
   TestPostCustomManifestEntryProperties
 >;
 
-export type TestPostContentTypeDefinitionInput = ContentTypeDefinitionInput<
+export type TestPostContentDefinitionInput = ContentDefinitionInput<
   TestPostInputMetadata,
   TestPostCustomManifestEntryProperties
 >;
@@ -110,7 +110,7 @@ interface PostFileWithJson extends BasePostFile {
   metadataStyle?: "json";
 }
 
-type TestPostContentTypeDefinition = ContentTypeDefinition<
+type TestPostContentDefinition = ContentDefinition<
   "post",
   TestPostInputMetadata,
   TestPostCustomManifestEntryProperties
@@ -118,12 +118,12 @@ type TestPostContentTypeDefinition = ContentTypeDefinition<
 
 export type PostFile = PostFileWithFrontmatter | PostFileWithJson;
 
-const getDefaultedUpdateOptions = (
-  input: TestPostContentTypeDefinitionInput,
-): TestPostContentTypeDefinition => {
+const getTestContentDef = (
+  input: TestPostContentDefinitionInput = {},
+): TestPostContentDefinition => {
   const defaultedHrefRoot = input.hrefRoot ?? "posts";
 
-  const postDef = createContentTypeDefinition("post", {
+  return createContentDefinition("post", {
     additionalWatchPaths: [],
     codeLineNumbers: false,
     hrefRoot: defaultedHrefRoot,
@@ -154,13 +154,11 @@ const getDefaultedUpdateOptions = (
       ...input.filePatterns,
     },
   });
-
-  return postDef;
 };
 
 export const writeOutputManifestFile = async (
   manifest: TestPostManifest,
-  options: ContentTypeDefinition,
+  options: TestContentDefinition,
 ): Promise<void> => {
   await writeJsonFile(
     path.join(options.outputDir, options.manifestFileName),
@@ -231,9 +229,9 @@ const writeJsonPost = (
 
 export const writePostFile = async (
   postFile: PostFile,
-  options: Partial<UpdateOptions> = {},
+  options: Partial<TestPostContentDefinitionInput> = {},
 ): Promise<void> => {
-  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
+  const contentDef = getTestContentDef(options);
 
   const { path: postPath = ".", otherFiles } = postFile;
 
@@ -250,31 +248,25 @@ export const writePostFile = async (
     })) ?? []),
   ];
 
-  await writeTextFiles(defaultedUpdateOptions.sourceDir, allFiles);
+  await writeTextFiles(contentDef.sourceDir, allFiles);
 };
 
 export const getOutputFile = async (
   filePath: string,
-  options: Partial<UpdateOptions> = {},
+  options: Partial<TestPostContentDefinitionInput> = {},
 ): Promise<string> => {
-  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
-  const resolvedFilePath = path.join(
-    defaultedUpdateOptions.outputDir,
-    filePath,
-  );
+  const contentDef = getTestContentDef(options);
+  const resolvedFilePath = path.join(contentDef.outputDir, filePath);
 
   return readTextFile(resolvedFilePath);
 };
 
 export const getValidatedManifestFile = async (
-  options: Partial<UpdateOptions> = {},
+  options: Partial<TestPostContentDefinitionInput> = {},
 ): Promise<TestPostManifest> => {
-  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
+  const contentDef = getTestContentDef(options);
 
-  const fileContent = await getOutputFile(
-    "post-manifest.json",
-    defaultedUpdateOptions,
-  );
+  const fileContent = await getOutputFile("post-manifest.json", contentDef);
   const parsedContent: unknown = JSON.parse(fileContent);
 
   const manifestValidator = isTestPostManifest;
@@ -287,15 +279,12 @@ export const getValidatedManifestFile = async (
 };
 
 export const getPostManifest = async (
-  options: Partial<UpdateOptions> = {},
+  options: Partial<TestPostContentDefinitionInput> = {},
 ): Promise<TestPostManifest> => {
-  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
+  const contentDef = getTestContentDef(options);
 
   // With the new orchestrator, post manifests are in post-manifest.json
-  const fileContent = await getOutputFile(
-    "post-manifest.json",
-    defaultedUpdateOptions,
-  );
+  const fileContent = await getOutputFile("post-manifest.json", contentDef);
   const parsedContent: unknown = JSON.parse(fileContent);
 
   // Handle both versioned (v2+) and legacy (v1) manifest formats
@@ -323,15 +312,15 @@ export const getPostManifest = async (
 
 export const getPost = async (
   slug: string,
-  options: Partial<UpdateOptions> = {},
+  options: Partial<TestPostContentDefinitionInput> = {},
 ): Promise<string> => {
   const manifest = await getPostManifest(options);
-  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
+  const contentDef = getTestContentDef(options);
   const manifestEntry = manifest.entries[slug];
   assertIsNotNullish(manifestEntry);
 
   const relativePath = path.relative(
-    defaultedUpdateOptions.hrefRoot,
+    contentDef.hrefRoot,
     `.${manifestEntry.href}`,
   );
 
@@ -339,30 +328,18 @@ export const getPost = async (
 };
 
 export const compilePosts = async (
-  options?: Partial<UpdateOptions>,
+  options?: Partial<TestPostContentDefinitionInput>,
 ): Promise<Result<TestPostManifest, string>> => {
-  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
-  // Convert to new orchestrator config
-  const orchestratorConfig = { clean: defaultedUpdateOptions.clean };
+  const contentDef = getTestContentDef(options);
 
-  // Create content config overrides for posts based on legacy options
-  const contentConfigOverrides = {
-    ...testContentTypeDefinitions,
-    post: {
-      ...testContentTypeDefinitions.post,
-      ...defaultedUpdateOptions,
-    },
-  };
+  const orchestratorConfig: OrchestratorConfig = { clean: false };
 
-  const updateResult = await processContent(
-    orchestratorConfig,
-    contentConfigOverrides,
-  );
+  const updateResult = await compost(orchestratorConfig, contentDef);
   if (!updateResult.success) {
     return updateResult;
   }
 
-  // Extract post manifest from the result
+  // Extract post manifest from the result (it's under the 'post' key)
   const postManifest = updateResult.value.post;
 
   return success(postManifest as TestPostManifest);
@@ -370,7 +347,7 @@ export const compilePosts = async (
 
 export const getCompiledPostWithContent = async (
   contentOrPost: string[] | RecursivePartial<PostFile>,
-  options: Partial<UpdateOptions> = {},
+  options: Partial<TestPostContentDefinitionInput> = {},
 ): Promise<string> => {
   await cleanUpDirectories();
 
@@ -378,11 +355,11 @@ export const getCompiledPostWithContent = async (
     ? { content: contentOrPost }
     : contentOrPost;
 
-  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
+  const contentDef = getTestContentDef(options);
   const postFile = {
     slug: "test-slug",
     content: ["{content}"],
-    path: defaultedUpdateOptions.sourceDir,
+    path: contentDef.sourceDir,
     ...userPost,
     meta: {
       abstract: "{abstract}",
