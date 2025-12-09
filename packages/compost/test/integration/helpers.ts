@@ -3,23 +3,24 @@ import type { Result } from "@jaybeeuu/utilities";
 import { assertIsNotNullish, success } from "@jaybeeuu/utilities";
 import { jest } from "@jest/globals";
 import path from "node:path";
-import { processContent } from "../../src/content/index.js";
-import type { UpdateOptions } from "../../src/exec/compost.js";
-import type { File } from "../../src/files/index";
-import {
-  deleteDirectories,
-  readTextFile,
-  writeJsonFile,
-  writeTextFiles,
-} from "../../src/files/index";
-import type { BaseOutputMeta } from "../../src/content/services/manifest/manifest-operations.js";
-import type { Manifest } from "../../src/content/services/manifest/manifest-operations.js";
-import { isManifest } from "../../src/content/services/manifest/manifest-operations.js";
 import { is, isObject } from "@jaybeeuu/is";
 import type { CheckedBy } from "@jaybeeuu/is";
-import { createContentTypeDef } from "../../src/content/content-types.js";
-import getReadingTime from "reading-time";
-import { getCompiledPostFileName } from "../../src/content/file-paths.js";
+import type {
+  Manifest,
+  BaseManifestEntry,
+  ContentTypeDefinition,
+} from "../../src/index.js";
+import { isManifest } from "../../src/index.js";
+import type { File } from "../../src/files/index.js";
+import { deleteDirectories, writeJsonFile } from "../../src/files/index.js";
+import type {
+  ContentTypeDefinitionInput,
+  ContentDefInputMeta,
+} from "../../src/content/index.js";
+import {
+  createCompostConfig,
+  createContentTypeDefinition,
+} from "../../src/content/index.js";
 
 jest.mock("reading-time", () => {
   return jest.fn().mockReturnValue({
@@ -42,7 +43,6 @@ jest.mock<typeof utilities>("@jaybeeuu/utilities", () => {
   return utils;
 });
 
-// Test content type definitions - isolated from real configuration
 export const isTestPostInputMetadata = isObject({
   title: is("string"),
   abstract: is("string"),
@@ -58,59 +58,32 @@ export const isTestReadingTime = isObject({
 });
 export type TestReadingTime = CheckedBy<typeof isTestReadingTime>;
 
-export const isTestPostOutputMetadata = isObject({
-  title: is("string"),
+export const isTestPostCustomManifestEntryProperties = isObject({
   abstract: is("string"),
   readingTime: isTestReadingTime,
 });
-export type TestPostOutputMetadata = CheckedBy<typeof isTestPostOutputMetadata>;
 
-export type TestPostManifestEntry = BaseOutputMeta & TestPostOutputMetadata;
+export type TestPostCustomManifestEntryProperties = CheckedBy<
+  typeof isTestPostCustomManifestEntryProperties
+>;
 
-export type TestPostManifest = Manifest<TestPostOutputMetadata>;
-
-export const isTestPostManifest = isManifest<TestPostOutputMetadata>(
-  isTestPostOutputMetadata,
+export type TestPostManifest = Manifest<TestPostManifestEntry>;
+export type TestPostManifestEntry = BaseManifestEntry &
+  TestPostCustomManifestEntryProperties;
+export const isTestPostManifest = isManifest<TestPostManifestEntry>(
+  isTestPostCustomManifestEntryProperties,
 );
 
-export const testPostContentTypeDefinition = createContentTypeDef({
-  contentType: "post",
-  filePatterns: {
-    frontmatter: [".post.md"],
-    jsonMetadata: [".md"],
-    jsonSuffix: ".post.json",
-  },
-  generateSlug: (filePath: string, sourceDir: string) => {
-    const relativePath = path.relative(sourceDir, filePath);
-    return path
-      .basename(relativePath, path.extname(relativePath))
-      .replace(/\.post$/, "");
-  },
-  generateFileName: (slug: string, html: string) => {
-    return getCompiledPostFileName(slug, html);
-  },
-  validateInputMeta: (data: unknown): data is TestPostInputMetadata => {
-    return isTestPostInputMetadata(data);
-  },
-  mapToOutputMeta: (input: TestPostInputMetadata, content: string) => {
-    const readingTime = getReadingTime(content);
-    return {
-      title: input.title,
-      abstract: input.abstract,
-      readingTime,
-    };
-  },
-  sourceDir: "src",
-  outputDir: "out",
-  hrefRoot: "/",
-  includeUnpublished: false,
-  codeLineNumbers: false,
-  removeH1: false,
-});
+export type TestContentTypeDefinition = ContentTypeDefinition<
+  "post",
+  TestPostInputMetadata,
+  TestPostCustomManifestEntryProperties
+>;
 
-export const testContentTypeDefinitions = {
-  post: testPostContentTypeDefinition,
-} as const;
+export type TestPostContentTypeDefinitionInput = ContentTypeDefinitionInput<
+  TestPostInputMetadata,
+  TestPostCustomManifestEntryProperties
+>;
 
 export const cleanUpDirectories = async (): Promise<void> => {
   // Reset the mocked file system by clearing all entries
@@ -137,13 +110,20 @@ interface PostFileWithJson extends BasePostFile {
   metadataStyle?: "json";
 }
 
+type TestPostContentTypeDefinition = ContentTypeDefinition<
+  "post",
+  TestPostInputMetadata,
+  TestPostCustomManifestEntryProperties
+>;
+
 export type PostFile = PostFileWithFrontmatter | PostFileWithJson;
 
 const getDefaultedUpdateOptions = (
-  options: Partial<UpdateOptions> = {},
-): UpdateOptions => {
-  const defaultedHrefRoot = options.hrefRoot ?? "posts";
-  return {
+  input: TestPostContentTypeDefinitionInput,
+): TestPostContentTypeDefinition => {
+  const defaultedHrefRoot = input.hrefRoot ?? "posts";
+
+  const postDef = createContentTypeDefinition("post", {
     additionalWatchPaths: [],
     codeLineNumbers: false,
     hrefRoot: defaultedHrefRoot,
@@ -154,23 +134,36 @@ const getDefaultedUpdateOptions = (
     removeH1: false,
     requireOldManifest: false,
     sourceDir: "src",
-    watch: false,
-    clean: true,
-    config: "test-config.ts",
-    ...options,
-  };
+    validateInputMeta: isTestPostInputMetadata,
+    mapToManifestEntry: (metadata: TestPostInputMetadata) => {
+      return {
+        abstract: metadata.abstract,
+        readingTime: {
+          text: "1 min read.",
+          time: 1,
+          words: 1,
+          minutes: 1,
+        },
+      };
+    },
+    ...input,
+    filePatterns: {
+      frontmatter: [`.md`],
+      jsonMetadata: [`.md`],
+      jsonFileExt: `.json`,
+      ...input.filePatterns,
+    },
+  });
+
+  return postDef;
 };
 
 export const writeOutputManifestFile = async (
   manifest: TestPostManifest,
-  options: Partial<UpdateOptions> = {},
+  options: ContentTypeDefinition,
 ): Promise<void> => {
-  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
   await writeJsonFile(
-    path.join(
-      defaultedUpdateOptions.outputDir,
-      defaultedUpdateOptions.manifestFileName,
-    ),
+    path.join(options.outputDir, options.manifestFileName),
     manifest,
   );
 };
@@ -317,7 +310,7 @@ export const getPostManifest = async (
   } else {
     // Legacy format - wrap in V2 structure for consistency
     return {
-      version: 1,
+      version: 2,
       metadata: {
         generatedAt: new Date().toISOString(),
         entryCount: Object.keys(parsedContent || {}).length,

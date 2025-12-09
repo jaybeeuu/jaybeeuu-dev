@@ -18,7 +18,7 @@ import type { IOptions } from "sanitize-html";
 import sanitizeHtml from "sanitize-html";
 import { canAccessSync, readTextFileSync } from "../../files/index.js";
 import { getHash } from "../../hash.js";
-import { getSlug } from "../file-paths.js";
+import { getSlug } from "./file-paths.js";
 
 export interface RenderContext {
   codeLineNumbers: boolean;

@@ -159,18 +159,18 @@ export function getUpgradedV1EntryHash(fileName: string): string {
 /**
  * V1 base output metadata (legacy format without hash).
  */
-export const isV1BaseOutputMeta = isObject({
+export const isV1BaseManifestEntry = isObject({
   fileName: is("string"),
   href: is("string"),
   lastUpdateDate: isUnionOf(is("string"), is("null")),
   publishDate: is("string"),
 });
-export type V1BaseOutputMeta = CheckedBy<typeof isV1BaseOutputMeta>;
+export type V1BaseManifestEntry = CheckedBy<typeof isV1BaseManifestEntry>;
 
 /**
  * Base output metadata for all manifest entries (current format with hash).
  */
-export const isBaseOutputMeta = isObject({
+export const isBaseManifestEntry = isObject({
   fileName: is("string"),
   href: is("string"),
   lastUpdateDate: isUnionOf(is("string"), is("null")),
@@ -178,17 +178,13 @@ export const isBaseOutputMeta = isObject({
   hash: is("string"),
   slug: is("string"),
 });
-export type BaseOutputMeta = CheckedBy<typeof isBaseOutputMeta>;
+export type BaseManifestEntry = CheckedBy<typeof isBaseManifestEntry>;
 
-/**
- * Entry type for new manifests we generate.
- * Always includes base output metadata with content-specific fields.
- */
-export type ManifestEntry = BaseOutputMeta & UnknownRecord;
-
-export const isManifest = <Metadata = UnknownRecord>(
-  entryPredicate: TypePredicate<Metadata>,
-): TypePredicate<Manifest<Metadata>> => {
+export const isManifest = <CustomManifestEntryProperties = UnknownRecord>(
+  entryPredicate: TypePredicate<
+    Omit<CustomManifestEntryProperties, keyof BaseManifestEntry>
+  >,
+): TypePredicate<Manifest<CustomManifestEntryProperties>> => {
   return isObject({
     version: isLiteral(2),
     metadata: isObject({
@@ -196,11 +192,14 @@ export const isManifest = <Metadata = UnknownRecord>(
       entryCount: is("number"),
       overallHash: is("string"),
     }),
-    entries: isRecordOf(isIntersectionOf(entryPredicate, isBaseOutputMeta)),
-  }) as TypePredicate<Manifest<Metadata>>;
+    entries: isRecordOf(isIntersectionOf(entryPredicate, isBaseManifestEntry)),
+  }) as TypePredicate<Manifest<CustomManifestEntryProperties>>;
 };
 
-export type Manifest<Metadata> = {
+export type ManifestEntry<CustomManifestEntryProperties = BaseManifestEntry> =
+  BaseManifestEntry & CustomManifestEntryProperties;
+
+export type Manifest<CustomManifestEntryProperties = BaseManifestEntry> = {
   version: 2;
   metadata: {
     generatedAt: string;
@@ -208,13 +207,13 @@ export type Manifest<Metadata> = {
     overallHash: string;
   };
   entries: {
-    [slug: string]: BaseOutputMeta & Metadata;
+    [slug: string]: ManifestEntry<CustomManifestEntryProperties>;
   };
 };
 export interface LoadedManifestData {
   readonly oldManifests: ReadonlyMap<
     string,
-    ReadonlyMap<string, BaseOutputMeta>
+    ReadonlyMap<string, BaseManifestEntry>
   >;
 }
 
@@ -226,9 +225,9 @@ export interface ProcessingManifest {
   [contentType: string]: { [slug: string]: ManifestEntry };
 }
 
-export function buildManifest<Metadata>(
-  entries: Map<string, BaseOutputMeta & Metadata>,
-): Manifest<Metadata> {
+export const buildManifest = <CustomManifestEntryProperties>(
+  entries: Map<string, ManifestEntry<CustomManifestEntryProperties>>,
+): Manifest<CustomManifestEntryProperties> => {
   const entriesObject = Object.fromEntries(entries);
   const entriesHash = getSha1Hex(
     JSON.stringify(entriesObject, Object.keys(entriesObject).sort()),
@@ -243,7 +242,7 @@ export function buildManifest<Metadata>(
     },
     entries: entriesObject,
   };
-}
+};
 
 export type WriteManifestFailureReason = "manifest write failed";
 

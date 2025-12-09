@@ -5,10 +5,9 @@ import { canAccess, readJsonFile, readTextFile } from "../../files/index.js";
 import type { ParseYamlMetaFailureReason } from "./metadata.js";
 import { parseYamlMeta } from "./metadata.js";
 import { is, isIntersectionOf } from "@jaybeeuu/is";
-import type { BaseInputMeta } from "../content-types.js";
+import type { BaseInputMetadata } from "../content-types.js";
 import {
   type ContentTypeDefinition,
-  type ContentDefResolvedContent,
   type ContentDefInputMeta,
   type ContentDefType,
   isBaseInputMetadata,
@@ -27,7 +26,7 @@ export type ResolvedContent<Type extends string, Metadata> = {
   type: Type;
 
   /** The raw metadata (validation happens later in the processing pipeline) */
-  metadata: Metadata & BaseInputMeta;
+  metadata: Metadata & BaseInputMetadata;
 
   /** The markdown content (without frontmatter) */
   content: string;
@@ -58,6 +57,17 @@ const hasFrontMatter = (sourceFileText: string): boolean => {
     sourceFileText.startsWith("---\n") &&
     sourceFileText.indexOf("\n---\n", 4) !== -1
   );
+};
+
+export type ContentDefResolvedContent<
+  ContentDef extends ContentTypeDefinition,
+> = {
+  /** The identified content type */
+  type: ContentDefType<ContentDef>;
+  /** The raw metadata (validation happens later in the processing pipeline) */
+  metadata: ContentDefInputMeta<ContentDef>;
+  /** The markdown content (without frontmatter) */
+  content: string;
 };
 
 export type ResolveFrontmatterContentFailureReason =
@@ -142,7 +152,7 @@ const resolveJsonContent = async <ContentDef extends ContentTypeDefinition>(
 
   const jsonFilePath = markdownFilePath.replace(
     /\.md$/,
-    config.filePatterns.jsonSuffix,
+    config.filePatterns.jsonFileExt,
   );
 
   const canAccessJson = await canAccess(jsonFilePath);

@@ -23,6 +23,11 @@ describe("config validation", () => {
           "title" in data &&
           "publish" in data,
         hrefRoot: "/",
+        mapToManifestEntry: (input, content) => ({
+          fileName: `${input.title.replace(/\s+/g, "-").toLowerCase()}.html`,
+          publishDate: input.publishDate,
+          contentLength: content.length,
+        }),
         includeUnpublished: false,
         codeLineNumbers: false,
         removeH1: false,
@@ -36,8 +41,8 @@ describe("config validation", () => {
     expect(validConfig.contentTypes.posts.contentType).toBe("posts");
     expect(validConfig.contentTypes.posts.hrefRoot).toBe("/");
 
-    // The mapToOutputMeta should have been automatically added by createCompostConfig
-    expect(typeof validConfig.contentTypes.posts.mapToOutputMeta).toBe(
+    // The mapToManifestEntry should have been automatically added by createCompostConfig
+    expect(typeof validConfig.contentTypes.posts.mapToManifestEntry).toBe(
       "function",
     );
   });

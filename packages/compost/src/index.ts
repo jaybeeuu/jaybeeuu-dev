@@ -1,39 +1,32 @@
-import type { Result } from "packages/utilities/lib/results.js";
-import type {
-  OrchestratorConfig,
-  ManifestEntry as ProcessedManifestEntry,
-  ProcessContentFailureReason,
-} from "./content/orchestrator.js";
-import { processContent } from "./content/orchestrator.js";
-import type {
-  Manifest as InternalManifest,
-  BaseManifestEntry as BaseManifestEntry,
-} from "./content/services/manifest/index.js";
-import type { ContentTypeDefinition } from "./content/index.js";
-
-export type Manifest<EntryType = BaseManifestEntry> =
-  InternalManifest<EntryType>;
-export type { BaseManifestEntry as ManifestEntry };
-
-export type {
-  CompostConfig,
-  ContentTypeDefinition,
-  BaseInputMetadata,
-  OrchestratorConfig,
-} from "./content/index.js";
-export {
-  createCompostConfig,
-  createContentType,
+import { type Result } from "@jaybeeuu/utilities";
+import {
+  type OrchestratorConfig,
+  type ProcessContentFailureReason,
+  type ContentTypeDefinitionMap,
+  type ContentTypeManifestMap,
   processContent,
 } from "./content/index.js";
 
-export type ContentTypeDefinitionMap = {
-  [ContentType in string]: ContentTypeDefinition<ContentType>;
+export {
+  type ProcessContentFailureReason,
+  type ContentTypeDefinitionMap,
+  type ContentTypeManifestMap,
 };
+export { createCompostConfig } from "./content/index.js";
+export {
+  type BaseManifestEntry,
+  isManifest,
+  type Manifest,
+  type ManifestEntry,
+  type CompostConfig,
+  type ContentTypeDefinition,
+  type ContentTypeDefinitionInput,
+  type BaseInputMetadata,
+  type OrchestratorConfig,
+} from "./content/index.js";
 
-export type CompostResult<Content extends ContentTypeDefinitionMap> = {
-  [K in keyof Content]: Manifest<ProcessedManifestEntry<Content[K]>>;
-};
+export type CompostResult<ContentDefs extends ContentTypeDefinitionMap> =
+  Result<ContentTypeManifestMap<ContentDefs>, ProcessContentFailureReason>;
 
 /**
  * Compile content using Compost with the provided configuration.
@@ -46,8 +39,6 @@ export type CompostResult<Content extends ContentTypeDefinitionMap> = {
 export function compost<const ContentTypeDefs extends ContentTypeDefinitionMap>(
   config: OrchestratorConfig,
   contentConfigDefinitions: ContentTypeDefs,
-): Promise<
-  Result<CompostResult<ContentTypeDefs>, ProcessContentFailureReason>
-> {
+): Promise<CompostResult<ContentTypeDefs>> {
   return processContent(config, contentConfigDefinitions);
 }

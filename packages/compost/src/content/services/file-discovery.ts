@@ -8,7 +8,7 @@ export async function discoverFilesForContentType(
   filePatterns: {
     frontmatter: readonly string[];
     jsonMetadata: readonly string[];
-    jsonSuffix: string;
+    jsonFileExt: string;
   },
 ): Promise<Result<string[], DiscoverFilesFailureReason>> {
   try {

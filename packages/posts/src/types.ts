@@ -15,7 +15,7 @@ type ReadingTime = CheckedBy<typeof isReadingTime>;
 /**
  * Base output metadata fields that all content types have
  */
-interface BaseOutputMeta {
+interface BaseManifestEntry {
   readonly fileName: string;
   readonly href: string;
   readonly publishDate: string;
@@ -27,7 +27,7 @@ interface BaseOutputMeta {
 /**
  * Individual post entry in the manifest
  */
-export interface PostManifestEntry extends BaseOutputMeta {
+export interface PostManifestEntry extends BaseManifestEntry {
   readonly title: string;
   readonly abstract: string;
   readonly readingTime: ReadingTime;

@@ -1,24 +1,35 @@
-export { parseYamlMeta } from "./services/metadata.js";
-export type { ParseYamlMetaFailureReason } from "./services/metadata.js";
-export { resolveContent } from "./services/content-resolver.js";
-export type {
-  ResolvedContent,
-  ResolveContentFailureReason,
-} from "./services/content-resolver.js";
-export { processContent } from "./orchestrator.js";
-export type { OrchestratorConfig } from "./orchestrator.js";
-export type { Manifest, BaseManifestEntry } from "./services/manifest/index.js";
-export type {
-  CompostConfig,
-  ContentTypeDefinition,
-  ContentTypeDefinitionInput,
-  BaseInputMeta as BaseInputMetadata,
+export {
+  createCompostConfig,
+  createContentTypeDefinition,
+  validateCompostConfig,
+  type BaseInputMetadata,
+  type CompostConfig,
+  type ContentTypeDefinition,
+  type ContentTypeDefinitionInput,
+  ContentDefInputMeta,
+  ContentDefType,
+  ContentDefManifestEntry,
+  ContentDefManifest,
 } from "./content-types.js";
 export {
-  validateCompostConfig,
-  createCompostConfig,
-  createContentType,
-  createSimpleContentType,
-  identityMapping,
-  createMapping,
-} from "./content-types.js";
+  processContent,
+  type ContentTypeDefinitionMap,
+  type ContentTypeManifestMap,
+  type OrchestratorConfig,
+  type ProcessContentFailureReason,
+} from "./orchestrator.js";
+export {
+  resolveContent,
+  type ResolveContentFailureReason,
+  type ResolvedContent,
+} from "./services/content-resolver.js";
+export {
+  isManifest,
+  type BaseManifestEntry,
+  type Manifest,
+  type ManifestEntry,
+} from "./services/manifest/index.js";
+export {
+  parseYamlMeta,
+  type ParseYamlMetaFailureReason,
+} from "./services/metadata.js";

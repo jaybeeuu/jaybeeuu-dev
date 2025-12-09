@@ -45,7 +45,7 @@ const config: CompostConfig = {
       validateInputMeta: (data: unknown): data is PostInputMetadata => {
         return isPostInputMetadata(data);
       },
-      mapToOutputMeta: (input, content: string) => {
+      mapToManifestEntry: (input, content: string) => {
         const readingTime = getReadingTime(content);
         return {
           title: input.title,

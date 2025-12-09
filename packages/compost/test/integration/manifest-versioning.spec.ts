@@ -8,7 +8,7 @@ import {
   writePostFile,
   type PostFile,
   type TestPostManifestEntry,
-  isTestPostOutputMetadata,
+  isTestPostCustomManifestEntryProperties,
 } from "./helpers.js";
 import { writeJsonFile } from "../../src/files/index.js";
 import path from "path";
@@ -317,7 +317,9 @@ describe("manifest versioning compatibility", () => {
 
     const rawManifestContent = await getOutputFile("post-manifest.json");
     const parsedManifest = JSON.parse(rawManifestContent) as unknown;
-    const manifestValidator = isManifest(isTestPostOutputMetadata);
+    const manifestValidator = isManifest(
+      isTestPostCustomManifestEntryProperties,
+    );
 
     if (!manifestValidator(parsedManifest)) {
       throw new Error("Invalid manifest structure");

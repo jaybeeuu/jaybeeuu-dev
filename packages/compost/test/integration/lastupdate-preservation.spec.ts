@@ -6,6 +6,44 @@ import {
   createCompostConfig,
   type OrchestratorConfig,
 } from "../../src/index.js";
+import { is, isObject } from "@jaybeeuu/is";
+import type { CheckedBy } from "@jaybeeuu/is";
+
+interface PostEntry {
+  title: string;
+  abstract: string;
+  publish: boolean;
+  publishDate: string;
+  type: string;
+  fileName: string;
+  href: string;
+  lastUpdateDate: string | null;
+  readingTime: {
+    text: string;
+    minutes: number;
+    time: number;
+    words: number;
+  };
+  slug: string;
+  hash?: string;
+}
+
+interface PostManifest {
+  version: number;
+  metadata: {
+    generatedAt: string;
+    entryCount: number;
+    overallHash: string;
+  };
+  [key: string]: unknown;
+  entries: {
+    [key: string]: PostEntry;
+  };
+}
+
+interface OldPostManifest {
+  [key: string]: Partial<PostEntry>;
+}
 
 describe("LastUpdateDate Preservation (Programmatic API)", () => {
   const testDir = resolve(__dirname, "../fixtures/lastupdate-test");
@@ -14,78 +52,67 @@ describe("LastUpdateDate Preservation (Programmatic API)", () => {
   const manifestPath = resolve(outputDir, "post-manifest.json");
   const oldManifestPath = resolve(testDir, "old-manifest.json");
 
-  interface PostInputMeta {
-    title: string;
-    abstract: string;
-    publish: boolean;
-    publishDate: string;
-    type: string;
-    [key: string]: unknown;
-  }
+  const isPostInputMeta = isObject({
+    title: is("string"),
+    abstract: is("string"),
+    publish: is("boolean"),
+    publishDate: is("string"),
+    type: is("string"),
+  });
+  type PostInputMeta = CheckedBy<typeof isPostInputMeta>;
 
-  interface PostOutputMeta {
-    title: string;
-    abstract: string;
-    readingTime: {
-      text: string;
-      minutes: number;
-      time: number;
-      words: number;
-    };
-    [key: string]: unknown;
-  }
-
-  const createPostContentType = () =>
-    createCompostConfig({
-      contentType: "post",
-      filePatterns: {
-        frontmatter: [".post.md"],
-        jsonMetadata: [".md"],
-        jsonSuffix: ".post.json",
+  const createPostContentType = (): ReturnType<typeof createCompostConfig> => {
+    return createCompostConfig({
+      post: {
+        filePatterns: {
+          frontmatter: [".post.md"],
+          jsonMetadata: [".md"],
+          jsonSuffix: ".post.json",
+        },
+        generateSlug: (filePath: string, sourceDirPath: string) => {
+          return filePath
+            .replace(sourceDirPath + "/", "")
+            .replace(/\.(post\.)?md$/, "");
+        },
+        generateFileName: (slug: string) => `${slug}.html`,
+        validateInputMeta: (data: unknown): data is PostInputMeta => {
+          return isPostInputMeta(data);
+        },
+        mapToManifestEntry: (input) => ({
+          title: input.title,
+          abstract: input.abstract,
+          publish: input.publish,
+          publishDate: input.publishDate,
+          type: input.type,
+          readingTime: {
+            text: "1 min read",
+            minutes: 1,
+            time: 60000,
+            words: 50,
+          },
+        }),
+        sourceDir,
+        outputDir,
+        hrefRoot: "/test",
+        includeUnpublished: false,
+        codeLineNumbers: false,
+        removeH1: false,
+        requireOldManifest: false,
+        oldManifestLocators: [oldManifestPath],
       },
-      generateSlug: (filePath: string, sourceDirPath: string) => {
-        return filePath
-          .replace(sourceDirPath + "/", "")
-          .replace(/\.(post\.)?md$/, "");
-      },
-      generateFileName: (slug: string) => `${slug}.html`,
-      validateInputMeta: (data: unknown): data is PostInputMeta => {
-        return (
-          data !== null &&
-          typeof data === "object" &&
-          "title" in data &&
-          "abstract" in data &&
-          "publish" in data &&
-          data.title === "string" &&
-          data.abstract === "string" &&
-          data.publish === "boolean"
-        );
-      },
-      mapToOutputMeta: (input: PostInputMeta) => ({
-        title: input.title,
-        abstract: input.abstract,
-        readingTime: { text: "1 min read", minutes: 1, time: 60000, words: 50 },
-      }),
-      sourceDir,
-      outputDir,
-      hrefRoot: "/test",
-      includeUnpublished: false,
-      codeLineNumbers: false,
-      removeH1: false,
-      requireOldManifest: false,
-      oldManifestLocators: [oldManifestPath],
     });
+  };
 
   async function runCompost(): Promise<void> {
     const orchestratorConfig: OrchestratorConfig = { clean: false };
-    const contentTypes = createPostContentType();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const config = createPostContentType();
 
-    const result = await compost(orchestratorConfig, contentTypes);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const result = await compost(orchestratorConfig, config.contentTypes);
     if (!result.success) {
       throw new Error(`Compost compilation failed: ${result.message}`);
     }
-
-    result.value.post?.metadata;
   }
 
   beforeEach(async () => {
@@ -110,8 +137,8 @@ This is original content.`,
     );
 
     // Create an old v1 manifest (flat structure) with existing lastUpdateDate
-    const oldManifest = {
-      "test-post": {
+    const oldManifest: OldPostManifest = {
+      ["test-post"]: {
         title: "Test Post",
         abstract: "A test post for lastUpdateDate functionality",
         publish: true,
@@ -137,7 +164,7 @@ This is original content.`,
     // Clean up test files
     try {
       await fs.rm(testDir, { recursive: true, force: true });
-    } catch (err) {
+    } catch {
       // Ignore cleanup errors
     }
   });
@@ -148,10 +175,10 @@ This is original content.`,
 
     // Read the generated manifest
     const manifestContent = await fs.readFile(manifestPath, "utf-8");
-    const manifest = JSON.parse(manifestContent);
+    const manifest = JSON.parse(manifestContent) as PostManifest;
 
     // Verify lastUpdateDate is preserved
-    const testPost = manifest.entries["test-post"];
+    const testPost = manifest.entries["test-post"] as PostEntry;
     expect(testPost.lastUpdateDate).toBe("2024-06-15T10:30:00.000Z");
   }, 15000);
 
@@ -180,17 +207,17 @@ This is modified content that should trigger lastUpdateDate change.`,
 
     // Read the generated manifest
     const manifestContent = await fs.readFile(manifestPath, "utf-8");
-    const manifest = JSON.parse(manifestContent);
+    const manifest = JSON.parse(manifestContent) as PostManifest;
 
     // For v1 entries, lastUpdateDate should be preserved even when content changes
     // because we can't reliably detect content changes without proper hashes
-    const testPost = manifest.entries["test-post"];
+    const testPost = manifest.entries["test-post"] as PostEntry;
     expect(testPost.lastUpdateDate).toBe("2024-06-15T10:30:00.000Z");
   }, 15000);
 
   it("should handle new posts with null lastUpdateDate", async () => {
     // Remove the old manifest entry for this post, making it "new"
-    const oldManifest = {}; // Empty v1 manifest
+    const oldManifest: OldPostManifest = {}; // Empty v1 manifest
 
     await fs.writeFile(oldManifestPath, JSON.stringify(oldManifest, null, 2));
 
@@ -199,10 +226,10 @@ This is modified content that should trigger lastUpdateDate change.`,
 
     // Read the generated manifest
     const manifestContent = await fs.readFile(manifestPath, "utf-8");
-    const manifest = JSON.parse(manifestContent);
+    const manifest = JSON.parse(manifestContent) as PostManifest;
 
     // Verify new post has null lastUpdateDate
-    const testPost = manifest.entries["test-post"];
+    const testPost = manifest.entries["test-post"] as PostEntry;
     expect(testPost.lastUpdateDate).toBeNull();
   }, 15000);
 
@@ -212,15 +239,15 @@ This is modified content that should trigger lastUpdateDate change.`,
 
     // Read the generated manifest to get the proper hash
     let manifestContent = await fs.readFile(manifestPath, "utf-8");
-    let manifest = JSON.parse(manifestContent);
+    let manifest = JSON.parse(manifestContent) as PostManifest;
 
     // Create a v2 manifest with the proper hash and set an old lastUpdateDate
     const v2Manifest = {
       version: 2,
       metadata: manifest.metadata,
       entries: {
-        "test-post": {
-          ...manifest.entries["test-post"],
+        ["test-post"]: {
+          ...(manifest.entries["test-post"] as PostEntry),
           lastUpdateDate: "2024-06-15T10:30:00.000Z", // Set old date
         },
       },
@@ -251,15 +278,17 @@ This content is much longer and different from the original to ensure the hash c
 
     // Read the new manifest
     manifestContent = await fs.readFile(manifestPath, "utf-8");
-    manifest = JSON.parse(manifestContent);
+    manifest = JSON.parse(manifestContent) as PostManifest;
 
     // For v2 entries with proper hashes, lastUpdateDate should be updated when content changes
-    const testPost = manifest.entries["test-post"];
+    const testPost = manifest.entries["test-post"] as PostEntry;
     expect(testPost.lastUpdateDate).toBeDefined();
     expect(testPost.lastUpdateDate).not.toBe("2024-06-15T10:30:00.000Z");
 
     // Verify the new lastUpdateDate is recent
-    const lastUpdateTime = new Date(testPost.lastUpdateDate).getTime();
+    const lastUpdateTime = new Date(
+      testPost.lastUpdateDate as string,
+    ).getTime();
     const now = Date.now();
     const oneMinuteAgo = now - 60 * 1000;
     expect(lastUpdateTime).toBeGreaterThan(oneMinuteAgo);

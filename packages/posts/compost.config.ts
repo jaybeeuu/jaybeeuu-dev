@@ -17,7 +17,7 @@ const isPostInputMetadata = isObject({
 type PostInputMetadata = CheckedBy<typeof isPostInputMetadata> &
   BaseInputMetadata;
 
-type PostOutputMetadata = {
+type PostManifestEntrydata = {
   title: string;
   abstract: string;
   readingTime: ReturnType<typeof getReadingTime>;
@@ -41,7 +41,7 @@ const getCompiledPostFileName = (slug: string, html: string): string => {
 const postContentType: ContentTypeDefinition<
   "post",
   PostInputMetadata,
-  PostOutputMetadata
+  PostManifestEntrydata
 > = {
   contentType: "post",
   filePatterns: {
@@ -61,10 +61,10 @@ const postContentType: ContentTypeDefinition<
   validateInputMeta: (data: unknown): data is PostInputMetadata => {
     return isPostInputMetadata(data);
   },
-  mapToOutputMeta: (
+  mapToManifestEntry: (
     input: PostInputMetadata,
     content: string,
-  ): PostOutputMetadata => {
+  ): PostManifestEntrydata => {
     const readingTime = getReadingTime(content);
     return {
       title: input.title,

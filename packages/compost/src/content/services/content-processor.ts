@@ -6,15 +6,15 @@ import { compileMarkdown } from "./markdown-compilation.js";
 import { copyFile, writeTextFile } from "../../files/index.js";
 import type {
   ContentTypeDefinition,
-  BaseInputMeta,
+  BaseInputMetadata,
   ContentDefType,
   ContentDefInputMeta,
-  ContentDefOutputMeta,
+  CustomManifestEntryProperties,
+  ContentDefManifestEntry,
 } from "../content-types.js";
 import { isBaseInputMetadata } from "../content-types.js";
 import { getSha1Hex } from "../../hash.js";
 import { shouldTreatEntryAsChanged } from "./manifest/index.js";
-import type { BaseManifestEntry } from "./manifest/index.js";
 
 export interface OldManifestEntry {
   fileName?: string;
@@ -29,14 +29,14 @@ export type OldManifest = { [slug: string]: OldManifestEntry };
 export interface ProcessedContent<ContentDef extends ContentTypeDefinition> {
   slug: string;
   contentType: ContentDefType<ContentDef>;
-  inputMetadata: ContentDefInputMeta<ContentDef> & BaseInputMeta;
+  inputMetadata: ContentDefInputMeta<ContentDef> & BaseInputMetadata;
   compiledHtml: string;
   assets: Array<{
     sourcePath: string;
     destinationPath: string;
   }>;
   contentHash: string;
-  manifestEntry: ContentDefOutputMeta<ContentDef> & BaseManifestEntry;
+  manifestEntry: ContentDefManifestEntry<ContentDef>;
 }
 
 export type ProcessTypedContentFailureReason =
@@ -44,7 +44,7 @@ export type ProcessTypedContentFailureReason =
   | "compilation failed";
 
 async function processTypedContent<ContentDef extends ContentTypeDefinition>(
-  inputMetadata: ContentDefInputMeta<ContentDef> & BaseInputMeta,
+  inputMetadata: ContentDefInputMeta<ContentDef> & BaseInputMetadata,
   content: string,
   filePath: string,
   oldManifest: OldManifest,
@@ -69,22 +69,22 @@ async function processTypedContent<ContentDef extends ContentTypeDefinition>(
 
   const { html: compiledHtml, assets } = compileResult.value;
 
-  // Map input metadata to output metadata using the mapping function
-  const outputMetadata = contentDef.mapToOutputMeta(
+  const customManifestEntryProperties = contentDef.mapToManifestEntry(
     inputMetadata,
     content,
-  ) as ContentDefOutputMeta<ContentDef>;
+  ) as CustomManifestEntryProperties<ContentDef>;
 
   const contentHash = generateHash(content + JSON.stringify(inputMetadata));
 
-  const manifestEntry = generateTypedManifestEntry(
-    slug,
-    outputMetadata,
-    compiledHtml,
-    contentHash,
-    oldManifest,
-    contentDef,
-  );
+  const manifestEntry: ContentDefManifestEntry<ContentDef> =
+    generateManifestEntry(
+      slug,
+      customManifestEntryProperties,
+      compiledHtml,
+      contentHash,
+      oldManifest,
+      contentDef,
+    );
 
   await writeTypedCompiledContent(slug, compiledHtml, assets, contentDef);
 
@@ -106,13 +106,13 @@ export type ProcessFileFailureReason =
   | "compilation failed"
   | "file processing failed";
 
-export async function processFile<ContentDef extends ContentTypeDefinition>(
+export const processFile = async <ContentDef extends ContentTypeDefinition>(
   filePath: string,
   oldManifest: OldManifest,
   contentDef: ContentDef,
 ): Promise<
   Result<ProcessedContent<ContentDef> | null, ProcessFileFailureReason>
-> {
+> => {
   try {
     const contentResult = await resolveContent(filePath, contentDef);
     if (!contentResult.success) {
@@ -165,7 +165,7 @@ export async function processFile<ContentDef extends ContentTypeDefinition>(
       `Failed to process file ${filePath}: ${String(error)}`,
     );
   }
-}
+};
 
 export type CompileContentFailureReason = "compilation failed";
 
@@ -197,14 +197,14 @@ async function compileContent(
   return success(result.value);
 }
 
-function generateTypedManifestEntry<ContentDef extends ContentTypeDefinition>(
+function generateManifestEntry<ContentDef extends ContentTypeDefinition>(
   slug: string,
-  outputMetadata: ContentDefOutputMeta<ContentDef>,
+  customManifestEntryProperties: CustomManifestEntryProperties<ContentDef>,
   compiledHtml: string,
   contentHash: string,
   oldManifest: OldManifest,
   contentDef: ContentDef,
-): BaseManifestEntry & ContentDefOutputMeta<ContentDef> {
+): ContentDefManifestEntry<ContentDef> {
   const fileName = contentDef.generateFileName(slug, compiledHtml);
   const href = joinUrlPath(contentDef.hrefRoot, fileName);
 
@@ -233,7 +233,7 @@ function generateTypedManifestEntry<ContentDef extends ContentTypeDefinition>(
         ? new Date(oldEntry.lastUpdateDate).toISOString() // Preserve existing update date
         : null; // Old post with no previous update date
 
-  return Object.assign({}, outputMetadata, {
+  return Object.assign({}, customManifestEntryProperties, {
     fileName,
     href,
     publishDate,
