@@ -1,25 +1,25 @@
 export {
-  DerivationContext,
-  Derive,
-  DerivedValue,
   DerivedValueState,
-  GetDependency,
+  type DerivationContext,
+  type Derive,
+  type DerivedValue,
+  type GetDependency,
 } from "./derived-value.js";
 
-export { PrimitiveValue, PrimitiveValueState } from "./primitive-value.js";
+export { PrimitiveValueState, type PrimitiveValue } from "./primitive-value.js";
 
 export {
   assertIsSettableValueState,
-  Listener,
-  RemoveFromStore,
-  SettableValueState,
-  Unsubscribe,
-  ValueState,
+  type Listener,
+  type RemoveFromStore,
+  type SettableValueState,
+  type Unsubscribe,
+  type ValueState,
 } from "./value-state.js";
 
 export {
   isDerivedValue,
   isPrimitiveValue,
-  SettableValue,
-  Value,
+  type SettableValue,
+  type Value,
 } from "./value.js";

@@ -1,7 +1,7 @@
 import type { CheckedBy, TypeAssertion, TypePredicate } from "@jaybeeuu/is";
-import { is, isObject, isArrayOf } from "@jaybeeuu/is";
-import path from "node:path";
-import type { Manifest, ManifestEntry } from "./services/manifest/index.js";
+import { is, isArrayOf, isObject } from "@jaybeeuu/is";
+import { getCompiledPostFileName, getSlug } from "./services/file-paths.js";
+import type { Manifest, ManifestEntry } from "../manifest.js";
 
 /**
  * Utility type for representing an unknown object with string keys
@@ -42,13 +42,26 @@ export interface ContentFilePatterns {
 
 export interface ContentDefinition<
   Type extends string = string,
-  InputMeta = UnknownRecord,
-  CustomManifestEntryProps = InputMeta & BaseInputMetadata,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  InputMeta = any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  CustomManifestEntryProps = any,
 > {
   readonly contentType: Type;
   readonly filePatterns: ContentFilePatterns;
-  readonly generateSlug: (filePath: string, sourceDir: string) => string;
-  readonly generateFileName: (slug: string, html: string) => string;
+  readonly generateSlug: (args: {
+    filePath: string;
+    sourceDir: string;
+    hash: string;
+    html: string;
+  }) => string;
+  readonly generateFileName: (args: {
+    filePath: string;
+    sourceDir: string;
+    slug: string;
+    hash: string;
+    html: string;
+  }) => string;
 
   /** Validates raw input data from frontmatter/JSON files - TypeScript user-defined type guard */
   readonly validateInputMeta: (data: unknown) => data is InputMeta;
@@ -154,23 +167,6 @@ export type DefaultedContentDefinition<
     : never;
 
 /**
- * Default slug generation function - converts file path to URL-friendly slug.
- */
-const defaultGenerateSlug = (filePath: string, sourceDir: string): string => {
-  const relativePath = path.relative(sourceDir, filePath);
-  const parsedPath = path.parse(relativePath);
-  const dirPath = parsedPath.dir ? `${parsedPath.dir}/` : "";
-  return `${dirPath}${parsedPath.name}`.replace(/\\/g, "/");
-};
-
-/**
- * Default file name generation function - creates HTML filename from slug.
- */
-const defaultGenerateFileName = (slug: string): string => {
-  return `${slug}.html`;
-};
-
-/**
  * Identity mapping function - returns input metadata as-is.
  * Use this when your input and output metadata have the same shape.
  */
@@ -212,14 +208,14 @@ export const createContentDefinition: CreateContentDefinition = <
     contentType,
     filePatterns: {
       frontmatter: [`.${contentType}.md`],
-      jsonMetadata: [`.${contentType}.md`],
-      jsonFileType: `.json`,
+      jsonMetadata: [`.md`],
+      jsonFileExt: `.${contentType}.json`,
       ...input.filePatterns,
     },
     hrefRoot: input.hrefRoot ?? contentType,
     validateInputMeta: input.validateInputMeta ?? isObject({} as const),
-    generateSlug: input.generateSlug ?? defaultGenerateSlug,
-    generateFileName: input.generateFileName ?? defaultGenerateFileName,
+    generateSlug: input.generateSlug ?? getSlug,
+    generateFileName: input.generateFileName ?? getCompiledPostFileName,
     requireOldManifest: input.requireOldManifest ?? true,
     manifestFileName: input.manifestFileName ?? `${contentType}-manifest.json`,
     sourceDir: input.sourceDir ?? "src",

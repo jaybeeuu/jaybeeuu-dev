@@ -5,7 +5,7 @@ import {
   getPost,
   getPostManifest,
   writePostFile,
-} from "./helpers";
+} from "./helpers.js";
 
 describe("file-selection", () => {
   it("ignores unpublished articles.", async () => {

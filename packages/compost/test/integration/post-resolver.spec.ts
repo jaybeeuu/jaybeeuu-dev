@@ -71,7 +71,7 @@ This is test content.`,
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.reason).toBe("content type processing failed");
+        expect(result.reason).toBe("file processing failed");
       }
     });
   });
@@ -150,7 +150,7 @@ This is test content.`,
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.reason).toBe("content type processing failed");
+        expect(result.reason).toBe("file processing failed");
       }
     });
   });
@@ -244,6 +244,7 @@ This is test content.`,
 title: "Test Post"
 abstract: "Test abstract"
 publish: true
+stars: 5
 ---
 
 # Test Post
@@ -258,7 +259,7 @@ This is test content.`,
       if (result.success) {
         expect(Object.keys(result.value.entries)).toHaveLength(1);
         expect(result.value.entries[slug]).toBeDefined();
-        expect(result.value.entries[slug]?.abstract).toBe("A test post");
+        expect(result.value.entries[slug]?.abstract).toBe("Test abstract");
       }
     });
 
@@ -278,6 +279,7 @@ This is test content.`,
             title: "Test Post",
             abstract: "Test abstract",
             publish: true,
+            stars: 5,
           }),
         },
       ]);

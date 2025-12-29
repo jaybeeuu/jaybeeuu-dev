@@ -16,24 +16,20 @@
     "src"
   ],
   "exports": {
-    "./manifest": {
-      "default": "./lib/post-manifest.json"
-    },
+    "./config": "./lib/compost.config.js",
+    "./manifest": "./lib/post-manifest.json",
     "./types": {
-      "types": "./src/types.ts",
-      "default": "./src/types.ts"
-    },
-    "./compost.config.ts": {
-      "default": "./compost.config.ts"
+      "types": "./lib/types.d.ts",
+      "default": "./lib/types.js"
     }
   },
   "scripts": {
-    "build": "tsc --project ./tsconfig.build.json --pretty && compost --config ./compost.config.ts --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\"",
+    "build": "tsc --project ./tsconfig.build.json --pretty && compost --config ./lib/compost.config.js",
     "type-check": "tsc --noEmit --pretty",
     "lint": "markdownlint \"**/*.md\" --ignore node_modules",
     "spell-check-interactive": "mdspell --en-GB --ignore-numbers \"**/*.md\" \"!**/node_modules/**/*.md\"",
     "spell-check": "pnpm run spell-check-interactive --report",
-    "start": "compost --config ./compost.config.ts --watch --include-unpublished --old-manifest-locator \"https://jaybeeuu.dev/blog/manifest.json\""
+    "start": "compost --config ./lib/compost.config.js --watch --include-unpublished"
   },
   "devDependencies": {
     "@jaybeeuu/compost": "workspace:*",

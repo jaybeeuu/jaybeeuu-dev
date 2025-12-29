@@ -10,6 +10,7 @@
     "outDir": "lib",
     "sourceMap": false,
     "types": ["cypress", "node"],
+    "module": "ES2022",
     "moduleResolution": "bundler"
   },
   "exclude": ["node_modules"]

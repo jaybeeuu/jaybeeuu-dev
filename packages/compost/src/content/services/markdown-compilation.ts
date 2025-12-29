@@ -17,7 +17,7 @@ import loadLanguages from "prismjs/components/index.js";
 import type { IOptions } from "sanitize-html";
 import sanitizeHtml from "sanitize-html";
 import { canAccessSync, readTextFileSync } from "../../files/index.js";
-import { getHash } from "../../hash.js";
+import { getHash } from "./hash.js";
 import { getSlug } from "./file-paths.js";
 
 export interface RenderContext {
@@ -69,7 +69,7 @@ const getAssetDetails = (
   }
 
   const fileContent = readTextFileSync(resolvedFilePath);
-  const fileHash = getHash(fileContent);
+  const fileHash = getHash(fileContent, { maxLength: 6 });
   const { name: imageFileName, ext: imageFileExtension } =
     path.parse(resolvedFilePath);
   const hashedFileName = `${imageFileName}-${fileHash}${imageFileExtension}`;
@@ -199,7 +199,7 @@ class CustomRenderer extends marked.Renderer {
         ...args,
         href: joinUrlPath(
           this.#renderContext.hrefRoot,
-          getSlug(resolvedHrefPath),
+          getSlug({ filePath: resolvedHrefPath }),
         ),
       });
     }

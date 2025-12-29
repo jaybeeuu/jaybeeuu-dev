@@ -1,4 +1,4 @@
-import { assertIsNotNullish } from "./index";
+import { assertIsNotNullish } from "./index.js";
 
 import { describe, expect, it } from "@jest/globals";
 describe("pre-built", () => {

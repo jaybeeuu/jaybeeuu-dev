@@ -1,24 +1,27 @@
-export { canAccess, canAccessSync, Mode } from "./can-access.js";
-export { deleteFile, deleteDirectories } from "./delete.js";
+export { canAccess, canAccessSync, type Mode } from "./can-access.js";
+export { deleteDirectories, deleteFile } from "./delete.js";
+export {
+  fetchJsonFile,
+  type FetchJsonFileFailureReason,
+} from "./json-file-url.js";
 export {
   readJsonFile,
-  ReadJsonFileFailureReason,
   writeJsonFile,
+  type ReadJsonFileFailureReason,
 } from "./json-files.js";
-export { fetchJsonFile, FetchJsonFileFailureReason } from "./json-file-url.js";
 export {
-  FileInfo,
-  RecurseDirectoryOptions,
   recurseDirectory,
+  type FileInfo,
+  type RecurseDirectoryOptions,
 } from "./recurse-dir.js";
 export {
-  File,
   readTextFile,
   readTextFileSync,
   writeTextFile,
   writeTextFiles,
+  type File,
 } from "./text-files.js";
+export { copyFile };
 
 import fs from "node:fs";
 const { copyFile } = fs.promises;
-export { copyFile };

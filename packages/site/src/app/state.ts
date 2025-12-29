@@ -1,7 +1,4 @@
-import type {
-  PostManifest,
-  PostManifestEntry as PostMetadata,
-} from "@jaybeeuu/posts/types";
+import type { PostManifest, PostManifestEntry } from "@jaybeeuu/posts/types";
 import { isPostManifest } from "@jaybeeuu/posts/types";
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
@@ -31,14 +28,17 @@ export const currentPostSlug: PrimitiveValue<string | null> = {
 
 export type PostFailureReasons = "post-does-not-exist" | "no-slug-set";
 
-export type PostMetaDataLookupResult = Result<PostMetadata, PostFailureReasons>;
+export type PostMetaDataLookupResult = Result<
+  PostManifestEntry,
+  PostFailureReasons
+>;
 
 export const currentPostMeta: DerivedValue<Promise<PostMetaDataLookupResult>> =
   {
     name: "currentPostMeta",
     derive: async ({
       get,
-    }): Promise<Result<PostMetadata, PostFailureReasons>> => {
+    }): Promise<Result<PostManifestEntry, PostFailureReasons>> => {
       const manifest = await get(postsManifest);
       const slug = get(currentPostSlug);
       if (!slug) {

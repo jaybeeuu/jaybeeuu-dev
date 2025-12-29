@@ -1,16 +1,15 @@
-import type { PostFile, TestPostInputMetadata } from "./helpers";
+import type { PostFile, TestPostFileMeta } from "./helpers.js";
 import {
   cleanUpDirectories,
   compilePosts,
   getPostManifest,
   writePostFile,
-} from "./helpers";
+} from "./helpers.js";
 
 import path from "node:path";
 import { advanceTo, clear } from "jest-date-mock";
 import type { Response } from "node-fetch";
 import fetch from "node-fetch";
-import readingTime from "reading-time";
 import { writeJsonFile } from "../../src/files/index.js";
 
 import { describe, expect, it, jest } from "@jest/globals";
@@ -27,17 +26,10 @@ describe("manifest", () => {
   it("has an entry for a new post with the correct properties.", async () => {
     await cleanUpDirectories();
 
-    jest.mocked(readingTime).mockReturnValue({
-      minutes: 20,
-      text: "{reading time}",
-      time: 120000,
-      words: 10,
-    });
-
     const publishDate = "2020-03-11";
     advanceTo(publishDate);
     const slug = "first-post";
-    const meta: TestPostInputMetadata = {
+    const meta: TestPostFileMeta = {
       title: "This is the first post",
       abstract: "This is the very first post.",
       publish: true,
@@ -59,7 +51,7 @@ describe("manifest", () => {
           /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
         ) as unknown,
         entryCount: 1,
-        overallHash: expect.stringMatching(/^[a-f0-9]{40}$/) as unknown,
+        overallHash: "x7KKZVvS1SM1S9yqff9gvKG5KqM",
       },
       entries: {
         [slug]: {
@@ -71,15 +63,11 @@ describe("manifest", () => {
           href: expect.stringMatching(
             new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`),
           ) as unknown,
-          hash: expect.stringMatching(/^[a-f0-9]{40}$/) as unknown,
+          hash: "lWR0ID14VxOeYmrBGIJ75jDhRA",
+          stars: 0,
+          contentLength: 46,
           lastUpdateDate: null,
           publishDate: new Date(publishDate).toISOString(),
-          readingTime: {
-            minutes: 20,
-            text: "{reading time}",
-            time: 120000,
-            words: 10,
-          },
           slug,
         },
       },
@@ -463,17 +451,10 @@ describe("manifest", () => {
     async ({ metadataStyle }) => {
       await cleanUpDirectories();
 
-      jest.mocked(readingTime).mockReturnValue({
-        minutes: 15,
-        text: "15 min read",
-        time: 900000,
-        words: 250,
-      });
-
       const publishDate = "2023-05-20";
       advanceTo(publishDate);
       const slug = "test-post";
-      const meta: TestPostInputMetadata = {
+      const meta: TestPostFileMeta = {
         title: "Test Post Title",
         abstract: "This is a test post abstract.",
         publish: true,
@@ -501,7 +482,7 @@ describe("manifest", () => {
             /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
           ) as unknown,
           entryCount: 1,
-          overallHash: expect.stringMatching(/^[a-f0-9]{40}$/) as unknown,
+          overallHash: "T4Q3cjuEVWLsnd8IPIBfEECc",
         },
         entries: {
           [slug]: {
@@ -513,16 +494,12 @@ describe("manifest", () => {
             href: expect.stringMatching(
               new RegExp(`/posts/${slug}-[A-z0-9]{6}.html`),
             ) as unknown,
-            hash: expect.stringMatching(/^[a-f0-9]{40}$/) as unknown,
+            hash: "UbwjWuXYLybAQRa7AxKPhsdbIo",
             lastUpdateDate: null,
             publishDate: new Date(publishDate).toISOString(),
-            readingTime: {
-              minutes: 15,
-              text: "15 min read",
-              time: 900000,
-              words: 250,
-            },
             slug,
+            stars: 0,
+            contentLength: 53,
           },
         },
       });

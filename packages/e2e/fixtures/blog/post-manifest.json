@@ -1,13 +1,12 @@
 {
   "version": 2,
   "metadata": {
-    "generatedAt": "2025-11-17T22:50:02.702Z",
+    "generatedAt": "2025-12-29T21:10:45.830Z",
     "entryCount": 3,
-    "overallHash": "1f55e16a35902f484d552bbc758a0e246a4b9a39"
+    "overallHash": "H1XhajWQL0hNVSu8dYoOJGpLmjk"
   },
   "entries": {
     "memoising-selectors": {
-      "title": "Memoising Selectors",
       "abstract": "Complex operations in redux selectors can result in render thrashing, but why and how does it happen?",
       "readingTime": {
         "text": "4 min read",
@@ -15,15 +14,15 @@
         "time": 211500,
         "words": 705
       },
-      "fileName": "memoising-selectors-2dde606b.html",
-      "href": "/blog/memoising-selectors-2dde606b.html",
-      "publishDate": "2021-01-01T00:00:00.000Z",
-      "lastUpdateDate": "2021-05-01T00:00:00.000Z",
-      "hash": "8b59e445326d07313db6254c0516a9a0ac0087ec",
+      "fileName": "memoising-selectors-i1nkRT.html",
+      "href": "/blog/memoising-selectors-i1nkRT.html",
+      "title": "Memoising Selectors",
+      "publishDate": "Fri, 01 Jan 2021 00:00:00 GMT",
+      "lastUpdateDate": "Sat, 01 May 2021 00:00:00 GMT",
+      "hash": "i1nkRTJtBzE9tiVMBRapoKwAhw",
       "slug": "memoising-selectors"
     },
     "module-spotting": {
-      "title": "Module Spotting",
       "abstract": "Modules in JavaScript have a long and complex history. Let's explore...",
       "readingTime": {
         "text": "15 min read",
@@ -31,27 +30,28 @@
         "time": 878700,
         "words": 2929
       },
-      "fileName": "module-spotting-789303c4.html",
-      "href": "/blog/module-spotting-789303c4.html",
-      "publishDate": "2021-02-01T00:00:00.000Z",
-      "lastUpdateDate": "2024-09-18T21:30:42.515Z",
-      "hash": "bcd7a428d00a511b47f0b7add432c0456ad61a4e",
+      "fileName": "module-spotting-vNekKN.html",
+      "href": "/blog/module-spotting-vNekKN.html",
+      "title": "Module Spotting",
+      "publishDate": "Mon, 01 Feb 2021 00:00:00 GMT",
+      "lastUpdateDate": "2025-09-10T20:37:14.430Z",
+      "hash": "vNekKNAKURtH8Let1DLARWrWGk4",
       "slug": "module-spotting"
     },
     "the-rewrite": {
-      "title": "The Rewrite",
       "abstract": "One of the grads at SL asked me if they should change their entire application. These were my thoughts...",
       "readingTime": {
-        "text": "3 min read",
-        "minutes": 2.99,
-        "time": 179400,
-        "words": 598
+        "text": "4 min read",
+        "minutes": 3.04,
+        "time": 182400,
+        "words": 608
       },
-      "fileName": "the-rewrite-24febc08.html",
-      "href": "/blog/the-rewrite-24febc08.html",
-      "publishDate": "2021-03-01T00:00:00.000Z",
-      "lastUpdateDate": "2024-03-20T14:15:15.236Z",
-      "hash": "73b160c7d526404e7d7e482a6a08ca57bfb71745",
+      "fileName": "the-rewrite-QvJdh6.html",
+      "href": "/blog/the-rewrite-QvJdh6.html",
+      "title": "The Rewrite",
+      "publishDate": "Mon, 01 Mar 2021 00:00:00 GMT",
+      "lastUpdateDate": null,
+      "hash": "QvJdh6WIu9hcfBM6rsk67Mp8Bfg",
       "slug": "the-rewrite"
     }
   }

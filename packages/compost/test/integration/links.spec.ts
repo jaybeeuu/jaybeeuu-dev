@@ -4,7 +4,7 @@ import {
   cleanUpDirectories,
   getCompiledPostWithContent,
   getOutputFile,
-} from "./helpers";
+} from "./helpers.js";
 
 describe("links", () => {
   it("compiles an inline hash link to link properly within the document.", async () => {
@@ -69,6 +69,7 @@ describe("links", () => {
               abstract: "{abstract}",
               publish: true,
               title: "{title}",
+              stars: 0,
             }),
           },
         ],

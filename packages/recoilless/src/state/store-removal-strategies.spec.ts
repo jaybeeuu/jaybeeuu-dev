@@ -1,7 +1,6 @@
 import { withFakeTimers } from "@jaybeeuu/utilities/test";
-import { makeScheduler } from "./store-removal-strategies";
-
 import { describe, expect, it, jest } from "@jest/globals";
+import { makeScheduler } from "./store-removal-strategies.js";
 
 describe("makeScheduler", () => {
   describe("synchronous", () => {

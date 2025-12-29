@@ -1,8 +1,5 @@
 import { describe, it, expect } from "@jest/globals";
-import {
-  createContentDefinition,
-  isManifest,
-} from "../../src/content/index.js";
+import { createContentDefinition } from "../../src/content/content-definition.js";
 
 describe("config validation", () => {
   it("should validate a proper ContentDefinition", () => {
@@ -21,8 +18,8 @@ describe("config validation", () => {
         jsonMetadata: ["**/*.json"],
         jsonFileExt: ".meta.json",
       },
-      generateSlug: (filePath: string) => filePath,
-      generateFileName: (slug: string) => `${slug}.html`,
+      generateSlug: ({ filePath }) => filePath,
+      generateFileName: ({ slug }) => `${slug}.html`,
       validateInputMeta: isPostInputMeta,
       hrefRoot: "/",
       mapToManifestEntry: (input, content) => ({
@@ -68,7 +65,8 @@ describe("config validation", () => {
     // isManifest checks for BaseManifestEntry structure
     // The manifest is valid if it has the required BaseManifestEntry properties
     expect(manifest.version).toBe(2);
-    expect(manifest.entries["test-post"]).toBeDefined();
-    expect(manifest.entries["test-post"]?.href).toBe("/posts/test-post.html");
+    expect(manifest.entries["test-post"]).toMatchObject({
+      href: "/posts/test-post.html",
+    });
   });
 });

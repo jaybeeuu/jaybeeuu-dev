@@ -54,9 +54,8 @@ export function is<Type extends TypeString | "null">(
 export function is<T>(
   guardOrTypeString: ((data: unknown) => data is T) | TypeString | "null",
 ): TypePredicate<T> {
-  // Handle user-defined type guard
   if (typeof guardOrTypeString === "function") {
-    const guard = guardOrTypeString as (data: unknown) => data is T;
+    const guard = guardOrTypeString;
     return isType(
       (candidate: unknown, context: ValidationContext): ValidationResult => {
         if (guard(candidate)) {
@@ -71,8 +70,7 @@ export function is<T>(
     );
   }
 
-  // Handle primitive type string (existing logic)
-  const typeString = guardOrTypeString as TypeString | "null";
+  const typeString = guardOrTypeString;
   return isType(
     (candidate: unknown, context: ValidationContext): ValidationResult => {
       if (
@@ -89,7 +87,7 @@ export function is<T>(
       );
     },
     typeString,
-  ) as TypePredicate<T>;
+  );
 }
 
 export type ExtractTypesFromPredicates<

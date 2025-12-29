@@ -23,7 +23,7 @@ export const fetchJson = async <ResponseContent>(
   init?: RequestInit,
 ): Promise<ResponseContent> => {
   return fetchRequest(async (response: Response): Promise<ResponseContent> => {
-    const jsonData = await response.json();
+    const jsonData: unknown = await response.json();
     return validator.check(jsonData);
   })(input, init);
 };

@@ -10,13 +10,16 @@ const config: JestConfigWithTsJest = {
   //   "src/**"
   // ],
   transform: {
-    "\\.(ts|tsx)$": "ts-jest",
+    "^.+\\.(t|j)sx?$": [
+      "ts-jest",
+      { tsconfig: "<rootDir>/tsconfig.test.json" },
+    ],
     "\\.(mjs|js|jsx)$": "babel-jest",
   },
   testMatch: ["**/*.spec.ts"],
   testPathIgnorePatterns: ["/node_modules/", "/lib/"],
   transformIgnorePatterns: [
-    "node_modules/(?!(\\.pnpm|@testing-library/preact|preact/|preact-transitioning|preact-merge-refs))",
+    "node_modules/(?!(\\.pnpm|@testing-library/preact|preact/|preact-transitioning|preact-merge-refs|@jaybeeuu/posts|node-fetch|fetch-blob|data-uri-to-buffer|formdata-polyfill|marked))",
   ],
   moduleNameMapper: {
     "(\\.\\.?/.*)\\.js$": "$1",

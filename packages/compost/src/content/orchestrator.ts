@@ -1,21 +1,20 @@
-import type { Result } from "@jaybeeuu/utilities";
-import { failure, success } from "@jaybeeuu/utilities";
+import { failure, success, type Result } from "@jaybeeuu/utilities";
 import fs from "node:fs";
 import path from "node:path";
 import { deleteDirectories } from "../files/index.js";
+import {
+  type ContentDefinition,
+  type ContentDefManifest,
+  type ContentDefManifestEntry,
+} from "./content-definition.js";
 import { processFile } from "./services/content-processor.js";
 import { discoverFilesForContentType } from "./services/file-discovery.js";
 import { ManifestEntriesManager } from "./services/manifest-entries-manager.js";
 import {
   buildManifest,
-  getOldManifestWithFallback,
+  getOldManifestEntriesWithFallback,
   writeManifest,
 } from "./services/manifest/index.js";
-import type {
-  ContentDefinition,
-  ContentDefManifest,
-  ContentDefManifestEntry,
-} from "./content-definition.js";
 
 export interface OrchestratorConfig {
   clean: boolean;
@@ -41,7 +40,7 @@ export const processContent = async <ContentDef extends ContentDefinition>(
     contentDef.manifestFileName,
   );
 
-  const manifestResult = await getOldManifestWithFallback(
+  const manifestResult = await getOldManifestEntriesWithFallback(
     manifestPath,
     contentDef.oldManifestLocators,
     contentDef.requireOldManifest,
@@ -72,7 +71,11 @@ export const processContent = async <ContentDef extends ContentDefinition>(
   >();
 
   for (const filePath of filesResult.value) {
-    const result = await processFile(filePath, manifestData, contentDef);
+    const result = await processFile({
+      filePath,
+      oldManifest: manifestData,
+      contentDef,
+    });
 
     if (!result.success) {
       return failure(

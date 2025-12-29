@@ -1,41 +1,25 @@
 import type { Result } from "@jaybeeuu/utilities";
-import { failure, success, joinUrlPath } from "@jaybeeuu/utilities";
+import { failure, joinUrlPath, success } from "@jaybeeuu/utilities";
 import path from "node:path";
-import { resolveContent } from "./content-resolver.js";
-import { compileMarkdown } from "./markdown-compilation.js";
 import { copyFile, writeTextFile } from "../../files/index.js";
-import type {
-  ContentDefinition,
-  BaseInputMetadata,
-  ContentDefType,
-  ContentDefInputMeta,
-  CustomManifestEntryProperties,
-  ContentDefManifestEntry,
+import { getHash } from "./hash.js";
+import {
+  type BaseInputMetadata,
+  type ContentDefinition,
+  type ContentDefManifestEntry,
+  type CustomManifestEntryProperties,
+  isBaseInputMetadata,
 } from "../content-definition.js";
-import { isBaseInputMetadata } from "../content-definition.js";
-import { getSha1Hex } from "../../hash.js";
-import { shouldTreatEntryAsChanged } from "./manifest/index.js";
-
-export interface OldManifestEntry {
-  fileName?: string;
-  hash?: string; // Present in V2, may be missing in legacy V1 entries
-  publishDate?: string | Date;
-  lastUpdateDate?: string | Date | null;
-  [key: string]: unknown;
-}
-
-export type OldManifest = { [slug: string]: OldManifestEntry };
-
+import { resolveContent } from "./content-resolver.js";
+import { type BaseManifestEntry } from "../../manifest.js";
+import {
+  detectContentChange,
+  type OldManifestEntries,
+} from "./manifest/index.js";
+import { compileMarkdown } from "./markdown-compilation.js";
+import { getErrorMessage } from "@jaybeeuu/utilities";
 export interface ProcessedContent<ContentDef extends ContentDefinition> {
   slug: string;
-  contentType: ContentDefType<ContentDef>;
-  inputMetadata: ContentDefInputMeta<ContentDef> & BaseInputMetadata;
-  compiledHtml: string;
-  assets: Array<{
-    sourcePath: string;
-    destinationPath: string;
-  }>;
-  contentHash: string;
   manifestEntry: ContentDefManifestEntry<ContentDef>;
 }
 
@@ -43,11 +27,30 @@ export type ProcessTypedContentFailureReason =
   | "content skipped"
   | "compilation failed";
 
+async function writeTypedCompiledContent(
+  fileName: string,
+  html: string,
+  assets: Array<{ sourcePath: string; destinationPath: string }>,
+  contentDef: ContentDefinition,
+): Promise<void> {
+  const htmlPath = path.join(contentDef.outputDir, fileName);
+  await writeTextFile(htmlPath, html);
+
+  await Promise.all(
+    assets.map((asset) =>
+      copyFile(
+        asset.sourcePath,
+        path.join(contentDef.outputDir, asset.destinationPath),
+      ),
+    ),
+  );
+}
+
 async function processTypedContent<ContentDef extends ContentDefinition>(
-  inputMetadata: ContentDefInputMeta<ContentDef> & BaseInputMetadata,
+  inputMetadata: BaseInputMetadata,
   content: string,
   filePath: string,
-  oldManifest: OldManifest,
+  oldManifestEntries: OldManifestEntries,
   contentDef: ContentDef,
 ): Promise<
   Result<ProcessedContent<ContentDef>, ProcessTypedContentFailureReason>
@@ -57,7 +60,14 @@ async function processTypedContent<ContentDef extends ContentDefinition>(
     return failure("content skipped", "Content is not published");
   }
 
-  const slug = contentDef.generateSlug(filePath, contentDef.sourceDir);
+  const hash = getHash(content + JSON.stringify(inputMetadata));
+
+  const slug = contentDef.generateSlug({
+    filePath,
+    sourceDir: contentDef.sourceDir,
+    hash,
+    html: content,
+  });
 
   const compileResult = await compileContent(filePath, content, contentDef);
   if (!compileResult.success) {
@@ -74,29 +84,28 @@ async function processTypedContent<ContentDef extends ContentDefinition>(
     content,
   ) as CustomManifestEntryProperties<ContentDef>;
 
-  const contentHash = generateHash(content + JSON.stringify(inputMetadata));
+  const manifestEntry: BaseManifestEntry = generateManifestEntry({
+    slug,
+    filePath,
+    title: inputMetadata.title,
+    customManifestEntryProperties,
+    compiledHtml,
+    hash,
+    oldManifest: oldManifestEntries,
+    contentDef,
+  });
 
-  const manifestEntry: ContentDefManifestEntry<ContentDef> =
-    generateManifestEntry(
-      slug,
-      customManifestEntryProperties,
-      compiledHtml,
-      contentHash,
-      oldManifest,
-      contentDef,
-    );
-
-  await writeTypedCompiledContent(slug, compiledHtml, assets, contentDef);
+  await writeTypedCompiledContent(
+    manifestEntry.fileName,
+    compiledHtml,
+    assets,
+    contentDef,
+  );
 
   return success({
     slug,
-    contentType: contentDef.contentType as ContentDefType<ContentDef>,
-    inputMetadata,
-    compiledHtml,
-    assets,
-    contentHash,
     manifestEntry,
-  });
+  } as ProcessedContent<ContentDef>);
 }
 
 export type ProcessFileFailureReason =
@@ -106,11 +115,15 @@ export type ProcessFileFailureReason =
   | "compilation failed"
   | "file processing failed";
 
-export const processFile = async <ContentDef extends ContentDefinition>(
-  filePath: string,
-  oldManifest: OldManifest,
-  contentDef: ContentDef,
-): Promise<
+export const processFile = async <ContentDef extends ContentDefinition>({
+  filePath,
+  oldManifest,
+  contentDef,
+}: {
+  filePath: string;
+  oldManifest: OldManifestEntries;
+  contentDef: ContentDef;
+}): Promise<
   Result<ProcessedContent<ContentDef> | null, ProcessFileFailureReason>
 > => {
   try {
@@ -126,13 +139,6 @@ export const processFile = async <ContentDef extends ContentDefinition>(
       return failure(
         "content resolution failed",
         `${contentResult.reason}: ${contentResult.message}`,
-      );
-    }
-
-    if (contentResult.value.type !== contentDef.contentType) {
-      return failure(
-        "content type not configured",
-        `No configuration found for content type: ${contentResult.value.type}`,
       );
     }
 
@@ -162,7 +168,7 @@ export const processFile = async <ContentDef extends ContentDefinition>(
   } catch (error) {
     return failure(
       "file processing failed",
-      `Failed to process file ${filePath}: ${String(error)}`,
+      `Failed to process file ${filePath}: ${getErrorMessage(error)}`,
     );
   }
 };
@@ -197,76 +203,80 @@ async function compileContent(
   return success(result.value);
 }
 
-function generateManifestEntry<ContentDef extends ContentDefinition>(
-  slug: string,
-  customManifestEntryProperties: CustomManifestEntryProperties<ContentDef>,
-  compiledHtml: string,
-  contentHash: string,
-  oldManifest: OldManifest,
-  contentDef: ContentDef,
-): ContentDefManifestEntry<ContentDef> {
-  const fileName = contentDef.generateFileName(slug, compiledHtml);
+const resolveLastUpdateDate = ({
+  oldEntry,
+  hasBeenUpdated,
+}: {
+  oldEntry?: { lastUpdateDate: string | null };
+  hasBeenUpdated: boolean;
+}): string | null => {
+  if (!oldEntry) {
+    return null;
+  }
+
+  if (hasBeenUpdated) {
+    return new Date().toISOString();
+  }
+
+  return oldEntry.lastUpdateDate
+    ? new Date(oldEntry.lastUpdateDate).toISOString()
+    : null;
+};
+
+function generateManifestEntry<ContentDef extends ContentDefinition>({
+  slug,
+  filePath,
+  customManifestEntryProperties,
+  title,
+  compiledHtml,
+  hash,
+  oldManifest,
+  contentDef,
+}: {
+  slug: string;
+  filePath: string;
+  customManifestEntryProperties: CustomManifestEntryProperties<ContentDef>;
+  title: string;
+  compiledHtml: string;
+  hash: string;
+  oldManifest: OldManifestEntries;
+  contentDef: ContentDef;
+}): ContentDefManifestEntry<ContentDef> {
+  const fileName = contentDef.generateFileName({
+    slug,
+    filePath,
+    sourceDir: contentDef.sourceDir,
+    hash,
+    html: compiledHtml,
+  });
   const href = joinUrlPath(contentDef.hrefRoot, fileName);
 
-  const oldEntryRaw = oldManifest[slug];
-  const oldEntry = isValidOldEntry(oldEntryRaw) ? oldEntryRaw : undefined;
+  const oldEntry = oldManifest[slug];
 
   const publishDate = new Date(
     oldEntry?.publishDate ?? new Date(),
   ).toISOString();
 
-  const hasBeenUpdated = shouldTreatEntryAsChanged(
+  const hasBeenUpdated = detectContentChange(oldEntry, fileName, hash);
+
+  const lastUpdateDate = resolveLastUpdateDate({
+    hasBeenUpdated,
     oldEntry,
-    fileName,
-    contentHash,
-    slug,
-  );
-
-  // For new posts (no oldEntry), lastUpdateDate should be null
-  // For existing posts that have been updated, set to current date
-  // For existing posts that haven't been updated, preserve existing lastUpdateDate or null
-  const lastUpdateDate = !oldEntry
-    ? null // New post, no update date
-    : hasBeenUpdated
-      ? new Date().toISOString() // Content changed, set current time
-      : oldEntry.lastUpdateDate
-        ? new Date(oldEntry.lastUpdateDate).toISOString() // Preserve existing update date
-        : null; // Old post with no previous update date
-
-  return Object.assign({}, customManifestEntryProperties, {
-    fileName,
-    href,
-    publishDate,
-    lastUpdateDate,
-    hash: contentHash,
-    slug,
   });
-}
-
-async function writeTypedCompiledContent(
-  slug: string,
-  html: string,
-  assets: Array<{ sourcePath: string; destinationPath: string }>,
-  contentDef: ContentDefinition,
-): Promise<void> {
-  const htmlFileName = contentDef.generateFileName(slug, html);
-  const htmlPath = path.join(contentDef.outputDir, htmlFileName);
-  await writeTextFile(htmlPath, html);
-
-  await Promise.all(
-    assets.map((asset) =>
-      copyFile(
-        asset.sourcePath,
-        path.join(contentDef.outputDir, asset.destinationPath),
-      ),
-    ),
+  const result: ContentDefManifestEntry<ContentDef> = Object.assign(
+    {},
+    customManifestEntryProperties,
+    {
+      fileName,
+      href,
+      title,
+      publishDate,
+      lastUpdateDate,
+      hash,
+      slug,
+    },
   );
-}
 
-function isValidOldEntry(entry: unknown): entry is OldManifestEntry {
-  return typeof entry === "object" && entry !== null;
-}
-
-function generateHash(content: string): string {
-  return getSha1Hex(content);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return result;
 }

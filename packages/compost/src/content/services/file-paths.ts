@@ -1,17 +1,19 @@
 import { assertIsNotNullish } from "@jaybeeuu/utilities";
 import path from "node:path";
-import { getHash } from "../../hash.js";
 
-export const getCompiledPostFileName = (
-  slug: string,
-  fileContent: string,
-): string => {
-  const hashFragment = getHash(fileContent);
+export const getCompiledPostFileName = ({
+  slug,
+  hash,
+}: {
+  slug: string;
+  hash: string;
+}): string => {
+  const hashFragment = hash.slice(0, 6);
   return `${slug}-${hashFragment}.html`;
 };
 
-export const getSlug = (relativeFilePath: string): string => {
-  const [slug] = path.basename(relativeFilePath).split(".", 1);
+export const getSlug = ({ filePath }: { filePath: string }): string => {
+  const [slug] = path.basename(filePath).split(".", 1);
   assertIsNotNullish(slug);
   return slug;
 };

@@ -1,6 +1,6 @@
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
-import type { BaseManifestEntry } from "./manifest/index.js";
+import type { BaseManifestEntry } from "../../manifest.js";
 
 export class ManifestEntriesManager<Entry extends BaseManifestEntry> {
   private readonly entries = new Map<string, Entry>();

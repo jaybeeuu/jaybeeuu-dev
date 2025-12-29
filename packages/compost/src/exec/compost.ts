@@ -1,32 +1,46 @@
 import type { Result } from "@jaybeeuu/utilities";
-import { debounce, failure, log, success } from "@jaybeeuu/utilities";
+import {
+  debounce,
+  failure,
+  log,
+  success,
+  getErrorMessage,
+} from "@jaybeeuu/utilities";
 import chokidar from "chokidar";
-import yargsFactory from "yargs";
-import { hideBin } from "yargs/helpers";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import yargsFactory from "yargs";
+import { hideBin } from "yargs/helpers";
+import {
+  type ContentDefinition,
+  isContentDefinition,
+} from "../content/content-definition.js";
 import type {
-  OrchestratorConfig as OrchestratorOptions,
-  ContentDefinition,
-} from "../content/index.js";
-import { processContent, isContentDefinition } from "../content/index.js";
-import type { ProcessContentFailureReason } from "../content/orchestrator.js";
+  OrchestratorConfig,
+  ProcessContentFailureReason,
+} from "../content/orchestrator.js";
+import { compost } from "../index.js";
 
 /**
  * Configuration options for the compost CLI.
  */
-export interface UpdateOptions {
+export interface CliArgs {
   /** Whether or not to clean the output directories before writing the composted files. */
   clean: boolean;
   /** The path to the config file. Will default to ./compost.config */
   config: string;
   /** Whether or not to watch for changes and recompile automatically. */
   watch: boolean;
+  /** Whether or not to include unpublished content in the output. */
+  includeUnpublished?: boolean;
 }
 
 const yargs = yargsFactory(hideBin(process.argv));
 
-const loadConfig = async (configPath: string): Promise<ContentDefinition> => {
+const loadConfig = async (
+  configPath: string,
+  args: CliArgs,
+): Promise<ContentDefinition> => {
   try {
     const resolvedPath = path.resolve(configPath);
     const configUrl = pathToFileURL(resolvedPath).href;
@@ -43,22 +57,27 @@ const loadConfig = async (configPath: string): Promise<ContentDefinition> => {
       );
     }
 
-    return config;
+    return {
+      ...config,
+      ...(args.includeUnpublished !== undefined
+        ? { includeUnpublished: args.includeUnpublished }
+        : {}),
+    };
   } catch (err) {
     throw new Error(
-      `Failed to load config from ${configPath}: ${log.getErrorMessage(err)}`,
+      `Failed to load config from ${configPath}: ${getErrorMessage(err)}`,
     );
   }
 };
 
 const run = async (
-  contentType: ContentDefinition,
-  orchestratorOptions: OrchestratorOptions,
+  contentDef: ContentDefinition,
+  orchestratorCOnfig: OrchestratorConfig,
 ): Promise<Result<never, ProcessContentFailureReason | "error">> => {
   try {
     log.info("Composting...");
 
-    const result = await processContent(contentType, orchestratorOptions);
+    const result = await compost(contentDef, orchestratorCOnfig);
 
     if (result.success) {
       const manifest = result.value;
@@ -81,23 +100,23 @@ const run = async (
     }
   } catch (err) {
     log.error("Failed to compost", err);
-    return failure("error", log.getErrorMessage(err));
+    return failure("error", getErrorMessage(err));
   }
 };
 
 const watch = (
-  contentType: ContentDefinition,
-  orchestratorOptions: OrchestratorOptions,
+  contentDef: ContentDefinition,
+  orchestratorConfig: OrchestratorConfig,
 ): void => {
   log.info("Starting compost in watch mode...");
 
   const debouncedRun = debounce(async () => {
-    await run(orchestratorOptions, contentType);
+    await run(contentDef, orchestratorConfig);
     log.info("Waiting for changes...");
   }, 250);
   const watchPaths = [
-    contentType.sourceDir,
-    ...contentType.additionalWatchPaths,
+    contentDef.sourceDir,
+    ...contentDef.additionalWatchPaths,
   ].filter(Boolean);
   chokidar.watch(watchPaths).on("all", debouncedRun);
 };
@@ -124,15 +143,22 @@ yargs.command(
       type: "string",
       demandOption: true,
     },
+    includeUnpublished: {
+      description:
+        "Include unpublished content in the output (overrides content definition setting).",
+      type: "boolean",
+    },
   },
-  async (options: UpdateOptions) => {
-    const orchestratorConfig = { clean: options.clean };
-    const compostConfig = await loadConfig(options.config);
+  async (args: CliArgs) => {
+    const orchestratorConfig: OrchestratorConfig = {
+      clean: args.clean,
+    };
 
-    if (options.watch) {
-      watch(orchestratorConfig, compostConfig);
+    const compostConfig = await loadConfig(args.config, args);
+    if (args.watch) {
+      watch(compostConfig, orchestratorConfig);
     } else {
-      const result = await run(orchestratorConfig, compostConfig);
+      const result = await run(compostConfig, orchestratorConfig);
 
       if (result.success) {
         log.info("Success!");

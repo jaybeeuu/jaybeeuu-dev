@@ -78,6 +78,7 @@ export type ResolveFrontmatterContentFailureReason =
 
 const resolveFrontmatterContent = async <ContentDef extends ContentDefinition>(
   markdownFilePath: string,
+  pattern: string,
   config: ContentDef,
 ): Promise<
   Result<
@@ -137,6 +138,7 @@ export type ResolveJsonContentFailureReason =
 
 const resolveJsonContent = async <ContentDef extends ContentDefinition>(
   markdownFilePath: string,
+  pattern: string,
   config: ContentDef,
 ): Promise<
   Result<ContentDefResolvedContent<ContentDef>, ResolveJsonContentFailureReason>
@@ -147,7 +149,7 @@ const resolveJsonContent = async <ContentDef extends ContentDefinition>(
   }
 
   const jsonFilePath = markdownFilePath.replace(
-    /\.md$/,
+    pattern,
     config.filePatterns.jsonFileExt,
   );
 
@@ -214,14 +216,14 @@ export const resolveContent = async <Content extends ContentDefinition>(
   // Check frontmatter patterns
   for (const pattern of config.filePatterns.frontmatter) {
     if (markdownFilePath.endsWith(pattern)) {
-      return resolveFrontmatterContent(markdownFilePath, config);
+      return resolveFrontmatterContent(markdownFilePath, pattern, config);
     }
   }
 
   // Check JSON metadata patterns
   for (const pattern of config.filePatterns.jsonMetadata) {
     if (markdownFilePath.endsWith(pattern)) {
-      return resolveJsonContent(markdownFilePath, config);
+      return resolveJsonContent(markdownFilePath, pattern, config);
     }
   }
 

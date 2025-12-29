@@ -12,7 +12,7 @@
   ],
   "type": "module",
   "scripts": {
-    "build": "compost --config ./compost.config.ts --source-dir ./fixtures/src/blog --output-dir ./fixtures/blog --href-root blog --remove-h1 --code-line-numbers",
+    "build": "compost --config ./compost.config.ts",
     "postbuild": "node ./fixtures/src/blog/post-processing.mjs",
     "e2e": "cypress",
     "lint": "eslint --format codeframe . --max-warnings 0",

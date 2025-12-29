@@ -1,10 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "ESNext",
-    "types": ["node"],
-    "esModuleInterop": true,
-    "outDir": "lib"
+    "types": ["node"]
   },
   "exclude": ["lib", "node_modules"]
 }

@@ -17,37 +17,6 @@ export const base = defineConfig(
   {
     files: ["**/*.ts", "**/*.tsx"],
     rules: {
-      "@typescript-eslint/naming-convention": [
-        "error",
-        {
-          selector: "default",
-          format: ["camelCase"],
-          leadingUnderscore: "forbid",
-          trailingUnderscore: "forbid",
-        },
-        {
-          selector: "import",
-          format: ["camelCase"],
-        },
-        {
-          selector: "variable",
-          format: ["camelCase"],
-          leadingUnderscore: "forbid",
-          trailingUnderscore: "forbid",
-        },
-        {
-          selector: "typeLike",
-          format: ["PascalCase"],
-        },
-        {
-          selector: "typeParameter",
-          format: ["StrictPascalCase"],
-          custom: {
-            regex: "^[A-Z][a-zA-Z]{2,}$",
-            match: true,
-          },
-        },
-      ],
       "@typescript-eslint/consistent-indexed-object-style": [
         "error",
         "index-signature",
@@ -106,7 +75,7 @@ export const base = defineConfig(
     },
   },
   {
-    files: ["**/.*rc.js", "**/*.config.js", "**/config/**/*.js"],
+    files: ["**/.*rc.[tj]s", "**/*.config.[jt]s", "**/config/**/*.[jt]s"],
     languageOptions: {
       globals: {
         ...globals.node,

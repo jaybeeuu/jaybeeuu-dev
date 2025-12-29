@@ -227,7 +227,6 @@ const resolvePath = (path: string): string => {
   return pathUtils.relative(process.cwd(), path);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const draw = (entry: Directory | File, indentation: number = 0): string => {
   const spaces = Array.from({ length: indentation }).join("  ");
 
@@ -397,7 +396,7 @@ const getFile = (path: string): File => {
   if (maybeGetFileResult.existed) {
     return maybeGetFileResult.file;
   }
-  throw new Error(maybeGetFileResult.message);
+  throw new Error(`${maybeGetFileResult.message}\n\n${draw(root)}`);
 };
 
 const assertPathIsString: (

@@ -7,8 +7,7 @@
     "jsx": "react",
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment",
-    "types": ["jest"],
-    "moduleResolution": "bundler"
+    "types": ["jest"]
   },
   "exclude": ["dist"]
 }

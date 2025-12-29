@@ -5,11 +5,11 @@ export {
   useSemanticMemo,
 } from "./async-hooks.js";
 export {
-  ContentComponent,
-  FailedComponent,
-  FailedProps,
-  MaybePromises,
-  PendingComponent,
   withPromise,
-  WithPromiseComponents,
+  type ContentComponent,
+  type FailedComponent,
+  type FailedProps,
+  type MaybePromises,
+  type PendingComponent,
+  type WithPromiseComponents,
 } from "./with-promise.js";

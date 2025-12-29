@@ -1,11 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "lib",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "noEmit": false
+    "outDir": "lib"
   },
   "include": ["src/**/*", "compost.config.ts"],
   "exclude": ["lib", "node_modules", "**/*.md", "**/*.json"]

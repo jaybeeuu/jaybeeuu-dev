@@ -1,4 +1,4 @@
-import { makeClassSelectors, makeHookBlock } from "./make-hooks";
+import { makeClassSelectors, makeHookBlock } from "./make-hooks.js";
 
 export { makeClassSelectors };
 

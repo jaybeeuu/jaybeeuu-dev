@@ -1,19 +1,23 @@
-import type { CheckedBy, TypeAssertion } from "./index";
+import type {
+  CheckedBy,
+  TypeAssertion,
+  TypePredicate,
+  TypeString,
+} from "./index.js";
 import {
   assert,
   is,
   isArrayOf,
   isInstanceOf,
   isIntersectionOf,
+  isKeyOf,
   isLiteral,
   isNullish,
   isObject,
   isRecordOf,
   isTuple,
   isUnionOf,
-  isKeyOf,
-  type TypeString,
-} from "./index";
+} from "./index.js";
 
 import { describe, expect, it } from "@jest/globals";
 describe("type-guards", () => {
@@ -349,8 +353,8 @@ root.b: Expected "string", but received "number"`),
           typeof data === "object" &&
           "id" in data &&
           "name" in data &&
-          typeof (data as any).id === "number" &&
-          typeof (data as any).name === "string"
+          typeof data.id === "number" &&
+          typeof data.name === "string"
         );
       };
 
@@ -413,14 +417,18 @@ root.b: Expected "string", but received "number"`),
       });
 
       it("works with assertion methods", () => {
-        const userPredicate = is(isTestUser);
+        const userPredicate: TypePredicate<TestUser> = is(isTestUser);
         const validUser = { id: 1, name: "Alice" };
 
         // Should not throw
-        expect(() => userPredicate.assert(validUser)).not.toThrow();
+        expect(() => {
+          userPredicate.assert(validUser);
+        }).not.toThrow();
 
         // Should throw for invalid data
-        expect(() => userPredicate.assert("invalid")).toThrow(
+        expect(() => {
+          userPredicate.assert("invalid");
+        }).toThrow(
           new TypeError(
             `Expected user-defined type guard but received string.\nroot: User-defined type guard failed for value of type "string"`,
           ),

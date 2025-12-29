@@ -1,17 +1,9 @@
-export {
-  buildManifest,
-  getUpgradedV1EntryHash,
-  isManifest,
-  shouldTreatEntryAsChanged,
-  writeManifest,
-  type BaseManifestEntry,
-  type LoadedManifestData,
-  type Manifest,
-  type ManifestEntry,
-  type ProcessingManifest,
-} from "./manifest-operations.js";
+export { buildManifest, writeManifest } from "./manifest-operations.js";
 
 export {
-  getOldManifestWithFallback,
+  getOldManifestEntriesWithFallback,
+  detectContentChange,
   type GetOldManifestFailureReason,
+  type OldManifestEntries,
+  type OldManifestEntry,
 } from "./old-manifest.js";
