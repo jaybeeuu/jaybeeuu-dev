@@ -75,6 +75,7 @@ const getFormattedTypeDeclaration = (classes: string[]): string =>
     "};",
     "export default classes;",
     "export { classes };",
+    "",
   ].join("\n");
 
 const getDeclarationFilePath = (fullPath: string): string =>
