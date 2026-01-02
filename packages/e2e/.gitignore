@@ -1,7 +1,7 @@
 /.reports
 /.screenshots
 /.videos
-/fixtures/blog/*.html
+/fixtures/blog
 /node_modules
 /coverage
 /.nyc_output
