@@ -7,5 +7,6 @@
     "types": ["jest"],
     "outDir": "lib"
   },
+  "include": ["src/**/*", "jest-setup.ts"],
   "exclude": ["lib", "node_modules"]
 }

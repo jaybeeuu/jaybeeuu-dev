@@ -28,13 +28,15 @@ import {
 jest.mock("node:fs");
 jest.mock<typeof utilities>("@jaybeeuu/utilities", () => {
   const utils = jest.requireActual<typeof utilities>("@jaybeeuu/utilities");
-  utils.log = {
-    error: jest.fn(),
-    getErrorMessage: jest.fn<(err: unknown) => string>(),
-    info: jest.fn(),
-    warn: jest.fn(),
+  return {
+    ...utils,
+    log: {
+      error: jest.fn(),
+      getErrorMessage: jest.fn<(err: unknown) => string>(),
+      info: jest.fn(),
+      warn: jest.fn(),
+    },
   };
-  return utils;
 });
 
 export const isTestPostInputMetadata = isObject({

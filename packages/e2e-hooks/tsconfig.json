@@ -4,5 +4,6 @@
   "compilerOptions": {
     "outDir": "lib",
     "types": ["node"]
-  }
+  },
+  "exclude": ["node_modules", "lib", "coverage-reports"]
 }
