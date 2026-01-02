@@ -9,9 +9,7 @@
     "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "outDir": "lib",
     "sourceMap": false,
-    "types": ["cypress", "node"],
-    "module": "ES2022",
-    "moduleResolution": "bundler"
+    "types": ["cypress", "node"]
   },
   "exclude": ["node_modules"]
 }

@@ -1,10 +1,10 @@
-import * as post from "../features/post";
-import * as postList from "../features/post-list";
+import * as post from "../features/post.js";
+import * as postList from "../features/post-list.js";
 import {
   getPostsAlias,
   registerEmptyRoutes,
   registerRoutes,
-} from "../routes/blog";
+} from "../routes/blog.js";
 
 context("Empty Post List", () => {
   beforeEach(() => {

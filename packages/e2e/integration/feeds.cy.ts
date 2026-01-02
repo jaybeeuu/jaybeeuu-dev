@@ -1,5 +1,5 @@
-import * as navBar from "../features/nav-bar";
-import * as fourOhFour from "../features/four-oh-four";
+import * as navBar from "../features/nav-bar.js";
+import * as fourOhFour from "../features/four-oh-four.js";
 
 describe("RSS/Atom Feeds", () => {
   beforeEach(() => {
