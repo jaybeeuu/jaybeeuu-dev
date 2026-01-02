@@ -2,9 +2,10 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "lib": ["ES2024"],
-    "module": "NodeNext",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "allowJs": true,
-    "checkJs": false,
+    "checkJs": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
@@ -22,9 +23,7 @@
     "skipLibCheck": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
-    "noUncheckedIndexedAccess": true,
-
-    "types": []
+    "noUncheckedIndexedAccess": true
   },
   "exclude": ["lib", "node_modules", "coverage-reports"]
 }

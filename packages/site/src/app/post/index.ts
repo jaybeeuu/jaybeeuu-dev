@@ -1,1 +1,1 @@
-export { PostLookup } from "./post";
+export { PostLookup } from "./post.js";

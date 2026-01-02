@@ -1,1 +1,1 @@
-export { ThemeRoot } from "./theme";
+export { ThemeRoot } from "./theme.js";

@@ -1,5 +1,5 @@
 import { h, render } from "preact";
-import { App } from "./app";
+import { App } from "./app/index.js";
 import { StoreProvider } from "@jaybeeuu/preact-recoilless";
 
 if (process.env.NODE_ENV === "development") {

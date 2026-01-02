@@ -2,9 +2,9 @@ import type { JSX } from "preact";
 import { h } from "preact";
 import { useValue } from "@jaybeeuu/preact-recoilless";
 import classNames from "classnames";
-import type { Theme } from "../services/theme";
-import { Icon } from "../icon";
-import { theme } from "../state";
+import type { Theme } from "../services/theme.js";
+import { Icon } from "../icon/index.js";
+import { theme } from "../state.js";
 
 import css from "./theme-toggle.module.css";
 

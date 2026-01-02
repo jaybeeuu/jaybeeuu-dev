@@ -4,18 +4,23 @@ import path from "node:path";
 import { defineConfig } from "vite";
 import { imagetools } from "vite-imagetools";
 import { viteStaticCopy } from "vite-plugin-static-copy";
-import type { SiteMapUrl } from "./build-plugins";
-import { cssModuleTypes, feed, siteMap, version } from "./build-plugins";
-import { paths } from "./config/paths";
-import type { PostManifest } from "@jaybeeuu/posts/types";
-import istanbulPlugin from "vite-plugin-istanbul";
+import type { SiteMapUrl } from "./build-plugins/index.js";
+import {
+  cssModuleTypes,
+  feed,
+  siteMap,
+  version,
+} from "./build-plugins/index.js";
+import { paths } from "./config/paths.js";
+import { isPostManifest } from "@jaybeeuu/posts/types";
+import { default as istanbulPlugin } from "vite-plugin-istanbul";
 
 console.log("VITE_COVERAGE", process.env.VITE_COVERAGE);
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const postManifestFile: PostManifest = JSON.parse(
+const postManifestFile: unknown = JSON.parse(
   fs.readFileSync(paths.manifest, "utf8"),
 );
+isPostManifest.assert(postManifestFile);
 const postManifest = postManifestFile.entries;
 
 const resolvedURLToBase = (...pathFragments: string[]): string => {
@@ -51,6 +56,7 @@ export default defineConfig({
   },
   plugins: [
     preact(),
+    // @ts-expect-error - types are wrong
     istanbulPlugin({
       requireEnv: true,
       forceBuildInstrument: true,

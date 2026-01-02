@@ -1,6 +1,6 @@
 import { asError } from "@jaybeeuu/utilities";
 import { is } from "@jaybeeuu/is";
-import { fetchJson, fetchText } from "./request";
+import { fetchJson, fetchText } from "./request.js";
 
 import { describe, expect, it, jest } from "@jest/globals";
 

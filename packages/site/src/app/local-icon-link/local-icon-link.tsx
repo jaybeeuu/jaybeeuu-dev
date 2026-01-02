@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import type { JSX } from "preact";
 import { h } from "preact";
-import type { IconName } from "../icon/index";
-import { Icon } from "../icon/index";
+import type { IconName } from "../icon/index.js";
+import { Icon } from "../icon/index.js";
 import css from "./local-icon-link.module.css";
 
 export type { IconName };

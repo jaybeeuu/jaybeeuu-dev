@@ -7,19 +7,22 @@ import classNames from "classnames";
 import type { JSX, RefObject } from "preact";
 import { createRef, h, render, Fragment } from "preact";
 import { useEffect, useLayoutEffect } from "preact/hooks";
-import { FouOhFour } from "../four-oh-four";
+import { FouOhFour } from "../four-oh-four.js";
 import { useParams } from "wouter";
-import { Icon } from "../icon";
-import type { PostHtmlLookupResult, PostMetaDataLookupResult } from "../state";
+import { Icon } from "../icon/index.js";
+import type {
+  PostHtmlLookupResult,
+  PostMetaDataLookupResult,
+} from "../state.js";
 import {
   currentPostHtml,
   currentPostMeta,
   currentPostSlug,
   hideTitleBar as hideTitleBarAction,
-} from "../state";
-import { useBackgrounds } from "../use-background";
-import { usePageInfo } from "../use-page-info";
-import { withPromise } from "../with-promise";
+} from "../state.js";
+import { useBackgrounds } from "../use-background.js";
+import { usePageInfo } from "../use-page-info.js";
+import { withPromise } from "../with-promise.js";
 import css from "./post.module.css";
 
 const assertIsString: TypeAssertion<string> = assert(is("string"));

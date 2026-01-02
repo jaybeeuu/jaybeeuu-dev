@@ -4,9 +4,9 @@ import { useEffect } from "preact/hooks";
 import classNames from "classnames";
 import { theme as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import { useValue } from "@jaybeeuu/preact-recoilless";
-import type { Theme } from "../services/theme";
-import { listenToMediaTheme, persistedTheme } from "../services/theme";
-import { theme } from "../state";
+import type { Theme } from "../services/theme.js";
+import { listenToMediaTheme, persistedTheme } from "../services/theme.js";
+import { theme } from "../state.js";
 
 import "./base-styles.css";
 import "./colours.css";

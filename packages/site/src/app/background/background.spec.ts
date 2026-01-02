@@ -1,11 +1,11 @@
 import { ControllablePromise } from "@jaybeeuu/utilities/test";
 import type { RenderHookResult } from "@testing-library/preact";
 import { act, renderHook, waitFor } from "@testing-library/preact";
-import { images } from "../images";
-import type { Theme } from "../services/theme";
-import type { BackgroundImages } from "../state";
-import type { ImageState } from "./background";
-import { useImages } from "./background";
+import { images } from "../images/index.js";
+import type { Theme } from "../services/theme.js";
+import type { BackgroundImages } from "../state.js";
+import type { ImageState } from "./background.js";
+import { useImages } from "./background.js";
 
 import { describe, expect, it, jest } from "@jest/globals";
 jest.mock("../images");

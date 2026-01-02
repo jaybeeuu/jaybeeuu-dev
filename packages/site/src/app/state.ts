@@ -2,16 +2,16 @@ import type { PostManifest, PostManifestEntry } from "@jaybeeuu/posts/types";
 import { isPostManifest } from "@jaybeeuu/posts/types";
 import type { Result } from "@jaybeeuu/utilities";
 import { failure, success } from "@jaybeeuu/utilities";
-import { fetchJson, fetchText } from "../utils/request";
+import { fetchJson, fetchText } from "../utils/request.js";
 import type {
   DerivationContext,
   DerivedValue,
   PrimitiveValue,
   ActionContext,
 } from "@jaybeeuu/recoilless";
-import type { ImageName } from "./images/index";
-import type { Theme } from "./services/theme";
-import { getMediaTheme, persistedTheme } from "./services/theme";
+import type { ImageName } from "./images/index.js";
+import type { Theme } from "./services/theme.js";
+import { getMediaTheme, persistedTheme } from "./services/theme.js";
 
 export const postsManifest: DerivedValue<Promise<PostManifest>> = {
   name: "postManifest",
