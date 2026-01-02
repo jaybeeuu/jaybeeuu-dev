@@ -4,9 +4,14 @@
     "jsx": "react",
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment",
-    "types": ["jest"],
+    "types": ["jest", "node"],
     "outDir": "lib"
   },
-  "include": ["src/**/*", "jest-setup.ts"],
+  "include": [
+    "src/**/*",
+    "jest-setup.ts",
+    "jest.config.ts",
+    "eslint.config.ts"
+  ],
   "exclude": ["lib", "node_modules"]
 }
