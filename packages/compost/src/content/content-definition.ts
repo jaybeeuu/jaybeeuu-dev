@@ -213,7 +213,7 @@ export const createContentDefinition: CreateContentDefinition = <
       ...input.filePatterns,
     },
     hrefRoot: input.hrefRoot ?? contentType,
-    validateInputMeta: input.validateInputMeta ?? isObject({} as const),
+    validateInputMeta: input.validateInputMeta ?? isObject({}),
     generateSlug: input.generateSlug ?? getSlug,
     generateFileName: input.generateFileName ?? getCompiledPostFileName,
     requireOldManifest: input.requireOldManifest ?? true,

@@ -14,7 +14,6 @@ import { compost } from "../../src/index.js";
 import type { File } from "../../src/files/index.js";
 import {
   deleteDirectories,
-  writeJsonFile,
   writeTextFiles,
   readTextFile,
 } from "../../src/files/index.js";
@@ -144,16 +143,6 @@ const getTestContentDef = (
   });
 };
 
-export const writeOutputManifestFile = async (
-  manifest: TestPostManifest,
-  options: TestContentDefinition,
-): Promise<void> => {
-  await writeJsonFile(
-    path.join(options.outputDir, options.manifestFileName),
-    manifest,
-  );
-};
-
 const createDefaultedMeta = (
   meta: Partial<TestPostInputMetadata & BaseInputMetadata> | null,
 ): Partial<TestPostInputMetadata & BaseInputMetadata> | null => {
@@ -254,7 +243,7 @@ export const writePostFile = async (
 
 export const getOutputFile = async (
   filePath: string,
-  options: Partial<TestPostContentDefinitionInput> = {},
+  options: Partial<TestPostContentDefinitionInput>,
 ): Promise<string> => {
   const contentDef = getTestContentDef(options);
   const resolvedFilePath = path.join(contentDef.outputDir, filePath);
