@@ -262,53 +262,15 @@ export const getOutputFile = async (
   return readTextFile(resolvedFilePath);
 };
 
-export const getValidatedManifestFile = async (
-  options: Partial<TestPostContentDefinitionInput> = {},
-): Promise<TestPostManifest> => {
-  const contentDef = getTestContentDef(options);
-
-  const fileContent = await getOutputFile("post-manifest.json", contentDef);
-  const parsedContent: unknown = JSON.parse(fileContent);
-
-  const manifestValidator = isTestPostManifest;
-
-  if (!manifestValidator(parsedContent)) {
-    throw new Error("Invalid manifest structure found in post-manifest.json");
-  }
-
-  return parsedContent;
-};
-
 export const getPostManifest = async (
   options: Partial<TestPostContentDefinitionInput> = {},
 ): Promise<TestPostManifest> => {
   const contentDef = getTestContentDef(options);
 
-  // With the new orchestrator, post manifests are in post-manifest.json
   const fileContent = await getOutputFile("post-manifest.json", contentDef);
   const parsedContent: unknown = JSON.parse(fileContent);
 
-  // Handle both versioned (v2+) and legacy (v1) manifest formats
-  if (
-    typeof parsedContent === "object" &&
-    parsedContent !== null &&
-    "version" in parsedContent &&
-    "entries" in parsedContent
-  ) {
-    // New versioned format - return the full manifest structure
-    return parsedContent as TestPostManifest;
-  } else {
-    // Legacy format - wrap in V2 structure for consistency
-    return {
-      version: 2,
-      metadata: {
-        generatedAt: new Date().toISOString(),
-        entryCount: Object.keys(parsedContent || {}).length,
-        overallHash: "legacy",
-      },
-      entries: parsedContent || {},
-    } as TestPostManifest;
-  }
+  return parsedContent as TestPostManifest;
 };
 
 export const getPost = async (

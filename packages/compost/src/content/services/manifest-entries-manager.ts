@@ -24,12 +24,4 @@ export class ManifestEntriesManager<Entry extends BaseManifestEntry> {
   getEntries(): Map<string, Entry> {
     return new Map(this.entries);
   }
-
-  hasSlug(slug: string): boolean {
-    return this.entries.has(slug);
-  }
-
-  size(): number {
-    return this.entries.size;
-  }
 }
