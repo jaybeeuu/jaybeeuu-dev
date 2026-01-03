@@ -78,14 +78,14 @@ const failure = <Reason extends string>(
 
 const repackError = <Value, FailureReason extends string>(
   result: Result<Value, string>,
-  newFailureReasons: FailureReason,
+  newFailureReason: FailureReason,
   failureMessagePrefix: string,
   framesSincePublic: number = 1,
 ): Result<Value, FailureReason> => {
   return result.success
     ? result
     : failure(
-        newFailureReasons,
+        newFailureReason,
         `${failureMessagePrefix}\n${result.reason}: ${result.message}`,
         framesSincePublic + 1,
       );

@@ -1,5 +1,5 @@
 import type { Result } from "@jaybeeuu/utilities";
-import { failure, success } from "@jaybeeuu/utilities";
+import { failure, repackError, success } from "@jaybeeuu/utilities";
 import type { ReadJsonFileFailureReason } from "../../files/index.js";
 import { canAccess, readJsonFile, readTextFile } from "../../files/index.js";
 import type { ParseYamlMetaFailureReason } from "./metadata.js";
@@ -104,22 +104,15 @@ const resolveFrontmatterContent = async <ContentDef extends ContentDefinition>(
   const frontMatterText = sourceFileText.slice(4, frontMatterEnd);
   const content = sourceFileText.slice(frontMatterEnd + 5);
 
-  const yamlResult = parseYamlMeta(frontMatterText, is("object"));
+  const yamlResult = parseYamlMeta(
+    frontMatterText,
+    isIntersectionOf(is(config.validateInputMeta), isBaseInputMetadata),
+  );
   if (!yamlResult.success) {
-    return yamlResult;
-  }
-
-  if (
-    !isIntersectionOf(
-      is(config.validateInputMeta),
-      isBaseInputMetadata,
-    )(yamlResult.value)
-  ) {
-    return failure(
+    return repackError(
+      yamlResult,
       "invalid frontmatter metadata",
-      new Error(
-        `Frontmatter metadata validation failed for file: ${markdownFilePath}`,
-      ),
+      "Failed to parse frontmatter metadata",
     );
   }
 
@@ -152,8 +145,8 @@ const resolveJsonContent = async <ContentDef extends ContentDefinition>(
     pattern,
     config.filePatterns.jsonFileExt,
   );
-
   const canAccessJson = await canAccess(jsonFilePath);
+
   if (!canAccessJson) {
     return failure(
       "json file not found",
@@ -161,20 +154,15 @@ const resolveJsonContent = async <ContentDef extends ContentDefinition>(
     );
   }
 
-  const metadataResult = await readJsonFile(jsonFilePath, is("object"));
+  const metadataResult = await readJsonFile(
+    jsonFilePath,
+    isIntersectionOf(is(config.validateInputMeta), isBaseInputMetadata),
+  );
   if (!metadataResult.success) {
-    return metadataResult;
-  }
-
-  if (
-    !isIntersectionOf(
-      is(config.validateInputMeta),
-      isBaseInputMetadata,
-    )(metadataResult.value)
-  ) {
-    return failure(
+    return repackError(
+      metadataResult,
       "invalid json metadata",
-      new Error(`JSON metadata validation failed for file: ${jsonFilePath}`),
+      "Failed to load JSON Metadata",
     );
   }
 

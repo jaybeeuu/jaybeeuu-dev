@@ -730,6 +730,10 @@ jest.mocked(fs.promises.readFile).mockImplementation(async (...args) => {
   const file = getFile(path);
   file.logAccess();
 
+  if (file.content === "<CORRUPTED FILE>") {
+    throw new Error(`Failed to read file: ${path} is corrupt.`);
+  }
+
   return file.content;
 });
 

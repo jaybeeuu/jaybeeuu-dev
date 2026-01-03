@@ -74,6 +74,50 @@ This is test content.`,
         expect(result.reason).toBe("file processing failed");
       }
     });
+
+    it("fails compilation with valid frontmatter YAML, missing fields", async () => {
+      await cleanUpDirectories();
+
+      const slug = "invalid-frontmatter-post";
+
+      await writeTextFiles("src", [
+        {
+          path: `${slug}.post.md`,
+          content: `---
+title: "Test Post"
+---
+
+# Test Post
+
+This is test content.`,
+        },
+      ]);
+
+      const result = await compilePosts();
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.reason).toBe("file processing failed");
+      }
+    });
+
+    it("returns a failure when a content file cannot be read.", async () => {
+      await cleanUpDirectories();
+
+      await writeTextFiles("src", [
+        {
+          path: "invalid-file.post.md",
+          content: "<CORRUPTED FILE>",
+        },
+      ]);
+
+      const result = await compilePosts();
+
+      expect(result).toMatchObject({
+        success: false,
+        message: expect.stringContaining("Failed to read file"),
+      });
+    });
   });
 
   describe("json post failures", () => {
@@ -156,7 +200,7 @@ This is test content.`,
   });
 
   describe("unsupported file extensions", () => {
-    it("skips files with unsupported extensions during compilation", async () => {
+    it("skips files with unsupported extensions during compilation.", async () => {
       await cleanUpDirectories();
 
       await writeTextFiles("src", [
@@ -172,11 +216,58 @@ This is test content.`,
 
       const result = await compilePosts();
 
-      // Should succeed but skip all files
       expect(result.success).toBe(true);
       if (result.success) {
         expect(Object.keys(result.value.entries)).toHaveLength(0);
       }
+    });
+
+    it("returns a failure when a content file cannot be read.", async () => {
+      await cleanUpDirectories();
+
+      await writeTextFiles("src", [
+        {
+          path: "invalid-file.md",
+          content: "<CORRUPTED FILE>",
+        },
+        {
+          path: "invalid-file.post.json",
+          content: JSON.stringify({
+            title: "Test Post",
+            abstract: "Test abstract",
+            publish: true,
+          }),
+        },
+      ]);
+
+      const result = await compilePosts();
+
+      expect(result).toMatchObject({
+        success: false,
+        message: expect.stringContaining("Failed to read file"),
+      });
+    });
+
+    it("returns a failure when a json metadata file cannot be read.", async () => {
+      await cleanUpDirectories();
+
+      await writeTextFiles("src", [
+        {
+          path: "invalid-file.md",
+          content: "# This is some markdown content.",
+        },
+        {
+          path: "invalid-file.post.json",
+          content: "<CORRUPTED FILE>",
+        },
+      ]);
+
+      const result = await compilePosts();
+
+      expect(result).toMatchObject({
+        success: false,
+        message: expect.stringContaining("Failed to read file"),
+      });
     });
   });
 
