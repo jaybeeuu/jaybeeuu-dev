@@ -1,5 +1,10 @@
 import { defineConfig } from "cypress";
-import coverage from "@cypress/code-coverage/task.js";
+import * as coverageModule from "@cypress/code-coverage/task.js";
+
+const coverage = coverageModule.default as unknown as (
+  on: Cypress.PluginEvents,
+  config: Cypress.PluginConfigOptions,
+) => void;
 
 export default defineConfig({
   e2e: {

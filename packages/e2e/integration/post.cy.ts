@@ -1,7 +1,7 @@
-import * as navBar from "../features/nav-bar";
-import * as post from "../features/post";
-import * as postList from "../features/post-list";
-import { registerRoutes, slugs, withPostMetaData } from "../routes/blog";
+import * as navBar from "../features/nav-bar.js";
+import * as post from "../features/post.js";
+import * as postList from "../features/post-list.js";
+import { registerRoutes, slugs, withPostMetaData } from "../routes/blog.js";
 
 context("Post navigation", (): void => {
   beforeEach(() => {

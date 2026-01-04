@@ -1,4 +1,4 @@
-import { cleanUpDirectories, getCompiledPostWithContent } from "./helpers";
+import { cleanUpDirectories, getCompiledPostWithContent } from "./helpers.js";
 
 import { describe, expect, it } from "@jest/globals";
 describe("compile", () => {

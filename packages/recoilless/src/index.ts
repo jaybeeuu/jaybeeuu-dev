@@ -1,3 +1,9 @@
 export * from "./state/index.js";
 
-export { GetValue, Action, ActionContext, SetValue, Store } from "./store.js";
+export {
+  Store,
+  type Action,
+  type ActionContext,
+  type GetValue,
+  type SetValue,
+} from "./store.js";

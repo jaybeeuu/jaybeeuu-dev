@@ -1,27 +1,97 @@
 import type { Result } from "@jaybeeuu/utilities";
-import { debounce, failure, log, success } from "@jaybeeuu/utilities";
+import {
+  debounce,
+  failure,
+  log,
+  success,
+  getErrorMessage,
+} from "@jaybeeuu/utilities";
 import chokidar from "chokidar";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
 import yargsFactory from "yargs";
 import { hideBin } from "yargs/helpers";
-import { update } from "../posts/index.js";
-import type { UpdateOptions } from "../posts/types.js";
-import type { UpdateFailureReason } from "../posts/update.js";
+import {
+  type ContentDefinition,
+  isContentDefinition,
+} from "../content/content-definition.js";
+import type {
+  OrchestratorConfig,
+  ProcessContentFailureReason,
+} from "../content/orchestrator.js";
+import { compost } from "../index.js";
+
+/**
+ * Configuration options for the compost CLI.
+ */
+export interface CliArgs {
+  /** Whether or not to clean the output directories before writing the composted files. */
+  clean: boolean;
+  /** The path to the config file. Will default to ./compost.config */
+  config: string;
+  /** Whether or not to watch for changes and recompile automatically. */
+  watch: boolean;
+  /** Whether or not to include unpublished content in the output. */
+  includeUnpublished?: boolean;
+}
 
 const yargs = yargsFactory(hideBin(process.argv));
 
+const loadConfig = async (
+  configPath: string,
+  args: CliArgs,
+): Promise<ContentDefinition> => {
+  try {
+    const resolvedPath = path.resolve(configPath);
+    const configUrl = pathToFileURL(resolvedPath).href;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const configModule = await import(configUrl);
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    const config = configModule.default ?? configModule.config;
+
+    if (!isContentDefinition(config)) {
+      throw new Error(
+        "Invalid config structure: must be a CompostConfig object with valid contentTypes",
+      );
+    }
+
+    return {
+      ...config,
+      ...(args.includeUnpublished !== undefined
+        ? { includeUnpublished: args.includeUnpublished }
+        : {}),
+    };
+  } catch (err) {
+    throw new Error(
+      `Failed to load config from ${configPath}: ${getErrorMessage(err)}`,
+    );
+  }
+};
+
 const run = async (
-  options: UpdateOptions,
-): Promise<Result<never, "error" | UpdateFailureReason>> => {
+  contentDef: ContentDefinition,
+  orchestratorCOnfig: OrchestratorConfig,
+): Promise<Result<never, ProcessContentFailureReason | "error">> => {
   try {
     log.info("Composting...");
-    const result = await update(options);
+
+    const result = await compost(contentDef, orchestratorCOnfig);
+
     if (result.success) {
+      const manifest = result.value;
+      // Format output for all content types
+      const outputLines = Object.entries(manifest.entries).map(
+        ([slug, meta]) => {
+          const fileName =
+            (meta as { fileName?: string }).fileName ?? "unknown";
+          return `    ${slug}: ${fileName}`;
+        },
+      );
+
       log.info(
-        `Complete:\n\n${Object.entries(result.value)
-          .map(([slug, postMeta]) => {
-            return `    ${slug}: ${postMeta.fileName}`;
-          })
-          .join("\n")}`,
+        `Complete:\n\n${outputLines.join("\n") || "  No content processed"}`,
       );
       return success();
     } else {
@@ -30,19 +100,23 @@ const run = async (
     }
   } catch (err) {
     log.error("Failed to compost", err);
-    return failure("error", log.getErrorMessage(err));
+    return failure("error", getErrorMessage(err));
   }
 };
 
-const watch = (options: UpdateOptions): void => {
+const watch = (
+  contentDef: ContentDefinition,
+  orchestratorConfig: OrchestratorConfig,
+): void => {
   log.info("Starting compost in watch mode...");
+
   const debouncedRun = debounce(async () => {
-    await run(options);
+    await run(contentDef, orchestratorConfig);
     log.info("Waiting for changes...");
   }, 250);
   const watchPaths = [
-    options.sourceDir,
-    ...options.additionalWatchPaths,
+    contentDef.sourceDir,
+    ...contentDef.additionalWatchPaths,
   ].filter(Boolean);
   chokidar.watch(watchPaths).on("all", debouncedRun);
 };
@@ -51,69 +125,6 @@ yargs.command(
   "$0",
   "Here we go!",
   {
-    hrefRoot: {
-      type: "string",
-      default: "/",
-      alias: ["r"],
-      description: "The root path to apply when compiling hrefs (e.g. links).",
-    },
-    additionalWatchPaths: {
-      alias: ["a"],
-      description: "Paths other than --source-dir to watch when in watch mode.",
-      implies: "watch",
-      type: "string",
-      array: true,
-    },
-    includeUnpublished: {
-      alias: ["u"],
-      description:
-        "Whether or not to compile posts not marked as published in their metadata.json file.",
-      type: "boolean",
-      default: false,
-    },
-    manifestFileName: {
-      alias: ["m"],
-      description: "The nam of the output JSON manifest file.",
-      type: "string",
-      default: "manifest.json",
-    },
-    codeLineNumbers: {
-      description:
-        "Include tags and classes in code blocks that can be styled to show line numbers with the Prism line number styles.",
-      type: "boolean",
-      default: false,
-    },
-    oldManifestLocator: {
-      description:
-        "The path or URL of the old manifest. If none is given then the output-dir and manifest-file-name options will be used to infer the location. If this option is given and no manifest is found compost will fail.",
-      type: "string",
-      array: true,
-    },
-    outputDir: {
-      alias: ["o"],
-      description:
-        "The directory into which the compiled files should be written.",
-      type: "string",
-      default: "./lib",
-    },
-    removeH1: {
-      description:
-        "Indicates whether the process will remove H1 (#) headings. Useful if you will render that with a custom heading in your page.",
-      type: "boolean",
-      default: false,
-    },
-    requireOldManifest: {
-      description:
-        "Indicates whether the process will fail if the old manifest is not found.",
-      type: "boolean",
-      default: false,
-    },
-    sourceDir: {
-      alias: ["s"],
-      description: "The directory containing the source files.",
-      type: "string",
-      default: "./src",
-    },
     watch: {
       alias: ["w"],
       description:
@@ -121,18 +132,33 @@ yargs.command(
       type: "boolean",
       default: false,
     },
+    clean: {
+      alias: ["c"],
+      description: "Clean the output directory before compiling.",
+      type: "boolean",
+      default: false,
+    },
+    config: {
+      description: "Path to the compost configuration file.",
+      type: "string",
+      demandOption: true,
+    },
+    includeUnpublished: {
+      description:
+        "Include unpublished content in the output (overrides content definition setting).",
+      type: "boolean",
+    },
   },
-  async (rawOptions) => {
-    const options: UpdateOptions = {
-      ...rawOptions,
-      oldManifestLocators: rawOptions.oldManifestLocator ?? [],
-      additionalWatchPaths: rawOptions.additionalWatchPaths ?? [],
+  async (args: CliArgs) => {
+    const orchestratorConfig: OrchestratorConfig = {
+      clean: args.clean,
     };
 
-    if (options.watch) {
-      watch(options);
+    const compostConfig = await loadConfig(args.config, args);
+    if (args.watch) {
+      watch(compostConfig, orchestratorConfig);
     } else {
-      const result = await run(options);
+      const result = await run(compostConfig, orchestratorConfig);
 
       if (result.success) {
         log.info("Success!");

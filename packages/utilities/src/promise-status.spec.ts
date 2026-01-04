@@ -1,12 +1,12 @@
+import { asError } from "./as-error.js";
 import { echo } from "./delay.js";
+import type { MonitorPromiseOptions, PromiseState } from "./promise-status.js";
+import { combinePromises, monitorPromise } from "./promise-status.js";
 import {
   advanceByTimeThenAwait,
   advanceToNextThenAwait,
   withFakeTimers,
 } from "./test/index.js";
-import type { MonitorPromiseOptions, PromiseState } from "./promise-status.js";
-import { monitorPromise, combinePromises } from "./promise-status.js";
-import { asError } from "./as-error";
 
 const getPromiseStatusIterator = <Value>(
   promise: Promise<Value>,

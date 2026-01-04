@@ -1,9 +1,9 @@
-import type { UpdateOptions } from "packages/compost/src/posts/types";
+import type { TestPostContentDefinitionInput } from "./helpers.js";
 import {
   cleanUpDirectories,
   getCompiledPostWithContent,
   getOutputFile,
-} from "./helpers";
+} from "./helpers.js";
 
 import { describe, expect, it } from "@jest/globals";
 describe("images", () => {
@@ -63,7 +63,9 @@ describe("images", () => {
 
   it("leaves https urls intact.", async () => {
     await cleanUpDirectories();
-    const updateOptions: Partial<UpdateOptions> = { hrefRoot: "posts-root" };
+    const updateOptions: TestPostContentDefinitionInput = {
+      hrefRoot: "posts-root",
+    };
     const post = await getCompiledPostWithContent(
       {
         content: [
@@ -84,7 +86,9 @@ describe("images", () => {
 
   it("leaves http urls intact.", async () => {
     await cleanUpDirectories();
-    const updateOptions: Partial<UpdateOptions> = { hrefRoot: "posts-root" };
+    const updateOptions: TestPostContentDefinitionInput = {
+      hrefRoot: "posts-root",
+    };
     const post = await getCompiledPostWithContent(
       {
         content: [
@@ -105,7 +109,8 @@ describe("images", () => {
 
   it("copies the image into the output dir in the right place.", async () => {
     await cleanUpDirectories();
-    const updateOptions: Partial<UpdateOptions> = { hrefRoot: "posts-root" };
+    const options: TestPostContentDefinitionInput = { hrefRoot: "posts-root" };
+
     void (await getCompiledPostWithContent(
       {
         content: [
@@ -116,11 +121,11 @@ describe("images", () => {
           { path: "./some-image.jpg", content: "this is an image, honest." },
         ],
       },
-      updateOptions,
+      options,
     ));
 
-    await expect(
-      getOutputFile("some-image-j8Ri3I.jpg", updateOptions),
-    ).resolves.toBe("this is an image, honest.");
+    await expect(getOutputFile("some-image-j8Ri3I.jpg", options)).resolves.toBe(
+      "this is an image, honest.",
+    );
   });
 });

@@ -1,5 +1,5 @@
-import { getThemeRoot } from "../features/theme";
-import { getThemeSwitch } from "../features/nav-bar";
+import { getThemeRoot } from "../features/theme.js";
+import { getThemeSwitch } from "../features/nav-bar.js";
 
 type MediaQueryEventListener<K extends keyof MediaQueryListEventMap> = (
   this: MediaQueryList,

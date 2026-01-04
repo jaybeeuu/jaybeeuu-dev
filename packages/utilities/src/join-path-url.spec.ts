@@ -1,6 +1,6 @@
-import { joinUrlPath } from "./join-url-path";
-
 import { describe, expect, it } from "@jest/globals";
+import { joinUrlPath } from "./join-url-path.js";
+
 describe("joinUrlPath", () => {
   const samples: {
     description: string;

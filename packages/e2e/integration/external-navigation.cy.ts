@@ -1,4 +1,4 @@
-import * as navBar from "../features/nav-bar";
+import * as navBar from "../features/nav-bar.js";
 
 context("external nav links", () => {
   beforeEach(() => {

@@ -4,5 +4,6 @@
   "compilerOptions": {
     "outDir": "lib",
     "types": ["node"]
-  }
+  },
+  "exclude": ["lib", "node_modules"]
 }

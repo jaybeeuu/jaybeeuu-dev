@@ -3,11 +3,11 @@
 import fs from "node:fs";
 
 /**
- * @typedef {import("@jaybeeuu/compost").PostManifest} PostManifest
- * @typedef {import("@jaybeeuu/compost").PostMetaData} PostMetaData
+ * @typedef {import("@jaybeeuu/posts/types").PostManifest} PostManifest
+ * @typedef {import("@jaybeeuu/posts/types").PostManifestEntry} PostMetadata
  */
 
-const manifestPath = "./fixtures/blog/manifest.json";
+const manifestPath = "./fixtures/blog/post-manifest.json";
 
 /**
  * @return {Promise<PostManifest>}
@@ -28,7 +28,7 @@ const writeManifest = (manifest) => {
 
 /**
  * @typedef {"memoising-selectors" | "module-spotting" | "the-rewrite"} PostSlug
- * @type {Partial<{ [slug in PostSlug]: Partial<PostMetaData> }>}
+ * @type {Partial<{ [slug in PostSlug]: Partial<PostMetadata> }>}
  */
 const manifestTransformations = {
   "memoising-selectors": {
@@ -50,23 +50,26 @@ const transformManifest = async () => {
   const original = await readManifest();
 
   /** @type {PostManifest} */
-  const transformedManifest = Object.entries(original).reduce(
-    /**
-     *
-     * @param {PostManifest} transformed
-     * @param {[string, PostMetaData]} param1
-     * @returns
-     */
-    (transformed, [slug, meta]) => {
-      transformed[slug] = {
-        ...meta,
-        // @ts-expect-error In practice I'm only overwriting some of the metadata.
-        ...manifestTransformations[slug],
-      };
-      return transformed;
-    },
-    {},
-  );
+  const transformedManifest = {
+    ...original,
+    entries: Object.entries(original.entries).reduce(
+      /**
+       *
+       * @param {{[slug: string]: PostMetadata}} transformed
+       * @param {[string, PostMetadata]} param1
+       * @returns
+       */
+      (transformed, [slug, meta]) => {
+        transformed[slug] = {
+          ...meta,
+          // @ts-expect-error In practice I'm only overwriting some of the metadata.
+          ...manifestTransformations[slug],
+        };
+        return transformed;
+      },
+      {},
+    ),
+  };
 
   await writeManifest(transformedManifest);
 };

@@ -1,5 +1,6 @@
 import { asError } from "@jaybeeuu/utilities";
-import { fetchJson, fetchText } from "./request";
+import { is } from "@jaybeeuu/is";
+import { fetchJson, fetchText } from "./request.js";
 
 import { describe, expect, it, jest } from "@jest/globals";
 
@@ -12,7 +13,9 @@ describe("fetchJson", () => {
       json: () => Promise.resolve({ data: "here's some data" }),
     } as Response);
 
-    await expect(fetchJson("http://example.com")).resolves.toStrictEqual({
+    await expect(
+      fetchJson("http://example.com", is("object")),
+    ).resolves.toStrictEqual({
       data: "here's some data",
     });
   });
@@ -25,7 +28,9 @@ describe("fetchJson", () => {
       text: () => Promise.resolve('{ "error": "unable to find address" }'),
     } as Response);
 
-    await expect(() => fetchJson("http://example.com")).rejects.toStrictEqual(
+    await expect(() =>
+      fetchJson("http://example.com", is("object")),
+    ).rejects.toStrictEqual(
       asError({
         status: 400,
         statusText: "Not found",

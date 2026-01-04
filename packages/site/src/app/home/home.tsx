@@ -1,6 +1,6 @@
 import type { JSX } from "preact";
 import { h } from "preact";
-import { useBackgrounds } from "../use-background";
+import { useBackgrounds } from "../use-background.js";
 
 import css from "./home.module.css";
 

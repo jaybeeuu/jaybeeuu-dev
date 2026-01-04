@@ -6,6 +6,7 @@ import type {
 } from "./core.js";
 import { assert, failValidation, isType, passValidation } from "./core.js";
 import { describe, expect, it } from "@jest/globals";
+import { is } from "./index.js";
 
 describe("assert", () => {
   it("throws when the candidate does not match the type guard.", () => {
@@ -133,6 +134,96 @@ describe("isType", () => {
       expect(predicate.validate("this?")).toStrictEqual({
         valid: false,
         errorMessages: ["root: Expected a string but got a number."],
+      });
+    });
+  });
+
+  describe("optional", () => {
+    it("returns a TypePredicate that accepts the original type", () => {
+      const optionalStringPredicate = is("string").optional();
+      expect(optionalStringPredicate("hello")).toBe(true);
+    });
+
+    it("returns a TypePredicate that accepts undefined", () => {
+      const optionalStringPredicate = is("string").optional();
+      expect(optionalStringPredicate(undefined)).toBe(true);
+    });
+
+    it.each([42, null, {}])(
+      "%#: returns a TypePredicate that rejects invalid type: %p",
+      (value) => {
+        const optionalStringPredicate = is("string").optional();
+
+        expect(optionalStringPredicate(value)).toBe(false);
+      },
+    );
+
+    it("has the correct type description", () => {
+      const optionalStringPredicate = is("string").optional();
+
+      expect(optionalStringPredicate.typeDescription).toBe(
+        "string | undefined",
+      );
+    });
+
+    it("check method returns the original value for valid input", () => {
+      const optionalStringPredicate = is("string").optional();
+
+      expect(optionalStringPredicate.check("hello")).toBe("hello");
+    });
+
+    it("check method returns undefined for undefined input", () => {
+      const optionalStringPredicate = is("string").optional();
+
+      expect(optionalStringPredicate.check(undefined)).toBe(undefined);
+    });
+
+    it("check method throws for invalid input", () => {
+      const optionalStringPredicate = is("string").optional();
+
+      expect(() => optionalStringPredicate.check(42)).toThrow(
+        'Expected string | undefined but received number.\nroot: Expected "string", but received "number"',
+      );
+    });
+
+    it.each(["hello", undefined])(
+      "%# assert method works for valid input (%p)",
+      (value) => {
+        const optionalStringPredicate: TypePredicate<string | undefined> =
+          is("string").optional();
+        expect(() => {
+          optionalStringPredicate.assert(value);
+        }).not.toThrow();
+      },
+    );
+
+    it("assert method throws for invalid input", () => {
+      const optionalStringPredicate: TypePredicate<string | undefined> =
+        is("string").optional();
+      expect(() => {
+        optionalStringPredicate.assert(null);
+      }).toThrow();
+    });
+
+    it.each(["hello", undefined])(
+      "%# validate method returns success for valid values (%p)",
+      (value) => {
+        const optionalStringPredicate: TypePredicate<string | undefined> =
+          is("string").optional();
+
+        expect(optionalStringPredicate.validate(value)).toStrictEqual({
+          valid: true,
+        });
+      },
+    );
+
+    it("validate method returns failure for invalid values", () => {
+      const stringPredicate: TypePredicate<string> = is("string");
+      const optionalStringPredicate = stringPredicate.optional();
+
+      expect(optionalStringPredicate.validate(42)).toStrictEqual({
+        valid: false,
+        errorMessages: ['root: Expected "string", but received "number"'],
       });
     });
   });

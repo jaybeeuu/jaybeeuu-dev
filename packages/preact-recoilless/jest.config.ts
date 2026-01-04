@@ -5,7 +5,7 @@ const config: JestConfigWithTsJest = {
   clearMocks: true,
   preset: "ts-jest",
   transform: {
-    "\\.(ts|tsx)$": "ts-jest",
+    "\\.(ts|tsx)$": ["ts-jest", { tsconfig: "<rootDir>/tsconfig.test.json" }],
     "\\.(mjs|js|jsx)$": "babel-jest",
   },
   testEnvironment: "jsdom",

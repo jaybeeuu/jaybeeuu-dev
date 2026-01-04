@@ -1,6 +1,5 @@
-import type fsModule from "fs";
-import { writeFile } from "fs";
-import type PathModule from "path";
+import type fsModule from "node:fs";
+import type pathModule from "node:path";
 
 // const jest.mocked = <T extends (...args: any[]) => any>(fn: T): jest.MockInstance<ReturnType<T>, Parameters<T>> => {
 //   if (!("mock" in fn)) {
@@ -10,7 +9,7 @@ import type PathModule from "path";
 //   return mockedFn;
 // };
 
-const pathUtils = jest.requireActual<typeof PathModule>("path");
+const pathUtils = jest.requireActual<typeof pathModule>("path");
 
 type FsModule = typeof fsModule;
 
@@ -228,7 +227,6 @@ const resolvePath = (path: string): string => {
   return pathUtils.relative(process.cwd(), path);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const draw = (entry: Directory | File, indentation: number = 0): string => {
   const spaces = Array.from({ length: indentation }).join("  ");
 
@@ -398,7 +396,7 @@ const getFile = (path: string): File => {
   if (maybeGetFileResult.existed) {
     return maybeGetFileResult.file;
   }
-  throw new Error(maybeGetFileResult.message);
+  throw new Error(`${maybeGetFileResult.message}\n\n${draw(root)}`);
 };
 
 const assertPathIsString: (
@@ -607,11 +605,11 @@ jest
         resolvedPath,
       );
       const segments = pathLeft.split(pathUtils.sep);
+
       segments.reduce<Directory>((dir, segment) => {
-        const newDir = makeDirectory(
-          pathUtils.join(dir.path, segment),
-          new Map(),
-        );
+        const newDirPath = pathUtils.join(dir.path, segment);
+
+        const newDir = makeDirectory(newDirPath, new Map());
 
         dir.entries.set(segment, newDir);
 
@@ -731,6 +729,10 @@ jest.mocked(fs.promises.readFile).mockImplementation(async (...args) => {
   await Promise.resolve();
   const file = getFile(path);
   file.logAccess();
+
+  if (file.content === "<CORRUPTED FILE>") {
+    throw new Error(`Failed to read file: ${path} is corrupt.`);
+  }
 
   return file.content;
 });

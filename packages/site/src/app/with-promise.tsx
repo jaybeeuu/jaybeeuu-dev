@@ -6,8 +6,8 @@ import type {
   PendingComponent,
 } from "@jaybeeuu/preact-async";
 import { withPromise as baseWithPromise } from "@jaybeeuu/preact-async";
-import { Error } from "./error/index";
-import { LoadingSpinner } from "./loading-spinner";
+import { Error } from "./error/index.js";
+import { LoadingSpinner } from "./loading-spinner.js";
 
 export const withPromise = <ContentProps extends object>(
   Content: ComponentType<ContentProps>,

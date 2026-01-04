@@ -1,6 +1,6 @@
-import { registerRoutes, withPostMetaData } from "../routes/blog";
-import * as postList from "../features/post-list";
-import * as post from "../features/post";
+import * as postList from "../features/post-list.js";
+import * as post from "../features/post.js";
+import { registerRoutes, withPostMetaData } from "../routes/blog.js";
 
 context("Post navigation", (): void => {
   beforeEach(() => {

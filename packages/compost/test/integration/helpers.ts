@@ -1,56 +1,90 @@
-import type Utilities from "@jaybeeuu/utilities";
+import type * as utilities from "@jaybeeuu/utilities";
 import type { Result } from "@jaybeeuu/utilities";
-import { assertIsNotNullish } from "@jaybeeuu/utilities";
-import type { PostMetaFileData } from "../../src/posts/metadata";
-import type { UpdateFailureReason } from "../../src/posts/update.js";
-import path from "path";
-import type { File } from "../../src/files/index";
+import { assertIsNotNullish, success } from "@jaybeeuu/utilities";
+import { jest } from "@jest/globals";
+import path from "node:path";
+import { is, isObject } from "@jaybeeuu/is";
+import type { CheckedBy } from "@jaybeeuu/is";
+import type {
+  ContentDefinition,
+  OrchestratorConfig,
+} from "../../src/config.js";
+import { isManifest } from "../../src/manifest.js";
+import { compost } from "../../src/index.js";
+import type { File } from "../../src/files/index.js";
 import {
   deleteDirectories,
-  readTextFile,
-  writeJsonFile,
   writeTextFiles,
-} from "../../src/files/index";
-import { update } from "../../src/posts/index.js";
-import type { PostManifest, UpdateOptions } from "../../src/posts/types.js";
-import type * as ReadingTime from "reading-time";
+  readTextFile,
+} from "../../src/files/index.js";
+import type { ManifestEntry, Manifest } from "../../src/manifest.js";
+import {
+  type BaseInputMetadata,
+  type ContentDefinitionInput,
+  createContentDefinition,
+} from "../../src/content/content-definition.js";
 
-import { jest } from "@jest/globals";
-jest.mock<typeof ReadingTime>("reading-time", (): typeof ReadingTime => {
-  const readingTime = jest.requireActual<typeof ReadingTime>("reading-time");
-
+jest.mock("node:fs");
+jest.mock<typeof utilities>("@jaybeeuu/utilities", () => {
+  const utils = jest.requireActual<typeof utilities>("@jaybeeuu/utilities");
   return {
-    // @ts-expect-error __esModule tesll jes what to do, but is not included in the ReadingTime type.
-    __esModule: true,
-    ...readingTime,
-    default: jest.fn<typeof ReadingTime.default>().mockReturnValue({
-      text: "1 min read.",
-      time: 1,
-      words: 1,
-      minutes: 1,
-    }),
+    ...utils,
+    log: {
+      error: jest.fn(),
+      getErrorMessage: jest.fn<(err: unknown) => string>(),
+      info: jest.fn(),
+      warn: jest.fn(),
+    },
   };
 });
 
-jest.mock("fs");
-jest.mock<typeof Utilities>("@jaybeeuu/utilities", () => {
-  const utils = jest.requireActual<typeof Utilities>("@jaybeeuu/utilities");
-  utils.log = {
-    error: jest.fn(),
-    getErrorMessage: jest.fn<(err: unknown) => string>(),
-    info: jest.fn(),
-    warn: jest.fn(),
-  };
-  return utils;
+export const isTestPostInputMetadata = isObject({
+  abstract: is("string"),
+  stars: is("number"),
+} as const);
+export type TestPostInputMetadata = CheckedBy<typeof isTestPostInputMetadata>;
+
+export const isTestPostCustomManifestEntryProperties = isObject({
+  abstract: is("string"),
+  stars: is("number"),
+  contentLength: is("number"),
 });
+
+export type TestPostCustomManifestEntryProperties = CheckedBy<
+  typeof isTestPostCustomManifestEntryProperties
+>;
+
+export type TestPostManifest = Manifest<TestPostManifestEntry>;
+export type TestPostManifestEntry =
+  ManifestEntry<TestPostCustomManifestEntryProperties>;
+export const isTestPostManifest = isManifest<TestPostManifestEntry>(
+  isTestPostCustomManifestEntryProperties,
+);
+
+export type TestContentDefinition = ContentDefinition<
+  "post",
+  TestPostInputMetadata,
+  TestPostCustomManifestEntryProperties
+>;
+
+export type TestPostContentDefinitionInput = ContentDefinitionInput<
+  TestPostInputMetadata,
+  TestPostCustomManifestEntryProperties
+>;
 
 export const cleanUpDirectories = async (): Promise<void> => {
+  // Reset the mocked file system by clearing all entries
+  // This clears the entire mock file system to ensure test isolation
   await deleteDirectories("/");
 };
 
-interface BasePostFile {
+export type TestPostFileMeta = Partial<
+  TestPostInputMetadata & BaseInputMetadata
+>;
+
+export interface BasePostFile {
   content: string | string[];
-  meta: PostMetaFileData | null;
+  meta: TestPostFileMeta | null;
   path?: string;
   slug: string;
   otherFiles?: {
@@ -59,56 +93,75 @@ interface BasePostFile {
   }[];
 }
 
-interface PostFileWithFrontmatter extends BasePostFile {
+export interface PostFileWithFrontmatter extends BasePostFile {
   metadataStyle: "frontmatter";
 }
 
-interface PostFileWithJson extends BasePostFile {
+export interface PostFileWithJson extends BasePostFile {
   metadataStyle?: "json";
 }
 
+type TestPostContentDefinition = ContentDefinition<
+  "post",
+  TestPostInputMetadata,
+  TestPostCustomManifestEntryProperties
+>;
+
 export type PostFile = PostFileWithFrontmatter | PostFileWithJson;
 
-const getDefaultedUpdateOptions = (
-  options: Partial<UpdateOptions> = {},
-): UpdateOptions => {
-  const defaultedHrefRoot = options.hrefRoot ?? "posts";
-  return {
+const getTestContentDef = (
+  input: TestPostContentDefinitionInput = {},
+): TestPostContentDefinition => {
+  const defaultedHrefRoot = input.hrefRoot ?? "posts";
+
+  return createContentDefinition("post", {
     additionalWatchPaths: [],
     codeLineNumbers: false,
     hrefRoot: defaultedHrefRoot,
     includeUnpublished: false,
-    manifestFileName: "manifest.json",
+    manifestFileName: "post-manifest.json",
     oldManifestLocators: [],
     outputDir: path.join("out", defaultedHrefRoot),
     removeH1: false,
     requireOldManifest: false,
     sourceDir: "src",
-    watch: false,
-    ...options,
-  };
+    validateInputMeta: isTestPostInputMetadata,
+    mapToManifestEntry: (metadata: TestPostInputMetadata, content: string) => {
+      return {
+        stars: metadata.stars,
+        abstract: metadata.abstract,
+        contentLength: content.length,
+      };
+    },
+    ...input,
+    filePatterns: {
+      frontmatter: [`.post.md`],
+      jsonMetadata: [`.md`],
+      jsonFileExt: `.post.json`,
+      ...input.filePatterns,
+    },
+  });
 };
 
-export const writeOutputManifestFile = async (
-  manifest: PostManifest,
-  options: Partial<UpdateOptions> = {},
-): Promise<void> => {
-  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
-  await writeJsonFile(
-    path.join(
-      defaultedUpdateOptions.outputDir,
-      defaultedUpdateOptions.manifestFileName,
-    ),
-    manifest,
-  );
+const createDefaultedMeta = (
+  meta: Partial<TestPostInputMetadata & BaseInputMetadata> | null,
+): Partial<TestPostInputMetadata & BaseInputMetadata> | null => {
+  return meta
+    ? {
+        stars: 0,
+        abstract: "Default abstract",
+        publish: true,
+        title: "Default title",
+        ...meta,
+      }
+    : null;
 };
 
 const getMarkdownContent = (
   content: string | string[],
-  meta: PostMetaFileData | null,
+  meta: Partial<TestPostInputMetadata & BaseInputMetadata> | null,
 ): string => {
   const markdownContent = Array.isArray(content) ? content.join("\n") : content;
-
   const frontMatter =
     meta === null
       ? ""
@@ -130,11 +183,11 @@ const writeFrontmatterPost = (
   postPath: string,
 ): File[] => {
   const { content, meta, slug } = postFile;
-
+  const defaultedMeta = createDefaultedMeta(meta);
   return [
     {
       path: path.join(postPath, `${slug}.post.md`),
-      content: getMarkdownContent(content, meta),
+      content: getMarkdownContent(content, defaultedMeta),
     },
   ];
 };
@@ -144,7 +197,7 @@ const writeJsonPost = (
   postPath: string,
 ): File[] => {
   const { content, meta, slug } = postFile;
-
+  const defaultedMeta = createDefaultedMeta(meta);
   const markdownContent = Array.isArray(content) ? content.join("\n") : content;
 
   const files: File[] = [
@@ -154,10 +207,10 @@ const writeJsonPost = (
     },
   ];
 
-  if (meta !== null) {
+  if (defaultedMeta !== null) {
     files.push({
       path: path.join(postPath, `${slug}.post.json`),
-      content: JSON.stringify(meta, null, 2),
+      content: JSON.stringify(defaultedMeta, null, 2),
     });
   }
 
@@ -166,9 +219,9 @@ const writeJsonPost = (
 
 export const writePostFile = async (
   postFile: PostFile,
-  options: Partial<UpdateOptions> = {},
+  options: Partial<TestPostContentDefinitionInput> = {},
 ): Promise<void> => {
-  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
+  const contentDef = getTestContentDef(options);
 
   const { path: postPath = ".", otherFiles } = postFile;
 
@@ -185,45 +238,41 @@ export const writePostFile = async (
     })) ?? []),
   ];
 
-  await writeTextFiles(defaultedUpdateOptions.sourceDir, allFiles);
+  await writeTextFiles(contentDef.sourceDir, allFiles);
 };
 
 export const getOutputFile = async (
   filePath: string,
-  options: Partial<UpdateOptions> = {},
+  options: Partial<TestPostContentDefinitionInput>,
 ): Promise<string> => {
-  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
-  const resolvedFilePath = path.join(
-    defaultedUpdateOptions.outputDir,
-    filePath,
-  );
+  const contentDef = getTestContentDef(options);
+  const resolvedFilePath = path.join(contentDef.outputDir, filePath);
 
   return readTextFile(resolvedFilePath);
 };
 
 export const getPostManifest = async (
-  options: Partial<UpdateOptions> = {},
-): Promise<PostManifest> => {
-  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
+  options: Partial<TestPostContentDefinitionInput> = {},
+): Promise<TestPostManifest> => {
+  const contentDef = getTestContentDef(options);
 
-  const fileContent = await getOutputFile(
-    defaultedUpdateOptions.manifestFileName,
-    defaultedUpdateOptions,
-  );
-  return JSON.parse(fileContent) as PostManifest;
+  const fileContent = await getOutputFile("post-manifest.json", contentDef);
+  const parsedContent: unknown = JSON.parse(fileContent);
+
+  return parsedContent as TestPostManifest;
 };
 
 export const getPost = async (
   slug: string,
-  options: Partial<UpdateOptions> = {},
+  options: Partial<TestPostContentDefinitionInput> = {},
 ): Promise<string> => {
   const manifest = await getPostManifest(options);
-  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
-  const manifestEntry = manifest[slug];
+  const contentDef = getTestContentDef(options);
+  const manifestEntry = manifest.entries[slug];
   assertIsNotNullish(manifestEntry);
 
   const relativePath = path.relative(
-    defaultedUpdateOptions.hrefRoot,
+    contentDef.hrefRoot,
     `.${manifestEntry.href}`,
   );
 
@@ -231,15 +280,26 @@ export const getPost = async (
 };
 
 export const compilePosts = async (
-  options?: Partial<UpdateOptions>,
-): Promise<Result<PostManifest, UpdateFailureReason>> => {
-  const defaultedUpdateOptions = getDefaultedUpdateOptions(options);
-  return update(defaultedUpdateOptions);
+  options?: Partial<TestPostContentDefinitionInput>,
+): Promise<Result<TestPostManifest, string>> => {
+  const contentDef = getTestContentDef(options);
+
+  const orchestratorConfig: OrchestratorConfig = { clean: false };
+
+  const updateResult = await compost(contentDef, orchestratorConfig);
+  if (!updateResult.success) {
+    return updateResult;
+  }
+
+  // Extract post manifest from the result (it's under the 'post' key)
+  const postManifest = updateResult.value;
+
+  return success(postManifest as TestPostManifest);
 };
 
 export const getCompiledPostWithContent = async (
   contentOrPost: string[] | RecursivePartial<PostFile>,
-  options: Partial<UpdateOptions> = {},
+  options: TestPostContentDefinitionInput = {},
 ): Promise<string> => {
   await cleanUpDirectories();
 
@@ -247,9 +307,11 @@ export const getCompiledPostWithContent = async (
     ? { content: contentOrPost }
     : contentOrPost;
 
+  const contentDef = getTestContentDef(options);
   const postFile = {
     slug: "test-slug",
     content: ["{content}"],
+    path: contentDef.sourceDir,
     ...userPost,
     meta: {
       abstract: "{abstract}",

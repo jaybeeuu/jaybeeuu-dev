@@ -1,8 +1,8 @@
 import { fourOhFour } from "@jaybeeuu/e2e-hooks";
 import type { JSX } from "preact";
 import { h } from "preact";
-import { ErrorMessage } from "./error";
-import { useBackgrounds } from "./use-background";
+import { ErrorMessage } from "./error/index.js";
+import { useBackgrounds } from "./use-background.js";
 
 export const FouOhFour = (): JSX.Element => {
   useBackgrounds({ dark: "galaxy", light: "harmony-ridge" });

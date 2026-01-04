@@ -4,8 +4,8 @@ import type { JSX, Ref } from "preact";
 import { h } from "preact";
 import { useLayoutEffect, useRef } from "preact/hooks";
 import { Link } from "wouter";
-import { NavBar } from "../nav-bar";
-import { titleBarHeight, titleBarStyle } from "../state";
+import { NavBar } from "../nav-bar/index.js";
+import { titleBarHeight, titleBarStyle } from "../state.js";
 
 import css from "./title-bar.module.css";
 

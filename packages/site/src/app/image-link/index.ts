@@ -1,1 +1,1 @@
-export { ImageLink } from "./image-link";
+export { ImageLink } from "./image-link.js";

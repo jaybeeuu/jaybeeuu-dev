@@ -1,6 +1,6 @@
 import { makeClassSelectors, post } from "@jaybeeuu/e2e-hooks";
-import type { PostSlug } from "../routes/blog";
-import { getPostsAlias, withPostMetaData } from "../routes/blog";
+import type { PostSlug } from "../routes/blog.js";
+import { getPostsAlias, withPostMetaData } from "../routes/blog.js";
 
 const mainPanelSelectors = makeClassSelectors(post);
 

@@ -4,10 +4,10 @@ import type { JSX } from "preact";
 import { h } from "preact";
 import { Link, useLocation } from "wouter";
 import { useState } from "preact/hooks";
-import { Icon } from "../icon/index";
-import { ImageLink } from "../image-link/index";
-import { LocalIconLink } from "../local-icon-link/index";
-import { ThemeToggle } from "../theme-toggle/index";
+import { Icon } from "../icon/index.js";
+import { ImageLink } from "../image-link/index.js";
+import { LocalIconLink } from "../local-icon-link/index.js";
+import { ThemeToggle } from "../theme-toggle/index.js";
 import githubDark from "./github-dark.png";
 import githubLight from "./github-light.png";
 import linkedInLogo from "./in-blue-logo.png";
@@ -58,25 +58,27 @@ export const NavBar = ({ className }: NavBarProps): JSX.Element => {
         </Link>
         <ImageLink
           className={e2eHooks.linkedInLink}
-          href={"https://linkedin.com/in/jaybeeuu"}
+          href="https://linkedin.com/in/jaybeeuu"
+          target="_blank"
           imageSrc={linkedInLogo}
-          title={"Linked In"}
+          title="Linked In"
         />
         <ImageLink
           className={e2eHooks.gitHubLink}
-          href={"https://github.com/jaybeeuu"}
+          href="https://github.com/jaybeeuu"
+          target="_blank"
           imageSrc={{
             light: githubDark,
             dark: githubLight,
           }}
-          title={"GitHub"}
+          title="GitHub"
         />
         <LocalIconLink
           className={e2eHooks.atomFeedLink}
-          href={"/feeds/atom.xml"}
-          iconName={"rss_feed"}
+          href="/feeds/atom.xml"
+          iconName="rss_feed"
           title="Atom Feed"
-          type={"application/atom+xml"}
+          type="application/atom+xml"
         />
         <ThemeToggle className={e2eHooks.switch} />
       </div>

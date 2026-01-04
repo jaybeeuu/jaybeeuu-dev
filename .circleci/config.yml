@@ -8,7 +8,7 @@ src-dir: &src-dir ~/src
 job-base: &job-base
   resource_class: large
   docker:
-    - image: cimg/node:22.14.0
+    - image: cimg/node:24.11.0
       auth:
         username: $DOCKERHUB_USERNAME
         password: $DOCKERHUB_PASSWORD
@@ -19,7 +19,7 @@ commands:
     steps:
       - run:
           name: Install pnpm
-          command: sudo npm i -g pnpm@10.4.1
+          command: sudo npm i -g pnpm@10.26.2
 
   setup_workspace:
     steps:

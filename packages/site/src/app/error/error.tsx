@@ -2,7 +2,7 @@ import { log } from "@jaybeeuu/utilities";
 import type { JSX } from "preact";
 import { h } from "preact";
 import { useEffect } from "preact/hooks";
-import { ErrorMessage } from "./error-message";
+import { ErrorMessage } from "./error-message.js";
 
 export interface ErrorProps {
   error: Error | { [value: string]: Error };

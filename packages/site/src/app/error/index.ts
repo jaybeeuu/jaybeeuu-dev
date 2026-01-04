@@ -1,2 +1,2 @@
-export { Error } from "./error";
-export { ErrorMessage } from "./error-message";
+export { Error } from "./error.js";
+export { ErrorMessage } from "./error-message.js";

@@ -1,23 +1,26 @@
 import type { JSX } from "preact";
 import { h } from "preact";
-import type { PostManifest, PostMetaData } from "@jaybeeuu/compost";
+import type {
+  PostManifest,
+  PostManifestEntry as PostMetadata,
+} from "@jaybeeuu/posts/types";
 import { postList as e2eHooks } from "@jaybeeuu/e2e-hooks";
 import { useValue } from "@jaybeeuu/preact-recoilless";
 import classNames from "classnames";
 import { Link } from "wouter";
-import { useBackgrounds as useBackgrounds } from "../use-background";
-import { usePageInfo } from "../use-page-info";
-import { postsManifest } from "../state";
-import { withPromise as withPromise } from "../with-promise";
+import { useBackgrounds as useBackgrounds } from "../use-background.js";
+import { usePageInfo } from "../use-page-info.js";
+import { postsManifest } from "../state.js";
+import { withPromise as withPromise } from "../with-promise.js";
 
 import css from "./posts.module.css";
 
-const compareDateString = (left: PostMetaData, right: PostMetaData): number =>
+const compareDateString = (left: PostMetadata, right: PostMetadata): number =>
   Date.parse(right.publishDate) - Date.parse(left.publishDate);
 
 const PostList = withPromise(({ manifest }: { manifest: PostManifest }) => {
   usePageInfo({ title: "Blog posts", description: "Index of my blog posts" });
-  const manifestValues = Object.values(manifest);
+  const manifestValues = Object.values(manifest.entries);
   return (
     <div className={classNames(css.componentRoot, e2eHooks.block)}>
       {manifestValues.length === 0

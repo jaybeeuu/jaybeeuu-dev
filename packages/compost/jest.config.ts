@@ -5,7 +5,10 @@ const config: Config = {
   clearMocks: true,
   testEnvironment: "node",
   transform: {
-    "^.+\\.(t|j)sx?$": "ts-jest",
+    "^.+\\.(t|j)sx?$": [
+      "ts-jest",
+      { tsconfig: "<rootDir>/tsconfig.test.json" },
+    ],
   },
   transformIgnorePatterns: ["/node_modules/(?!(\\.pnpm|marked/))"],
   testMatch: ["**/*.spec.ts"],

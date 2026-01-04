@@ -1,6 +1,6 @@
-import * as navBar from "../features/nav-bar";
 import * as e2eHooks from "@jaybeeuu/e2e-hooks";
-import { registerRoutes } from "../routes/blog";
+import * as navBar from "../features/nav-bar.js";
+import { registerRoutes } from "../routes/blog.js";
 
 context("Navigation Links", () => {
   beforeEach(() => {

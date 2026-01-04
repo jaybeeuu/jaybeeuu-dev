@@ -1,3 +1,3 @@
-export { StoreProps, StoreProvider } from "./store-provider.js";
+export { StoreProvider, type StoreProps } from "./store-provider.js";
 export { useAction } from "./use-action.js";
-export { UseValue, useValue } from "./use-value.js";
+export { useValue, type UseValue } from "./use-value.js";

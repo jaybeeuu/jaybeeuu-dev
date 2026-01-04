@@ -6,7 +6,7 @@ import {
   useIsMounted,
   usePromise,
   useSemanticMemo,
-} from "./async-hooks";
+} from "./async-hooks.js";
 
 const waitForValueToChange = (getValue: () => unknown): Promise<void> => {
   const initialValue = getValue();

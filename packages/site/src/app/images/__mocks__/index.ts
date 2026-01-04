@@ -1,4 +1,4 @@
-import type { ImageDetails } from "../index";
+import type { ImageDetails } from "../index.js";
 
 const cachedImages: {
   [key: string]: (() => Promise<ImageDetails>) | undefined;

@@ -1,2 +1,2 @@
-export type { IconName, IconProps } from "./icon";
-export { Icon } from "./icon";
+export type { IconName, IconProps } from "./icon.js";
+export { Icon } from "./icon.js";

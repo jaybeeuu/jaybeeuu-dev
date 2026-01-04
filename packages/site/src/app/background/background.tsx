@@ -4,13 +4,13 @@ import type { ComponentChildren, JSX } from "preact";
 import { h } from "preact";
 import { CSSTransition } from "preact-transitioning";
 import { useEffect, useState } from "preact/hooks";
-import type { ImageDetails } from "../images";
-import { images } from "../images";
-import type { Theme } from "../services/theme";
-import type { BackgroundImages } from "../state";
-import { backgroundImages, onMainContentScroll, theme } from "../state";
+import type { ImageDetails } from "../images/index.js";
+import { images } from "../images/index.js";
+import type { Theme } from "../services/theme.js";
+import type { BackgroundImages } from "../state.js";
+import { backgroundImages, onMainContentScroll, theme } from "../state.js";
 import css from "./background.module.css";
-import { ProgressiveImage } from "./progressive-image";
+import { ProgressiveImage } from "./progressive-image.js";
 
 export interface BackgroundProps {
   children: ComponentChildren;

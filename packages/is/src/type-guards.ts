@@ -42,25 +42,53 @@ export interface TypeStringPrimitiveTypeMap {
   function: (...args: any[]) => any;
 }
 
-export const is = <Type extends TypeString | "null">(
+// Overload for user-defined type guards
+export function is<T>(guard: (data: unknown) => data is T): TypePredicate<T>;
+// Overload for primitive type strings
+export function is<Type extends TypeString | "null">(
   typeString: Type,
 ): TypePredicate<
   Type extends TypeString ? TypeStringPrimitiveTypeMap[Type] : null
-> =>
-  isType((candidate: unknown, context: ValidationContext): ValidationResult => {
-    if (
-      typeString === "null"
-        ? candidate === null
-        : typeof candidate === typeString
-    ) {
-      return passValidation(context);
-    }
-
-    return failValidation(
-      `Expected "${typeString}", but received "${typeof candidate}"${candidate && typeof candidate === "object" ? `: ${candidate.constructor.name}` : ""}`,
-      context,
+>;
+// Implementation
+export function is<T>(
+  guardOrTypeString: ((data: unknown) => data is T) | TypeString | "null",
+): TypePredicate<T> {
+  if (typeof guardOrTypeString === "function") {
+    const guard = guardOrTypeString;
+    return isType(
+      (candidate: unknown, context: ValidationContext): ValidationResult => {
+        if (guard(candidate)) {
+          return passValidation(context);
+        }
+        return failValidation(
+          `User-defined type guard failed for value of type "${typeof candidate}"${candidate && typeof candidate === "object" ? `: ${candidate.constructor.name}` : ""}`,
+          context,
+        );
+      },
+      "user-defined type guard",
     );
-  }, typeString);
+  }
+
+  const typeString = guardOrTypeString;
+  return isType(
+    (candidate: unknown, context: ValidationContext): ValidationResult => {
+      if (
+        typeString === "null"
+          ? candidate === null
+          : typeof candidate === typeString
+      ) {
+        return passValidation(context);
+      }
+
+      return failValidation(
+        `Expected "${typeString}", but received "${typeof candidate}"${candidate && typeof candidate === "object" ? `: ${candidate.constructor.name}` : ""}`,
+        context,
+      );
+    },
+    typeString,
+  );
+}
 
 export type ExtractTypesFromPredicates<
   T extends ReadonlyArray<TypePredicate<unknown>>,

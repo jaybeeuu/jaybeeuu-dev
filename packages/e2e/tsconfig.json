@@ -11,5 +11,5 @@
     "sourceMap": false,
     "types": ["cypress", "node"]
   },
-  "exclude": ["node_modules"]
+  "exclude": ["lib", "node_modules"]
 }

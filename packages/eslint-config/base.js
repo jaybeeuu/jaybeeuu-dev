@@ -75,7 +75,7 @@ export const base = defineConfig(
     },
   },
   {
-    files: ["**/.*rc.js", "**/*.config.js", "**/config/**/*.js"],
+    files: ["**/.*rc.[tj]s", "**/*.config.[jt]s", "**/config/**/*.[jt]s"],
     languageOptions: {
       globals: {
         ...globals.node,

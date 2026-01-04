@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 export const readTextFile = (filePath: string): Promise<string> =>
   fs.promises.readFile(filePath, "utf8");

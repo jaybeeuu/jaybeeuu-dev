@@ -1,4 +1,5 @@
 import { asError } from "@jaybeeuu/utilities";
+import type { TypePredicate } from "@jaybeeuu/is";
 
 const fetchRequest =
   <ResponseContent>(
@@ -18,10 +19,12 @@ const fetchRequest =
 
 export const fetchJson = async <ResponseContent>(
   input: RequestInfo,
+  validator: TypePredicate<ResponseContent>,
   init?: RequestInit,
 ): Promise<ResponseContent> => {
   return fetchRequest(async (response: Response): Promise<ResponseContent> => {
-    return (await response.json()) as ResponseContent;
+    const jsonData: unknown = await response.json();
+    return validator.check(jsonData);
   })(input, init);
 };
 

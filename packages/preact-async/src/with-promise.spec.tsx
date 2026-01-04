@@ -1,10 +1,9 @@
+import type { PromiseState } from "@jaybeeuu/utilities";
 import { describe, expect, it } from "@jest/globals";
 import { render } from "@testing-library/preact";
-import type { PromiseState } from "packages/utilities/lib";
 import type { JSX } from "preact";
 import { h } from "preact";
-import type { FailedProps } from "./with-promise";
-import { withPromise } from "./with-promise";
+import { type FailedProps, withPromise } from "./with-promise.js";
 
 const Pending = (): JSX.Element => <div>Pending</div>;
 const Failed = ({ error }: FailedProps): JSX.Element => (

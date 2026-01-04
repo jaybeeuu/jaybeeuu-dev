@@ -1,0 +1,58 @@
+{
+  "version": 2,
+  "metadata": {
+    "generatedAt": "2026-01-01T21:31:05.105Z",
+    "entryCount": 3,
+    "overallHash": "H1XhajWQL0hNVSu8dYoOJGpLmjk"
+  },
+  "entries": {
+    "memoising-selectors": {
+      "abstract": "Complex operations in redux selectors can result in render thrashing, but why and how does it happen?",
+      "readingTime": {
+        "text": "4 min read",
+        "minutes": 3.525,
+        "time": 211500,
+        "words": 705
+      },
+      "fileName": "memoising-selectors-i1nkRT.html",
+      "href": "/blog/memoising-selectors-i1nkRT.html",
+      "title": "Memoising Selectors",
+      "publishDate": "Fri, 01 Jan 2021 00:00:00 GMT",
+      "lastUpdateDate": "Sat, 01 May 2021 00:00:00 GMT",
+      "hash": "i1nkRTJtBzE9tiVMBRapoKwAhw",
+      "slug": "memoising-selectors"
+    },
+    "module-spotting": {
+      "abstract": "Modules in JavaScript have a long and complex history. Let's explore...",
+      "readingTime": {
+        "text": "15 min read",
+        "minutes": 14.645,
+        "time": 878700,
+        "words": 2929
+      },
+      "fileName": "module-spotting-vNekKN.html",
+      "href": "/blog/module-spotting-vNekKN.html",
+      "title": "Module Spotting",
+      "publishDate": "Mon, 01 Feb 2021 00:00:00 GMT",
+      "lastUpdateDate": "2025-09-10T20:37:14.430Z",
+      "hash": "vNekKNAKURtH8Let1DLARWrWGk4",
+      "slug": "module-spotting"
+    },
+    "the-rewrite": {
+      "abstract": "One of the grads at SL asked me if they should change their entire application. These were my thoughts...",
+      "readingTime": {
+        "text": "4 min read",
+        "minutes": 3.04,
+        "time": 182400,
+        "words": 608
+      },
+      "fileName": "the-rewrite-QvJdh6.html",
+      "href": "/blog/the-rewrite-QvJdh6.html",
+      "title": "The Rewrite",
+      "publishDate": "Mon, 01 Mar 2021 00:00:00 GMT",
+      "lastUpdateDate": null,
+      "hash": "QvJdh6WIu9hcfBM6rsk67Mp8Bfg",
+      "slug": "the-rewrite"
+    }
+  }
+}

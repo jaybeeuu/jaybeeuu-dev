@@ -1,16 +1,15 @@
 import type { TypeAssertion, TypePredicate } from "./core.js";
 
 export {
-  ValidationContext,
-  ValidationFailed,
-  ValidationPassed,
-  ValidationResult,
   assert,
   failValidation,
-  isType,
   passValidation,
   type TypeAssertion,
   type TypePredicate,
+  type ValidationContext,
+  type ValidationFailed,
+  type ValidationPassed,
+  type ValidationResult,
 } from "./core.js";
 
 export { assertIsNotNullish, isNullish } from "./pre-built.js";
@@ -20,12 +19,12 @@ export {
   isArrayOf,
   isInstanceOf,
   isIntersectionOf,
+  isKeyOf,
   isLiteral,
   isObject,
   isRecordOf,
   isTuple,
   isUnionOf,
-  isKeyOf,
   type TypeString,
 } from "./type-guards.js";
 

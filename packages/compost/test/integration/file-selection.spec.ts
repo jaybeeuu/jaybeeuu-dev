@@ -1,12 +1,12 @@
+import { describe, expect, it } from "@jest/globals";
 import {
   cleanUpDirectories,
   compilePosts,
   getPost,
   getPostManifest,
   writePostFile,
-} from "./helpers";
+} from "./helpers.js";
 
-import { describe, expect, it } from "@jest/globals";
 describe("file-selection", () => {
   it("ignores unpublished articles.", async () => {
     await cleanUpDirectories();
@@ -26,7 +26,7 @@ describe("file-selection", () => {
 
     const manifest = await getPostManifest();
 
-    expect(manifest[slug]).toBeUndefined();
+    expect(manifest.entries[slug]).toBeUndefined();
   });
 
   it("ignores markdown files with no .post.json.", async () => {
@@ -42,7 +42,7 @@ describe("file-selection", () => {
     await compilePosts();
 
     const manifest = await getPostManifest();
-    expect(manifest[slug]).toBeUndefined();
+    expect(manifest.entries[slug]).toBeUndefined();
   });
 
   it("ignores unpublished articles unless told to include them with the option.", async () => {
@@ -62,7 +62,7 @@ describe("file-selection", () => {
     await compilePosts({ includeUnpublished: true });
 
     const manifest = await getPostManifest();
-    expect(manifest[slug]).toBeDefined();
+    expect(manifest.entries[slug]).toBeDefined();
   });
 
   it("recurses the all the directories.", async () => {
