@@ -2,103 +2,135 @@
 
 [![npm](https://img.shields.io/npm/v/@jaybeeuu/compost.svg)](https://www.npmjs.com/package/@jaybeeuu/compost)
 
-A CLI tool that compiles markdown files with metadata into HTML and a manifest of posts.
+A CLI tool that compiles markdown files into HTML with a manifest. Uses [marked](https://marked.js.org/) for markdown, [prism](https://prismjs.com/) for syntax highlighting.
 
-It makes use of [marked](https://marked.js.org/) and [prism](https://prismjs.com/),
-and uses [yargs](https://yargs.js.org/) to provide the CLI.
+## Quick Start
 
-**Content Authoring:** Supports both traditional JSON metadata files and YAML front matter for flexible content authoring workflows.
+1. Install:
 
-## Usage
+```sh
+npm install @jaybeeuu/compost
+```
 
-This package provides a node executable so you can run it from the command line.
-To see the options available run:
+2. Create a config file `compost.config.ts`:
+
+```typescript
+import { createCompostConfig } from "@jaybeeuu/compost/config";
+import { is, isObject } from "@jaybeeuu/is";
+
+const isMyMeta = isObject({
+  description: is("string"),
+});
+
+export default createCompostConfig("article", {
+  sourceDir: "./content",
+  outputDir: "./dist",
+  hrefRoot: "/articles",
+  validateInputMeta: (data): data is { description: string } => isMyMeta(data),
+  mapToManifestEntry: (input) => ({ description: input.description }),
+});
+```
+
+3. Write some content in `content/hello-world.article.md`:
+
+```markdown
+---
+title: Hello World
+publish: true
+description: My first article
+---
+
+# Hello World
+
+Your content here.
+```
+
+4. Run it:
+
+```sh
+compost --config ./compost.config.js
+```
+
+This outputs `hello-world-abc123.html` and a manifest to `./dist`.
+
+## CLI Options
 
 ```sh
 compost --help
 ```
 
-## options
+| Option               | Description                             | Default |
+| -------------------- | --------------------------------------- | ------- |
+| --config             | Path to config file (required)          |         |
+| -w, --watch          | Watch for changes and recompile         | false   |
+| -c, --clean          | Clean output directory before compiling | false   |
+| --includeUnpublished | Include content with `publish: false`   | false   |
 
-| Options                    | Description                                                                                                                                                                                                      | Type    | Default         |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------- | ------- |
-| --version                  | Show version number                                                                                                                                                                                              | boolean |                 |
-| -r, --hrefRoot             | The root path to apply when compiling hrefs (e.g. links).                                                                                                                                                        | string  | "/"             |
-| -a, --additionalWatchPaths | Paths other than --source-dir to watch when in watch mode.                                                                                                                                                       | array   |                 |
-| -u, --includeUnpublished   | Whether or not to compile posts not marked as published in their metadata.json file.                                                                                                                             | boolean | false           |
-| -m, --manifestFileName     | The nam of the output JSON manifest file.                                                                                                                                                                        | string  | "manifest.json" |
-| --codeLineNumbers          | Include tags and classes in code blocks that can be styled to show line numbers with the Prism line number styles.                                                                                               | boolean | false           |
-| --oldManifestLocator       | The path or URL of the old manifest. If none is given then the output-dir and manifest-file-name options will be used to infer the location. If this option is given and no manifest is found compost will fail. | array   |                 |
-| -o, --outputDir            | The directory into which the compiled files should be written.                                                                                                                                                   | string  |                 | "./lib" |
-| --removeH1                 | Indicates whether the process will remove H1 (#) headings. Useful if you will render that with a custom heading in your page.                                                                                    | boolean | false           |
-| --requireOldManifest       | Indicates whether the process will fail if the old manifest is not found.                                                                                                                                        | boolean | false           |
-| -s, --sourceDir            | The directory containing the source files.                                                                                                                                                                       | string  | "./src"         |
-| -w, --watch                | Watch the source files and recompile the posts when changes occur.                                                                                                                                               | boolean | false           |
-| -h, --help                 | Show help                                                                                                                                                                                                        | boolean |                 |
+## Config Options
 
-## Content Authoring
+The config object passed to `createCompostConfig(contentType, options)`:
 
-Compost supports two approaches for authoring content, both producing identical compilation output:
-
-### Traditional JSON Metadata Files
-
-Create separate files for content and metadata:
-
-```
-src/
-  my-post.md         # Markdown content
-  my-post.post.json  # Metadata file
-```
-
-**my-post.post.json:**
-
-```json
+```typescript
 {
-  "title": "My Post Title",
-  "abstract": "A brief description of the post",
-  "publish": true
+  // Required
+  sourceDir: string;              // Where to find markdown files
+  outputDir: string;              // Where to write compiled HTML
+
+  // Validation (recommended)
+  validateInputMeta: (data) => data is YourType;  // Type guard for frontmatter
+  mapToManifestEntry: (input, content) => {...};  // Transform metadata for manifest
+
+  // Optional
+  hrefRoot: string;               // URL prefix for links (default: contentType)
+  manifestFileName: string;       // Output manifest name (default: "{contentType}-manifest.json")
+  filePatterns: {
+    frontmatter: string[];        // File suffixes for frontmatter files (default: [".{contentType}.md"])
+    jsonMetadata: string[];       // File suffixes for JSON metadata (default: [".md"])
+    jsonFileExt: string;          // JSON metadata file extension (default: ".{contentType}.json")
+  };
+  codeLineNumbers: boolean;       // Add line numbers to code blocks (default: true)
+  removeH1: boolean;              // Strip H1 headings from output (default: true)
+  oldManifestLocators: string[];  // URLs/paths to fetch previous manifest for date tracking
+  additionalWatchPaths: string[]; // Extra paths to watch in watch mode
 }
 ```
 
-**my-post.md:**
+## Content Files
 
-```markdown
-# My Post Title
+### Frontmatter (recommended)
 
-Content goes here...
-```
-
-### YAML Front Matter
-
-Include metadata directly in the markdown file using YAML front matter:
-
-```
-src/
-  my-post.md  # Markdown with front matter
-```
-
-**my-post.md:**
+Files ending in `.{contentType}.md` use YAML frontmatter:
 
 ```markdown
 ---
-title: "My Post Title"
-abstract: "A brief description of the post"
+title: My Article
 publish: true
+description: About this article
 ---
 
-# My Post Title
-
-Content goes here...
+Content here...
 ```
 
-### Metadata Schema
+### JSON Metadata
 
-Both approaches support the same metadata fields:
+Plain `.md` files with a companion `.{contentType}.json`:
 
-- **title** (string, required): The post title
-- **abstract** (string, required): Brief description for listings and SEO
-- **publish** (boolean, required): Whether to include in published output
+```
+my-post.md
+my-post.article.json
+```
 
-### Migration
+Both `title` and `publish` are required fields. Additional fields depend on your `validateInputMeta` config.
 
-Existing projects using JSON metadata files continue working unchanged. You can gradually migrate to front matter or use both approaches within the same project.
+## Programmatic API
+
+```typescript
+import { compost } from "@jaybeeuu/compost";
+import config from "./compost.config.js";
+
+const result = await compost(config, { clean: true });
+
+if (result.success) {
+  console.log(result.value.entries); // manifest entries
+}
+```

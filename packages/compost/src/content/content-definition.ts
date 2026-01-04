@@ -34,12 +34,26 @@ const isFilePatterns = isObject({
   jsonFileExt: is("string"),
 });
 export type FilePatterns = CheckedBy<typeof isFilePatterns>;
+
+/**
+ * File pattern configuration for content discovery.
+ */
 export interface ContentFilePatterns {
+  /** File suffixes for markdown files with YAML frontmatter (default: [".{contentType}.md"]) */
   frontmatter: readonly string[];
+  /** File suffixes for markdown files with separate JSON metadata (default: [".md"]) */
   jsonMetadata: readonly string[];
+  /** Extension for JSON metadata files (default: ".{contentType}.json") */
   jsonFileExt: string;
 }
 
+/**
+ * Complete configuration for a content type.
+ *
+ * @template Type - The content type identifier string
+ * @template InputMeta - The metadata shape expected in frontmatter/JSON files
+ * @template CustomManifestEntryProps - Additional properties added to manifest entries
+ */
 export interface ContentDefinition<
   Type extends string = string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,14 +61,21 @@ export interface ContentDefinition<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   CustomManifestEntryProps = any,
 > {
+  /** The content type identifier (e.g., "post", "article") */
   readonly contentType: Type;
+
+  /** File pattern configuration for content discovery */
   readonly filePatterns: ContentFilePatterns;
+
+  /** Generate a URL-friendly slug from file info. Default: filename without extension */
   readonly generateSlug: (args: {
     filePath: string;
     sourceDir: string;
     hash: string;
     html: string;
   }) => string;
+
+  /** Generate the output HTML filename. Default: "{slug}-{hash}.html" */
   readonly generateFileName: (args: {
     filePath: string;
     sourceDir: string;
@@ -63,24 +84,43 @@ export interface ContentDefinition<
     html: string;
   }) => string;
 
-  /** Validates raw input data from frontmatter/JSON files - TypeScript user-defined type guard */
+  /** Type guard to validate frontmatter/JSON metadata. Return true if data matches InputMeta shape */
   readonly validateInputMeta: (data: unknown) => data is InputMeta;
 
-  /** Maps validated input metadata and content to output metadata. Always required for explicit data transformation. */
+  /** Transform input metadata to manifest entry properties. Receives validated metadata and raw content */
   readonly mapToManifestEntry: (
     input: InputMeta & BaseInputMetadata,
     content: string,
   ) => CustomManifestEntryProps;
 
+  /** Fail if no previous manifest found. Useful for preserving publish dates (default: true) */
   readonly requireOldManifest: boolean;
+
+  /** Output manifest filename (default: "{contentType}-manifest.json") */
   readonly manifestFileName: string;
+
+  /** Directory containing source markdown files */
   readonly sourceDir: string;
+
+  /** Directory for compiled HTML and manifest output */
   readonly outputDir: string;
+
+  /** Extra paths to watch in watch mode */
   readonly additionalWatchPaths: string[];
+
+  /** URLs or file paths to fetch previous manifest for date tracking */
   readonly oldManifestLocators: string[];
+
+  /** URL prefix for generated hrefs (default: contentType) */
   readonly hrefRoot: string;
+
+  /** Include content with publish: false (default: false) */
   readonly includeUnpublished: boolean;
+
+  /** Add line number markup to code blocks for Prism styling (default: true) */
   readonly codeLineNumbers: boolean;
+
+  /** Strip H1 headings from output, useful when rendering title separately (default: true) */
   readonly removeH1: boolean;
 }
 

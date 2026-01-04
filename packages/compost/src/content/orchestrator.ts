@@ -16,7 +16,11 @@ import {
   writeManifest,
 } from "./services/manifest/index.js";
 
+/**
+ * Runtime options passed to compost when processing content.
+ */
 export interface OrchestratorConfig {
+  /** Delete output directory before compiling (default: false) */
   clean: boolean;
 }
 
