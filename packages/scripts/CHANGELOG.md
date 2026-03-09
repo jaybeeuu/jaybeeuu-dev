@@ -1,5 +1,13 @@
 # @jaybeeuu/scripts
 
+## 0.1.19
+
+### Patch Changes
+
+- Updated dependencies [[`986076c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/986076c6a4c0ca0e143b2c955e21e7b2edcf8584), [`986076c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/986076c6a4c0ca0e143b2c955e21e7b2edcf8584), [`986076c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/986076c6a4c0ca0e143b2c955e21e7b2edcf8584)]:
+  - @jaybeeuu/is@3.0.0
+  - @jaybeeuu/utilities@6.0.0
+
 ## 0.1.18
 
 ### Patch Changes

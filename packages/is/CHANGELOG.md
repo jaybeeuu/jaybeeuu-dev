@@ -1,5 +1,19 @@
 # @jaybeeuu/is
 
+## 3.0.0
+
+### Major Changes
+
+- [#198](https://github.com/jaybeeuu/jaybeeuu-dev/pull/198) [`986076c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/986076c6a4c0ca0e143b2c955e21e7b2edcf8584) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Breaking: TypeScript module system changed from `ESNext` to `nodenext`. Requires Node.js ESM resolution. Import paths now require `.js` extensions.
+
+### Minor Changes
+
+- [#198](https://github.com/jaybeeuu/jaybeeuu-dev/pull/198) [`986076c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/986076c6a4c0ca0e143b2c955e21e7b2edcf8584) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Breaking: Compost now requires a `compost.config.ts` file. API redesigned around configurable content types with user-defined type guards for validation. New V2 manifest format (V1 auto-upgrades). Posts-specific code moved to generic `/content` module.
+
+- [#198](https://github.com/jaybeeuu/jaybeeuu-dev/pull/198) [`986076c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/986076c6a4c0ca0e143b2c955e21e7b2edcf8584) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Add .optional to typepredicates, giving a simple way to declare a property as optional.
+
+  Add user-defined type guard overload to the `is` function, allowing users to pass custom type guards directly: `is((data): data is MyType => ...)`. This provides a consistent API for all validation scenarios and seamlessly integrates with existing validation builders like `isObject`.
+
 ## 2.1.1
 
 ### Patch Changes

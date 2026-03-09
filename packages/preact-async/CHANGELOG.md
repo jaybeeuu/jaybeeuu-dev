@@ -1,5 +1,16 @@
 # @jaybeeuu/preact-async
 
+## 8.0.0
+
+### Major Changes
+
+- [#198](https://github.com/jaybeeuu/jaybeeuu-dev/pull/198) [`986076c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/986076c6a4c0ca0e143b2c955e21e7b2edcf8584) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Breaking: TypeScript module system changed from `ESNext` to `nodenext`. Requires Node.js ESM resolution. Import paths now require `.js` extensions.
+
+### Patch Changes
+
+- Updated dependencies [[`986076c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/986076c6a4c0ca0e143b2c955e21e7b2edcf8584)]:
+  - @jaybeeuu/utilities@6.0.0
+
 ## 7.0.3
 
 ### Patch Changes
