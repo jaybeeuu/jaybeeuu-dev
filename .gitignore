@@ -7,3 +7,7 @@
 node_modules
 CLAUDE.md
 .claude
+
+# Dolt database files (added by bd init)
+.dolt/
+*.db
