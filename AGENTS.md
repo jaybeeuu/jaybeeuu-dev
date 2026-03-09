@@ -1,114 +1,100 @@
-Use 'bd' and the beads-mcp for task tracking
+# AGENTS
 
-<!-- BEGIN BEADS INTEGRATION -->
-## Issue Tracking with bd (beads)
+> **Use `bd` and the `beads-mcp` for task tracking**
 
-**IMPORTANT**: This project uses **bd (beads)** for ALL issue tracking. Do NOT use markdown TODOs, task lists, or other tracking methods.
+## 1. Purpose
 
-### Why bd?
+- This file gives coding agents the repo-wide rules for working safely in `jaybeeuu-dev`.
+- These instructions apply across the whole monorepo unless a more local `AGENTS.md` exists in a subdirectory and overrides them.
+- Check the local package README and config files before changing behavior in that package.
 
-- Dependency-aware: Track blockers and relationships between issues
-- Git-friendly: Dolt-powered version control with native sync
-- Agent-optimized: JSON output, ready work detection, discovered-from links
-- Prevents duplicate tracking systems and confusion
+## 2. Repository Overview
 
-### Quick Start
+- This is a `pnpm` monorepo for `jaybeeuu.dev`: a Preact/Vite site plus the supporting libraries, content pipeline, and test tooling used to build and validate it.
+- The repo is TypeScript-first. Most packages expose source in `src/` and build output in `lib/`.
+- Main package groups:
+   - **Content and markdown pipeline:** `@jaybeeuu/compost`, `@jaybeeuu/posts`, `@jaybeeuu/reading-time-cli`
+   - **Site and browser-facing code:** `@jaybeeuu/site`, `@jaybeeuu/e2e`, `@jaybeeuu/e2e-hooks`
+   - **Shared libraries:** `@jaybeeuu/is`, `@jaybeeuu/conv`, `@jaybeeuu/utilities`, `@jaybeeuu/recoilless`, `@jaybeeuu/preact-async`, `@jaybeeuu/preact-recoilless`
+   - **Tooling and repo config:** `@jaybeeuu/eslint-config`, `@jaybeeuu/scripts`
 
-**Check for ready work:**
+## 3. Task Tracking
 
-```bash
-bd ready --json
-```
+- Use `bd` and the `beads-mcp` for task tracking.
+- Track work before changing code and keep the issue updated while implementing.
+- Prefer the normal flow:
+   - `bd ready --json` to find unblocked work
+   - `bd create ... --json` if a task does not exist yet
+   - claim the task before editing
+   - create linked follow-up work for anything discovered during implementation
+- Do not create markdown TODO lists or separate tracking systems in the repo.
 
-**Create new issues:**
+## 4. Working Rules
 
-```bash
-bd create "Issue title" --description="Detailed context" -t bug|feature|task -p 0-4 --json
-bd create "Issue title" --description="What this issue is about" -p 1 --deps discovered-from:bd-123 --json
-```
+- Make minimal, focused changes that match the requested scope.
+- Follow the naming, file layout, test style, and config patterns already used in the package you are editing.
+- Avoid broad refactors unless they are required to complete the task.
+- Keep docs, tests, and type definitions in sync with behavior changes.
+- Prefer editing `src/`, config, tests, and docs; only touch built output when the task explicitly requires it.
 
-**Claim and update:**
+## 5. Commands
 
-```bash
-bd update <id> --claim --json
-bd update bd-42 --priority 1 --json
-```
+- Environment baseline:
+   - Node `>=24`
+   - `pnpm >=10 <11`
+- Root-level commands:
+   - `pnpm install`
+   - `pnpm build`
+   - `pnpm build-changes`
+   - `pnpm test`
+   - `pnpm lint`
+   - `pnpm type-check`
+   - `pnpm format-check`
+   - `pnpm format`
+   - `pnpm spell-check`
+   - `pnpm gen-certs`
+   - `pnpm start-all`
+- Common targeted commands:
+   - `pnpm --filter @jaybeeuu/site start`
+   - `pnpm --filter @jaybeeuu/site build`
+   - `pnpm --filter @jaybeeuu/posts start`
+   - `pnpm --filter @jaybeeuu/compost test`
+   - `pnpm --filter @jaybeeuu/recoilless test`
+   - `pnpm --filter @jaybeeuu/<package> lint`
+   - `pnpm --filter @jaybeeuu/<package> type-check`
+- E2E commands:
+   - start the site first
+   - `pnpm e2e run` for headless Cypress runs
+   - `pnpm e2e open` for interactive Cypress work
+- Prefer targeted package commands first. Use full-repo runs when touching shared code, workspace config, or behavior that crosses package boundaries.
 
-**Complete work:**
+## 6. Testing Expectations
 
-```bash
-bd close bd-42 --reason "Completed" --json
-```
+- Run the narrowest relevant validation first.
+- For package-local changes, start with that package’s `test`, `lint`, and `type-check` scripts.
+- Use broader validation when changing shared packages or repo-wide config:
+   - root `pnpm test` for Jest project coverage across packages
+   - root `pnpm lint` and `pnpm type-check` when shared APIs or config change
+   - `pnpm e2e run` when site behavior, routing, rendering, or content integration changes
+- For Cypress work, keep the site running while iterating and prefer `open` during development.
 
-### Issue Types
+## 7. Package Guidance
 
-- `bug` - Something broken
-- `feature` - New functionality
-- `task` - Work item (tests, docs, refactoring)
-- `epic` - Large feature with subtasks
-- `chore` - Maintenance (dependencies, tooling)
+- **Content / markdown compilation (`compost`, `posts`):** preserve frontmatter expectations, manifest shape, and file naming conventions. If compiled post output changes, check downstream consumers in `site` and `e2e`.
+- **Site app (`site`):** this is a Preact app built with Vite. Keep component structure, routing, asset handling, and hook usage consistent with the existing package. Be careful with selectors and CSS classes consumed by `e2e-hooks`.
+- **E2E tests (`e2e`, `e2e-hooks`):** prefer stable selectors from `@jaybeeuu/e2e-hooks`. If fixtures or compiled test content change, rebuild or rerun the relevant flow instead of patching snapshots blindly.
+- **Shared utilities and state libraries (`is`, `conv`, `utilities`, `recoilless`, `preact-*`):** these packages feed other packages in the workspace and some are published. Keep API changes small, typed, and well-tested.
+- **Tooling packages (`eslint-config`, `scripts`):** changes here can affect the whole repo. Validate consumers after modifying shared tooling.
 
-### Priorities
+## 8. Change Safety
 
-- `0` - Critical (security, data loss, broken builds)
-- `1` - High (major features, important bugs)
-- `2` - Medium (default, nice-to-have)
-- `3` - Low (polish, optimization)
-- `4` - Backlog (future ideas)
+- Do not hand-edit generated or build output unless necessary. This usually includes `lib/`, coverage artifacts, test reports, generated manifests, and generated certificates.
+- Be careful with cross-package API changes; check workspace dependents before finalizing them.
+- Preserve backwards compatibility unless the task explicitly requires a breaking change.
+- When in doubt, check the local package README, `package.json`, `jest.config.ts`, `tsconfig*.json`, `eslint.config.ts`, `compost.config.ts`, or `cypress.config.ts` before changing behavior.
 
-### Workflow for AI Agents
+## 9. Documentation
 
-1. **Check ready work**: `bd ready` shows unblocked issues
-2. **Claim your task atomically**: `bd update <id> --claim`
-3. **Work on it**: Implement, test, document
-4. **Discover new work?** Create linked issue:
-   - `bd create "Found bug" --description="Details about what was found" -p 1 --deps discovered-from:<parent-id>`
-5. **Complete**: `bd close <id> --reason "Done"`
-
-### Auto-Sync
-
-bd automatically syncs via Dolt:
-
-- Each write auto-commits to Dolt history
-- Use `bd dolt push`/`bd dolt pull` for remote sync
-- No manual export/import needed!
-
-### Important Rules
-
-- ✅ Use bd for ALL task tracking
-- ✅ Always use `--json` flag for programmatic use
-- ✅ Link discovered work with `discovered-from` dependencies
-- ✅ Check `bd ready` before asking "what should I work on?"
-- ❌ Do NOT create markdown TODO lists
-- ❌ Do NOT use external issue trackers
-- ❌ Do NOT duplicate tracking systems
-
-For more details, see README.md and docs/QUICKSTART.md.
-
-## Landing the Plane (Session Completion)
-
-**When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
-
-**MANDATORY WORKFLOW:**
-
-1. **File issues for remaining work** - Create issues for anything that needs follow-up
-2. **Run quality gates** (if code changed) - Tests, linters, builds
-3. **Update issue status** - Close finished work, update in-progress items
-4. **PUSH TO REMOTE** - This is MANDATORY:
-   ```bash
-   git pull --rebase
-   bd sync
-   git push
-   git status  # MUST show "up to date with origin"
-   ```
-5. **Clean up** - Clear stashes, prune remote branches
-6. **Verify** - All changes committed AND pushed
-7. **Hand off** - Provide context for next session
-
-**CRITICAL RULES:**
-- Work is NOT complete until `git push` succeeds
-- NEVER stop before pushing - that leaves work stranded locally
-- NEVER say "ready to push when you are" - YOU must push
-- If push fails, resolve and retry until it succeeds
-
-<!-- END BEADS INTEGRATION -->
+- Update package READMEs, changelogs, and related docs when behavior, public APIs, or developer workflow changes materially.
+- Keep documentation concise, practical, and aligned with the commands that already exist in the repo.
+- If a change only affects internal implementation, avoid unnecessary doc churn.
