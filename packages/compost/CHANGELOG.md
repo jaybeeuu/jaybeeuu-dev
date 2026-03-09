@@ -1,5 +1,11 @@
 # @jaybeeuu/compost
 
+## 1.0.0
+
+### Major Changes
+
+- [#198](https://github.com/jaybeeuu/jaybeeuu-dev/pull/198) [`986076c`](https://github.com/jaybeeuu/jaybeeuu-dev/commit/986076c6a4c0ca0e143b2c955e21e7b2edcf8584) Thanks [@jaybeeuu](https://github.com/jaybeeuu)! - Breaking: Compost now requires a `compost.config.ts` file. API redesigned around configurable content types with user-defined type guards for validation. New V2 manifest format (V1 auto-upgrades). Posts-specific code moved to generic `/content` module.
+
 ## 0.3.0
 
 ### Minor Changes
