@@ -3,7 +3,7 @@
 ## Scope
 
 - This file applies to `packages/posts`.
-- Follow the root [AGENTS.md](../../AGENTS.md) first, then use this file for package-specific content guidance.
+- Follow the root agent guide first, then use this file for content guidance in this package.
 
 ## Package Overview
 
@@ -12,8 +12,8 @@
 
 ## Working Rules
 
-- Preserve established frontmatter fields, file naming conventions, and content organization unless the task requires a deliberate content-model change.
-- Treat markdown, frontmatter, and generated manifests as part of a pipeline: changes here can affect site rendering and E2E coverage.
+- Preserve established front matter fields, file naming conventions, and content organization unless the task requires a deliberate content-model change.
+- Treat markdown, front matter, and generated manifests as part of a pipeline: changes here can affect site rendering and E2E coverage.
 - Prefer editing source content and config; do not hand-edit generated output under `lib/`.
 
 ## Commands
@@ -28,4 +28,4 @@
 
 - Run markdown linting and spell-check when changing post content or docs in this package.
 - If manifest or compiled output changes, check downstream consumers in `site` and `e2e`.
-- Keep frontmatter and config changes compatible with the validation rules used during compilation.
+- Keep front matter and config changes compatible with the validation rules used during compilation.
