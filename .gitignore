@@ -1,13 +1,9 @@
+.beads
+.dolt
 .husky/_
 .pnpm-debug.log
 /.VSCodeCounter
 /coverage-reports
 /test-reports
-/plans
 node_modules
-CLAUDE.md
-.claude
-
-# Dolt database files (added by bd init)
-.dolt/
 *.db
